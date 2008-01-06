@@ -1,0 +1,149 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                        
+// Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
+// 	    All rights reserved.                   				      
+//                                                                             
+// This program and the accompanying materials are made available under       
+// the terms of the Common Public License v1.0 which accompanies this         
+// distribution.							      
+//                                                                             
+// Redistribution and use in source and binary forms, with or                 
+// without modification, are permitted provided that the following            
+// conditions are met:                                                        
+//                                                                             
+// Redistributions of source code must retain the above copyright             
+// notice, this list of conditions and the following disclaimer.              
+// Redistributions in binary form must reproduce the above copyright          
+// notice, this list of conditions and the following disclaimer in            
+// the documentation and/or other materials provided with the distribution.   
+//                                                                             
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
+// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
+//                                                                             
+// Contributors:
+//      James Nies
+//      - Initial creation
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
+
+namespace NArrange.Core
+{
+	/// <summary>
+	/// Element utility methods
+	/// </summary>
+	public static class ElementUtilities	
+	{
+		#region Public Methods
+		
+		/// <summary>
+		/// Gets the string representation of a code element attribute.
+		/// </summary>
+		/// <param name="attributeType"></param>
+		/// <param name="codeElement"></param>
+		/// <returns></returns>
+		public static string GetAttribute(ElementAttribute attributeType, ICodeElement codeElement)		
+		{
+			string attributeString = null;
+			MemberElement memberElement;
+			TypeElement typeElement;
+			
+			switch (attributeType)
+			{
+			    case ElementAttribute.Name:
+			        attributeString = codeElement.Name;
+			        break;
+			
+			    case ElementAttribute.Access:
+			        AttributedElement attributedElement = codeElement as AttributedElement;
+			        if (attributedElement != null)
+			        {
+			            if (attributedElement.Access == CodeAccess.NotSpecified)
+			            {
+			                attributeString = CodeAccess.Internal.ToString();
+			            }
+			            else
+			            {
+			                attributeString = attributedElement.Access.ToString();
+			            }
+			        }
+			        break;
+			
+			    case ElementAttribute.ElementType:
+			        attributeString = codeElement.ElementType.ToString();
+			        break;
+			
+			    case ElementAttribute.Type:
+			        attributeString = GetTypeAttribute(codeElement);
+			        break;
+			
+			    case ElementAttribute.Modifier:
+			        memberElement = codeElement as MemberElement;
+			        if (memberElement != null)
+			        {
+			            attributeString = memberElement.MemberModifiers.ToString();
+			        }
+			        else
+			        {
+			            typeElement = codeElement as TypeElement;
+			            if (typeElement != null)
+			            {
+			                attributeString = typeElement.TypeModifiers.ToString();
+			            }
+			        }
+			        break;
+			
+			    default:
+			        attributeString = string.Empty;
+			        break;
+			}
+			
+			if (attributeString == null)
+			{
+			    attributeString = string.Empty;
+			}
+			
+			return attributeString;
+		}		
+		
+		#endregion Public Methods
+		
+		#region Private Methods
+		
+		private static string GetTypeAttribute(ICodeElement codeElement)		
+		{
+			string attributeString = string.Empty;
+			
+			MemberElement memberElement = codeElement as MemberElement;
+			if (memberElement != null)
+			{
+			    attributeString = memberElement.Type;
+			}
+			else
+			{
+			    TypeElement typeElement = codeElement as TypeElement;
+			    if (typeElement != null)
+			    {
+			        attributeString = typeElement.Type.ToString();
+			    }
+			}
+			
+			return attributeString;
+		}		
+		
+		#endregion Private Methods
+
+	}
+}
