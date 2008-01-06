@@ -115,6 +115,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>narrange-console $(ProjectPath)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
