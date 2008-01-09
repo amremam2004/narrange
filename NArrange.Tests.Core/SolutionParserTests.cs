@@ -66,19 +66,9 @@ namespace NArrange.Tests.Core
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()		
 		{
-			Assembly assembly = Assembly.GetExecutingAssembly();
-			using (Stream stream = assembly.GetManifestResourceStream(
-			   this.GetType(), "TestProject.sln"))
-			{
-			    Assert.IsNotNull(stream,
-			        "Test stream could not be retrieved.");
+			_testSolutionFile = Path.GetTempFileName() + ".csproj";
 			
-			    StreamReader reader = new StreamReader(stream);
-			    string contents = reader.ReadToEnd();
-			
-			    _testSolutionFile = Path.GetTempFileName() + ".csproj";
-			    File.WriteAllText(_testSolutionFile, contents);
-			}
+			WriteTestSolution(_testSolutionFile);
 		}		
 		
 		/// <summary>
@@ -96,6 +86,26 @@ namespace NArrange.Tests.Core
 			}
 			catch
 			{
+			}
+		}		
+		
+		/// <summary>
+		/// Writes the test solution to a file
+		/// </summary>
+		/// <param name="filename"></param>
+		public static void WriteTestSolution(string filename)		
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			using (Stream stream = assembly.GetManifestResourceStream(
+			   typeof(SolutionParserTests), "TestProject.sln"))
+			{
+			    Assert.IsNotNull(stream,
+			        "Test stream could not be retrieved.");
+			
+			    StreamReader reader = new StreamReader(stream);
+			    string contents = reader.ReadToEnd();
+			
+			    File.WriteAllText(filename, contents);
 			}
 		}		
 		

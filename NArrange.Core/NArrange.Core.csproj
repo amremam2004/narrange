@@ -74,6 +74,8 @@
     <Compile Include="Configuration\RegionConfiguration.cs" />
     <Compile Include="CodeElements\ICodeElementVisitor.cs" />
     <Compile Include="Configuration\StringExpression.cs" />
+    <Compile Include="FileArranger.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="SolutionParser.cs" />
     <Compile Include="IProjectParser.cs" />
     <Compile Include="ElementUtilities.cs" />

@@ -215,6 +215,32 @@ namespace NArrange.Core
 	}	
 	
 	/// <summary>
+	/// Log level
+	/// </summary>
+	public enum LogLevel	
+	{
+		/// <summary>
+		/// Error message
+		/// </summary>
+		Error,
+		
+		/// <summary>
+		/// Warning message
+		/// </summary>
+		Warning,
+		
+		/// <summary>
+		/// Informational message
+		/// </summary>
+		Info,
+		
+		/// <summary>
+		/// Verbose
+		/// </summary>
+		Verbose
+	}	
+	
+	/// <summary>
 	/// Member attributes
 	/// </summary>
 	[Flags]

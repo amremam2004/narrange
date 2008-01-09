@@ -75,6 +75,7 @@
     <Compile Include="ElementArrangerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortedInserterTests.cs" />
+    <Compile Include="TestLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NArrange.Core\NArrange.Core.csproj">

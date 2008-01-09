@@ -36,7 +36,9 @@
     <Compile Include="..\TestApp\TestApp\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ClassMembers.cs" />
+	<Compile Include="ClassDefinition.cs" />
+	<Compile Include="BlahBlahBlah.cs" />
     <Compile Include="Folder1\Class2.cs" />
     <Compile Include="Folder1\Folder2\Class3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

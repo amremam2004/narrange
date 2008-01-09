@@ -1,0 +1,3 @@
+The following changes were made in this release:
+
+- Improved console logging and error handling.

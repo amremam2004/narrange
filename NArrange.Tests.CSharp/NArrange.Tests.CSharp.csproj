@@ -40,6 +40,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CodeArrangerTests.cs" />
+    <Compile Include="FileArrangerTests.cs" />
     <Compile Include="CSharpParserTests.cs" />
     <Compile Include="CSharpProjectParserTests.cs" />
     <Compile Include="CSharpTestFile.cs" />

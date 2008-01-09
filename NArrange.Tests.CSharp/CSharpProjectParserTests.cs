@@ -43,7 +43,9 @@ namespace NArrange.Tests.CSharp
 		public void ParseTest()		
 		{
 			string[] testSourceFiles = new string[]{
-			    Path.Combine(Path.GetTempPath(), "Class1.cs"),
+			    Path.Combine(Path.GetTempPath(), "ClassMembers.cs"),
+			    Path.Combine(Path.GetTempPath(), "ClassDefinition.cs"),
+			    Path.Combine(Path.GetTempPath(), "BlahBlahBlah.cs"),
 			    Path.Combine(Path.GetTempPath(), "Folder1\\Class2.cs"),
 			    Path.Combine(Path.GetTempPath(), "Folder1\\Folder2\\Class3.cs"),
 			    Path.Combine(Path.GetTempPath(), "Properties\\AssemblyInfo.cs")
@@ -70,19 +72,9 @@ namespace NArrange.Tests.CSharp
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()		
 		{
-			Assembly assembly = Assembly.GetExecutingAssembly();
-			using (Stream stream = assembly.GetManifestResourceStream(
-			   this.GetType(), "TestProject.csproj"))
-			{
-			    Assert.IsNotNull(stream,
-			        "Test stream could not be retrieved.");
+			_testProjectFile = Path.GetTempFileName() + ".csproj";
 			
-			    StreamReader reader = new StreamReader(stream);
-			    string contents = reader.ReadToEnd();
-			
-			    _testProjectFile = Path.GetTempFileName() + ".csproj";
-			    File.WriteAllText(_testProjectFile, contents);
-			}
+			WriteTestProject(_testProjectFile);
 		}		
 		
 		/// <summary>
@@ -100,6 +92,26 @@ namespace NArrange.Tests.CSharp
 			}
 			catch
 			{
+			}
+		}		
+		
+		/// <summary>
+		/// Writes the test project to a file
+		/// </summary>
+		/// <param name="filename"></param>
+		public static void WriteTestProject(string filename)		
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			using (Stream stream = assembly.GetManifestResourceStream(
+			   typeof(CSharpProjectParserTests), "TestProject.csproj"))
+			{
+			    Assert.IsNotNull(stream,
+			        "Test stream could not be retrieved.");
+			
+			    StreamReader reader = new StreamReader(stream);
+			    string contents = reader.ReadToEnd();
+			
+			    File.WriteAllText(filename, contents);
 			}
 		}		
 		

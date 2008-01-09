@@ -240,6 +240,12 @@
             Performs test fixture cleanup
             </summary>
         </member>
+        <member name="M:NArrange.Tests.CSharp.CSharpProjectParserTests.WriteTestProject(System.String)">
+            <summary>
+            Writes the test project to a file
+            </summary>
+            <param name="filename"></param>
+        </member>
         <member name="T:NArrange.Tests.CSharp.CSharpParserTests">
             <summary>
             Test fixture for the CSharpParser class.
@@ -534,6 +540,66 @@
         <member name="M:NArrange.Tests.Core.CodeArrangerTests.TestFixtureSetup">
             <summary>
             Performs setup for this test fixture
+            </summary>
+        </member>
+        <member name="T:NArrange.Tests.Core.FileArrangerTests">
+            <summary>
+            Test fixture for the FileArranger class
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeInvalidConfigurationTest">
+            <summary>
+            Tests arranging a single source file with an invalid configuration
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeInvalidExtensionAssemblyTest">
+            <summary>
+            Tests arranging a single source file with an invalid configuration
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeInvalidExtensionTest">
+            <summary>
+            Tests arranging a single source file with an invalid extension
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeInvalidSourceFileTest">
+            <summary>
+            Tests arranging a single invalid source file
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeNonExistantConfigurationTest">
+            <summary>
+            Tests arranging a single source file with an invalid configuration
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeProjectTest">
+            <summary>
+            Tests arranging a project file
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeReadOnlySourceFileTest">
+            <summary>
+            Tests arranging a read-only source file
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeSingleSourceFileTest">
+            <summary>
+            Tests arranging a single source file
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.ArrangeSolutionTest">
+            <summary>
+            Tests arranging a solution file
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.TestFixtureSetup">
+            <summary>
+            Performs test fixture setup
+            </summary>
+        </member>
+        <member name="M:NArrange.Tests.Core.FileArrangerTests.TestFixtureTearDown">
+            <summary>
+            Performs test fixture cleanup
             </summary>
         </member>
     </members>

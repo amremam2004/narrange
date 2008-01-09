@@ -122,6 +122,23 @@ namespace NArrange.Tests.CSharp
 			return new StreamReader(GetTestFileStream(resourceName), Encoding.Default);
 		}		
 		
+		/// <summary>
+		/// Opens a test file resource stream.
+		/// </summary>
+		/// <param name="resourceName"></param>
+		/// <returns></returns>
+		public static Stream GetTestFileStream(string resourceName)		
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			Stream stream = assembly.GetManifestResourceStream(
+			   typeof(CSharpTestUtilities), "TestSourceFiles." + resourceName);
+			
+			Assert.IsNotNull(stream,
+			    "Test stream could not be retrieved.");
+			
+			return stream;
+		}		
+		
 		#endregion Public Methods
 		
 		#region Private Methods
@@ -167,23 +184,6 @@ namespace NArrange.Tests.CSharp
 			
 			    return assembly;
 			}
-		}		
-		
-		/// <summary>
-		/// Opens a test file resource stream.
-		/// </summary>
-		/// <param name="resourceName"></param>
-		/// <returns></returns>
-		private static Stream GetTestFileStream(string resourceName)		
-		{
-			Assembly assembly = Assembly.GetExecutingAssembly();
-			Stream stream = assembly.GetManifestResourceStream(
-			   typeof(CSharpTestUtilities), "TestSourceFiles." + resourceName);
-			
-			Assert.IsNotNull(stream,
-			    "Test stream could not be retrieved.");
-			
-			return stream;
 		}		
 		
 		#endregion Private Methods
