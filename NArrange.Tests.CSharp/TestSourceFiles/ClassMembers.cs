@@ -294,6 +294,11 @@ namespace SampleNamespace
         public event SampleEventHandler SimpleEvent;
 
         /// <summary>
+        /// Generic event
+        /// </summary>
+        public event EventHandler<EventArgs> GenericEvent;
+
+        /// <summary>
         /// Explicit event
         /// </summary>
         public event SampleEventHandler ExplicitEvent

@@ -23,7 +23,7 @@ namespace NArrange.Tests.CSharp
 		
 		private const int NumConstructors = 4;		
 		private const int NumDelegates = 1;		
-		private const int NumEvents = 2;		
+		private const int NumEvents = 3;		
 		private const int NumFields = 11;		
 		private const int NumMethods = 7;		
 		private const int NumNestedTypes = 4;		
@@ -610,6 +610,33 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected body text.");
 			
 			    eventElement = classElement.Children[eventOffset + 1] as EventElement;
+			    Assert.IsNotNull(eventElement, "Expected an event.");
+			    Assert.AreEqual("GenericEvent", eventElement.Name,
+			        "Unexpected event name.");
+			    Assert.AreEqual(CodeAccess.Public, eventElement.Access,
+			        "Unexpected access level.");
+			    Assert.AreEqual(3, eventElement.HeaderCommentLines.Count,
+			        "Unexpected number of header comment lines.");
+			    Assert.IsFalse(eventElement.IsStatic,
+			        "Delegate should not be static.");
+			    Assert.AreEqual("EventHandler<EventArgs>", eventElement.Type,
+			        "Unexpected return type.");
+			    Assert.IsFalse(eventElement.IsAbstract,
+			        "Event should not be abstract.");
+			    Assert.IsFalse(eventElement.IsOverride,
+			        "Event should not be an override.");
+			    Assert.IsFalse(eventElement.IsSealed,
+			        "Event should not be sealed.");
+			    Assert.IsFalse(eventElement.IsVirtual,
+			        "Event should not be virtual.");
+			    Assert.IsFalse(eventElement.IsNew,
+			        "Event should not be new.");
+			    Assert.AreEqual(0, eventElement.Attributes.Count,
+			        "Unexpected number of attributes.");
+			    Assert.IsNull(eventElement.BodyText,
+			        "Unexpected body text.");
+			
+			    eventElement = classElement.Children[eventOffset + 2] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("ExplicitEvent", eventElement.Name,
 			        "Unexpected event name.");

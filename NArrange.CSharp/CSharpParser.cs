@@ -31,6 +31,7 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//      - Fixed parsing of events with generic return types
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,37 @@ namespace NArrange.CSharp
 		#region Private Methods
 		
 		/// <summary>
+		/// Captures an type name alias from the stream.
+		/// </summary>
+		/// <returns></returns>
+		private string CaptureTypeName()		
+		{
+			EatWhitespace();
+			
+			StringBuilder word = new StringBuilder();
+			
+			int data = _reader.Peek();
+			while (data > 0)
+			{
+			    char ch = (char)data;
+			
+			    if (!IsWhitespace(ch) &&
+			        !IsSpecialChar(ch))
+			    {
+			        TryReadChar();
+			        word.Append(_ch);
+			        data = _reader.Peek();
+			    }
+			    else
+			    {
+			        break;
+			    }
+			}
+			
+			return word.ToString();
+		}		
+		
+		/// <summary>
 		/// Captures an alias or keyword from the stream.
 		/// </summary>
 		/// <returns></returns>
@@ -117,15 +149,9 @@ namespace NArrange.CSharp
 			    char ch = (char)data;
 			
 			    if (!IsWhitespace(ch) &&
-			        ch != CSharpSymbol.BeginParamList &&
-			        ch != CSharpSymbol.EndParamList &&
-			        ch != CSharpSymbol.EndOfStatement &&
-			        ch != CSharpSymbol.AliasSeparator &&
-			        ch != CSharpSymbol.TypeImplements &&
+			        !IsSpecialChar(ch) &&
 			        ch != CSharpSymbol.BeginGeneric &&
-			        ch != CSharpSymbol.EndGeneric &&
-			        ch != CSharpSymbol.BeginBlock &&
-			        ch != CSharpSymbol.EndBlock)
+			        ch != CSharpSymbol.EndGeneric)
 			    {
 			        TryReadChar();
 			        word.Append(_ch);
@@ -477,6 +503,22 @@ namespace NArrange.CSharp
 			}
 			
 			return type;
+		}		
+		
+		/// <summary>
+		/// Determines whether or not the specified char is a C# special character
+		/// </summary>
+		/// <param name="ch"></param>
+		/// <returns></returns>
+		private bool IsSpecialChar(char ch)		
+		{
+			return  ch == CSharpSymbol.BeginParamList ||
+			        ch == CSharpSymbol.EndParamList ||
+			        ch == CSharpSymbol.EndOfStatement ||
+			        ch == CSharpSymbol.AliasSeparator ||
+			        ch == CSharpSymbol.TypeImplements ||
+			        ch == CSharpSymbol.BeginBlock ||
+			        ch == CSharpSymbol.EndBlock;
 		}		
 		
 		/// <summary>
@@ -845,7 +887,7 @@ namespace NArrange.CSharp
 		private EventElement ParseEvent(CodeAccess access, MemberModifier memberAttributes)		
 		{
 			EventElement eventElement = new EventElement();
-			eventElement.Type = CaptureWord();
+			eventElement.Type = CaptureTypeName();
 			eventElement.Name = CaptureWord();
 			eventElement.Access = access;
 			eventElement.MemberModifiers = memberAttributes;
