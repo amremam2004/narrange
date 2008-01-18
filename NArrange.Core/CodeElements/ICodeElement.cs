@@ -117,6 +117,5 @@ namespace NArrange.Core.CodeElements
 		void RemoveChild(ICodeElement childElement);		
 		
 		#endregion Methods
-
 	}
 }

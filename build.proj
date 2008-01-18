@@ -1,0 +1,83 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+	<PropertyGroup>
+		<BuildDirectory>$(MSBuildProjectDirectory)\Build</BuildDirectory>
+		<BinDirectory>$(BuildDirectory)\NArrange\bin</BinDirectory>
+		<SourceDistributionDirectory>$(BuildDirectory)\NArrange\src</SourceDistributionDirectory>
+		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
+		<Major>0</Major>
+		<Minor>1</Minor>
+		<Build>01</Build>
+	</PropertyGroup>
+	<ItemGroup>
+		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>
+	</ItemGroup>
+	
+	<Target Name="BuildAll" DependsOnTargets="$(BuildAllDependsOn)"/>
+
+	<Target Name="Clean">
+		<RemoveDir Directories="$(BinDirectory)"/>
+		<MSBuild Projects="@(Projects)" Targets="Clean" Properties="Configuration=Release;"/>
+	</Target>
+
+	<Target Name="MakeSourceDistribution">
+
+		<Message Text="Making source distribution..."/>
+
+		<RemoveDir Directories="$(SourceDistributionDirectory)"/>
+		<MakeDir Directories="$(SourceDistributionDirectory)"/>
+		<CreateItem Include="$(MSBuildProjectDirectory)\**\*.*"
+					Exclude="$(MSBuildProjectDirectory)\**\*svn\**\*.*;
+						$(MSBuildProjectDirectory)\**\bin\**\*.*;
+						$(MSBuildProjectDirectory)\**\obj\**\*.*;
+						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;">
+			<Output ItemName="SourceFiles" TaskParameter="Include"/>
+		</CreateItem>
+
+		<Message Text="@(SourceFiles)"/>
+		<Copy SourceFiles ="@(SourceFiles)" DestinationFolder="$(SourceDistributionDirectory)\%(RecursiveDir)"/>
+
+		<CreateItem Include="$(SourceDistributionDirectory)\**\*.*">
+			<Output ItemName="ZipSourceFiles" TaskParameter="Include"/>
+		</CreateItem>
+
+		<Zip Files="@(ZipSourceFiles)" WorkingDirectory="$(BuildDirectory)" 
+			 ZipFileName="..\Releases\NArrange-$(Major).$(Minor).$(Build)-src.zip"/>
+	</Target>
+		
+	<Target Name="Build">
+		<MakeDir Directories="$(BinDirectory)"/>   
+		
+		<MSBuild Projects="@(Projects)" Properties="Configuration=Release">
+			<Output ItemName="OutputFiles" TaskParameter="TargetOutputs"/>
+		</MSBuild>
+
+		<Message Text="Copying output files..."/>
+		<Message Text="@(OutputFiles)"/>
+		<Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(BinDirectory)"/>
+
+		<CreateItem Include="%(Projects.RecursiveDir)bin\release\*.xml"
+					Exclude="%(Projects.RecursiveDir)**\nunit*.xml;
+						%(Projects.RecursiveDir)**\TestResult.xml;
+						%(Projects.RecursiveDir)**\coverage.xml;
+						$(SourceDistributionDirectory)\**\*.*">
+			<Output ItemName="AdditionalFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Message Text="Copying additional files..."/>
+		<Message Text="@(AdditionalFiles)"/>
+		<Copy SourceFiles="@(AdditionalFiles)" DestinationFolder="$(BinDirectory)"/>
+
+		<CreateItem Include="$(MSBuildProjectDirectory)\*.txt">
+			<Output ItemName="InfoFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(BinDirectory)"/>
+
+		<CreateItem Include="$(BinDirectory)\**\*.*">
+			<Output ItemName="ZipBinFiles" TaskParameter="Include"/>
+		</CreateItem>
+		
+		<Zip Files="@(ZipBinFiles)" WorkingDirectory="$(BuildDirectory)"
+			 ZipFileName="..\Releases\NArrange-$(Major).$(Minor).$(Build)-net-2.0.zip"/>
+	</Target>
+</Project>

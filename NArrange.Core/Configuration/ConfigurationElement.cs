@@ -87,6 +87,5 @@ namespace NArrange.Core.Configuration
 		protected abstract ConfigurationElement DoClone();		
 		
 		#endregion Protected Methods
-
 	}
 }

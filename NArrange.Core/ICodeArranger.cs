@@ -56,6 +56,5 @@ namespace NArrange.Core
 		ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements);		
 		
 		#endregion Methods
-
 	}
 }

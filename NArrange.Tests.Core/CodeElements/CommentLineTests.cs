@@ -63,6 +63,5 @@ namespace NArrange.Tests.Core.CodeElements
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

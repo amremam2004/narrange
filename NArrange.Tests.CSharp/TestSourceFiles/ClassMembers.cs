@@ -32,6 +32,7 @@ namespace SampleNamespace
         private Nullable<int> _genericField;
         protected internal string[] _arrayField = { };
         internal bool @internal;
+        private global::System.Boolean _globalNamespaceTypeField;
 
         /// <summary>
         /// This field has an attribute

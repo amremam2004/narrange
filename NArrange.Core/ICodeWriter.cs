@@ -58,6 +58,5 @@ namespace NArrange.Core
 		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);		
 		
 		#endregion Methods
-
 	}
 }

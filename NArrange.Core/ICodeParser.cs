@@ -58,6 +58,5 @@ namespace NArrange.Core
 		ReadOnlyCollection<ICodeElement> Parse(TextReader reader);		
 		
 		#endregion Methods
-
 	}
 }

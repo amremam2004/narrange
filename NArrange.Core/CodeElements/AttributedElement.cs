@@ -161,6 +161,5 @@ namespace NArrange.Core.CodeElements
 		}		
 		
 		#endregion Protected Methods
-
 	}
 }

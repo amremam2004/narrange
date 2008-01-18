@@ -102,6 +102,5 @@ namespace NArrange.Tests.Core.CodeElements
 		protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);		
 		
 		#endregion Protected Methods
-
 	}
 }

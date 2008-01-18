@@ -37,10 +37,8 @@ namespace NArrange.Tests.Core
                 new ElementFilter("$(Access) == 'Public'"),
                 null)
 			{
-			}
-		}		
+			}		}		
 		
 		#endregion Other
-
 	}
 }

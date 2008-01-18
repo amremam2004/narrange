@@ -302,6 +302,5 @@ namespace NArrange.Tests.Core
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

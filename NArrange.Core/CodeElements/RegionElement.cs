@@ -85,6 +85,5 @@ namespace NArrange.Core.CodeElements
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

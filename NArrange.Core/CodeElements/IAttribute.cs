@@ -56,6 +56,5 @@ namespace NArrange.Core.CodeElements
 		}		
 		
 		#endregion Properties
-
 	}
 }

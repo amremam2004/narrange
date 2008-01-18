@@ -264,6 +264,5 @@ namespace NArrange.Core.CodeElements
 		protected abstract CodeElement DoClone();		
 		
 		#endregion Protected Methods
-
 	}
 }

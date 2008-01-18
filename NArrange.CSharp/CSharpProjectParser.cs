@@ -90,6 +90,5 @@ namespace NArrange.CSharp
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

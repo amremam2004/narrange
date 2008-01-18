@@ -204,6 +204,5 @@ namespace NArrange.ConsoleApplication
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

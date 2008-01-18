@@ -166,6 +166,5 @@ namespace NArrange.Core.Configuration
 		}		
 		
 		#endregion Protected Methods
-
 	}
 }

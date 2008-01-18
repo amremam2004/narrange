@@ -117,6 +117,5 @@ namespace NArrange.Core
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

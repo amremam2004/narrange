@@ -179,6 +179,5 @@ namespace NArrange.Tests.Core
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

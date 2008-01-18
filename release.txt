@@ -2,3 +2,5 @@ The following changes were made in this release:
 
 - Improved console logging and error handling.
 - Fixed parsing of events with generic return types.
+- Removed an extraneous new line after Type members.
+- Added an MSBuild script to ease creation of releases.

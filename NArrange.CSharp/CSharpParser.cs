@@ -108,29 +108,7 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private string CaptureTypeName()		
 		{
-			EatWhitespace();
-			
-			StringBuilder word = new StringBuilder();
-			
-			int data = _reader.Peek();
-			while (data > 0)
-			{
-			    char ch = (char)data;
-			
-			    if (!IsWhitespace(ch) &&
-			        !IsSpecialChar(ch))
-			    {
-			        TryReadChar();
-			        word.Append(_ch);
-			        data = _reader.Peek();
-			    }
-			    else
-			    {
-			        break;
-			    }
-			}
-			
-			return word.ToString();
+			return CaptureWord(true);
 		}		
 		
 		/// <summary>
@@ -138,6 +116,15 @@ namespace NArrange.CSharp
 		/// </summary>
 		/// <returns></returns>
 		private string CaptureWord()		
+		{
+			return CaptureWord(false);
+		}		
+		
+		/// <summary>
+		/// Captures an alias or keyword from the stream.
+		/// </summary>
+		/// <returns></returns>
+		private string CaptureWord(bool captureGeneric)		
 		{
 			EatWhitespace();
 			
@@ -148,18 +135,20 @@ namespace NArrange.CSharp
 			{
 			    char ch = (char)data;
 			
-			    if (!IsWhitespace(ch) &&
-			        !IsSpecialChar(ch) &&
-			        ch != CSharpSymbol.BeginGeneric &&
-			        ch != CSharpSymbol.EndGeneric)
+			    if (IsWhitespace(ch) ||
+			        (IsAliasBreak(ch) && 
+			        !(ch == CSharpSymbol.TypeImplements && (word.ToString() == CSharpKeyword.Global || word.ToString() == CSharpKeyword.Global + CSharpSymbol.TypeImplements.ToString())))||
+			        (!captureGeneric &&
+			        (ch == CSharpSymbol.BeginGeneric ||
+			        ch == CSharpSymbol.EndGeneric)))
+			    {
+			        break;
+			    }
+			    else
 			    {
 			        TryReadChar();
 			        word.Append(_ch);
 			        data = _reader.Peek();
-			    }
-			    else
-			    {
-			        break;
 			    }
 			}
 			
@@ -507,10 +496,11 @@ namespace NArrange.CSharp
 		
 		/// <summary>
 		/// Determines whether or not the specified char is a C# special character
+		/// that signals a break in an alias
 		/// </summary>
 		/// <param name="ch"></param>
 		/// <returns></returns>
-		private bool IsSpecialChar(char ch)		
+		private bool IsAliasBreak(char ch)		
 		{
 			return  ch == CSharpSymbol.BeginParamList ||
 			        ch == CSharpSymbol.EndParamList ||
@@ -572,7 +562,7 @@ namespace NArrange.CSharp
 			{
 			    while (nextChar != EmptyChar && nextChar != CSharpSymbol.BeginBlock)
 			    {
-			        string alias = CaptureWord();
+			        string alias = CaptureWord(false);
 			
 			        nextChar = NextChar();
 			        if (nextChar == CSharpSymbol.BeginGeneric)
@@ -1165,7 +1155,8 @@ namespace NArrange.CSharp
 			string className = CaptureWord();
 			typeElement.Name = className;
 			
-			if (access == CodeAccess.NotSpecified)
+			if (access == CodeAccess.NotSpecified && 
+			    ((typeAttributes & TypeModifier.Partial) != TypeModifier.Partial))
 			{
 			    access = CodeAccess.Internal;
 			}
@@ -1628,6 +1619,5 @@ namespace NArrange.CSharp
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

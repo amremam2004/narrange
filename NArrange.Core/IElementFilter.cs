@@ -57,6 +57,5 @@ namespace NArrange.Core
 		bool IsMatch(ICodeElement codeElement);		
 		
 		#endregion Methods
-
 	}
 }

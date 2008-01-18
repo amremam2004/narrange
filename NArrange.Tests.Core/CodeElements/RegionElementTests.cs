@@ -78,6 +78,5 @@ namespace NArrange.Tests.Core.CodeElements
 		}		
 		
 		#endregion Protected Methods
-
 	}
 }

@@ -175,7 +175,15 @@ namespace NArrange.CSharp
 		
 		private void WriteEndBlock()		
 		{
-			_writer.WriteLine();
+			WriteEndBlock(true);
+		}		
+		
+		private void WriteEndBlock(bool newLine)		
+		{
+			if (newLine)
+			{
+			    _writer.WriteLine();
+			}
 			_tabCount--;
 			WriteIndented(CSharpSymbol.EndBlock.ToString());
 		}		
@@ -739,6 +747,10 @@ namespace NArrange.CSharp
 			{
 			    WriteAccess(element.Access);
 			}
+			else
+			{
+			    WriteIndented(string.Empty);
+			}
 			
 			if (element.IsUnsafe)
 			{
@@ -841,7 +853,7 @@ namespace NArrange.CSharp
 			    {
 			        WriteChildren(element);
 			
-			        WriteEndBlock();
+			        WriteEndBlock(false);
 			    }
 			    else
 			    {
@@ -868,6 +880,5 @@ namespace NArrange.CSharp
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

@@ -128,10 +128,8 @@ namespace NArrange.Tests.Core
 			{
 				Level = level;
 				Message = message;
-			}
-		}		
+			}		}		
 		
 		#endregion Other
-
 	}
 }

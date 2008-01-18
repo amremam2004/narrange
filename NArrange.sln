@@ -6,6 +6,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Tests.Core", "NArrange.Tests.Core\NArrange.Tests.Core.csproj", "{5053E13A-3D0C-444F-9B39-EFE32076FB50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.ConsoleApplication", "NArrange.Console\NArrange.ConsoleApplication.csproj", "{78E67A66-D3C9-4916-86D3-3CBC579E7332}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C4771371-41DD-476F-B107-DF60C4594813} = {C4771371-41DD-476F-B107-DF60C4594813}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.CSharp", "NArrange.CSharp\NArrange.CSharp.csproj", "{C4771371-41DD-476F-B107-DF60C4594813}"
 EndProject

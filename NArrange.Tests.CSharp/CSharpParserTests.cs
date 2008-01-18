@@ -24,7 +24,7 @@ namespace NArrange.Tests.CSharp
 		private const int NumConstructors = 4;		
 		private const int NumDelegates = 1;		
 		private const int NumEvents = 3;		
-		private const int NumFields = 11;		
+		private const int NumFields = 12;		
 		private const int NumMethods = 7;		
 		private const int NumNestedTypes = 4;		
 		private const int NumProperties = 7;		
@@ -356,6 +356,33 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(CodeAccess.Public, classElement.Access,
 			        "Unexpected class code access level.");
 			}
+		}		
+		
+		/// <summary>
+		/// Tests parsing a class with unspecified access.
+		/// </summary>
+		[Test]
+		public void ParseClassPartialUnspecifiedAccessTest()		
+		{
+			StringReader reader = new StringReader(
+			    "partial class Test{}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			TypeElement typeElement = elements[0] as TypeElement;
+			Assert.IsNotNull(typeElement,
+			    "Element is not a TypeElement.");
+			Assert.AreEqual("Test", typeElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(CodeAccess.NotSpecified, typeElement.Access,
+			    "Unexpected code access.");
+			Assert.IsTrue(typeElement.IsPartial,
+			    "Expected a partial class.");
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+			    "Unexpected type element type.");
 		}		
 		
 		/// <summary>
@@ -891,6 +918,21 @@ namespace NArrange.Tests.CSharp
 			
 			    field = classElement.Children[6] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
+			    Assert.AreEqual("_globalNamespaceTypeField", field.Name,
+			        "Unexpected field name.");
+			    Assert.AreEqual("global::System.Boolean", field.Type,
+			        "Unexpected field type.");
+			    Assert.AreEqual(CodeAccess.Private, field.Access,
+			        "Unexpected field access level.");
+			    Assert.IsNull(field.InitialValue,
+			        "Unexpected field initial value.");
+			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			        "Unexpected number of header comment lines.");
+			    Assert.IsFalse(field.IsStatic,
+			        "Field should not be static.");
+			
+			    field = classElement.Children[7] as FieldElement;
+			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_attributedField", field.Name,
 			        "Unexpected field name.");
 			    Assert.AreEqual("string", field.Type,
@@ -906,7 +948,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, field.Attributes.Count,
 			        "Unexpected number of attributes.");
 			
-			    field = classElement.Children[7] as FieldElement;
+			    field = classElement.Children[8] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("ConstantStr", field.Name,
 			        "Unexpected field name.");
@@ -927,7 +969,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be readonly.");
 			
-			    field = classElement.Children[8] as FieldElement;
+			    field = classElement.Children[9] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_volatileField", field.Name,
 			        "Unexpected field name.");
@@ -950,7 +992,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
 			
-			    field = classElement.Children[9] as FieldElement;
+			    field = classElement.Children[10] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val1, _val2", field.Name,
 			        "Unexpected field name.");
@@ -973,7 +1015,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
 			
-			    field = classElement.Children[10] as FieldElement;
+			    field = classElement.Children[11] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val3, _val4, _val5, _val6", field.Name,
 			        "Unexpected field name.");
@@ -1665,9 +1707,9 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of type parameter constraints.");
 			    Assert.AreEqual("class", parameter2.Constraints[0],
 			        "Unexpected type parameter contraint.");
-			    Assert.AreEqual("IComparable", parameter2.Constraints[1],
+			    Assert.AreEqual("IComparable<T2>", parameter2.Constraints[1],
 			        "Unexpected type parameter contraint.");
-			    Assert.AreEqual("IConvertible", parameter2.Constraints[2],
+			    Assert.AreEqual("global::System.IConvertible", parameter2.Constraints[2],
 			        "Unexpected type parameter contraint.");
 			    Assert.AreEqual("new()", parameter2.Constraints[3],
 			        "Unexpected type parameter contraint.");
@@ -1713,6 +1755,12 @@ namespace NArrange.Tests.CSharp
 			        "Class should be static.");
 			    Assert.IsTrue(classElement7.IsSealed,
 			       "Class should be sealed.");
+			    Assert.AreEqual(2, classElement7.Interfaces.Count,
+			        "Unexpected number of interfaces.");
+			    Assert.AreEqual("global::System.IDisposable", classElement7.Interfaces[0],
+			        "Unexpected interface name.");
+			    Assert.AreEqual("IComparable<int>", classElement7.Interfaces[1],
+			        "Unexpected interface name.");
 			
 			    //
 			    // Sample class 8
@@ -2559,6 +2607,5 @@ namespace NArrange.Tests.CSharp
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

@@ -37,7 +37,7 @@ namespace SampleNamespace
 
     internal sealed class SampleClass4<T1, T2> : IComparable, IDisposable
         where T1 : IComparable, IConvertible, new()
-        where T2 : class, IComparable, IConvertible, new()
+        where T2 : class, IComparable<T2>, global::System.IConvertible, new()
     {
         #region IComparable Members
 
@@ -66,8 +66,17 @@ namespace SampleNamespace
     {
     }
 
-    sealed public class SampleClass7
+    sealed public class SampleClass7 : global::System.IDisposable, IComparable<int>
     {
+        public int CompareTo(int obj)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Dispose()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
 
     public abstract class SampleClass8

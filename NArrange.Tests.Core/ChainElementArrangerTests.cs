@@ -117,10 +117,8 @@ namespace NArrange.Tests.Core
 			public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)			
 			{
 				_arrangeCalled = true;
-			}
-		}		
+			}		}		
 		
 		#endregion Other
-
 	}
 }

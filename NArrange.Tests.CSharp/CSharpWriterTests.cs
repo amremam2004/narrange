@@ -223,6 +223,35 @@ namespace NArrange.Tests.CSharp
 		}		
 		
 		/// <summary>
+		/// Tests writing a class with unspecified access.
+		/// </summary>
+		[Test]
+		public void WriteClassUnspecifiedAccessTest()		
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			TypeElement classElement = new TypeElement();
+			classElement.Access = CodeAccess.NotSpecified;
+			classElement.TypeModifiers = TypeModifier.Partial;
+			classElement.Type = TypeElementType.Class;
+			classElement.Name = "TestClass";
+			classElement.AddInterface("IDisposable");
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(classElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "partial class TestClass : IDisposable\r\n" +
+			    "{\r\n}",
+			    text,
+			    "Class element was not written correctly.");
+		}		
+		
+		/// <summary>
 		/// Tests writing a constructor with a constructor reference.
 		/// </summary>
 		[Test]
@@ -505,6 +534,5 @@ namespace NArrange.Tests.CSharp
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

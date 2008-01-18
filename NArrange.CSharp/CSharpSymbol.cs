@@ -136,6 +136,5 @@ namespace NArrange.CSharp
 		public const char TypeImplements = ':';		
 		
 		#endregion Constants
-
 	}
 }

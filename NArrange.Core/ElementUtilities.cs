@@ -144,6 +144,5 @@ namespace NArrange.Core
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

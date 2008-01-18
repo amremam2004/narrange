@@ -57,6 +57,5 @@ namespace NArrange.Core
 		ReadOnlyCollection<string> Parse(string projectFile);		
 		
 		#endregion Methods
-
 	}
 }

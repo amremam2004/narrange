@@ -106,6 +106,5 @@ namespace NArrange.Core.CodeElements
 		void VisitUsingElement(UsingElement element);		
 		
 		#endregion Methods
-
 	}
 }

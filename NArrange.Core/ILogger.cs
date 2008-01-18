@@ -54,6 +54,5 @@ namespace NArrange.Core
 		void LogMessage(LogLevel level, string message, params object[] args);		
 		
 		#endregion Methods
-
 	}
 }

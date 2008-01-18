@@ -62,6 +62,5 @@ namespace NArrange.Core.Configuration
 		}		
 		
 		#endregion Properties
-
 	}
 }

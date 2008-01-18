@@ -373,10 +373,8 @@ namespace NArrange.Core.Configuration
 				{
 				    return _operatorType;
 				}
-			}
-		}		
+			}		}		
 		
 		#endregion Other
-
 	}
 }

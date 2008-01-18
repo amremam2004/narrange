@@ -63,6 +63,5 @@ namespace NArrange.Core
 		bool CanArrange(ICodeElement codeElement);		
 		
 		#endregion Methods
-
 	}
 }

@@ -187,6 +187,5 @@ namespace NArrange.Tests.CSharp
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

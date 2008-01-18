@@ -187,6 +187,5 @@ namespace NArrange.Core.CodeElements
 		protected abstract MemberElement DoMemberClone();		
 		
 		#endregion Protected Methods
-
 	}
 }

@@ -89,34 +89,7 @@ namespace NArrange.Core
 			bool success = true;
 			_filesProcessed = 0;
 			
-			try
-			{
-			    LoadConfiguration(_configFile);
-			}
-			catch (InvalidOperationException xmlEx)
-			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, xmlEx.Message);
-			    success = false;
-			}
-			catch (IOException ioEx)
-			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, ioEx.Message);
-			    success = false;
-			}
-			catch (UnauthorizedAccessException authEx)
-			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, authEx.Message);
-			    success = false;
-			}
-			catch (TargetInvocationException invEx)
-			{
-			    LogMessage(LogLevel.Error, "Unable to load extension assembly from configuration file {0}: {1}",
-			        _configFile, invEx.Message);
-			    success = false;
-			}
+			success = InitializeConfiguration();
 			
 			if (success)
 			{
@@ -160,6 +133,78 @@ namespace NArrange.Core
 			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
 			
 			return success;
+		}		
+		
+		/// <summary>
+		/// Determines whether or not the specified file can be parsed
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public bool CanParse(string inputFile)		
+		{
+			InitializeConfiguration();
+			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
+		}		
+		
+		/// <summary>
+		/// Retrieves an extension handler for a project file
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <returns></returns>
+		public SourceHandler GetProjectHandler(string filename)		
+		{
+			InitializeConfiguration();
+			string extension = GetExtension(filename);
+			return _projectExtensionHandlers[extension];
+		}		
+		
+		/// <summary>
+		/// Retrieves an extension handler
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <returns></returns>
+		public SourceHandler GetSourceHandler(string filename)		
+		{
+			InitializeConfiguration();
+			string extension = GetExtension(filename);
+			return _sourceExtensionHandlers[extension];
+		}		
+		
+		/// <summary>
+		/// Determines whether or not the specified file is a project
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public bool IsProject(string inputFile)		
+		{
+			InitializeConfiguration();
+			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
+		}		
+		
+		/// <summary>
+		/// Parses code elements from the input file
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)		
+		{
+			InitializeConfiguration();
+			
+			ReadOnlyCollection<ICodeElement> elements = null;
+			SourceHandler sourceHandler = GetSourceHandler(inputFile);
+			if (sourceHandler != null)
+			{
+			    ICodeParser parser = sourceHandler.CodeParser;
+			    if (parser != null)
+			    {
+			        using (StreamReader reader = new StreamReader(inputFile, Encoding.Default))
+			        {
+			            elements = parser.Parse(reader);
+			        }
+			    }
+			}
+			
+			return elements;
 		}		
 		
 		#endregion Public Methods
@@ -323,16 +368,6 @@ namespace NArrange.Core
 		}		
 		
 		/// <summary>
-		/// Determines whether or not the specified file can be parsed
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		private bool CanParse(string inputFile)		
-		{
-			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}		
-		
-		/// <summary>
 		/// Gets the file extension
 		/// </summary>
 		/// <param name="inputFile"></param>
@@ -342,36 +377,40 @@ namespace NArrange.Core
 			return Path.GetExtension(inputFile).TrimStart('.');
 		}		
 		
-		/// <summary>
-		/// Retrieves an extension handler for a project file
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		private SourceHandler GetProjectHandler(string filename)		
+		private bool InitializeConfiguration()		
 		{
-			string extension = GetExtension(filename);
-			return _projectExtensionHandlers[extension];
-		}		
-		
-		/// <summary>
-		/// Retrieves an extension handler
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		private SourceHandler GetSourceHandler(string filename)		
-		{
-			string extension = GetExtension(filename);
-			return _sourceExtensionHandlers[extension];
-		}		
-		
-		/// <summary>
-		/// Determines whether or not the specified file is a project
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		private bool IsProject(string inputFile)		
-		{
-			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
+			bool success = true;
+			
+			try
+			{
+			    LoadConfiguration(_configFile);
+			}
+			catch (InvalidOperationException xmlEx)
+			{
+			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
+			        _configFile, xmlEx.Message);
+			    success = false;
+			}
+			catch (IOException ioEx)
+			{
+			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
+			        _configFile, ioEx.Message);
+			    success = false;
+			}
+			catch (UnauthorizedAccessException authEx)
+			{
+			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
+			        _configFile, authEx.Message);
+			    success = false;
+			}
+			catch (TargetInvocationException invEx)
+			{
+			    LogMessage(LogLevel.Error, "Unable to load extension assembly from configuration file {0}: {1}",
+			        _configFile, invEx.Message);
+			    success = false;
+			}
+			
+			return success;
 		}		
 		
 		/// <summary>
@@ -431,22 +470,6 @@ namespace NArrange.Core
 		}		
 		
 		/// <summary>
-		/// Parses code elements from the input file
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		private ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)		
-		{
-			ReadOnlyCollection<ICodeElement> elements;
-			ICodeParser parser = GetSourceHandler(inputFile).CodeParser;
-			using (StreamReader reader = new StreamReader(inputFile, Encoding.Default))
-			{
-			    elements = parser.Parse(reader);
-			}
-			return elements;
-		}		
-		
-		/// <summary>
 		/// Writes arranged elements to the output file
 		/// </summary>
 		/// <param name="outputFile"></param>
@@ -490,6 +513,5 @@ namespace NArrange.Core
 		}		
 		
 		#endregion Private Methods
-
 	}
 }

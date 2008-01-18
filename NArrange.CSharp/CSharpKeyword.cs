@@ -96,6 +96,11 @@ namespace NArrange.CSharp
 		public const string External = "extern";		
 		
 		/// <summary>
+		/// global
+		/// </summary>
+		public const string Global = "global";		
+		
+		/// <summary>
 		/// implicit
 		/// </summary>
 		public const string Implicit = "implicit";		
@@ -216,6 +221,5 @@ namespace NArrange.CSharp
             CSharpSymbol.BeginParamList + CSharpSymbol.EndParamList;		
 		
 		#endregion Read-Only Fields
-
 	}
 }

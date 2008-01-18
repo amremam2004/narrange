@@ -116,6 +116,5 @@ namespace NArrange.Tests.CSharp
 		}		
 		
 		#endregion Public Methods
-
 	}
 }

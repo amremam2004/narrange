@@ -137,6 +137,5 @@ namespace NArrange.Core
 		}		
 		
 		#endregion Private Properties
-
 	}
 }

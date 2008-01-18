@@ -55,6 +55,5 @@ namespace NArrange.Core
 		void InsertElement(ICodeElement parentElement, ICodeElement codeElement);		
 		
 		#endregion Methods
-
 	}
 }
