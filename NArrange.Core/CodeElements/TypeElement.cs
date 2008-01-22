@@ -42,10 +42,10 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Class/struct code element
 	/// </summary>
-	public class TypeElement : AttributedElement	
+	public class TypeElement : AttributedElement
 	{
 		#region Fields
-		
+
 		private object _interacesLock = new object();		
 		private List<string> _interfaces;		
 		private TypeElementType _type;		
@@ -54,91 +54,91 @@ namespace NArrange.Core.CodeElements
 		private object _typeParametersLock = new object();		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Type;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the collection of implemented interface names for the type
 		/// definition.
 		/// </summary>
-		public ReadOnlyCollection<string> Interfaces		
+		public ReadOnlyCollection<string> Interfaces
 		{
 			get
 			{
 			    return BaseInterfaces.AsReadOnly();
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the type is abstract
 		/// </summary>
-		public bool IsAbstract		
+		public bool IsAbstract
 		{
 			get
 			{
 			    return (_typeModifiers & TypeModifier.Abstract) == TypeModifier.Abstract;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the type is a partial class
 		/// </summary>
-		public bool IsPartial		
+		public bool IsPartial
 		{
 			get
 			{
 			    return (_typeModifiers & TypeModifier.Partial) == TypeModifier.Partial;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the type is sealed
 		/// </summary>
-		public bool IsSealed		
+		public bool IsSealed
 		{
 			get
 			{
 			    return (_typeModifiers & TypeModifier.Sealed) == TypeModifier.Sealed;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the type is static
 		/// </summary>
-		public bool IsStatic		
+		public bool IsStatic
 		{
 			get
 			{
 			    return (_typeModifiers & TypeModifier.Static) == TypeModifier.Static;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the type is unsafe
 		/// </summary>
-		public bool IsUnsafe		
+		public bool IsUnsafe
 		{
 			get
 			{
 			    return (_typeModifiers & TypeModifier.Unsafe) == TypeModifier.Unsafe;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the type of the type element
 		/// </summary>
-		public TypeElementType Type		
+		public TypeElementType Type
 		{
 			get
 			{
@@ -148,12 +148,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _type = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the type attributes
 		/// </summary>
-		public TypeModifier TypeModifiers		
+		public TypeModifier TypeModifiers
 		{
 			get
 			{
@@ -163,12 +163,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _typeModifiers = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		public List<TypeParameter> TypeParameters		
+		public List<TypeParameter> TypeParameters
 		{
 			get
 			{
@@ -185,16 +185,16 @@ namespace NArrange.Core.CodeElements
 			
 			    return _typeParameters;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Properties
-		
+
 		/// <summary>
 		/// List of implemented interface names
 		/// </summary>
-		protected List<string> BaseInterfaces		
+		protected List<string> BaseInterfaces
 		{
 			get
 			{
@@ -211,40 +211,40 @@ namespace NArrange.Core.CodeElements
 			
 			    return _interfaces;
 			}
-		}		
-		
+		}
+
 		#endregion Protected Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitTypeElement(this);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Adds an interface implementation to the type definition.
 		/// </summary>
 		/// <param name="interfaceName"></param>
-		public void AddInterface(string interfaceName)		
+		public void AddInterface(string interfaceName)
 		{
 			BaseInterfaces.Add(interfaceName);
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Clones an attributed element
 		/// </summary>
 		/// <returns></returns>
-		protected override AttributedElement DoAttributedClone()		
+		protected override AttributedElement DoAttributedClone()
 		{
 			TypeElement clone = new TypeElement();
 			
@@ -264,8 +264,8 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

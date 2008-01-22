@@ -8,7 +8,7 @@
 		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
 		<Major>0</Major>
 		<Minor>1</Minor>
-		<Build>01</Build>
+		<Build>02</Build>
 	</PropertyGroup>
 	<ItemGroup>
 		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>
@@ -31,7 +31,10 @@
 					Exclude="$(MSBuildProjectDirectory)\**\*svn\**\*.*;
 						$(MSBuildProjectDirectory)\**\bin\**\*.*;
 						$(MSBuildProjectDirectory)\**\obj\**\*.*;
-						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;">
+						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;
+						$(MSBuildProjectDirectory)\TestResult.xml;
+						$(MSBuildProjectDirectory)\**\*.suo;;
+						$(MSBuildProjectDirectory)\**\*.user;">
 			<Output ItemName="SourceFiles" TaskParameter="Include"/>
 		</CreateItem>
 

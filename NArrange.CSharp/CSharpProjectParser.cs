@@ -46,16 +46,16 @@ namespace NArrange.CSharp
 	/// <summary>
 	/// Parses a C# project for individual source file names
 	/// </summary>
-	public class CSharpProjectParser : IProjectParser	
+	public class CSharpProjectParser : IProjectParser
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Parses source file names from a project file.
 		/// </summary>
 		/// <param name="projectFile"></param>
 		/// <returns>A list of source code filenames</returns>
-		public ReadOnlyCollection<string> Parse(string projectFile)		
+		public ReadOnlyCollection<string> Parse(string projectFile)
 		{
 			if (projectFile == null)
 			{
@@ -87,8 +87,8 @@ namespace NArrange.CSharp
 			}
 			
 			return sourceFiles.AsReadOnly();
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

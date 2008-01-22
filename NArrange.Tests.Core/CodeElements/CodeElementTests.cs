@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture base for the CodeElement class
 	/// </summary>
 	public abstract class CodeElementTests<TCodeElement>
-		where TCodeElement : CodeElement, new()	
+		where TCodeElement : CodeElement, new()
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the clone method
 		/// </summary>
 		[Test]
-		public void CloneTest()		
+		public void CloneTest()
 		{
 			TCodeElement original = DoCreateClonePrototype();
 			TCodeElement clone = original.Clone() as TCodeElement;
@@ -30,13 +30,13 @@ namespace NArrange.Tests.Core.CodeElements
 			Assert.AreNotSame(original, clone, "Clone should be a different instance.");
 			
 			DoVerifyClone(original, clone);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests getting and setting the parent property
 		/// </summary>
 		[Test]
-		public virtual void ParentTest()		
+		public virtual void ParentTest()
 		{
 			TCodeElement parentElement = new TCodeElement();
 			TCodeElement childElement = new TCodeElement();
@@ -61,46 +61,46 @@ namespace NArrange.Tests.Core.CodeElements
 			
 			parentElement.RemoveChild(childElement);
 			Assert.IsNull(childElement.Parent, "Parent should not be set.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the ToString method
 		/// </summary>
 		[Test]
-		public virtual void ToStringTest()		
+		public virtual void ToStringTest()
 		{
 			DoToStringTest();
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance to be cloned
 		/// </summary>
 		/// <returns></returns>
-		protected abstract TCodeElement DoCreateClonePrototype();		
-		
+		protected abstract TCodeElement DoCreateClonePrototype();
+
 		/// <summary>
 		/// Performs the ToString test
 		/// </summary>
-		protected virtual void DoToStringTest()		
+		protected virtual void DoToStringTest()
 		{
 			TCodeElement codeElement = new TCodeElement();
 			codeElement.Name = "Element";
 			string str = codeElement.ToString();
 			Assert.AreEqual("Element", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies that a clone has the same state as the original
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);		
-		
+		protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);
+
 		#endregion Protected Methods
 	}
 }

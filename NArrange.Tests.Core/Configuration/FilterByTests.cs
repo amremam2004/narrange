@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the FilterBy class
 	/// </summary>
 	[TestFixture]
-	public class FilterByTests	
+	public class FilterByTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new FilterBy
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			FilterBy filterBy = new FilterBy();
 			
@@ -30,13 +30,13 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			Assert.IsNull(filterBy.Condition,
 			    "Unexpected default value for Condition.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the ToString method
 		/// </summary>
 		[Test]
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			FilterBy filterBy = new FilterBy();
 			filterBy.Condition = "$(Access) == 'Protected'";
@@ -45,8 +45,8 @@ namespace NArrange.Tests.Core.Configuration
 			
 			Assert.AreEqual("Filter by: $(Access) == 'Protected'", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

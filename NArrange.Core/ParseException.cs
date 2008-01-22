@@ -41,68 +41,68 @@ namespace NArrange.Core
 	/// <summary>
 	/// Exception thrown by parsers
 	/// </summary>
-	public class ParseException : Exception	
+	public class ParseException : Exception
 	{
 		#region Fields
-		
+
 		private int _column;		
 		private int _lineNumber;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ParseException
 		/// </summary>
 		/// <param name="message">Message text</param>
 		/// <param name="lineNumber">Line number</param>
 		/// <param name="column">Column</param>
-		public ParseException(string message, int lineNumber, int column)		
+		public ParseException(string message, int lineNumber, int column)
 			: base(message)
 		{
 			_lineNumber = lineNumber;
 			_column = column;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the character position of the parse error
 		/// </summary>
-		public int Column		
+		public int Column
 		{
 			get
 			{
 			    return _column;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Line number
 		/// </summary>
-		public int LineNumber		
+		public int LineNumber
 		{
 			get
 			{
 			    return _lineNumber;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the exception message.
 		/// </summary>
-		public override string Message		
+		public override string Message
 		{
 			get
 			{
 			    return string.Format("{0}: Line {1}, Column {2}",
 			        base.Message, LineNumber, Column);
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
 	}
 }

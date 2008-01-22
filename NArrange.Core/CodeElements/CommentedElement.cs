@@ -42,21 +42,21 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Code element base class for elements with header comments.
 	/// </summary>
-	public abstract class CommentedElement : CodeElement	
+	public abstract class CommentedElement : CodeElement
 	{
 		#region Fields
-		
+
 		private List<ICommentLine> _commentLines;		
 		private object _commentLinesLock = new object();		
 		
 		#endregion Fields
-		
+
 		#region Protected Properties
-		
+
 		/// <summary>
 		/// Base header comment lines collection
 		/// </summary>
-		protected List<ICommentLine> BaseHeaderCommentLines		
+		protected List<ICommentLine> BaseHeaderCommentLines
 		{
 			get
 			{
@@ -73,68 +73,68 @@ namespace NArrange.Core.CodeElements
 			
 			    return _commentLines;
 			}
-		}		
-		
+		}
+
 		#endregion Protected Properties
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the collection of header comment lines
 		/// </summary>
-		public ReadOnlyCollection<ICommentLine> HeaderCommentLines		
+		public ReadOnlyCollection<ICommentLine> HeaderCommentLines
 		{
 			get
 			{
 			    return BaseHeaderCommentLines.AsReadOnly();
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Adds a header comment line to this element
 		/// </summary>
 		/// <param name="commentLine"></param>
-		public void AddHeaderCommentLine(ICommentLine commentLine)		
+		public void AddHeaderCommentLine(ICommentLine commentLine)
 		{
 			BaseHeaderCommentLines.Add(commentLine);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Adds a header comment line to this element
 		/// </summary>
 		/// <param name="commentLine"></param>
-		public void AddHeaderCommentLine(string commentLine)		
+		public void AddHeaderCommentLine(string commentLine)
 		{
 			BaseHeaderCommentLines.Add(new CommentLine(commentLine));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Adds a header comment line to this element
 		/// </summary>
 		/// <param name="commentLine"></param>
 		/// <param name="xmlComment"></param>
-		public void AddHeaderCommentLine(string commentLine, bool xmlComment)		
+		public void AddHeaderCommentLine(string commentLine, bool xmlComment)
 		{
 			BaseHeaderCommentLines.Add(new CommentLine(commentLine, xmlComment));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Clears all header comments.
 		/// </summary>
-		public void ClearHeaderCommentLines()		
+		public void ClearHeaderCommentLines()
 		{
 			this.BaseHeaderCommentLines.Clear();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a clone of the instance and assigns any state
 		/// </summary>
 		/// <returns></returns>
-		public override object Clone()		
+		public override object Clone()
 		{
 			CommentedElement clone = base.Clone() as CommentedElement;
 			
@@ -145,8 +145,8 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

@@ -41,100 +41,100 @@ namespace NArrange.CSharp
 	/// <summary>
 	/// C# character constants
 	/// </summary>
-	public static class CSharpSymbol	
+	public static class CSharpSymbol
 	{
 		#region Constants
-		
+
 		/// <summary>
 		/// Alias separator
 		/// </summary>
-		public const char AliasSeparator = ',';		
-		
+		public const char AliasSeparator = ',';
+
 		/// <summary>
 		/// Assignment
 		/// </summary>
-		public const char Assignment = '=';		
-		
+		public const char Assignment = '=';
+
 		/// <summary>
 		/// Beginning of attribute
 		/// </summary>
-		public const char BeginAttribute = '[';		
-		
+		public const char BeginAttribute = '[';
+
 		/// <summary>
 		/// Beginning of block
 		/// </summary>
-		public const char BeginBlock = '{';		
-		
+		public const char BeginBlock = '{';
+
 		/// <summary>
 		/// Beginning of character literal
 		/// </summary>
-		public const char BeginCharLiteral = '\'';		
-		
+		public const char BeginCharLiteral = '\'';
+
 		/// <summary>
 		/// Beginning of comment
 		/// </summary>
-		public const char BeginComment = '/';		
-		
+		public const char BeginComment = '/';
+
 		/// <summary>
 		/// End of string
 		/// </summary>
-		public const char BeginFinalizer = '~';		
-		
+		public const char BeginFinalizer = '~';
+
 		/// <summary>
 		/// Beginning of generic parameter
 		/// </summary>
-		public const char BeginGeneric = '<';		
-		
+		public const char BeginGeneric = '<';
+
 		/// <summary>
 		/// Beginning of parameter list
 		/// </summary>
-		public const char BeginParamList = '(';		
-		
+		public const char BeginParamList = '(';
+
 		/// <summary>
 		/// Beginning of string
 		/// </summary>
-		public const char BeginString = '"';		
-		
+		public const char BeginString = '"';
+
 		/// <summary>
 		/// Beginning of block comment
 		/// </summary>
-		public const char BlockCommentModifier = '*';		
-		
+		public const char BlockCommentModifier = '*';
+
 		/// <summary>
 		/// End of attribute
 		/// </summary>
-		public const char EndAttribute = ']';		
-		
+		public const char EndAttribute = ']';
+
 		/// <summary>
 		/// End of block
 		/// </summary>
-		public const char EndBlock = '}';		
-		
+		public const char EndBlock = '}';
+
 		/// <summary>
 		/// End of generic parameter
 		/// </summary>
-		public const char EndGeneric = '>';		
-		
+		public const char EndGeneric = '>';
+
 		/// <summary>
 		/// End of statement
 		/// </summary>
-		public const char EndOfStatement = ';';		
-		
+		public const char EndOfStatement = ';';
+
 		/// <summary>
 		/// End of parameter list
 		/// </summary>
-		public const char EndParamList = ')';		
-		
+		public const char EndParamList = ')';
+
 		/// <summary>
 		/// Preprocessor
 		/// </summary>
-		public const char Preprocessor = '#';		
-		
+		public const char Preprocessor = '#';
+
 		/// <summary>
 		/// Type inheritance 
 		/// </summary>
-		public const char TypeImplements = ':';		
-		
+		public const char TypeImplements = ':';
+
 		#endregion Constants
 	}
 }

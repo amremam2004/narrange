@@ -57,6 +57,7 @@
     <Compile Include="CodeElements\NamespaceElementTests.cs" />
     <Compile Include="ConditionExpressionEvaluatorTests.cs" />
     <Compile Include="Configuration\CodeConfigurationTests.cs" />
+    <Compile Include="Configuration\TabConfigurationTests.cs" />
     <Compile Include="Configuration\ExtensionConfigurationTests.cs" />
     <Compile Include="Configuration\ElementConfigurationTests.cs" />
     <Compile Include="Configuration\ConditionExpressionParserTests.cs" />

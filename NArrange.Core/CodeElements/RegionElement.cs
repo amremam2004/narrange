@@ -42,48 +42,48 @@ namespace NArrange.Core.CodeElements
 	/// Region element
 	/// </summary>
 	/// <remarks>Region elements are not parsed.</remarks>
-	public class RegionElement : CodeElement	
+	public class RegionElement : CodeElement
 	{
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override CodeElement DoClone()		
+		protected override CodeElement DoClone()
 		{
 			return new RegionElement();
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.NotSpecified;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitRegionElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

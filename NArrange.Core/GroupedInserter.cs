@@ -45,34 +45,34 @@ namespace NArrange.Core
 	/// <summary>
 	/// Grouped inserter
 	/// </summary>
-	public class GroupedInserter : IElementInserter	
+	public class GroupedInserter : IElementInserter
 	{
 		#region Fields
-		
+
 		private Regex _captureRegex;		
 		private GroupBy _groupBy;		
 		private IElementInserter _innerInserter;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new GroupedInserter using the specified grouping configuration
 		/// </summary>
 		/// <param name="groupBy"></param>
-		public GroupedInserter(GroupBy groupBy)		
+		public GroupedInserter(GroupBy groupBy)
 			: this(groupBy, null)
 		{
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a new GroupedInserter using the specified grouping configuration
 		/// and sorter.
 		/// </summary>
 		/// <param name="groupBy"></param>
 		/// <param name="innerInserter"></param>
-		public GroupedInserter(GroupBy groupBy, IElementInserter innerInserter)		
+		public GroupedInserter(GroupBy groupBy, IElementInserter innerInserter)
 		{
 			if (groupBy == null)
 			{
@@ -86,18 +86,18 @@ namespace NArrange.Core
 			{
 			    _captureRegex = new Regex(_groupBy.AttributeCapture);
 			}
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Inserts the element within the parent
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			GroupElement group = null;
 			
@@ -130,12 +130,12 @@ namespace NArrange.Core
 			{
 			    group.AddChild(codeElement);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Gets the name of the group the element falls into
 		/// </summary>
@@ -144,7 +144,7 @@ namespace NArrange.Core
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
 		private string GetGroupName(ElementAttribute elementFilterType, string captureExpression, 
-			ICodeElement codeElement)		
+			ICodeElement codeElement)
 		{
 			string groupName = string.Empty;
 			
@@ -164,8 +164,8 @@ namespace NArrange.Core
 			}
 			
 			return groupName;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

@@ -19,10 +19,10 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the FileArranger class
 	/// </summary>
 	[TestFixture]
-	public class FileArrangerTests	
+	public class FileArrangerTests
 	{
 		#region Fields
-		
+
 		private string _testInvalidExtensionFile;		
 		private string _testInvalidSourceFile;		
 		private string _testProjectFile;		
@@ -31,14 +31,14 @@ namespace NArrange.Tests.Core
 		private string _testValidSourceFile2;		
 		
 		#endregion Fields
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
-		public void ArrangeInvalidConfigurationTest()		
+		public void ArrangeInvalidConfigurationTest()
 		{
 			string testConfiguration = Path.GetTempFileName();
 			File.WriteAllText(testConfiguration, "<xml");
@@ -63,13 +63,13 @@ namespace NArrange.Tests.Core
 			    {
 			    }
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
-		public void ArrangeInvalidExtensionAssemblyTest()		
+		public void ArrangeInvalidExtensionAssemblyTest()
 		{
 			string testConfiguration = Path.GetTempFileName();
 			File.WriteAllText(testConfiguration, 
@@ -106,13 +106,13 @@ namespace NArrange.Tests.Core
 			    {
 			    }
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a single source file with an invalid extension
 		/// </summary>
 		[Test]
-		public void ArrangeInvalidExtensionTest()		
+		public void ArrangeInvalidExtensionTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -121,13 +121,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, "No assembly is registered to handle file"));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a single invalid source file
 		/// </summary>
 		[Test]
-		public void ArrangeInvalidSourceFileTest()		
+		public void ArrangeInvalidSourceFileTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -136,13 +136,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files processed."));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
-		public void ArrangeNonExistantConfigurationTest()		
+		public void ArrangeNonExistantConfigurationTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger("blahblahblahblah.xml", logger);
@@ -151,13 +151,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasPartialMessage(LogLevel.Error, "Unable to load configuration file"));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a project file
 		/// </summary>
 		[Test]
-		public void ArrangeProjectTest()		
+		public void ArrangeProjectTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -166,13 +166,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files processed."));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a read-only source file
 		/// </summary>
 		[Test]
-		public void ArrangeReadOnlySourceFileTest()		
+		public void ArrangeReadOnlySourceFileTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -191,13 +191,13 @@ namespace NArrange.Tests.Core
 			{
 			    File.SetAttributes(_testValidSourceFile1, FileAttributes.Normal);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a single source file
 		/// </summary>
 		[Test]
-		public void ArrangeSingleSourceFileTest()		
+		public void ArrangeSingleSourceFileTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -206,13 +206,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files processed."));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging a solution file
 		/// </summary>
 		[Test]
-		public void ArrangeSolutionTest()		
+		public void ArrangeSolutionTest()
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
@@ -221,13 +221,13 @@ namespace NArrange.Tests.Core
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files processed."));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Performs test fixture setup
 		/// </summary>
 		[TestFixtureSetUp]
-		public void TestFixtureSetup()		
+		public void TestFixtureSetup()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			
@@ -256,13 +256,13 @@ namespace NArrange.Tests.Core
 			contents = GetTestFileContents("ClassMembers.cs");
 			_testInvalidExtensionFile = Path.GetTempFileName() + ".zzz";
 			File.WriteAllText(_testInvalidExtensionFile, contents);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Performs test fixture cleanup
 		/// </summary>
 		[TestFixtureTearDown]
-		public void TestFixtureTearDown()		
+		public void TestFixtureTearDown()
 		{
 			try
 			{
@@ -279,13 +279,13 @@ namespace NArrange.Tests.Core
 			catch
 			{
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
-		private static string GetTestFileContents(string filename)		
+
+		private static string GetTestFileContents(string filename)
 		{
 			string contents = null;
 			
@@ -299,8 +299,8 @@ namespace NArrange.Tests.Core
 			}
 			
 			return contents;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

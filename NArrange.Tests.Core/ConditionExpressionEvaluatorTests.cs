@@ -14,15 +14,15 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the ConditionExpressionEvaluator class
 	/// </summary>
 	[TestFixture]
-	public class ConditionExpressionEvaluatorTests	
+	public class ConditionExpressionEvaluatorTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the Evaluate method with an And expression
 		/// </summary>
 		[Test]
-		public void EvaluateAndTest()		
+		public void EvaluateAndTest()
 		{
 			IConditionExpression expression =
 			   new OperatorExpression(ExpressionOperator.And,
@@ -49,13 +49,13 @@ namespace NArrange.Tests.Core
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with a Contains expression
 		/// </summary>
 		[Test]
-		public void EvaluateContainsTest()		
+		public void EvaluateContainsTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
 			   ExpressionOperator.Contains, new AttributeExpression(ElementAttribute.Name),
@@ -77,13 +77,13 @@ namespace NArrange.Tests.Core
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with an Equal expression
 		/// </summary>
 		[Test]
-		public void EvaluateEqualTest()		
+		public void EvaluateEqualTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
 			   ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
@@ -100,15 +100,15 @@ namespace NArrange.Tests.Core
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with a an operator element that has an 
 		/// unknown operator type.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void EvaluateInvalidOperatorTest()		
+		public void EvaluateInvalidOperatorTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
 			    (ExpressionOperator)int.MinValue, new AttributeExpression(ElementAttribute.Name),
@@ -119,14 +119,14 @@ namespace NArrange.Tests.Core
 			
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with a null element
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void EvaluateNullElementTest()		
+		public void EvaluateNullElementTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
 			    ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
@@ -134,24 +134,24 @@ namespace NArrange.Tests.Core
 			
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with a null expression
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void EvaluateNullExpressionTest()		
+		public void EvaluateNullExpressionTest()
 		{
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    null, new FieldElement());
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the Evaluate method with an Or expression
 		/// </summary>
 		[Test]
-		public void EvaluateOrTest()		
+		public void EvaluateOrTest()
 		{
 			IConditionExpression expression =
 			   new OperatorExpression(ExpressionOperator.Or,
@@ -183,8 +183,8 @@ namespace NArrange.Tests.Core
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

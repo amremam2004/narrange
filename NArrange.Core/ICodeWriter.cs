@@ -39,6 +39,7 @@ using System.IO;
 using System.Text;
 
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.Core
 {
@@ -46,17 +47,30 @@ namespace NArrange.Core
 	/// Interface for writing NArrange code elements to 
 	/// a source file stream.
 	/// </summary>
-	public interface ICodeWriter	
+	public interface ICodeWriter
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Writes code elements to a stream.
 		/// </summary>
 		/// <param name="codeElements">Read only collection of elements</param>
 		/// <param name="writer">Code file writer</param>
-		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);		
-		
+		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);
+
 		#endregion Methods
+
+		#region Properties
+
+		/// <summary>
+		/// Gets or sets the code configuration
+		/// </summary>
+		CodeConfiguration Configuration
+		{
+			get;
+			set;
+		}
+
+		#endregion Properties
 	}
 }

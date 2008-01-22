@@ -14,15 +14,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the CodeConfiguration class
 	/// </summary>
 	[TestFixture]
-	public class CodeConfigurationTests	
+	public class CodeConfigurationTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the Clone method
 		/// </summary>
 		[Test]
-		public void CloneTest()		
+		public void CloneTest()
 		{
 			CodeConfiguration defaultConfig = CodeConfiguration.Default;
 			Assert.IsNotNull(defaultConfig,
@@ -39,13 +39,17 @@ namespace NArrange.Tests.Core.Configuration
 			
 			Assert.AreEqual(defaultConfig.Elements.Count, clonedConfig.Elements.Count,
 			    "Child element state was not copied correctly.");
-		}		
-		
+			Assert.AreEqual(defaultConfig.Handlers.Count, clonedConfig.Handlers.Count,
+			    "Handler state was not copied correctly.");
+			Assert.AreEqual(defaultConfig.Tabs.Style, clonedConfig.Tabs.Style,
+			    "Tab configuration was not copied correctly.");
+		}
+
 		/// <summary>
 		/// Tests the creation of a new CodeConfiguration
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			CodeConfiguration configuration = new CodeConfiguration();
 			
@@ -53,13 +57,22 @@ namespace NArrange.Tests.Core.Configuration
 			    "Elements collection should not be null.");
 			Assert.AreEqual(0, configuration.Elements.Count,
 			    "Elements collection should be empty.");
-		}		
-		
+			
+			//
+			// Test the default tab configuration
+			//
+			Assert.IsNotNull(configuration.Tabs, "Tabs configuration should not be null.");
+			Assert.AreEqual(TabStyle.Tabs, configuration.Tabs.Style,
+			    "Unexpected default tab style.");
+			Assert.AreEqual(4, configuration.Tabs.SpacesPerTab,
+			    "Unexpected defatult number of spaces per tab.");
+		}
+
 		/// <summary>
 		/// Tests the Default configuration property
 		/// </summary>
 		[Test]
-		public void DefaultTest()		
+		public void DefaultTest()
 		{
 			CodeConfiguration defaultConfig = CodeConfiguration.Default;
 			Assert.IsNotNull(defaultConfig,
@@ -68,7 +81,21 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.AreEqual(3, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 			
+			//
+			// Handlers
+			//
+			Assert.IsNotNull(defaultConfig.Handlers,
+			    "Handlers collection should not be null.");
+			Assert.AreEqual(1, defaultConfig.Handlers.Count,
+			    "Unexpected number of default handlers.");
+			Assert.IsTrue(defaultConfig.Handlers[0].AssemblyName.Contains("NArrange.CSharp"));
 			
+			Assert.IsNotNull(defaultConfig.Tabs,
+			    "Tab configuration should not be null.");
+			Assert.AreEqual(TabStyle.Tabs, defaultConfig.Tabs.Style, 
+			    "Unexpected tab style.");
+			Assert.AreEqual(4, defaultConfig.Tabs.SpacesPerTab, 
+			    "Unexpected number of spaces per tab.");
 			
 			//
 			// Using elements
@@ -104,13 +131,13 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected element type.");
 			
 			// TODO: Verify entire heirarchy
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests serialization and deserialization
 		/// </summary>
 		[Test]
-		public void SerializeAndDeserializeTest()		
+		public void SerializeAndDeserializeTest()
 		{
 			CodeConfiguration origConfig = new CodeConfiguration();
 			
@@ -172,8 +199,8 @@ namespace NArrange.Tests.Core.Configuration
 			{
 			    File.Delete(tempFile);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

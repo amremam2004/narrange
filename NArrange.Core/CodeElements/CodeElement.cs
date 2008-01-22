@@ -42,57 +42,57 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Code element base class.
 	/// </summary>
-	public abstract class CodeElement : ICodeElement	
+	public abstract class CodeElement : ICodeElement
 	{
 		#region Constructors
-		
+
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		protected CodeElement()		
+		protected CodeElement()
 		{
 			//
 			// Default property values
 			//
 			_name = string.Empty;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Fields
-		
+
 		private List<ICodeElement> _children;		
 		private object _childrenLock = new object();		
 		private string _name;		
 		private ICodeElement _parent;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the collection of children for this element
 		/// </summary>
-		public ReadOnlyCollection<ICodeElement> Children		
+		public ReadOnlyCollection<ICodeElement> Children
 		{
 			get
 			{
 			    return BaseChildren.AsReadOnly();
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public abstract ElementType ElementType		
+		public abstract ElementType ElementType
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the code element name.
 		/// </summary>
-		public string Name		
+		public string Name
 		{
 			get
 			{
@@ -102,12 +102,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _name = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the parent element
 		/// </summary>
-		public ICodeElement Parent		
+		public ICodeElement Parent
 		{
 			get
 			{
@@ -129,16 +129,16 @@ namespace NArrange.Core.CodeElements
 			        }
 			    }
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Properties
-		
+
 		/// <summary>
 		/// Gets the base child collection
 		/// </summary>
-		protected List<ICodeElement> BaseChildren		
+		protected List<ICodeElement> BaseChildren
 		{
 			get
 			{
@@ -155,36 +155,36 @@ namespace NArrange.Core.CodeElements
 			
 			    return _children;
 			}
-		}		
-		
+		}
+
 		#endregion Protected Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public abstract void Accept(ICodeElementVisitor visitor);		
-		
+		public abstract void Accept(ICodeElementVisitor visitor);
+
 		/// <summary>
 		/// Adds a child to this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		public void AddChild(ICodeElement childElement)		
+		public void AddChild(ICodeElement childElement)
 		{
 			if (childElement != null && !BaseChildren.Contains(childElement))
 			{
 			    BaseChildren.Add(childElement);
 			    childElement.Parent = this;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Removes all child elements
 		/// </summary>
-		public void ClearChildren()		
+		public void ClearChildren()
 		{
 			for (int childIndex = 0; childIndex < Children.Count; childIndex++)
 			{
@@ -196,13 +196,13 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			BaseChildren.Clear();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Clones the 
 		/// </summary>
 		/// <returns></returns>
-		public virtual object Clone()		
+		public virtual object Clone()
 		{
 			CodeElement clone = DoClone();
 			
@@ -219,50 +219,50 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Inserts a child element at the specified index
 		/// </summary>
 		/// <param name="index"></param>
 		/// <param name="codeElement"></param>
-		public void InsertChild(int index, ICodeElement codeElement)		
+		public void InsertChild(int index, ICodeElement codeElement)
 		{
 			BaseChildren.Insert(index, codeElement);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Removes a child from this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		public void RemoveChild(ICodeElement childElement)		
+		public void RemoveChild(ICodeElement childElement)
 		{
 			if (childElement != null && BaseChildren.Contains(childElement))
 			{
 			    BaseChildren.Remove(childElement);
 			    childElement.Parent = null;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation of this object.
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return _name;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of the instance and assigns any state
 		/// </summary>
 		/// <returns></returns>
-		protected abstract CodeElement DoClone();		
-		
+		protected abstract CodeElement DoClone();
+
 		#endregion Protected Methods
 	}
 }

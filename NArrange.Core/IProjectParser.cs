@@ -45,17 +45,17 @@ namespace NArrange.Core
 	/// <summary>
 	/// Interface for parsing individual filenames from a project.
 	/// </summary>
-	public interface IProjectParser	
+	public interface IProjectParser
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Parses source file names from a project file.
 		/// </summary>
 		/// <param name="projectFile"></param>
 		/// <returns>A list of source code filenames</returns>
-		ReadOnlyCollection<string> Parse(string projectFile);		
-		
+		ReadOnlyCollection<string> Parse(string projectFile);
+
 		#endregion Methods
 	}
 }

@@ -41,18 +41,18 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Operator expression
 	/// </summary>
-	public class OperatorExpression : IConditionExpression	
+	public class OperatorExpression : IConditionExpression
 	{
 		#region Fields
-		
+
 		private IConditionExpression _left;		
 		private ExpressionOperator _operatorType;		
 		private IConditionExpression _right;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new operator expression.
 		/// </summary>
@@ -60,59 +60,59 @@ namespace NArrange.Core.Configuration
 		/// <param name="left"></param>
 		/// <param name="right"></param>
 		public OperatorExpression(ExpressionOperator operatorType, 
-			IConditionExpression left, IConditionExpression right)		
+			IConditionExpression left, IConditionExpression right)
 		{
 			_operatorType = operatorType;
 			_left = left;
 			_right = right;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Left expression
 		/// </summary>
-		public IConditionExpression Left		
+		public IConditionExpression Left
 		{
 			get 
 			{
 			    return _left;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the expression operator
 		/// </summary>
-		public ExpressionOperator Operator		
+		public ExpressionOperator Operator
 		{
 			get
 			{
 			    return _operatorType;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Right expression
 		/// </summary>
-		public IConditionExpression Right		
+		public IConditionExpression Right
 		{
 			get 
 			{
 			    return _right;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			string operatorString = string.Empty;
 			switch(_operatorType)
@@ -141,8 +141,8 @@ namespace NArrange.Core.Configuration
 			
 			return string.Format("({0} {1} {2})", 
 			    Left, operatorString, Right);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

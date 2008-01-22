@@ -44,32 +44,32 @@ namespace NArrange.Core.Configuration
 	/// Specifies source code extension
 	/// </summary>
 	[XmlType("Extension")]
-	public class ExtensionConfiguration : ICloneable	
+	public class ExtensionConfiguration : ICloneable
 	{
 		#region Fields
-		
+
 		private string _name;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ExtensionConfiguration instance
 		/// </summary>
-		public ExtensionConfiguration()		
+		public ExtensionConfiguration()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the extension name
 		/// </summary>
 		[XmlAttribute("Name")]
-		public string Name		
+		public string Name
 		{
 			get
 			{
@@ -79,34 +79,34 @@ namespace NArrange.Core.Configuration
 			{
 			    _name = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			ExtensionConfiguration clone = new ExtensionConfiguration();
 			
 			clone._name = _name;
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Extension: {0}", this._name);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

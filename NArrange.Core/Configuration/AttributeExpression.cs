@@ -41,53 +41,53 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Element attribute expression
 	/// </summary>
-	public class AttributeExpression : LeafExpression	
+	public class AttributeExpression : LeafExpression
 	{
 		#region Fields
-		
+
 		private ElementAttribute _elementAttribute;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new attribute expression
 		/// </summary>
 		/// <param name="elementAttribute"></param>
-		public AttributeExpression(ElementAttribute elementAttribute)		
+		public AttributeExpression(ElementAttribute elementAttribute)
 		{
 			_elementAttribute = elementAttribute;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element attribute specified by the expression
 		/// </summary>
-		public ElementAttribute ElementAttribute		
+		public ElementAttribute ElementAttribute
 		{
 			get
 			{
 			    return _elementAttribute;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("$({0})", _elementAttribute);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

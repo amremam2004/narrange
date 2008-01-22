@@ -12,33 +12,34 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the ElementArranger class.
 	/// </summary>
 	[TestFixture]
-	public class ElementArrangerTests	
+	public class ElementArrangerTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Test the construction with a null inserter
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullInserterTest()		
+		public void CreateWithNullInserterTest()
 		{
 			TestNullInserterArranger arranger = new TestNullInserterArranger();
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Other
-		
-		private class TestNullInserterArranger : ElementArranger		
+
+		private class TestNullInserterArranger : ElementArranger
 		{
-			public TestNullInserterArranger()			
+			public TestNullInserterArranger()
 				: base(ElementType.Constructor, null,
                 new ElementFilter("$(Access) == 'Public'"),
                 null)
 			{
-			}		}		
-		
+			}
+		}
+
 		#endregion Other
 	}
 }

@@ -61,6 +61,7 @@
     <Compile Include="CodeElements\UsingElement.cs" />
     <Compile Include="CodeElements\CommentLine.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
+    <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
     <Compile Include="Configuration\HandlerConfiguration.cs" />
     <Compile Include="Configuration\LeafExpression.cs" />

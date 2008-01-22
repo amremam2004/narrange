@@ -43,20 +43,20 @@ namespace NArrange.Core
 	/// <summary>
 	/// Inserts an element in the code arrangement
 	/// </summary>
-	public class DefaultElementInserter : IElementInserter	
+	public class DefaultElementInserter : IElementInserter
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Inserts the element in the code arrangement
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		public virtual void InsertElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public virtual void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			parentElement.AddChild(codeElement);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

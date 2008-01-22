@@ -44,10 +44,10 @@ namespace NArrange.Core
 	/// Class for creating ElementArranger instances based on configuration
 	/// information.
 	/// </summary>
-	public static class ElementArrangerFactory	
+	public static class ElementArrangerFactory
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates an element arranger using the specified configuration information.
 		/// </summary>
@@ -55,7 +55,7 @@ namespace NArrange.Core
 		/// <param name="parentRegion"></param>
 		/// <returns>Returns an IElementArranger if succesful, otherwise null</returns>
 		public static IElementArranger CreateElementArranger(
-			ConfigurationElement configuration, RegionConfiguration parentRegion)		
+			ConfigurationElement configuration, RegionConfiguration parentRegion)
 		{
 			IElementArranger arranger = null;
 			
@@ -99,18 +99,18 @@ namespace NArrange.Core
 			}
 			
 			return arranger;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Creates an element filter
 		/// </summary>
 		/// <param name="filterBy"></param>
 		/// <returns></returns>
-		private static IElementFilter CreateElementFilter(FilterBy filterBy)		
+		private static IElementFilter CreateElementFilter(FilterBy filterBy)
 		{
 			IElementFilter filter = null;
 			
@@ -120,8 +120,8 @@ namespace NArrange.Core
 			}
 			
 			return filter;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates an element inserter
 		/// </summary>
@@ -132,7 +132,7 @@ namespace NArrange.Core
 		/// <returns></returns>
 		private static IElementInserter CreateElementInserter(
 			ElementType elementType, SortBy sortBy, GroupBy groupBy,
-			RegionConfiguration parentRegion)		
+			RegionConfiguration parentRegion)
 		{
 			IElementInserter inserter = null;
 			
@@ -157,8 +157,8 @@ namespace NArrange.Core
 			}
 			
 			return inserter;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

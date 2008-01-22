@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the ConstructorElement class.
 	/// </summary>
 	[TestFixture]
-	public class ConstructorElementTests : CommentedElementTests<ConstructorElement>	
+	public class ConstructorElementTests : CommentedElementTests<ConstructorElement>
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			ConstructorElement constructorElement = new ConstructorElement();
 			
@@ -56,17 +56,17 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for IsStatic.");
 			Assert.AreEqual(string.Empty, constructorElement.Name,
 			    "Unexpected default value for Name.");
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance for cloning
 		/// </summary>
 		/// <returns></returns>
-		protected override ConstructorElement DoCreateClonePrototype()		
+		protected override ConstructorElement DoCreateClonePrototype()
 		{
 			ConstructorElement prototype = new ConstructorElement();
 			prototype.Name = "SomeClass";
@@ -84,14 +84,14 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.MemberModifiers = MemberModifier.Abstract;
 			
 			return prototype;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the clone was succesful
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected override void DoVerifyClone(ConstructorElement original, ConstructorElement clone)		
+		protected override void DoVerifyClone(ConstructorElement original, ConstructorElement clone)
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
@@ -115,8 +115,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsStatic was not copied correctly.");
 			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

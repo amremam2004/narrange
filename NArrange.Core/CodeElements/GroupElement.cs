@@ -41,38 +41,38 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Element used to logically group other elements
 	/// </summary>
-	public class GroupElement : CodeElement	
+	public class GroupElement : CodeElement
 	{
 		#region Fields
-		
+
 		private string _customSeparator;		
 		private GroupSeparatorType _separatorType;		
 		
 		#endregion Fields
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override CodeElement DoClone()		
+		protected override CodeElement DoClone()
 		{
 			GroupElement clone = new GroupElement();
 			clone._customSeparator = _customSeparator;
 			clone._separatorType = _separatorType;
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the custom separator string
 		/// </summary>
-		public string CustomSeparator		
+		public string CustomSeparator
 		{
 			get
 			{
@@ -82,23 +82,23 @@ namespace NArrange.Core.CodeElements
 			{
 			    _customSeparator = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.NotSpecified;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the separator type.
 		/// </summary>
-		public GroupSeparatorType SeparatorType		
+		public GroupSeparatorType SeparatorType
 		{
 			get
 			{
@@ -108,22 +108,22 @@ namespace NArrange.Core.CodeElements
 			{
 			    _separatorType = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitGroupElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

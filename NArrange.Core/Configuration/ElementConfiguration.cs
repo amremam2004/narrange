@@ -43,24 +43,24 @@ namespace NArrange.Core.Configuration
 	/// Element configuration
 	/// </summary>
 	[XmlType("Element")]
-	public class ElementConfiguration : ConfigurationElement	
+	public class ElementConfiguration : ConfigurationElement
 	{
 		#region Fields
-		
+
 		private ElementType _elementType;		
 		private FilterBy _filterBy;		
 		private GroupBy _groupBy;		
 		private SortBy _sortBy;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Element type
 		/// </summary>
 		[XmlAttribute("Type")]
-		public ElementType ElementType		
+		public ElementType ElementType
 		{
 			get
 			{
@@ -70,13 +70,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _elementType = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the filter specification
 		/// </summary>
 		[XmlElement("Filter")]
-		public FilterBy FilterBy		
+		public FilterBy FilterBy
 		{
 			get
 			{
@@ -86,13 +86,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _filterBy = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Specifies grouping of elements
 		/// </summary>
 		[XmlElement("Group")]
-		public GroupBy GroupBy		
+		public GroupBy GroupBy
 		{
 			get
 			{
@@ -102,13 +102,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _groupBy = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the sort specification
 		/// </summary>
 		[XmlElement("Sort")]
-		public SortBy SortBy		
+		public SortBy SortBy
 		{
 			get
 			{
@@ -118,30 +118,30 @@ namespace NArrange.Core.Configuration
 			{
 			    _sortBy = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets a string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Type: {0}", this.ElementType);
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override ConfigurationElement DoClone()		
+		protected override ConfigurationElement DoClone()
 		{
 			ElementConfiguration clone = new ElementConfiguration();
 			
@@ -163,8 +163,8 @@ namespace NArrange.Core.Configuration
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

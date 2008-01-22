@@ -45,33 +45,33 @@ namespace NArrange.Core
 	/// <summary>
 	/// Regioned inserter
 	/// </summary>
-	public class RegionedInserter : IElementInserter	
+	public class RegionedInserter : IElementInserter
 	{
 		#region Fields
-		
+
 		private IElementInserter _innerInserter;		
 		private RegionConfiguration _regionConfiguration;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new GroupedInserter using the specified grouping configuration
 		/// </summary>
 		/// <param name="regionConfiguration"></param>
-		public RegionedInserter(RegionConfiguration regionConfiguration)		
+		public RegionedInserter(RegionConfiguration regionConfiguration)
 			: this(regionConfiguration, null)
 		{
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a new GroupedInserter using the specified grouping configuration
 		/// and sorter.
 		/// </summary>
 		/// <param name="regionConfiguration"></param>
 		/// <param name="innerInserter"></param>
-		public RegionedInserter(RegionConfiguration regionConfiguration, IElementInserter innerInserter)		
+		public RegionedInserter(RegionConfiguration regionConfiguration, IElementInserter innerInserter)
 		{
 			if (regionConfiguration == null)
 			{
@@ -80,18 +80,18 @@ namespace NArrange.Core
 			
 			_regionConfiguration = regionConfiguration.Clone() as RegionConfiguration;
 			_innerInserter = innerInserter;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Inserts the element within the parent
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			RegionElement region = null;
 			
@@ -122,8 +122,8 @@ namespace NArrange.Core
 			{
 			    region.AddChild(codeElement);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

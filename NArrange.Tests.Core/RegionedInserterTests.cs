@@ -15,37 +15,37 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the RegionedInserter class.
 	/// </summary>
 	[TestFixture]
-	public class RegionedInserterTests	
+	public class RegionedInserterTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a RegionedInserter instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
 			
 			RegionedInserter regionedInserter = new RegionedInserter(regionConfiguration);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Test construction with a null configuration
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullTest()		
+		public void CreateWithNullTest()
 		{
 			RegionedInserter regionedInserter = new RegionedInserter(null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements.
 		/// </summary>
 		[Test]
-		public void InsertTest()		
+		public void InsertTest()
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
@@ -111,8 +111,8 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, groupElement.Children[0].Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

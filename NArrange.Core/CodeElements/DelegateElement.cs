@@ -41,31 +41,31 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Delegate element
 	/// </summary>
-	public class DelegateElement : MemberElement	
+	public class DelegateElement : MemberElement
 	{
 		#region Fields
-		
+
 		private string _params;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Delegate;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the parameter list 
 		/// </summary>
-		public string Params		
+		public string Params
 		{
 			get
 			{
@@ -75,17 +75,17 @@ namespace NArrange.Core.CodeElements
 			{
 			    _params = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()		
+		protected override MemberElement DoMemberClone()
 		{
 			DelegateElement clone = new DelegateElement();
 			
@@ -95,22 +95,22 @@ namespace NArrange.Core.CodeElements
 			clone._params = _params;
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitDelegateElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

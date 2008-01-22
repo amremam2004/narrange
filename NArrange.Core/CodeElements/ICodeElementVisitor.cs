@@ -41,70 +41,70 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Interface for a code element visitor.
 	/// </summary>
-	public interface ICodeElementVisitor	
+	public interface ICodeElementVisitor
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Visits a AttributeElement
 		/// </summary>
-		void VisitAttributeElement(AttributeElement element);		
-		
+		void VisitAttributeElement(AttributeElement element);
+
 		/// <summary>
 		/// Visits a ConstructorElement
 		/// </summary>
-		void VisitConstructorElement(ConstructorElement element);		
-		
+		void VisitConstructorElement(ConstructorElement element);
+
 		/// <summary>
 		/// Visits a DelegateElement
 		/// </summary>
-		void VisitDelegateElement(DelegateElement element);		
-		
+		void VisitDelegateElement(DelegateElement element);
+
 		/// <summary>
 		/// Visits an EventElement
 		/// </summary>
-		void VisitEventElement(EventElement element);		
-		
+		void VisitEventElement(EventElement element);
+
 		/// <summary>
 		/// Visits a FieldElement
 		/// </summary>
-		void VisitFieldElement(FieldElement element);		
-		
+		void VisitFieldElement(FieldElement element);
+
 		/// <summary>
 		/// Visits a GroupElement
 		/// </summary>
-		void VisitGroupElement(GroupElement element);		
-		
+		void VisitGroupElement(GroupElement element);
+
 		/// <summary>
 		/// Visits a MethodElement
 		/// </summary>
-		void VisitMethodElement(MethodElement element);		
-		
+		void VisitMethodElement(MethodElement element);
+
 		/// <summary>
 		/// Visits a NamespaceElement
 		/// </summary>
-		void VisitNamespaceElement(NamespaceElement element);		
-		
+		void VisitNamespaceElement(NamespaceElement element);
+
 		/// <summary>
 		/// Visits a PropertyElement
 		/// </summary>
-		void VisitPropertyElement(PropertyElement element);		
-		
+		void VisitPropertyElement(PropertyElement element);
+
 		/// <summary>
 		/// Visits a RegionElement
 		/// </summary>
-		void VisitRegionElement(RegionElement element);		
-		
+		void VisitRegionElement(RegionElement element);
+
 		/// <summary>
 		/// Visits a TypeElement
 		/// </summary>
-		void VisitTypeElement(TypeElement element);		
-		
+		void VisitTypeElement(TypeElement element);
+
 		/// <summary>
 		/// Visits a UsingElement
 		/// </summary>
-		void VisitUsingElement(UsingElement element);		
-		
+		void VisitUsingElement(UsingElement element);
+
 		#endregion Methods
 	}
 }

@@ -12,15 +12,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the TypeParameter class
 	/// </summary>
 	[TestFixture]
-	public class TypeParameterTests	
+	public class TypeParameterTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the ICloneable implementation
 		/// </summary>
 		[Test]
-		public void CloneTest()		
+		public void CloneTest()
 		{
 			TypeParameter typeParameter = new TypeParameter();
 			typeParameter.Name = "T";
@@ -39,13 +39,13 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Constraints property was not copied correctly.");
 			Assert.AreEqual(typeParameter.Constraints[1], clone.Constraints[1],
 			    "Constraints property was not copied correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the construction of a type parameter
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			TypeParameter typeParameter = new TypeParameter();
 			
@@ -58,8 +58,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Constraints collection should be instantiated.");
 			Assert.AreEqual(0, typeParameter.Constraints.Count,
 			    "Constraints collection should be empty.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

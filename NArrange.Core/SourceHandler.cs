@@ -44,10 +44,10 @@ namespace NArrange.Core
 	/// This class provides instances for handling language specific requests 
 	/// based on file extension.
 	/// </summary>
-	public sealed class SourceHandler	
+	public sealed class SourceHandler
 	{
 		#region Fields
-		
+
 		private Assembly _assembly;		
 		private string _assemblyName;		
 		private ICodeParser _codeParser;		
@@ -55,28 +55,28 @@ namespace NArrange.Core
 		private ICodeWriter _writer;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ExtensionHandler
 		/// </summary>
 		/// <param name="assemblyName"></param>
-		public SourceHandler(string assemblyName)		
+		public SourceHandler(string assemblyName)
 		{
 			_assemblyName = assemblyName;
 			
 			Initialize();
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Initializes the extension handler
 		/// </summary>
-		private void Initialize()		
+		private void Initialize()
 		{
 			_assembly = Assembly.Load(_assemblyName);
 			
@@ -96,45 +96,45 @@ namespace NArrange.Core
 			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
 			    }
 			}
-		}		
-		
+		}
+
 		#endregion Private Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the code parser associated with the extension
 		/// </summary>
-		public ICodeParser CodeParser		
+		public ICodeParser CodeParser
 		{
 			get
 			{
 			    return _codeParser;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the project parser associated with the extension
 		/// </summary>
-		public IProjectParser ProjectParser		
+		public IProjectParser ProjectParser
 		{
 			get
 			{
 			    return _projectParser;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the code writer associated with the extension
 		/// </summary>
-		public ICodeWriter Writer		
+		public ICodeWriter Writer
 		{
 			get
 			{
 			    return _writer;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
 	}
 }

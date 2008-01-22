@@ -44,18 +44,18 @@ namespace NArrange.Core
 	/// Class for determining if an element meets specific
 	/// filter criteria.
 	/// </summary>
-	public interface IElementFilter	
+	public interface IElementFilter
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Determines whether or not the specified code element matches the
 		/// filter criteria.
 		/// </summary>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		bool IsMatch(ICodeElement codeElement);		
-		
+		bool IsMatch(ICodeElement codeElement);
+
 		#endregion Methods
 	}
 }

@@ -39,6 +39,7 @@ using System.IO;
 using System.Text;
 
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.Core
 {
@@ -46,17 +47,17 @@ namespace NArrange.Core
 	/// Interface for parsing NArrange code elements from 
 	/// a source file stream.
 	/// </summary>
-	public interface ICodeParser	
+	public interface ICodeParser
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Parses code elements from a stream.
 		/// </summary>
 		/// <param name="reader">Code file reader</param>
 		/// <returns>A read-only collection of code elements.</returns>
-		ReadOnlyCollection<ICodeElement> Parse(TextReader reader);		
-		
+		ReadOnlyCollection<ICodeElement> Parse(TextReader reader);
+
 		#endregion Methods
 	}
 }

@@ -44,17 +44,17 @@ namespace NArrange.Core
 	/// <summary>
 	/// Element utility methods
 	/// </summary>
-	public static class ElementUtilities	
+	public static class ElementUtilities
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets the string representation of a code element attribute.
 		/// </summary>
 		/// <param name="attributeType"></param>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public static string GetAttribute(ElementAttribute attributeType, ICodeElement codeElement)		
+		public static string GetAttribute(ElementAttribute attributeType, ICodeElement codeElement)
 		{
 			string attributeString = null;
 			MemberElement memberElement;
@@ -116,13 +116,13 @@ namespace NArrange.Core
 			}
 			
 			return attributeString;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
-		private static string GetTypeAttribute(ICodeElement codeElement)		
+
+		private static string GetTypeAttribute(ICodeElement codeElement)
 		{
 			string attributeString = string.Empty;
 			
@@ -141,8 +141,8 @@ namespace NArrange.Core
 			}
 			
 			return attributeString;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

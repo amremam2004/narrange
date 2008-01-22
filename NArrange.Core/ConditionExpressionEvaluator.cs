@@ -45,35 +45,35 @@ namespace NArrange.Core
 	/// <summary>
 	/// Class for evaluating filter expressions
 	/// </summary>
-	public sealed class ConditionExpressionEvaluator	
+	public sealed class ConditionExpressionEvaluator
 	{
 		#region Fields
-		
+
 		private static ConditionExpressionEvaluator _instance;		
 		private static object _instanceLock = new object();		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ConditionExpressionEvaluator
 		/// </summary>
-		private ConditionExpressionEvaluator()		
+		private ConditionExpressionEvaluator()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Evaluates an expression against the specified element
 		/// </summary>
 		/// <param name="conditionExpression"></param>
 		/// <param name="element"></param>
 		/// <returns></returns>
-		public bool Evaluate(IConditionExpression conditionExpression, ICodeElement element)		
+		public bool Evaluate(IConditionExpression conditionExpression, ICodeElement element)
 		{
 			bool result = false;
 			
@@ -126,13 +126,13 @@ namespace NArrange.Core
 			}
 			
 			return result;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
-		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)		
+
+		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)
 		{
 			string value = string.Empty;
 			
@@ -155,16 +155,16 @@ namespace NArrange.Core
 			}
 			
 			return value;
-		}		
-		
+		}
+
 		#endregion Private Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the single instance of the expression evaluator
 		/// </summary>
-		public static ConditionExpressionEvaluator Instance		
+		public static ConditionExpressionEvaluator Instance
 		{
 			get
 			{
@@ -181,8 +181,8 @@ namespace NArrange.Core
 			
 			    return _instance;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
 	}
 }

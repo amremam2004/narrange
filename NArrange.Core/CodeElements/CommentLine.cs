@@ -41,87 +41,87 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Comment line implementation
 	/// </summary>
-	public class CommentLine : ICommentLine	
+	public class CommentLine : ICommentLine
 	{
 		#region Read-Only Fields
-		
-		private readonly bool _isXmlComment;		
-		private readonly string _text;		
-		
+
+		private readonly bool _isXmlComment;
+		private readonly string _text;
+
 		#endregion Read-Only Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new comment line
 		/// </summary>
 		/// <param name="text">Comment text</param>
-		public CommentLine(string text)		
+		public CommentLine(string text)
 		{
 			_text = text;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a new comment line
 		/// </summary>
 		/// <param name="text">Comment text</param>
 		/// <param name="isXmlComment">Whether or not this is an XML comment</param>
-		public CommentLine(string text, bool isXmlComment)		
+		public CommentLine(string text, bool isXmlComment)
 			: this(text)
 		{
 			_isXmlComment = isXmlComment;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Whether or not this comment line is an XML comment.
 		/// </summary>
-		public bool IsXmlComment		
+		public bool IsXmlComment
 		{
 			get
 			{
 			    return _isXmlComment;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the comment text.
 		/// </summary>
-		public string Text		
+		public string Text
 		{
 			get
 			{
 			    return _text;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			CommentLine clone = new CommentLine(_text, _isXmlComment);
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation of this object.
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return _text;
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

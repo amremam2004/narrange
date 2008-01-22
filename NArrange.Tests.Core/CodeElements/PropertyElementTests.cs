@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the PropertyElement class.
 	/// </summary>
 	[TestFixture]
-	public class PropertyElementTests : CommentedElementTests<PropertyElement>	
+	public class PropertyElementTests : CommentedElementTests<PropertyElement>
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			PropertyElement propertyElement = new PropertyElement();
 			
@@ -54,17 +54,17 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for IsStatic.");
 			Assert.AreEqual(string.Empty, propertyElement.Name,
 			    "Unexpected default value for Name.");
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance for cloning
 		/// </summary>
 		/// <returns></returns>
-		protected override PropertyElement DoCreateClonePrototype()		
+		protected override PropertyElement DoCreateClonePrototype()
 		{
 			PropertyElement prototype = new PropertyElement();
 			prototype.Name = "SomeProperty";
@@ -81,14 +81,14 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.MemberModifiers = MemberModifier.Abstract; 
 			
 			return prototype;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the clone was succesful
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected override void DoVerifyClone(PropertyElement original, PropertyElement clone)		
+		protected override void DoVerifyClone(PropertyElement original, PropertyElement clone)
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
@@ -110,8 +110,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsStatic was not copied correctly.");
 			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

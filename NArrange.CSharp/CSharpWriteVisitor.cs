@@ -40,42 +40,51 @@ using System.Text;
 
 using NArrange.Core;
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.CSharp
 {
 	/// <summary>
 	/// Visits a tree of code elements for writing C# code 
 	/// </summary>
-	internal class CSharpWriteVisitor : ICodeElementVisitor	
+	internal class CSharpWriteVisitor : ICodeElementVisitor
 	{
 		#region Fields
-		
+
+		private CodeConfiguration _configuration;		
 		private int _tabCount;		
 		private TextWriter _writer;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new CSharpWriteVisitor
 		/// </summary>
 		/// <param name="writer"></param>
-		public CSharpWriteVisitor(TextWriter writer)		
+		/// <param name="configuration"></param>
+		public CSharpWriteVisitor(TextWriter writer, CodeConfiguration configuration)
 		{
 			if (writer == null)
 			{
 			    throw new ArgumentNullException("writer");
 			}
 			
+			if (configuration == null)
+			{
+			    throw new ArgumentNullException("configuration");
+			}
+			
 			_writer = writer;
-		}		
-		
+			_configuration = configuration;
+		}
+
 		#endregion Constructors
-		
+
 		#region Private Methods
-		
-		private void WriteAccess(CodeAccess codeAccess)		
+
+		private void WriteAccess(CodeAccess codeAccess)
 		{
 			string accessString = string.Empty;
 			if (codeAccess != CodeAccess.NotSpecified)
@@ -84,27 +93,27 @@ namespace NArrange.CSharp
 			}
 			
 			WriteIndented(accessString);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes a collection of element attributes
 		/// </summary>
 		/// <param name="element"></param>
-		private void WriteAttributes(AttributedElement element)		
+		private void WriteAttributes(AttributedElement element)
 		{
 			foreach (IAttribute attribute in element.Attributes)
 			{
 			    attribute.Accept(this);
 			}
-		}		
-		
-		private void WriteBeginBlock()		
+		}
+
+		private void WriteBeginBlock()
 		{
 			WriteIndentedLine(CSharpSymbol.BeginBlock.ToString());
 			_tabCount++;
-		}		
-		
-		private void WriteBody(TextCodeElement element)		
+		}
+
+		private void WriteBody(TextCodeElement element)
 		{
 			WriteBeginBlock();
 			if (element.BodyText != null && element.BodyText.Trim().Length > 0)
@@ -117,9 +126,9 @@ namespace NArrange.CSharp
 			    _tabCount--;
 			    WriteIndented(CSharpSymbol.EndBlock.ToString());
 			}
-		}		
-		
-		private void WriteChildren(ICodeElement element)		
+		}
+
+		private void WriteChildren(ICodeElement element)
 		{
 			//
 			// Process all children
@@ -132,7 +141,7 @@ namespace NArrange.CSharp
 			    if (childIndex > 0 && childFieldElement != null && 
 			        childFieldElement.HeaderCommentLines.Count > 0)
 			    {
-			        WriteIndentedLine();
+			        _writer.WriteLine();
 			    }
 			
 			    childElement.Accept(this);
@@ -141,22 +150,21 @@ namespace NArrange.CSharp
 			    {
 			        if (!(childElement is GroupElement))
 			        {
-			            if (!(childElement is RegionElement) && 
-			                !(childElement is FieldElement))
+			            if (!(childElement is FieldElement))
 			            {
-			                WriteIndentedLine();
+			                _writer.WriteLine();
 			            }
-			            WriteIndentedLine();
+			            _writer.WriteLine();
 			        }
 			    }
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes a comment line
 		/// </summary>
 		/// <param name="commentLine"></param>
-		private void WriteCommentLine(ICommentLine commentLine)		
+		private void WriteCommentLine(ICommentLine commentLine)
 		{
 			StringBuilder builder = new StringBuilder();
 			if (commentLine.IsXmlComment)
@@ -171,14 +179,14 @@ namespace NArrange.CSharp
 			builder.Append(commentLine.Text);
 			
 			WriteIndentedLine(builder.ToString());
-		}		
-		
-		private void WriteEndBlock()		
+		}
+
+		private void WriteEndBlock()
 		{
 			WriteEndBlock(true);
-		}		
-		
-		private void WriteEndBlock(bool newLine)		
+		}
+
+		private void WriteEndBlock(bool newLine)
 		{
 			if (newLine)
 			{
@@ -186,42 +194,54 @@ namespace NArrange.CSharp
 			}
 			_tabCount--;
 			WriteIndented(CSharpSymbol.EndBlock.ToString());
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes a collection of header comment lines
 		/// </summary>
 		/// <param name="headerCommentLines"></param>
-		private void WriteHeaderCommentLines(ReadOnlyCollection<ICommentLine> headerCommentLines)		
+		private void WriteHeaderCommentLines(ReadOnlyCollection<ICommentLine> headerCommentLines)
 		{
 			foreach (ICommentLine commentLine in headerCommentLines)
 			{
 			    this.WriteCommentLine(commentLine);
 			}
-		}		
-		
-		private void WriteIndented(string text)		
+		}
+
+		private void WriteIndented(string text)
 		{
 			for (int tabIndex = 0; tabIndex < _tabCount; tabIndex++)
 			{
-			    _writer.Write("\t");
+			    if (_configuration.Tabs.Style == TabStyle.Tabs)
+			    {
+			        _writer.Write("\t");
+			    }
+			    else if (_configuration.Tabs.Style == TabStyle.Spaces)
+			    {
+			        _writer.Write(new string(' ', _configuration.Tabs.SpacesPerTab));
+			    }
+			    else
+			    {
+			        throw new ArgumentOutOfRangeException(
+			            "Unknown tab style {0}.", _configuration.Tabs.Style.ToString());
+			    }
 			}
 			
 			_writer.Write(text);
-		}		
-		
-		private void WriteIndentedLine(string text)		
+		}
+
+		private void WriteIndentedLine(string text)
 		{
 			WriteIndented(text);
 			_writer.WriteLine();
-		}		
-		
-		private void WriteIndentedLine()		
+		}
+
+		private void WriteIndentedLine()
 		{
 			WriteIndentedLine(string.Empty);
-		}		
-		
-		private void WriteMemberAttributes(MemberModifier memberAttributes)		
+		}
+
+		private void WriteMemberAttributes(MemberModifier memberAttributes)
 		{
 			if ((memberAttributes & MemberModifier.Unsafe) == MemberModifier.Unsafe)
 			{
@@ -282,9 +302,9 @@ namespace NArrange.CSharp
 			    _writer.Write(CSharpKeyword.Virtual);
 			    _writer.Write(' ');
 			}
-		}		
-		
-		private void WriteParameterList(string paramList)		
+		}
+
+		private void WriteParameterList(string paramList)
 		{
 			_writer.Write(CSharpSymbol.BeginParamList);
 			
@@ -305,9 +325,9 @@ namespace NArrange.CSharp
 			}
 			_writer.Write(CSharpSymbol.EndParamList);
 			_tabCount--;
-		}		
-		
-		private void WriteTextBlock(string text)		
+		}
+
+		private void WriteTextBlock(string text)
 		{
 			if (!string.IsNullOrEmpty(text))
 			{
@@ -336,9 +356,9 @@ namespace NArrange.CSharp
 			                        lineBuilder[index] == ' ' && tabIndex < _tabCount)
 			                    {
 			                        spaceCount++;
-			                        if (spaceCount == 4)
+			                        if (spaceCount == _configuration.Tabs.SpacesPerTab)
 			                        {
-			                            lineBuilder.Remove(0, 4);
+			                            lineBuilder.Remove(0, _configuration.Tabs.SpacesPerTab);
 			                            spaceCount = 0;
 			                            index = 0;
 			                            tabIndex++;
@@ -362,9 +382,9 @@ namespace NArrange.CSharp
 			        }
 			    }
 			}
-		}		
-		
-		private void WriteTypeParameterConstraints(List<TypeParameter> typeParameters)		
+		}
+
+		private void WriteTypeParameterConstraints(List<TypeParameter> typeParameters)
 		{
 			if (typeParameters.Count > 0)
 			{
@@ -393,9 +413,9 @@ namespace NArrange.CSharp
 			        }
 			    }
 			}
-		}		
-		
-		private void WriteTypeParameters(List<TypeParameter> typeParameters)		
+		}
+
+		private void WriteTypeParameters(List<TypeParameter> typeParameters)
 		{
 			if (typeParameters.Count > 0)
 			{
@@ -413,17 +433,17 @@ namespace NArrange.CSharp
 			
 			    _writer.Write(CSharpSymbol.EndGeneric);
 			}
-		}		
-		
+		}
+
 		#endregion Private Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Processes an attribute element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitAttributeElement(AttributeElement element)		
+		public void VisitAttributeElement(AttributeElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			
@@ -433,13 +453,13 @@ namespace NArrange.CSharp
 			builder.Append(CSharpSymbol.EndAttribute);
 			
 			WriteIndentedLine(builder.ToString());
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a constructor element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitConstructorElement(ConstructorElement element)		
+		public void VisitConstructorElement(ConstructorElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -451,7 +471,7 @@ namespace NArrange.CSharp
 			_writer.Write(element.Name);
 			
 			WriteParameterList(element.Params);
-			WriteIndentedLine();
+			_writer.WriteLine();
 			
 			if (element.Reference != null)
 			{
@@ -462,13 +482,13 @@ namespace NArrange.CSharp
 			}
 			
 			WriteBody(element);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a delegate element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitDelegateElement(DelegateElement element)		
+		public void VisitDelegateElement(DelegateElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -488,13 +508,13 @@ namespace NArrange.CSharp
 			
 			WriteParameterList(element.Params);
 			_writer.Write(CSharpSymbol.EndOfStatement);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes an event element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitEventElement(EventElement element)		
+		public void VisitEventElement(EventElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -513,20 +533,20 @@ namespace NArrange.CSharp
 			
 			if (element.BodyText != null && element.BodyText.Length > 0)
 			{
-			    WriteIndentedLine();
+			    _writer.WriteLine();
 			    WriteBody(element);
 			}
 			else
 			{
 			    _writer.Write(CSharpSymbol.EndOfStatement);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a field element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitFieldElement(FieldElement element)		
+		public void VisitFieldElement(FieldElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -549,13 +569,13 @@ namespace NArrange.CSharp
 			}
 			
 			_writer.Write(CSharpSymbol.EndOfStatement);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a group element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitGroupElement(GroupElement element)		
+		public void VisitGroupElement(GroupElement element)
 		{
 			//
 			// Process all children
@@ -584,13 +604,13 @@ namespace NArrange.CSharp
 			}
 			
 			WriteIndentedLine();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a method element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitMethodElement(MethodElement element)		
+		public void VisitMethodElement(MethodElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -639,16 +659,16 @@ namespace NArrange.CSharp
 			}
 			else
 			{
-			    WriteIndentedLine();
+			    _writer.WriteLine();
 			    WriteBody(element);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a namespace element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitNamespaceElement(NamespaceElement element)		
+		public void VisitNamespaceElement(NamespaceElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			
@@ -677,13 +697,13 @@ namespace NArrange.CSharp
 			}
 			
 			WriteEndBlock();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a property element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitPropertyElement(PropertyElement element)		
+		public void VisitPropertyElement(PropertyElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -697,16 +717,16 @@ namespace NArrange.CSharp
 			
 			_writer.Write(element.Name);
 			
-			WriteIndentedLine();
+			_writer.WriteLine();
 			
 			WriteBody(element);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a region element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitRegionElement(RegionElement element)		
+		public void VisitRegionElement(RegionElement element)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpSymbol.Preprocessor);
@@ -715,7 +735,7 @@ namespace NArrange.CSharp
 			builder.Append(element.Name);
 			
 			WriteIndentedLine(builder.ToString());
-			WriteIndentedLine();
+			_writer.WriteLine();
 			
 			WriteChildren(element);
 			
@@ -728,17 +748,18 @@ namespace NArrange.CSharp
 			if (element.Children.Count > 0 &&
 			    !(element.Children.Count == 1 && element.Children[0] is GroupElement))
 			{
-			    WriteIndentedLine();
-			    WriteIndentedLine();
+			    _writer.WriteLine();
+			    _writer.WriteLine();
 			}
-			WriteIndentedLine(builder.ToString());
-		}		
-		
+			
+			WriteIndented(builder.ToString());
+		}
+
 		/// <summary>
 		/// Processes a type element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitTypeElement(TypeElement element)		
+		public void VisitTypeElement(TypeElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			this.WriteAttributes(element);
@@ -839,7 +860,7 @@ namespace NArrange.CSharp
 			
 			
 			WriteTypeParameterConstraints(element.TypeParameters);
-			WriteIndentedLine();
+			_writer.WriteLine();
 			
 			if (element.Type == TypeElementType.Enum)
 			{
@@ -853,20 +874,20 @@ namespace NArrange.CSharp
 			    {
 			        WriteChildren(element);
 			
-			        WriteEndBlock(false);
+			        WriteEndBlock();
 			    }
 			    else
 			    {
 			        _writer.Write(CSharpSymbol.EndBlock);
 			    }
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Processes a using element
 		/// </summary>
 		/// <param name="element"></param>
-		public void VisitUsingElement(UsingElement element)		
+		public void VisitUsingElement(UsingElement element)
 		{
 			this.WriteHeaderCommentLines(element.HeaderCommentLines);
 			
@@ -877,8 +898,8 @@ namespace NArrange.CSharp
 			builder.Append(CSharpSymbol.EndOfStatement);
 			
 			WriteIndented(builder.ToString());
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

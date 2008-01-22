@@ -41,68 +41,68 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Attribute code element
 	/// </summary>
-	public class AttributeElement : TextCodeElement, IAttribute	
+	public class AttributeElement : TextCodeElement, IAttribute
 	{
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new attribute element
 		/// </summary>
-		public AttributeElement()		
+		public AttributeElement()
 		{
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a new attribute element with the specified attribute text
 		/// </summary>
 		/// <param name="bodyText"></param>
-		public AttributeElement(string bodyText)		
+		public AttributeElement(string bodyText)
 		{
 			this.BodyText = bodyText;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Clones this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override CodeElement DoClone()		
+		protected override CodeElement DoClone()
 		{
 			return new AttributeElement();
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Attribute;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitAttributeElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

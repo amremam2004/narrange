@@ -45,23 +45,23 @@ namespace NArrange.Core
 	/// <summary>
 	/// Sorted inserter
 	/// </summary>
-	public class SortedInserter : IElementInserter	
+	public class SortedInserter : IElementInserter
 	{
 		#region Fields
-		
+
 		private Comparison<ICodeElement> _comparison;		
 		private ElementType _elementType;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new sorted inserter using the specified sorting configuration
 		/// </summary>
 		/// <param name="elementType"></param>
 		/// <param name="sortBy"></param>
-		public SortedInserter(ElementType elementType, SortBy sortBy)		
+		public SortedInserter(ElementType elementType, SortBy sortBy)
 		{
 			if (sortBy == null)
 			{
@@ -70,13 +70,13 @@ namespace NArrange.Core
 			
 			_elementType = elementType;
 			_comparison = CreateComparison(sortBy);
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Private Methods
-		
-		private Comparison<ICodeElement> CreateComparison(SortBy sortBy)		
+
+		private Comparison<ICodeElement> CreateComparison(SortBy sortBy)
 		{
 			_comparison = delegate(ICodeElement x, ICodeElement y)
 			{
@@ -135,19 +135,19 @@ namespace NArrange.Core
 			};
 			
 			return _comparison;
-		}		
-		
+		}
+
 		#endregion Private Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Inserts an element into the parent using the strategy defined by the 
 		/// sort configuration.
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			ICodeElement compareElement = null;
 			
@@ -177,8 +177,8 @@ namespace NArrange.Core
 			}
 			
 			parentElement.InsertChild(insertIndex, codeElement);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

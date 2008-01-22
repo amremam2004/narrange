@@ -41,185 +41,185 @@ namespace NArrange.CSharp
 	/// <summary>
 	/// C# keyword constants
 	/// </summary>
-	public static class CSharpKeyword	
+	public static class CSharpKeyword
 	{
 		#region Constants
-		
+
 		/// <summary>
 		/// abstract
 		/// </summary>
-		public const string Abstract = "abstract";		
-		
+		public const string Abstract = "abstract";
+
 		/// <summary>
 		/// as
 		/// </summary>
-		public const string As = "as";		
-		
+		public const string As = "as";
+
 		/// <summary>
 		/// class
 		/// </summary>
-		public const string Class = "class";		
-		
+		public const string Class = "class";
+
 		/// <summary>
 		/// const
 		/// </summary>
-		public const string Constant = "const";		
-		
+		public const string Constant = "const";
+
 		/// <summary>
 		/// delegate
 		/// </summary>
-		public const string Delegate = "delegate";		
-		
+		public const string Delegate = "delegate";
+
 		/// <summary>
 		/// endregion
 		/// </summary>
-		public const string EndRegion = "endregion";		
-		
+		public const string EndRegion = "endregion";
+
 		/// <summary>
 		/// enum
 		/// </summary>
-		public const string Enumeration = "enum";		
-		
+		public const string Enumeration = "enum";
+
 		/// <summary>
 		/// event
 		/// </summary>
-		public const string Event = "event";		
-		
+		public const string Event = "event";
+
 		/// <summary>
 		/// explicit
 		/// </summary>
-		public const string Explicit = "explicit";		
-		
+		public const string Explicit = "explicit";
+
 		/// <summary>
 		/// extern
 		/// </summary>
-		public const string External = "extern";		
-		
+		public const string External = "extern";
+
 		/// <summary>
 		/// global
 		/// </summary>
-		public const string Global = "global";		
-		
+		public const string Global = "global";
+
 		/// <summary>
 		/// implicit
 		/// </summary>
-		public const string Implicit = "implicit";		
-		
+		public const string Implicit = "implicit";
+
 		/// <summary>
 		/// interface
 		/// </summary>
-		public const string Interface = "interface";		
-		
+		public const string Interface = "interface";
+
 		/// <summary>
 		/// internal
 		/// </summary>
-		public const string Internal = "internal";		
-		
+		public const string Internal = "internal";
+
 		/// <summary>
 		/// namespace
 		/// </summary>
-		public const string Namespace = "namespace";		
-		
+		public const string Namespace = "namespace";
+
 		/// <summary>
 		/// new
 		/// </summary>
-		public const string New = "new";		
-		
+		public const string New = "new";
+
 		/// <summary>
 		/// operator
 		/// </summary>
-		public const string Operator = "operator";		
-		
+		public const string Operator = "operator";
+
 		/// <summary>
 		/// override
 		/// </summary>
-		public const string Override = "override";		
-		
+		public const string Override = "override";
+
 		/// <summary>
 		/// partial
 		/// </summary>
-		public const string Partial = "partial";		
-		
+		public const string Partial = "partial";
+
 		/// <summary>
 		/// private
 		/// </summary>
-		public const string Private = "private";		
-		
+		public const string Private = "private";
+
 		/// <summary>
 		/// protected
 		/// </summary>
-		public const string Protected = "protected";		
-		
+		public const string Protected = "protected";
+
 		/// <summary>
 		/// public
 		/// </summary>
-		public const string Public = "public";		
-		
+		public const string Public = "public";
+
 		/// <summary>
 		/// readonly
 		/// </summary>
-		public const string ReadOnly = "readonly";		
-		
+		public const string ReadOnly = "readonly";
+
 		/// <summary>
 		/// region
 		/// </summary>
-		public const string Region = "region";		
-		
+		public const string Region = "region";
+
 		/// <summary>
 		/// sealed
 		/// </summary>
-		public const string Sealed = "sealed";		
-		
+		public const string Sealed = "sealed";
+
 		/// <summary>
 		/// static
 		/// </summary>
-		public const string Static = "static";		
-		
+		public const string Static = "static";
+
 		/// <summary>
 		/// struct
 		/// </summary>
-		public const string Structure = "struct";		
-		
+		public const string Structure = "struct";
+
 		/// <summary>
 		/// unsafe
 		/// </summary>
-		public const string Unsafe = "unsafe";		
-		
+		public const string Unsafe = "unsafe";
+
 		/// <summary>
 		/// using
 		/// </summary>
-		public const string Using = "using";		
-		
+		public const string Using = "using";
+
 		/// <summary>
 		/// virtual
 		/// </summary>
-		public const string Virtual = "virtual";		
-		
+		public const string Virtual = "virtual";
+
 		/// <summary>
 		/// void
 		/// </summary>
-		public const string Void = "void";		
-		
+		public const string Void = "void";
+
 		/// <summary>
 		/// volatile
 		/// </summary>
-		public const string Volatile = "volatile";		
-		
+		public const string Volatile = "volatile";
+
 		/// <summary>
 		/// where
 		/// </summary>
-		public const string Where = "where";		
-		
+		public const string Where = "where";
+
 		#endregion Constants
-		
+
 		#region Read-Only Fields
-		
+
 		/// <summary>
 		/// new()
 		/// </summary>
 		public static readonly string NewConstraint = New + 
-            CSharpSymbol.BeginParamList + CSharpSymbol.EndParamList;		
-		
+            CSharpSymbol.BeginParamList + CSharpSymbol.EndParamList;
+
 		#endregion Read-Only Fields
 	}
 }

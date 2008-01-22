@@ -48,10 +48,10 @@ namespace NArrange.Core
 	/// <summary>
 	/// Class for arranging source code files
 	/// </summary>
-	public sealed class FileArranger	
+	public sealed class FileArranger
 	{
 		#region Fields
-		
+
 		private string _configFile;		
 		private CodeConfiguration _configuration;		
 		private int _filesProcessed;		
@@ -60,31 +60,31 @@ namespace NArrange.Core
 		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new file arranger
 		/// </summary>
 		/// <param name="configFile"></param>
 		/// <param name="logger"></param>
-		public FileArranger(string configFile, ILogger logger)		
+		public FileArranger(string configFile, ILogger logger)
 		{
 			_configFile = configFile;
 			_logger = logger;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Arranges an individual source code file
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
 		/// <returns></returns>
-		public bool Arrange(string inputFile, string outputFile)		
+		public bool Arrange(string inputFile, string outputFile)
 		{
 			bool success = true;
 			_filesProcessed = 0;
@@ -133,60 +133,60 @@ namespace NArrange.Core
 			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
 			
 			return success;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines whether or not the specified file can be parsed
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <returns></returns>
-		public bool CanParse(string inputFile)		
+		public bool CanParse(string inputFile)
 		{
 			InitializeConfiguration();
 			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Retrieves an extension handler for a project file
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <returns></returns>
-		public SourceHandler GetProjectHandler(string filename)		
+		public SourceHandler GetProjectHandler(string filename)
 		{
 			InitializeConfiguration();
 			string extension = GetExtension(filename);
 			return _projectExtensionHandlers[extension];
-		}		
-		
+		}
+
 		/// <summary>
 		/// Retrieves an extension handler
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <returns></returns>
-		public SourceHandler GetSourceHandler(string filename)		
+		public SourceHandler GetSourceHandler(string filename)
 		{
 			InitializeConfiguration();
 			string extension = GetExtension(filename);
 			return _sourceExtensionHandlers[extension];
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines whether or not the specified file is a project
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <returns></returns>
-		public bool IsProject(string inputFile)		
+		public bool IsProject(string inputFile)
 		{
 			InitializeConfiguration();
 			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses code elements from the input file
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)		
+		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
 		{
 			InitializeConfiguration();
 			
@@ -205,12 +205,12 @@ namespace NArrange.Core
 			}
 			
 			return elements;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Arranges code elements
 		/// </summary>
@@ -218,14 +218,14 @@ namespace NArrange.Core
 		/// <param name="elements"></param>
 		/// <returns></returns>
 		private static ReadOnlyCollection<ICodeElement> ArrangeElements(
-			CodeConfiguration codeConfiguration, ReadOnlyCollection<ICodeElement> elements)		
+			CodeConfiguration codeConfiguration, ReadOnlyCollection<ICodeElement> elements)
 		{
 			CodeArranger arranger = new CodeArranger(codeConfiguration);
 			elements = arranger.Arrange(elements);
 			return elements;
-		}		
-		
-		private bool ArrangeProject(string inputFile)		
+		}
+
+		private bool ArrangeProject(string inputFile)
 		{
 			bool success = true;
 			
@@ -266,15 +266,15 @@ namespace NArrange.Core
 			}
 			
 			return success;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Arranges an individual source file
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
 		/// <returns></returns>
-		private bool ArrangeSourceFile(string inputFile, string outputFile)		
+		private bool ArrangeSourceFile(string inputFile, string outputFile)
 		{
 			bool success = true;
 			
@@ -365,19 +365,19 @@ namespace NArrange.Core
 			}
 			
 			return success;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the file extension
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <returns></returns>
-		private static string GetExtension(string inputFile)		
+		private static string GetExtension(string inputFile)
 		{
 			return Path.GetExtension(inputFile).TrimStart('.');
-		}		
-		
-		private bool InitializeConfiguration()		
+		}
+
+		private bool InitializeConfiguration()
 		{
 			bool success = true;
 			
@@ -411,14 +411,14 @@ namespace NArrange.Core
 			}
 			
 			return success;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Loads the configuration file that specifies how elements will be arranged.
 		/// </summary>
 		/// <param name="configFile"></param>
 		/// <returns></returns>
-		private void LoadConfiguration(string configFile)		
+		private void LoadConfiguration(string configFile)
 		{
 			if (_configuration == null)
 			{
@@ -453,22 +453,22 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Log a message
 		/// </summary>
 		/// <param name="level"></param>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-		private void LogMessage(LogLevel level, string message, params object[] args)		
+		private void LogMessage(LogLevel level, string message, params object[] args)
 		{
 			if (_logger != null)
 			{
 			    _logger.LogMessage(level, message, args);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes arranged elements to the output file
 		/// </summary>
@@ -476,10 +476,11 @@ namespace NArrange.Core
 		/// <param name="elements"></param>
 		/// <returns></returns>
 		private bool WriteElements(
-			string outputFile, ReadOnlyCollection<ICodeElement> elements)		
+			string outputFile, ReadOnlyCollection<ICodeElement> elements)
 		{
 			bool success = true;
 			ICodeWriter codeWriter = GetSourceHandler(outputFile).Writer;
+			codeWriter.Configuration = _configuration;
 			
 			StringWriter writer = new StringWriter();
 			try
@@ -510,8 +511,8 @@ namespace NArrange.Core
 			}
 			
 			return success;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

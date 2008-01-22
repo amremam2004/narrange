@@ -43,17 +43,17 @@ namespace NArrange.Core
 	/// <summary>
 	/// Performs insertion of an ICodeElement within the code tree.
 	/// </summary>
-	public interface IElementInserter	
+	public interface IElementInserter
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Inserts the specified element
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		void InsertElement(ICodeElement parentElement, ICodeElement codeElement);		
-		
+		void InsertElement(ICodeElement parentElement, ICodeElement codeElement);
+
 		#endregion Methods
 	}
 }

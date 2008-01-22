@@ -41,10 +41,10 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Method element
 	/// </summary>
-	public class MethodElement : MemberElement	
+	public class MethodElement : MemberElement
 	{
 		#region Fields
-		
+
 		private bool _isOperator;		
 		private OperatorType _operatorType;		
 		private string _params = string.Empty;		
@@ -52,35 +52,35 @@ namespace NArrange.Core.CodeElements
 		private object _typeParametersLock = new object();		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Method;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the member is external.
 		/// </summary>
-		public bool IsExternal		
+		public bool IsExternal
 		{
 			get
 			{
 			    return (MemberModifiers & MemberModifier.External) == MemberModifier.External;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets whether or not the method is an operator
 		/// </summary>
-		public bool IsOperator		
+		public bool IsOperator
 		{
 			get
 			{
@@ -90,12 +90,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _isOperator = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the operator type
 		/// </summary>
-		public OperatorType OperatorType		
+		public OperatorType OperatorType
 		{
 			get
 			{
@@ -105,12 +105,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _operatorType = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the parameter list 
 		/// </summary>
-		public string Params		
+		public string Params
 		{
 			get
 			{
@@ -120,12 +120,12 @@ namespace NArrange.Core.CodeElements
 			{
 			    _params = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		public List<TypeParameter> TypeParameters		
+		public List<TypeParameter> TypeParameters
 		{
 			get
 			{
@@ -142,17 +142,17 @@ namespace NArrange.Core.CodeElements
 			
 			    return _typeParameters;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()		
+		protected override MemberElement DoMemberClone()
 		{
 			MethodElement clone = new MethodElement();
 			
@@ -170,22 +170,22 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitMethodElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

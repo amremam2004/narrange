@@ -44,33 +44,33 @@ namespace NArrange.Core
 	/// Uses the chain of responsibility pattern to arrange an element using
 	/// the provided ArrangedCodeBuilder.
 	/// </summary>
-	public sealed class ChainElementArranger : IElementArranger	
+	public sealed class ChainElementArranger : IElementArranger
 	{
 		#region Fields
-		
+
 		private List<IElementArranger> _arrangers;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new element arranger chain
 		/// </summary>
-		public ChainElementArranger()		
+		public ChainElementArranger()
 		{
 			_arrangers = new List<IElementArranger>();
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Adds an arranger to the responsibility chain
 		/// </summary>
 		/// <param name="arranger"></param>
-		public void AddArranger(IElementArranger arranger)		
+		public void AddArranger(IElementArranger arranger)
 		{
 			if (arranger == null)
 			{
@@ -78,8 +78,8 @@ namespace NArrange.Core
 			}
 			
 			_arrangers.Add(arranger);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Arranges an element, delegating the responsibility to the first arranger
 		/// encountered who can process the request.
@@ -87,7 +87,7 @@ namespace NArrange.Core
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			bool arranged = false;
 			
@@ -108,15 +108,15 @@ namespace NArrange.Core
 			        "Cannot arrange element of type {0} with name '{1}'.",
 			        codeElement.GetType().Name, codeElement.Name));
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines if the specified code element can be arranged by
 		/// any arranger in the chain.
 		/// </summary>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public bool CanArrange(ICodeElement codeElement)		
+		public bool CanArrange(ICodeElement codeElement)
 		{
 			bool canArrange = false;
 			
@@ -133,8 +133,8 @@ namespace NArrange.Core
 			}
 			
 			return canArrange;
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

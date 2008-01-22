@@ -13,16 +13,16 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the Operator expression class.
 	/// </summary>
 	[TestFixture]
-	public class OperatorExpressionTests	
+	public class OperatorExpressionTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets the string representation of the operator expression with an invalid operator type.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void ToStringInvalidOperatorTest()		
+		public void ToStringInvalidOperatorTest()
 		{
 			AttributeExpression attributeExpression = new AttributeExpression(ElementAttribute.Name);
 			StringExpression stringExpression = new StringExpression("Test");
@@ -30,12 +30,12 @@ namespace NArrange.Tests.Core.Configuration
 			    attributeExpression, stringExpression);
 			
 			string str = operatorExpression.ToString();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation of the operator expression
 		/// </summary>
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			AttributeExpression attributeExpression = new AttributeExpression(ElementAttribute.Name);
 			StringExpression stringExpression = new StringExpression("Test");
@@ -43,8 +43,8 @@ namespace NArrange.Tests.Core.Configuration
 			    attributeExpression, stringExpression);
 			
 			Assert.AreEqual("$(Name) == 'Test'", operatorExpression.ToString());
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

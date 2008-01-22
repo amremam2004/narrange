@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the GroupBy class
 	/// </summary>
 	[TestFixture]
-	public class GroupByTests	
+	public class GroupByTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new GroupBy
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			
@@ -36,13 +36,13 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected default value for SeparateType.");
 			Assert.IsNull(groupBy.CustomSeparator,
 			    "Unexpected default value for CustomSeparator.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the CustomSeparator property
 		/// </summary>
 		[Test]
-		public void CustomSeparatorTest()		
+		public void CustomSeparatorTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			Assert.IsNull(groupBy.CustomSeparator,
@@ -51,13 +51,13 @@ namespace NArrange.Tests.Core.Configuration
 			groupBy.CustomSeparator = "// This is a group\r\n";
 			Assert.AreEqual("// This is a group\r\n", groupBy.CustomSeparator,
 			    "CustomSeparator was not set correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the SeparateType property
 		/// </summary>
 		[Test]
-		public void SeparatorTypeTest()		
+		public void SeparatorTypeTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType,
@@ -66,13 +66,13 @@ namespace NArrange.Tests.Core.Configuration
 			groupBy.SeparatorType = GroupSeparatorType.Custom;
 			Assert.AreEqual(GroupSeparatorType.Custom, groupBy.SeparatorType,
 			    "SeparateType was not set correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the ToString method
 		/// </summary>
 		[Test]
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			groupBy.By = ElementAttribute.Access;
@@ -81,8 +81,8 @@ namespace NArrange.Tests.Core.Configuration
 			
 			Assert.AreEqual("Group by: Access", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

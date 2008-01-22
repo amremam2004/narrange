@@ -45,78 +45,79 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Code arranger configuration information
 	/// </summary>
-	public class CodeConfiguration : ConfigurationElement	
+	public class CodeConfiguration : ConfigurationElement
 	{
 		#region Fields
-		
+
 		private static CodeConfiguration _default;		
 		private static object _defaultLock = new object();		
 		private List<HandlerConfiguration> _handlers;		
+		private TabConfiguration _tabs;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new CodeConfiguration.
 		/// </summary>
 		/// <remarks>Required for XML serialization</remarks>
-		public CodeConfiguration()		
+		public CodeConfiguration()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Loads a configuration from file
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <returns></returns>
-		public static CodeConfiguration Load(string filename)		
+		public static CodeConfiguration Load(string filename)
 		{
 			using (FileStream fileStream = new FileStream(filename, FileMode.Open))
 			{
 			    return Load(fileStream);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Loads a configuration from a stream
 		/// </summary>
 		/// <param name="stream"></param>
 		/// <returns></returns>
-		public static CodeConfiguration Load(Stream stream)		
+		public static CodeConfiguration Load(Stream stream)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(CodeConfiguration));
 			CodeConfiguration configuration = 
 			    serializer.Deserialize(stream) as CodeConfiguration;
 			
 			return configuration;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Saves the configuration to a file.
 		/// </summary>
 		/// <param name="filename"></param>
-		public void Save(string filename)		
+		public void Save(string filename)
 		{
 			XmlSerializer serializer = new XmlSerializer(this.GetType());
 			using (FileStream stream = new FileStream(filename, FileMode.Create))
 			{
 			    serializer.Serialize(stream, this);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the default configuration
 		/// </summary>
-		public static CodeConfiguration Default		
+		public static CodeConfiguration Default
 		{
 			get
 			{
@@ -141,14 +142,14 @@ namespace NArrange.Core.Configuration
 			
 			    return _default;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Source code handlers
 		/// </summary>
 		[XmlArrayItem(typeof(HandlerConfiguration))]
 		[Description("Handler configurations")]
-		public List<HandlerConfiguration> Handlers		
+		public List<HandlerConfiguration> Handlers
 		{
 			get
 			{
@@ -165,19 +166,51 @@ namespace NArrange.Core.Configuration
 			
 			    return _handlers;
 			}
-		}		
-		
+		}
+
+		/// <summary>
+		/// Tab configuration
+		/// </summary>
+		[Description("Tab configuration")]
+		public TabConfiguration Tabs
+		{
+			get
+			{
+			    if (_tabs == null)
+			    {
+			        lock (this)
+			        {
+			            if (_tabs == null)
+			            {
+			                //
+			                // Default tab configuration
+			                //
+			                _tabs = new TabConfiguration();
+			            }
+			        }
+			    }
+			
+			    return _tabs;
+			}
+			set
+			{
+			    _tabs = value;
+			}
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
-		protected override ConfigurationElement DoClone()		
+		protected override ConfigurationElement DoClone()
 		{
 			CodeConfiguration clone = new CodeConfiguration();
+			
+			clone._tabs = Tabs.Clone() as TabConfiguration;
 			
 			foreach (HandlerConfiguration handler in this.Handlers)
 			{
@@ -186,8 +219,8 @@ namespace NArrange.Core.Configuration
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

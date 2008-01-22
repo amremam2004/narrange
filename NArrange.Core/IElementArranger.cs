@@ -43,25 +43,25 @@ namespace NArrange.Core
 	/// <summary>
 	/// Element arranger interface
 	/// </summary>
-	public interface IElementArranger	
+	public interface IElementArranger
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Arranges the specified element within the parent element
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement);		
-		
+		void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement);
+
 		/// <summary>
 		/// Determines whether or not this arranger can handle arrangement of 
 		/// the specified element.
 		/// </summary>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		bool CanArrange(ICodeElement codeElement);		
-		
+		bool CanArrange(ICodeElement codeElement);
+
 		#endregion Methods
 	}
 }

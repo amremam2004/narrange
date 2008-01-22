@@ -41,27 +41,27 @@ namespace NArrange.Core
 	/// <summary>
 	/// Interface for code comment line information
 	/// </summary>
-	public interface ICommentLine : ICloneable	
+	public interface ICommentLine : ICloneable
 	{
 		#region Properties
-		
+
 		/// <summary>
 		/// Gets a boolean value indicating whether or not this 
 		/// comment is an XML comment.
 		/// </summary>
-		bool IsXmlComment		
+		bool IsXmlComment
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Comment text
 		/// </summary>
-		string Text		
+		string Text
 		{
 			get;
-		}		
-		
+		}
+
 		#endregion Properties
 	}
 }

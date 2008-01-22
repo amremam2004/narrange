@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the ElementConfiguration class
 	/// </summary>
 	[TestFixture]
-	public class ElementConfigurationTests	
+	public class ElementConfigurationTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new ElementConfiguration
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			ElementConfiguration elementConfiguration = new ElementConfiguration();
 			
@@ -40,13 +40,13 @@ namespace NArrange.Tests.Core.Configuration
 			    "Elements collection should not be null.");
 			Assert.AreEqual(0, elementConfiguration.Elements.Count,
 			    "Elements collection should be empty.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the ToString method
 		/// </summary>
 		[Test]
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			ElementConfiguration elementConfiguration = new ElementConfiguration();
 			elementConfiguration.ElementType = ElementType.Method;
@@ -55,8 +55,8 @@ namespace NArrange.Tests.Core.Configuration
 			
 			Assert.AreEqual("Type: Method", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

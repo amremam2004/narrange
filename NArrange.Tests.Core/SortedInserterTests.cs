@@ -15,36 +15,36 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the SortedInserter class.
 	/// </summary>
 	[TestFixture]
-	public class SortedInserterTests	
+	public class SortedInserterTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a SortedInserter instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			SortBy sortBy = new SortBy();
 			
 			SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, sortBy);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Test construction with a null configuration
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullTest()		
+		public void CreateWithNullTest()
 		{
 			SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements by access and name.
 		/// </summary>
 		[Test]
-		public void InsertByAccessAndNameTest()		
+		public void InsertByAccessAndNameTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Access;
@@ -157,13 +157,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(5, regionElement.Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements by access.
 		/// </summary>
 		[Test]
-		public void InsertByAccessTest()		
+		public void InsertByAccessTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Access;
@@ -216,13 +216,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, regionElement.Children.IndexOf(field2),
 			  "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements by name in descending order.
 		/// </summary>
 		[Test]
-		public void InsertByNameDescendingTest()		
+		public void InsertByNameDescendingTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
@@ -275,13 +275,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, regionElement.Children.IndexOf(field3),
 			  "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements by name.
 		/// </summary>
 		[Test]
-		public void InsertByNameTest()		
+		public void InsertByNameTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
@@ -334,13 +334,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, regionElement.Children.IndexOf(field2),
 			  "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements without any criteria.
 		/// </summary>
 		[Test]
-		public void InsertByNoneTest()		
+		public void InsertByNoneTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.None;
@@ -389,13 +389,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, regionElement.Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting a null element.
 		/// </summary>
 		[Test]
-		public void InsertNullTest()		
+		public void InsertNullTest()
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
@@ -446,8 +446,8 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

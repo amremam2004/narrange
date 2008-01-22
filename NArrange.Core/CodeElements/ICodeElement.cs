@@ -42,80 +42,80 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Interface for a code element.
 	/// </summary>
-	public interface ICodeElement : ICloneable	
+	public interface ICodeElement : ICloneable
 	{
 		#region Properties
-		
+
 		/// <summary>
 		/// Gets any children of this code element.
 		/// </summary>
 		/// <remarks>For a class, this would return
 		/// all member, methods, properties and nested types.</remarks>
-		ReadOnlyCollection<ICodeElement> Children		
+		ReadOnlyCollection<ICodeElement> Children
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		ElementType ElementType		
+		ElementType ElementType
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the name of the code element.
 		/// </summary>
-		string Name		
+		string Name
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the parent of this element
 		/// </summary>
-		ICodeElement Parent		
+		ICodeElement Parent
 		{
 			get;
 			set;
-		}		
-		
+		}
+
 		#endregion Properties
-		
+
 		#region Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		void Accept(ICodeElementVisitor visitor);		
-		
+		void Accept(ICodeElementVisitor visitor);
+
 		/// <summary>
 		/// Adds a child to this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		void AddChild(ICodeElement childElement);		
-		
+		void AddChild(ICodeElement childElement);
+
 		/// <summary>
 		/// Removes all child elements
 		/// </summary>
-		void ClearChildren();		
-		
+		void ClearChildren();
+
 		/// <summary>
 		/// Inserts a child at the specified index
 		/// </summary>
 		/// <param name="index"></param>
 		/// <param name="childElement"></param>
-		void InsertChild(int index, ICodeElement childElement);		
-		
+		void InsertChild(int index, ICodeElement childElement);
+
 		/// <summary>
 		/// Removes a child from this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		void RemoveChild(ICodeElement childElement);		
-		
+		void RemoveChild(ICodeElement childElement);
+
 		#endregion Methods
 	}
 }

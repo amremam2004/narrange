@@ -12,15 +12,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the CommentLine class
 	/// </summary>
 	[TestFixture]
-	public class CommentLineTests	
+	public class CommentLineTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the construction of a CommentLine
 		/// </summary>
 		[Test]
-		public void CreateTextAndXmlTest()		
+		public void CreateTextAndXmlTest()
 		{
 			CommentLine commentLine = new CommentLine("Comment here", true);
 			
@@ -31,13 +31,13 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected value for IsXmlComment.");
 			Assert.AreEqual("Comment here", commentLine.Text,
 			    "Unexpected value for Text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the construction of a CommentLine
 		/// </summary>
 		[Test]
-		public void CreateTextTest()		
+		public void CreateTextTest()
 		{
 			CommentLine commentLine = new CommentLine("Comment here");
 			
@@ -48,20 +48,20 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for IsXmlComment.");
 			Assert.AreEqual("Comment here", commentLine.Text,
 			    "Unexpected value for Text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests for ToString
 		/// </summary>
 		[Test]
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			CommentLine commentLine = new CommentLine("This is some text.", true);
 			string str = commentLine.ToString();
 			Assert.AreEqual("This is some text.", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

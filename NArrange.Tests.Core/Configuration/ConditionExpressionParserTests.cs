@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the FilterExpressionParser class.
 	/// </summary>
 	[TestFixture]
-	public class ConditionExpressionParserTests	
+	public class ConditionExpressionParserTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests parsing an AND expression.
 		/// </summary>
 		[Test]
-		public void ParseAndExpressionTest()		
+		public void ParseAndExpressionTest()
 		{
 			Action<string> testExpression = delegate(string condition)
 			{
@@ -85,13 +85,13 @@ namespace NArrange.Tests.Core.Configuration
 			
 			expressionText = "$(Name) == 'Test 1' And $(Name) == 'Test 2'";
 			testExpression(expressionText);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an expression.
 		/// </summary>
 		[Test]
-		public void ParseAndOrExpressionTest()		
+		public void ParseAndOrExpressionTest()
 		{
 			Action<string> testExpression = delegate(string condition)
 			{
@@ -185,13 +185,13 @@ namespace NArrange.Tests.Core.Configuration
 			
 			expressionText = "$(Name) == 'Test 3' And ($(Name) == 'Test 1' Or $(Name) == 'Test 2')";
 			//testExpression(expressionText);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a complex expression.
 		/// </summary>
 		[Test]
-		public void ParseComplexTest()		
+		public void ParseComplexTest()
 		{
 			string expression =
 			    "$(Name) : 'Test' Or $(Access) == 'Protected' Or " +
@@ -207,24 +207,24 @@ namespace NArrange.Tests.Core.Configuration
 			    "((($(Access) == 'Private') And ($(Name) : 'OrAnd')) And ($(Type) == 'int')))",
 			    expressionString,
 			    "Unexpected parsed expression.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a null expression.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentException))]
-		public void ParseEmptyTest()		
+		public void ParseEmptyTest()
 		{
 			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
 			    string.Empty);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an equals expression.
 		/// </summary>
 		[Test]
-		public void ParseEqualsExpressionTest()		
+		public void ParseEqualsExpressionTest()
 		{
 			string expressionText = "$(Name) == 'Test'";
 			
@@ -250,76 +250,76 @@ namespace NArrange.Tests.Core.Configuration
 			    "String expression was not parsed correctly.");
 			Assert.IsNull(stringExpression.Left);
 			Assert.IsNull(stringExpression.Right);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an invalid attribute name
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(FormatException))]
-		public void ParseInvalidAttributeTest()		
+		public void ParseInvalidAttributeTest()
 		{
 			string expression = "$(Foo) : 'Test'";
 			
 			IConditionExpression conditionExpression = ConditionExpressionParser.Instance.Parse(
 			    expression);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an invalid expression
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(FormatException))]
-		public void ParseInvalidExpressionTest1()		
+		public void ParseInvalidExpressionTest1()
 		{
 			string expression = "$(Name) == 'Test' == $(Name)";
 			
 			IConditionExpression conditionExpression = ConditionExpressionParser.Instance.Parse(
 			    expression);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an invalid expression
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(FormatException))]
-		public void ParseInvalidExpressionTest2()		
+		public void ParseInvalidExpressionTest2()
 		{
 			string expression = "$(Name)";
 			
 			IConditionExpression conditionExpression = ConditionExpressionParser.Instance.Parse(
 			    expression);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an invalid expression
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(FormatException))]
-		public void ParseInvalidExpressionTest3()		
+		public void ParseInvalidExpressionTest3()
 		{
 			string expression = "$(Name) == 'Test' $(Name) == 'Foo'";
 			
 			IConditionExpression conditionExpression = ConditionExpressionParser.Instance.Parse(
 			    expression);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a null expression.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void ParseNullTest()		
+		public void ParseNullTest()
 		{
 			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
 			    null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an expression.
 		/// </summary>
 		[Test]
-		public void ParseOrAndExpressionTest1()		
+		public void ParseOrAndExpressionTest1()
 		{
 			Action<string> testExpression = delegate(string condition)
 			{
@@ -413,13 +413,13 @@ namespace NArrange.Tests.Core.Configuration
 			
 			expressionText = "$(Name) == 'Test 1' And $(Name) == 'Test 2' Or $(Name) == 'Test 3'";
 			testExpression(expressionText);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an expression.
 		/// </summary>
 		[Test]
-		public void ParseOrAndExpressionTest2()		
+		public void ParseOrAndExpressionTest2()
 		{
 			Action<string> testExpression = delegate(string condition)
 			{
@@ -513,13 +513,13 @@ namespace NArrange.Tests.Core.Configuration
 			
 			expressionText = "$(Name) == 'Test 1' Or $(Name) == 'Test 2' And $(Name) == 'Test 3'";
 			testExpression(expressionText);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an OR expression.
 		/// </summary>
 		[Test]
-		public void ParseOrExpressionTest()		
+		public void ParseOrExpressionTest()
 		{
 			Action<string> testExpression = delegate(string condition)
 			{
@@ -583,8 +583,8 @@ namespace NArrange.Tests.Core.Configuration
 			
 			expressionText = "$(Name) == 'Test 1' Or $(Name) == 'Test 2'";
 			testExpression(expressionText);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

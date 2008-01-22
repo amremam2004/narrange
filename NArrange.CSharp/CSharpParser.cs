@@ -43,28 +43,29 @@ using System.Text;
 
 using NArrange.Core;
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.CSharp
 {
 	/// <summary>
 	/// Standard NArrange CSharp parser implementation.
 	/// </summary>
-	public sealed class CSharpParser : ICodeParser	
+	public sealed class CSharpParser : ICodeParser
 	{
 		#region Constants
-		
-		private const char EmptyChar = '\0';		
-		
+
+		private const char EmptyChar = '\0';
+
 		#endregion Constants
-		
+
 		#region Read-Only Fields
-		
-		private static readonly char[] WhitespaceChars = { ' ', '\t', '\r', '\n' };		
-		
+
+		private static readonly char[] WhitespaceChars = { ' ', '\t', '\r', '\n' };
+
 		#endregion Read-Only Fields
-		
+
 		#region Fields
-		
+
 		private char _ch = '\0';		
 		private char[] _charBuffer = new char[1];		
 		private char _lastCh = '\0';		
@@ -73,15 +74,15 @@ namespace NArrange.CSharp
 		private TextReader _reader;		
 		
 		#endregion Fields
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Parses a collection of code elements from a stream reader.
 		/// </summary>
 		/// <param name="reader">Code stream reader</param>
 		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> Parse(TextReader reader)		
+		public ReadOnlyCollection<ICodeElement> Parse(TextReader reader)
 		{
 			if (reader == null)
 			{
@@ -96,35 +97,35 @@ namespace NArrange.CSharp
 			codeElements = ParseElements();
 			
 			return codeElements.AsReadOnly();
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Captures an type name alias from the stream.
 		/// </summary>
 		/// <returns></returns>
-		private string CaptureTypeName()		
+		private string CaptureTypeName()
 		{
 			return CaptureWord(true);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Captures an alias or keyword from the stream.
 		/// </summary>
 		/// <returns></returns>
-		private string CaptureWord()		
+		private string CaptureWord()
 		{
 			return CaptureWord(false);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Captures an alias or keyword from the stream.
 		/// </summary>
 		/// <returns></returns>
-		private string CaptureWord(bool captureGeneric)		
+		private string CaptureWord(bool captureGeneric)
 		{
 			EatWhitespace();
 			
@@ -153,8 +154,8 @@ namespace NArrange.CSharp
 			}
 			
 			return word.ToString();
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a field with the specified information
 		/// </summary>
@@ -165,7 +166,7 @@ namespace NArrange.CSharp
 		/// <param name="isVolatile"></param>
 		/// <returns></returns>
 		private FieldElement CreateField(string fieldName, string type,
-			CodeAccess access, MemberModifier memberAttributes, bool isVolatile)		
+			CodeAccess access, MemberModifier memberAttributes, bool isVolatile)
 		{
 			FieldElement field = new FieldElement();
 			field.Name = fieldName;
@@ -175,13 +176,13 @@ namespace NArrange.CSharp
 			field.IsVolatile = isVolatile;
 			
 			return field;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Eats the specified character
 		/// </summary>
 		/// <param name="ch">Character to eat</param>
-		private void EatChar(char ch)		
+		private void EatChar(char ch)
 		{
 			EatWhitespace();
 			TryReadChar();
@@ -189,20 +190,20 @@ namespace NArrange.CSharp
 			{
 			    this.OnParseError("Expected " + ch);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Reads until the next non-whitespace character is reached.
 		/// </summary>
-		private void EatWhitespace()		
+		private void EatWhitespace()
 		{
 			EatWhitespace(false);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Reads until the next non-whitespace character is reached.
 		/// </summary>
-		private void EatWhitespace(bool spacesOnly)		
+		private void EatWhitespace(bool spacesOnly)
 		{
 			int data = _reader.Peek();
 			while (data > 0)
@@ -228,9 +229,9 @@ namespace NArrange.CSharp
 			        UnexpectedEndOfFile();
 			    }
 			}
-		}		
-		
-		private static CodeAccess GetAccess(string processedElementText)		
+		}
+
+		private static CodeAccess GetAccess(string processedElementText)
 		{
 			CodeAccess access = CodeAccess.NotSpecified;
 			
@@ -256,9 +257,9 @@ namespace NArrange.CSharp
 			}
 			
 			return access;
-		}		
-		
-		private static MemberModifier GetMemberAttributes(StringCollection wordList)		
+		}
+
+		private static MemberModifier GetMemberAttributes(StringCollection wordList)
 		{
 			MemberModifier memberAttributes;
 			memberAttributes = MemberModifier.None;
@@ -324,8 +325,8 @@ namespace NArrange.CSharp
 			}
 			
 			return memberAttributes;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Extracts a member name.
 		/// </summary>
@@ -334,7 +335,7 @@ namespace NArrange.CSharp
 		/// <param name="returnType"></param>
 		/// <returns></returns>
 		private void GetMemberNameAndType(string[] words,
-			out string name, out string returnType)		
+			out string name, out string returnType)
 		{
 			name = null;
 			returnType = null;
@@ -439,9 +440,9 @@ namespace NArrange.CSharp
 			{
 			    name = wordList[0];
 			}
-		}		
-		
-		private OperatorType GetOperatorType(StringCollection wordList)		
+		}
+
+		private OperatorType GetOperatorType(StringCollection wordList)
 		{
 			OperatorType operatorType = OperatorType.NotSpecified;
 			if (wordList.Contains(CSharpKeyword.Explicit))
@@ -454,8 +455,8 @@ namespace NArrange.CSharp
 			}
 			
 			return operatorType;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets a type element type
 		/// </summary>
@@ -464,7 +465,7 @@ namespace NArrange.CSharp
 		/// <param name="isInterface"></param>
 		/// <param name="isEnum"></param>
 		/// <returns></returns>
-		private TypeElementType GetTypeElementType(bool isClass, bool isStruct, bool isInterface, bool isEnum)		
+		private TypeElementType GetTypeElementType(bool isClass, bool isStruct, bool isInterface, bool isEnum)
 		{
 			TypeElementType type = TypeElementType.Class;
 			
@@ -492,15 +493,15 @@ namespace NArrange.CSharp
 			}
 			
 			return type;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines whether or not the specified char is a C# special character
 		/// that signals a break in an alias
 		/// </summary>
 		/// <param name="ch"></param>
 		/// <returns></returns>
-		private bool IsAliasBreak(char ch)		
+		private bool IsAliasBreak(char ch)
 		{
 			return  ch == CSharpSymbol.BeginParamList ||
 			        ch == CSharpSymbol.EndParamList ||
@@ -509,24 +510,24 @@ namespace NArrange.CSharp
 			        ch == CSharpSymbol.TypeImplements ||
 			        ch == CSharpSymbol.BeginBlock ||
 			        ch == CSharpSymbol.EndBlock;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines whether or not the specified character is whitespace.
 		/// </summary>
 		/// <param name="ch"></param>
 		/// <returns></returns>
-		private static bool IsWhitespace(char ch)		
+		private static bool IsWhitespace(char ch)
 		{
 			return ch == ' ' || ch == '\t' ||
 			    ch == '\n' || ch == '\r';
-		}		
-		
+		}
+
 		/// <summary>
 		/// Returns the next character in the file, if any
 		/// </summary>
 		/// <returns></returns>
-		private char NextChar()		
+		private char NextChar()
 		{
 			int data = _reader.Peek();
 			if (data > 0)
@@ -538,18 +539,18 @@ namespace NArrange.CSharp
 			{
 			    return EmptyChar;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Throws a parse error 
 		/// </summary>
 		/// <param name="message"></param>
-		private void OnParseError(string message)		
+		private void OnParseError(string message)
 		{
 			throw new ParseException(message, _lineNumber, _position);
-		}		
-		
-		private string[] ParseAliasList()		
+		}
+
+		private string[] ParseAliasList()
 		{
 			List<string> aliases = new List<string>();
 			
@@ -610,13 +611,13 @@ namespace NArrange.CSharp
 			}
 			
 			return aliases.ToArray();
-		}		
-		
-		private string ParseBlock(bool beginExpected)		
+		}
+
+		private string ParseBlock(bool beginExpected)
 		{
 			return ParseNestedText(CSharpSymbol.BeginBlock, CSharpSymbol.EndBlock, beginExpected, true);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a constructor
 		/// </summary>
@@ -624,7 +625,7 @@ namespace NArrange.CSharp
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private ConstructorElement ParseConstructor(string memberName, CodeAccess access, MemberModifier memberAttributes)		
+		private ConstructorElement ParseConstructor(string memberName, CodeAccess access, MemberModifier memberAttributes)
 		{
 			ConstructorElement constructor = new ConstructorElement();
 			constructor.Name = memberName;
@@ -662,8 +663,8 @@ namespace NArrange.CSharp
 			constructor.BodyText = this.ParseBlock(true);
 			
 			return constructor;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a delegate
 		/// </summary>
@@ -673,7 +674,7 @@ namespace NArrange.CSharp
 		/// <param name="returnType">Return type</param>
 		/// <returns></returns>
 		private DelegateElement ParseDelegate(string memberName, CodeAccess access, MemberModifier memberAttributes,
-			string returnType)		
+			string returnType)
 		{
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Name = memberName;
@@ -686,13 +687,13 @@ namespace NArrange.CSharp
 			EatChar(CSharpSymbol.EndOfStatement);
 			
 			return delegateElement;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses elements from the current point in the stream
 		/// </summary>
 		/// <returns></returns>
-		private List<ICodeElement> ParseElements()		
+		private List<ICodeElement> ParseElements()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			List<ICommentLine> commentLines = new List<ICommentLine>();
@@ -866,15 +867,15 @@ namespace NArrange.CSharp
 			}
 			
 			return codeElements;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses an event
 		/// </summary>
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private EventElement ParseEvent(CodeAccess access, MemberModifier memberAttributes)		
+		private EventElement ParseEvent(CodeAccess access, MemberModifier memberAttributes)
 		{
 			EventElement eventElement = new EventElement();
 			eventElement.Type = CaptureTypeName();
@@ -895,9 +896,9 @@ namespace NArrange.CSharp
 			}
 			
 			return eventElement;
-		}		
-		
-		private string ParseInitialValue()		
+		}
+
+		private string ParseInitialValue()
 		{
 			EatWhitespace(true);
 			
@@ -909,8 +910,8 @@ namespace NArrange.CSharp
 			}
 			    
 			return initialValue;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a method
 		/// </summary>
@@ -922,7 +923,7 @@ namespace NArrange.CSharp
 		/// <param name="operatorType"></param>
 		/// <returns></returns>
 		private MethodElement ParseMethod(string memberName, CodeAccess access, MemberModifier memberAttributes,
-			string returnType, bool isOperator, OperatorType operatorType)		
+			string returnType, bool isOperator, OperatorType operatorType)
 		{
 			MethodElement method = new MethodElement();
 			method.Name = memberName;
@@ -976,13 +977,13 @@ namespace NArrange.CSharp
 			}
 			
 			return method;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a namespace definition
 		/// </summary>
 		/// <returns></returns>
-		private NamespaceElement ParseNamespace()		
+		private NamespaceElement ParseNamespace()
 		{
 			NamespaceElement namespaceElement = new NamespaceElement();
 			string namepaceName = CaptureWord();
@@ -1002,9 +1003,9 @@ namespace NArrange.CSharp
 			EatChar(CSharpSymbol.EndBlock);
 			
 			return namespaceElement;
-		}		
-		
-		private string ParseNestedText(char beginChar, char endChar, bool beginExpected, bool trim)		
+		}
+
+		private string ParseNestedText(char beginChar, char endChar, bool beginExpected, bool trim)
 		{
 			if (beginChar != EmptyChar && beginExpected)
 			{
@@ -1113,13 +1114,13 @@ namespace NArrange.CSharp
 			{
 			    return blockText.ToString();
 			}
-		}		
-		
-		private string ParseParams()		
+		}
+
+		private string ParseParams()
 		{
 			return ParseNestedText(CSharpSymbol.BeginParamList, CSharpSymbol.EndParamList, false, false);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a property
 		/// </summary>
@@ -1128,7 +1129,7 @@ namespace NArrange.CSharp
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private PropertyElement ParseProperty(string memberName, string returnType, CodeAccess access, MemberModifier memberAttributes)		
+		private PropertyElement ParseProperty(string memberName, string returnType, CodeAccess access, MemberModifier memberAttributes)
 		{
 			PropertyElement property = new PropertyElement();
 			property.Name = memberName;
@@ -1139,15 +1140,15 @@ namespace NArrange.CSharp
 			property.BodyText = this.ParseBlock(false);
 			
 			return property;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Parses a type definition
 		/// </summary>
 		/// <returns></returns>
 		private TypeElement ParseType(
 			CodeAccess access, TypeModifier typeAttributes,
-			TypeElementType elementType)		
+			TypeElementType elementType)
 		{
 			TypeElement typeElement = new TypeElement();
 			
@@ -1227,9 +1228,9 @@ namespace NArrange.CSharp
 			}
 			
 			return typeElement;
-		}		
-		
-		private void ParseTypeParameterConstraints(List<TypeParameter> parameters)		
+		}
+
+		private void ParseTypeParameterConstraints(List<TypeParameter> parameters)
 		{
 			char nextChar = EmptyChar;
 			while (parameters.Count > 0 && nextChar != CSharpSymbol.BeginBlock)
@@ -1290,9 +1291,9 @@ namespace NArrange.CSharp
 			
 			    EatWhitespace();
 			}
-		}		
-		
-		private UsingElement ParseUsing()		
+		}
+
+		private UsingElement ParseUsing()
 		{
 			UsingElement usingElement = new UsingElement();
 			string alias = CaptureWord();
@@ -1334,24 +1335,24 @@ namespace NArrange.CSharp
 			}
 			
 			return usingElement;
-		}		
-		
-		private string ReadLine()		
+		}
+
+		private string ReadLine()
 		{
 			string commentText = _reader.ReadLine();
 			_lineNumber++;
 			
 			return commentText;
-		}		
-		
-		private void Reset()		
+		}
+
+		private void Reset()
 		{
 			_ch = '\0';
 			_lastCh = '\0';
 			_lineNumber = 1;
 			_position = 1;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tries to parse a code element
 		/// </summary>
@@ -1360,7 +1361,7 @@ namespace NArrange.CSharp
 		/// <param name="attributes"></param>
 		/// <returns></returns>
 		private ICodeElement TryParseElement(StringBuilder elementBuilder, List<ICommentLine> commentLines,
-			List<AttributeElement> attributes)		
+			List<AttributeElement> attributes)
 		{
 			CodeElement codeElement = null;
 			
@@ -1563,13 +1564,13 @@ namespace NArrange.CSharp
 			}
 			
 			return codeElement;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tries to read any character from the stream
 		/// </summary>
 		/// <returns></returns>
-		private bool TryReadChar()		
+		private bool TryReadChar()
 		{
 			if (_reader.Read(_charBuffer, 0, 1) > 0)
 			{
@@ -1590,14 +1591,14 @@ namespace NArrange.CSharp
 			}
 			
 			return false;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tries to read the specified character from the stream.
 		/// </summary>
 		/// <param name="ch"></param>
 		/// <returns></returns>
-		private bool TryReadChar(char ch)		
+		private bool TryReadChar(char ch)
 		{
 			int data = _reader.Peek();
 			char nextCh = (char)data;
@@ -1608,16 +1609,16 @@ namespace NArrange.CSharp
 			}
 			
 			return false;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Throws an unexpected end of file error.
 		/// </summary>
-		private void UnexpectedEndOfFile()		
+		private void UnexpectedEndOfFile()
 		{
 			throw new ParseException("Unexpected end of file", _lineNumber, _position);
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

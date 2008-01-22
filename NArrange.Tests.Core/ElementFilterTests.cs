@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the ElementFilter class
 	/// </summary>
 	[TestFixture]
-	public class ElementFilterTests	
+	public class ElementFilterTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests access filtering
 		/// </summary>
 		[Test]
-		public void IsMatchAccessTest()		
+		public void IsMatchAccessTest()
 		{
 			ElementFilter filter = new ElementFilter("$(Access) : 'Protected'");
 			
@@ -50,13 +50,13 @@ namespace NArrange.Tests.Core
 			// Null
 			//
 			Assert.IsFalse(filter.IsMatch(null), "IsMatch did not return the expected value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests name filtering
 		/// </summary>
 		[Test]
-		public void IsMatchNameTest()		
+		public void IsMatchNameTest()
 		{
 			ElementFilter filter = new ElementFilter("$(Name) : 'Style'");
 			
@@ -82,8 +82,8 @@ namespace NArrange.Tests.Core
 			// Null
 			//
 			Assert.IsFalse(filter.IsMatch(null), "IsMatch did not return the expected value.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

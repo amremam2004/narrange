@@ -42,34 +42,34 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Class for parsing filter expressions
 	/// </summary>
-	public sealed class ConditionExpressionParser	
+	public sealed class ConditionExpressionParser
 	{
 		#region Fields
-		
+
 		private static ConditionExpressionParser _instance;		
 		private static object _instanceLock = new object();		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new FilterExpressionParser
 		/// </summary>
-		private ConditionExpressionParser()		
+		private ConditionExpressionParser()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Parses and expression to an expression tree
 		/// </summary>
 		/// <param name="expression"></param>
 		/// <returns></returns>
-		public IConditionExpression Parse(string expression)		
+		public IConditionExpression Parse(string expression)
 		{
 			IConditionExpression conditionExpression = null;
 			
@@ -317,16 +317,16 @@ namespace NArrange.Core.Configuration
 			}
 			
 			return conditionExpression;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the single instance of the expression parser
 		/// </summary>
-		public static ConditionExpressionParser Instance		
+		public static ConditionExpressionParser Instance
 		{
 			get
 			{
@@ -343,38 +343,39 @@ namespace NArrange.Core.Configuration
 			
 			    return _instance;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Other
-		
+
 		/// <summary>
 		/// Operator expression
 		/// </summary>
-		private class OperatorExpressionPlaceholder : LeafExpression		
+		private class OperatorExpressionPlaceholder : LeafExpression
 		{
-			private ExpressionOperator _operatorType;			
+			private ExpressionOperator _operatorType;
 			/// <summary>
 			/// Creates a new operator expression.
 			/// </summary>
 			/// <param name="operatorType"></param>
-			public OperatorExpressionPlaceholder(ExpressionOperator operatorType)			
+			public OperatorExpressionPlaceholder(ExpressionOperator operatorType)
 			{
 				_operatorType = operatorType;
-			}			
-			
+			}
+
 			/// <summary>
 			/// Gets the expression operator
 			/// </summary>
-			public ExpressionOperator Operator			
+			public ExpressionOperator Operator
 			{
 				get
 				{
 				    return _operatorType;
 				}
-			}		}		
-		
+			}
+		}
+
 		#endregion Other
 	}
 }

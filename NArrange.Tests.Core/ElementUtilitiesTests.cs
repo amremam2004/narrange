@@ -14,15 +14,15 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the ElementUtilities class.
 	/// </summary>
 	[TestFixture]
-	public class ElementUtilitiesTests	
+	public class ElementUtilitiesTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the GetAttribute method for Access
 		/// </summary>
 		[Test]
-		public void GetAttributeAccessTest()		
+		public void GetAttributeAccessTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
@@ -30,13 +30,13 @@ namespace NArrange.Tests.Core
 			
 			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Access, fieldElement);
 			Assert.AreEqual("Protected", attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the GetAttribute method for ElementType
 		/// </summary>
 		[Test]
-		public void GetAttributeElementTypeTest()		
+		public void GetAttributeElementTypeTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
@@ -44,13 +44,13 @@ namespace NArrange.Tests.Core
 			
 			string attribute = ElementUtilities.GetAttribute(ElementAttribute.ElementType, fieldElement);
 			Assert.AreEqual("Field", attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the GetAttribute method for Modifier
 		/// </summary>
 		[Test]
-		public void GetAttributeModifierTest()		
+		public void GetAttributeModifierTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
@@ -72,39 +72,39 @@ namespace NArrange.Tests.Core
 			
 			attribute = ElementUtilities.GetAttribute(ElementAttribute.Modifier, usingElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the GetAttribute method for Name
 		/// </summary>
 		[Test]
-		public void GetAttributeNameTest()		
+		public void GetAttributeNameTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			
 			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Name, fieldElement);
 			Assert.AreEqual("TestField", attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the GetAttribute method for None
 		/// </summary>
 		[Test]
-		public void GetAttributeNoneTest()		
+		public void GetAttributeNoneTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			
 			string attribute = ElementUtilities.GetAttribute(ElementAttribute.None, fieldElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the GetAttribute method for Type
 		/// </summary>
 		[Test]
-		public void GetAttributeTypeTest()		
+		public void GetAttributeTypeTest()
 		{
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
@@ -125,8 +125,8 @@ namespace NArrange.Tests.Core
 			
 			attribute = ElementUtilities.GetAttribute(ElementAttribute.Type, usingElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

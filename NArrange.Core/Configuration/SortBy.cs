@@ -44,34 +44,34 @@ namespace NArrange.Core.Configuration
 	/// Specifies element sorting 
 	/// </summary>
 	[XmlType("Sort")]
-	public class SortBy : ICloneable	
+	public class SortBy : ICloneable
 	{
 		#region Fields
-		
+
 		private ElementAttribute _by;		
 		private ListSortDirection _direction;		
 		private SortBy _innerSortBy;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new SortBy instance
 		/// </summary>
-		public SortBy()		
+		public SortBy()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the attribute elements should be sorted by
 		/// </summary>
 		[XmlAttribute("By")]
-		public ElementAttribute By		
+		public ElementAttribute By
 		{
 			get
 			{
@@ -81,14 +81,14 @@ namespace NArrange.Core.Configuration
 			{
 			    _by = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the sort direction
 		/// </summary>
 		[XmlAttribute("Direction")]
 		[DefaultValue(ListSortDirection.Ascending)]
-		public ListSortDirection Direction		
+		public ListSortDirection Direction
 		{
 			get
 			{
@@ -98,13 +98,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _direction = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the inner sort specification
 		/// </summary>
 		[XmlElement("Sort")]
-		public SortBy InnerSortBy		
+		public SortBy InnerSortBy
 		{
 			get
 			{
@@ -114,17 +114,17 @@ namespace NArrange.Core.Configuration
 			{
 			    _innerSortBy = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			SortBy clone = new SortBy();
 			
@@ -137,17 +137,17 @@ namespace NArrange.Core.Configuration
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Sort by: {0}", this._by);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

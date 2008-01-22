@@ -45,36 +45,36 @@ namespace NArrange.Core
 	/// Class for determining whether or not an element matches 
 	/// filter criteria.
 	/// </summary>
-	public class ElementFilter : IElementFilter	
+	public class ElementFilter : IElementFilter
 	{
 		#region Fields
-		
+
 		private IConditionExpression _conditionExpression;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ElementFilter
 		/// </summary>
 		/// <param name="conditionExpression"></param>
-		public ElementFilter(string conditionExpression)		
+		public ElementFilter(string conditionExpression)
 		{
 			_conditionExpression = ConditionExpressionParser.Instance.Parse(conditionExpression);
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Determines whether or not the specified code element matches the
 		/// filter criteria.
 		/// </summary>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public bool IsMatch(ICodeElement codeElement)		
+		public bool IsMatch(ICodeElement codeElement)
 		{
 			bool isMatch = false;
 			
@@ -84,8 +84,8 @@ namespace NArrange.Core
 			}
 			
 			return isMatch;
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

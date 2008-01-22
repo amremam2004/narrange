@@ -45,36 +45,36 @@ namespace NArrange.Core.Configuration
 	/// separation in between)
 	/// </summary>
 	[XmlType("Group")]
-	public class GroupBy : ICloneable	
+	public class GroupBy : ICloneable
 	{
 		#region Fields
-		
+
 		private ElementAttribute _by;		
 		private string _customSeparator;		
 		private string _matchCapture;		
 		private GroupSeparatorType _separatorType;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new GroupBy instance
 		/// </summary>
-		public GroupBy()		
+		public GroupBy()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the regular expression that specifies which portion
 		/// of the element attribute should be used for grouping.
 		/// </summary>
 		[XmlAttribute("AttributeCapture")]
-		public string AttributeCapture		
+		public string AttributeCapture
 		{
 			get
 			{
@@ -84,13 +84,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _matchCapture = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the attribute elements should be grouped by
 		/// </summary>
 		[XmlAttribute("By")]
-		public ElementAttribute By		
+		public ElementAttribute By
 		{
 			get
 			{
@@ -100,14 +100,14 @@ namespace NArrange.Core.Configuration
 			{
 			    _by = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the custom separator string
 		/// </summary>
 		[XmlAttribute("CustomSeparator")]
 		[DefaultValue(null)]
-		public string CustomSeparator		
+		public string CustomSeparator
 		{
 			get
 			{
@@ -117,13 +117,13 @@ namespace NArrange.Core.Configuration
 			{
 			    _customSeparator = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the separator type
 		/// </summary>
 		[XmlAttribute("SeparatorType")]
-		public GroupSeparatorType SeparatorType		
+		public GroupSeparatorType SeparatorType
 		{
 			get
 			{
@@ -133,17 +133,17 @@ namespace NArrange.Core.Configuration
 			{
 			    _separatorType = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			GroupBy clone = new GroupBy();
 			
@@ -153,17 +153,17 @@ namespace NArrange.Core.Configuration
 			clone._separatorType = _separatorType;
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Group by: {0}", this._by);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

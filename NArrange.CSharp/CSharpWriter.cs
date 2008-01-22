@@ -40,35 +40,66 @@ using System.Text;
 
 using NArrange.Core;
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.CSharp
 {
 	/// <summary>
 	/// Writes CSharp code elements to a file
 	/// </summary>
-	public class CSharpWriter : ICodeWriter	
+	public class CSharpWriter : ICodeWriter
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Writes code elements to the specified writer
 		/// </summary>
 		/// <param name="codeElements"></param>
 		/// <param name="writer"></param>
-		public void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)		
+		public void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)
 		{
 			if (codeElements == null)
 			{
 			    throw new ArgumentNullException("codeElements");
 			}
 			
-			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer);
+			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer, Configuration);
 			foreach (ICodeElement codeElement in codeElements)
 			{
 			    codeElement.Accept(visitor);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets or sets the code configuration
+		/// </summary>
+		public CodeConfiguration Configuration
+		{
+			get
+			{
+			    if(_configuration == null)
+			    {
+			        _configuration = CodeConfiguration.Default;
+			    }
+			
+			    return _configuration;
+			}
+			set
+			{
+			    _configuration = value;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Fields
+
+		private CodeConfiguration _configuration;		
+		
+		#endregion Fields
 	}
 }

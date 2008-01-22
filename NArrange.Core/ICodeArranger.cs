@@ -44,17 +44,17 @@ namespace NArrange.Core
 	/// <summary>
 	/// Interface for a code arranger
 	/// </summary>
-	public interface ICodeArranger	
+	public interface ICodeArranger
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Arranges elements
 		/// </summary>
 		/// <param name="originalElements">Original elements, this collection should not be modified</param>
 		/// <returns></returns>
-		ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements);		
-		
+		ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements);
+
 		#endregion Methods
 	}
 }

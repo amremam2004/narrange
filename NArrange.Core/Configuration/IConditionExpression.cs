@@ -41,26 +41,26 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Interface for a filter expression
 	/// </summary>
-	public interface IConditionExpression	
+	public interface IConditionExpression
 	{
 		#region Properties
-		
+
 		/// <summary>
 		/// Left expression
 		/// </summary>
-		IConditionExpression Left		
+		IConditionExpression Left
 		{
 			get;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Right expression
 		/// </summary>
-		IConditionExpression Right		
+		IConditionExpression Right
 		{
 			get;
-		}		
-		
+		}
+
 		#endregion Properties
 	}
 }

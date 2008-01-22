@@ -43,19 +43,19 @@ namespace NArrange.Core
 	/// <summary>
 	/// Standard IElementArranger implementation
 	/// </summary>
-	public class ElementArranger : IElementArranger	
+	public class ElementArranger : IElementArranger
 	{
 		#region Fields
-		
+
 		private IElementArranger _childrenArranger;		
 		private ElementType _elementType;		
 		private IElementFilter _filter;		
 		private IElementInserter _inserter;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ElementArranger
 		/// </summary>
@@ -64,7 +64,7 @@ namespace NArrange.Core
 		/// <param name="filter"></param>
 		/// <param name="childrenArranger"></param>
 		protected internal ElementArranger(ElementType elementType,
-			IElementInserter inserter, IElementFilter filter, IElementArranger childrenArranger)		
+			IElementInserter inserter, IElementFilter filter, IElementArranger childrenArranger)
 		{
 			if (inserter == null)
 			{
@@ -75,19 +75,19 @@ namespace NArrange.Core
 			_inserter = inserter;
 			_filter = filter;
 			_childrenArranger = childrenArranger;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Arranges the element in within the code tree represented in the specified
 		/// builder.
 		/// </summary>
 		/// <param name="parentElement"></param>
 		/// <param name="codeElement"></param>
-		public virtual void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)		
+		public virtual void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			if (_childrenArranger != null)
 			{
@@ -101,21 +101,21 @@ namespace NArrange.Core
 			}
 			
 			_inserter.InsertElement(parentElement, codeElement);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Determines whether or not the specified element can be arranged by 
 		/// this arranger.
 		/// </summary>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public virtual bool CanArrange(ICodeElement codeElement)		
+		public virtual bool CanArrange(ICodeElement codeElement)
 		{
 			return (_elementType == ElementType.NotSpecified ||
 			    codeElement.ElementType == _elementType) && 
 			    (_filter == null || _filter.IsMatch(codeElement));
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

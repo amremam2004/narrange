@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the TypeElement class.
 	/// </summary>
 	[TestFixture]
-	public class TypeElementTests : CommentedElementTests<TypeElement>	
+	public class TypeElementTests : CommentedElementTests<TypeElement>
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			TypeElement typeElement = new TypeElement();
 			
@@ -62,17 +62,17 @@ namespace NArrange.Tests.Core.CodeElements
 			    "TypeParameters collection should not be null.");
 			Assert.AreEqual(0, typeElement.TypeParameters.Count,
 			    "TypeParameters collection should be empty.");
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance for cloning
 		/// </summary>
 		/// <returns></returns>
-		protected override TypeElement DoCreateClonePrototype()		
+		protected override TypeElement DoCreateClonePrototype()
 		{
 			TypeElement prototype = new TypeElement();
 			prototype.Name = "SomeType";
@@ -97,14 +97,14 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.TypeParameters.Add(new TypeParameter("T", "new()"));
 			
 			return prototype;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the clone was succesful
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected override void DoVerifyClone(TypeElement original, TypeElement clone)		
+		protected override void DoVerifyClone(TypeElement original, TypeElement clone)
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
@@ -130,8 +130,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.TypeParameters.Count, clone.TypeParameters.Count,
 			    "TypeParameters were not copied correctly.");
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

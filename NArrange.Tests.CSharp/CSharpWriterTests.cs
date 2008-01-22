@@ -19,15 +19,127 @@ namespace NArrange.Tests.CSharp
 	/// Test fixture for the CSharpWriter class
 	/// </summary>
 	[TestFixture]
-	public class CSharpWriterTests	
+	public class CSharpWriterTests
 	{
 		#region Public Methods
-		
+
+		/// <summary>
+		/// Tests writing an element with different tab styles
+		/// </summary>
+		[Test]
+		public void TabStyleTest()
+		{
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "TestClass";
+			classElement.Type = TypeElementType.Class;
+			classElement.Access = CodeAccess.Public;
+			
+			MethodElement methodElement = new MethodElement();
+			methodElement.Name = "DoSomething";
+			methodElement.Access = CodeAccess.Public;
+			methodElement.Type = "bool";
+			methodElement.BodyText = "\treturn false;";
+			
+			classElement.AddChild(methodElement);
+			
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			StringWriter writer; 
+			codeElements.Add(classElement);
+			
+			CodeConfiguration configuration = new CodeConfiguration();
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Configuration = configuration;
+			
+			//
+			// Tabs
+			//
+			configuration.Tabs.SpacesPerTab = 4;
+			configuration.Tabs.Style = TabStyle.Tabs;
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "public class TestClass\r\n" + 
+			    "{\r\n" + 
+			    "\tpublic bool DoSomething()\r\n" +
+			    "\t{\r\n" +
+			    "\t\treturn false;\r\n" +
+			    "\t}\r\n" + 
+			    "}", text,
+			    "Unexpected element text.");
+			
+			//
+			// Spaces(4)
+			//
+			configuration.Tabs.SpacesPerTab = 4;
+			configuration.Tabs.Style = TabStyle.Spaces;
+			methodElement.BodyText = "\treturn false;";
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "public class TestClass\r\n" +
+			    "{\r\n" +
+			    "    public bool DoSomething()\r\n" +
+			    "    {\r\n" +
+			    "        return false;\r\n" +
+			    "    }\r\n" +
+			    "}", text,
+			    "Unexpected element text.");
+			
+			//
+			// Spaces(8)
+			//
+			configuration.Tabs.SpacesPerTab = 8;
+			configuration.Tabs.Style = TabStyle.Spaces;
+			methodElement.BodyText = "\treturn false;";
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "public class TestClass\r\n" +
+			    "{\r\n" +
+			    "        public bool DoSomething()\r\n" +
+			    "        {\r\n" +
+			    "                return false;\r\n" +
+			    "        }\r\n" +
+			    "}", text,
+			    "Unexpected element text.");
+			
+			//
+			// Parse spaces
+			//
+			configuration.Tabs.SpacesPerTab = 4;
+			configuration.Tabs.Style = TabStyle.Tabs;
+			methodElement.BodyText = "    return false;";
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "public class TestClass\r\n" +
+			    "{\r\n" +
+			    "\tpublic bool DoSomething()\r\n" +
+			    "\t{\r\n" +
+			    "\t\treturn false;\r\n" +
+			    "\t}\r\n" +
+			    "}", text,
+			    "Unexpected element text.");
+		}
+
 		/// <summary>
 		/// Tests writing a tree of arranged elements
 		/// </summary>
 		[Test]
-		public void WriteArrangedElementTest()		
+		public void WriteArrangedElementTest()
 		{
 			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 			
@@ -66,13 +178,13 @@ namespace NArrange.Tests.CSharp
 			        error.ErrorText, "ArrangedClassMembers.cs",
 			        error.Line, error.Column);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing an attribute element
 		/// </summary>
 		[Test]
-		public void WriteAttributeElementTest()		
+		public void WriteAttributeElementTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -93,13 +205,13 @@ namespace NArrange.Tests.CSharp
 			    "[Obsolete(\"This is obsolete\")]\r\n",
 			    text,
 			    "Attribute element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a generic class.
 		/// </summary>
 		[Test]
-		public void WriteClassDefinitionGenericTest()		
+		public void WriteClassDefinitionGenericTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -125,13 +237,13 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n}",
 			    text,
 			    "Class element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a partial class.
 		/// </summary>
 		[Test]
-		public void WriteClassDefinitionPartialTest()		
+		public void WriteClassDefinitionPartialTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -157,13 +269,13 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n}",
 			    text,
 			    "Class element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a class.
 		/// </summary>
 		[Test]
-		public void WriteClassDefinitionTest()		
+		public void WriteClassDefinitionTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -220,13 +332,73 @@ namespace NArrange.Tests.CSharp
 			    "public unsafe class TestClass : IDisposable, IEnumerable\r\n{\r\n}",
 			    text,
 			    "Class element was not written correctly.");
-		}		
-		
+		}
+
+		/// <summary>
+		/// Tests writing a class with regions.
+		/// </summary>
+		[Test]
+		public void WriteClassDefinitionWithRegionsTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			TypeElement classElement = new TypeElement();
+			classElement.Access = CodeAccess.Public;
+			classElement.Type = TypeElementType.Class;
+			classElement.Name = "TestClass";
+			
+			RegionElement fieldsRegion = new RegionElement();
+			fieldsRegion.Name = "Fields";
+			
+			FieldElement field = new FieldElement();
+			field.Name = "_val";
+			field.Access = CodeAccess.Private;
+			field.Type = "int";
+			
+			fieldsRegion.AddChild(field);
+			classElement.AddChild(fieldsRegion);
+			
+			RegionElement methodsRegion = new RegionElement();
+			methodsRegion.Name = "Methods";
+			
+			MethodElement method = new MethodElement();
+			method.Name = "DoSomething";
+			method.Access = CodeAccess.Public;
+			method.Type = "void";
+			method.BodyText = string.Empty;
+			
+			methodsRegion.AddChild(method);
+			classElement.AddChild(methodsRegion);
+			
+			StringWriter writer;
+			codeElements.Add(classElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "public class TestClass\r\n" + 
+			    "{\r\n" +
+			    "\t#region Fields\r\n\r\n" + 
+			    "\tprivate int _val;\r\n\r\n" + 
+			    "\t#endregion Fields\r\n\r\n" + 
+			    "\t#region Methods\r\n\r\n" + 
+			    "\tpublic void DoSomething()\r\n" + 
+			    "\t{\r\n" + 
+			    "\t}\r\n\r\n" + 
+			    "\t#endregion Methods\r\n" +
+			    "}",
+			    text,
+			    "Class element was not written correctly.");
+		}
+
 		/// <summary>
 		/// Tests writing a class with unspecified access.
 		/// </summary>
 		[Test]
-		public void WriteClassUnspecifiedAccessTest()		
+		public void WriteClassUnspecifiedAccessTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -249,13 +421,13 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n}",
 			    text,
 			    "Class element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a constructor with a constructor reference.
 		/// </summary>
 		[Test]
-		public void WriteConstructorReferenceTest()		
+		public void WriteConstructorReferenceTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -275,13 +447,13 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("public TestClass(int value)\r\n\t: base(value)\r\n{\r\n}",
 			    text,
 			    "Constructor element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a constructor.
 		/// </summary>
 		[Test]
-		public void WriteConstructorTest()		
+		public void WriteConstructorTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -300,13 +472,13 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("public TestClass(int value)\r\n{\r\n}",
 			    text,
 			    "Constructor element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing an explicit operator
 		/// </summary>
 		[Test]
-		public void WriteExplicitOperatorTest()		
+		public void WriteExplicitOperatorTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -334,13 +506,13 @@ namespace NArrange.Tests.CSharp
 			    "}",
 			    text,
 			    "Operator element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a generic field.
 		/// </summary>
 		[Test]
-		public void WriteFieldGenericTest()		
+		public void WriteFieldGenericTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -361,13 +533,13 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("private static Dictionary<string, int> _test = new Dictionary<string, int>();",
 			    text,
 			    "FielElement element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a field.
 		/// </summary>
 		[Test]
-		public void WriteFieldTest()		
+		public void WriteFieldTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -388,13 +560,13 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("private static int _test = 1;",
 			    text,
 			    "FielElement element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing an implicit operator
 		/// </summary>
 		[Test]
-		public void WriteImplicitOperatorTest()		
+		public void WriteImplicitOperatorTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -422,13 +594,13 @@ namespace NArrange.Tests.CSharp
 			    "}",
 			    text,
 			    "Operator element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing an interface definition.
 		/// </summary>
 		[Test]
-		public void WriteInterfaceDefinitionTest()		
+		public void WriteInterfaceDefinitionTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -450,35 +622,35 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n}",
 			    text,
 			    "Interface element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests calling Write with a null element collection.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void WriteNullElementsTest()		
+		public void WriteNullElementsTest()
 		{
 			CSharpWriter writer = new CSharpWriter();
 			writer.Write(null, new StringWriter());
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests calling Write with a null writer.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void WriteNullWriterTest()		
+		public void WriteNullWriterTest()
 		{
 			CSharpWriter writer = new CSharpWriter();
 			writer.Write(new List<ICodeElement>().AsReadOnly(), null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing an operator
 		/// </summary>
 		[Test]
-		public void WriteOperatorTest()		
+		public void WriteOperatorTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -505,13 +677,13 @@ namespace NArrange.Tests.CSharp
 			    "}",
 			    text,
 			    "Operator element was not written correctly.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests writing a using element
 		/// </summary>
 		[Test]
-		public void WriteUsingElementTest()		
+		public void WriteUsingElementTest()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			
@@ -531,8 +703,8 @@ namespace NArrange.Tests.CSharp
 			    "using System.Text;",
 			    text,
 			    "Using element was not written correctly.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// </summary>
 	/// <typeparam name="TCodeElement"></typeparam>
 	public abstract class CommentedElementTests<TCodeElement> : CodeElementTests<TCodeElement>
-		where TCodeElement : CommentedElement, new()	
+		where TCodeElement : CommentedElement, new()
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the ClearHeaderCommentLines method
 		/// </summary>
 		[Test]
-		public void ClearHeaderCommentLinesTest()		
+		public void ClearHeaderCommentLinesTest()
 		{
 			TCodeElement codeElement = new TCodeElement();
 			codeElement.AddHeaderCommentLine(
@@ -36,8 +36,8 @@ namespace NArrange.Tests.Core.CodeElements
 			
 			Assert.AreEqual(0, codeElement.HeaderCommentLines.Count,
 			    "Header comment lines was not cleared.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

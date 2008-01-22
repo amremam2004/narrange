@@ -41,18 +41,18 @@ namespace NArrange.Core
 	/// <summary>
 	/// Logger interface
 	/// </summary>
-	public interface ILogger	
+	public interface ILogger
 	{
 		#region Methods
-		
+
 		/// <summary>
 		/// Logs a message
 		/// </summary>
 		/// <param name="level"></param>
 		/// <param name="message"></param>
 		/// <param name="args">Message args</param>
-		void LogMessage(LogLevel level, string message, params object[] args);		
-		
+		void LogMessage(LogLevel level, string message, params object[] args);
+
 		#endregion Methods
 	}
 }

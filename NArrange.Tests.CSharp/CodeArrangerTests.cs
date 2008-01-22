@@ -18,31 +18,31 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the CodeArranger class
 	/// </summary>
 	[TestFixture]
-	public class CodeArrangerTests	
+	public class CodeArrangerTests
 	{
 		#region Fields
-		
+
 		private ReadOnlyCollection<ICodeElement> TestElements;		
 		
 		#endregion Fields
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Test the construction with a null configuration
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullTest()		
+		public void CreateWithNullTest()
 		{
 			CodeArranger arranger = new CodeArranger(null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests arranging with the default configuration
 		/// </summary>
 		[Test]
-		public void DefualtArrangeTest()		
+		public void DefualtArrangeTest()
 		{
 			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 			
@@ -86,13 +86,13 @@ namespace NArrange.Tests.Core
 			//
 			NamespaceElement namespaceElement = arranged[2] as NamespaceElement;
 			Assert.IsNotNull(namespaceElement, "Expected a namespace element.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Performs setup for this test fixture
 		/// </summary>
 		[TestFixtureSetUp]
-		public void TestFixtureSetup()		
+		public void TestFixtureSetup()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -103,8 +103,8 @@ namespace NArrange.Tests.Core
 			    Assert.IsTrue(TestElements.Count > 0,
 			        "Test file does not contain any elements.");
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

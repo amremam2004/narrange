@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the MethodElement class.
 	/// </summary>
 	[TestFixture]
-	public class MethodElementTests : CommentedElementTests<MethodElement>	
+	public class MethodElementTests : CommentedElementTests<MethodElement>
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			MethodElement methodElement = new MethodElement();
 			
@@ -56,17 +56,17 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for IsStatic.");
 			Assert.AreEqual(string.Empty, methodElement.Name,
 			    "Unexpected default value for Name.");
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance for cloning
 		/// </summary>
 		/// <returns></returns>
-		protected override MethodElement DoCreateClonePrototype()		
+		protected override MethodElement DoCreateClonePrototype()
 		{
 			MethodElement prototype = new MethodElement();
 			prototype.Name = "SomeMethod";
@@ -86,14 +86,14 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.MemberModifiers = MemberModifier.Abstract;
 			
 			return prototype;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the clone was succesful
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected override void DoVerifyClone(MethodElement original, MethodElement clone)		
+		protected override void DoVerifyClone(MethodElement original, MethodElement clone)
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
@@ -123,8 +123,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsOperator was not copied correctly.");
 			Assert.AreEqual(original.OperatorType, clone.OperatorType,
 			    "OperatorType was not copied correctly.");
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

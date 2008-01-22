@@ -17,72 +17,72 @@ namespace NArrange.Tests.CSharp
 	/// Test fixture for the CSharpParser class.
 	/// </summary>
 	[TestFixture]
-	public class CSharpParserTests	
+	public class CSharpParserTests
 	{
 		#region Constants
-		
-		private const int NumConstructors = 4;		
-		private const int NumDelegates = 1;		
-		private const int NumEvents = 3;		
-		private const int NumFields = 12;		
-		private const int NumMethods = 7;		
-		private const int NumNestedTypes = 4;		
-		private const int NumProperties = 7;		
-		
+
+		private const int NumConstructors = 4;
+		private const int NumDelegates = 1;
+		private const int NumEvents = 3;
+		private const int NumFields = 12;
+		private const int NumMethods = 7;
+		private const int NumNestedTypes = 4;
+		private const int NumProperties = 7;
+
 		#endregion Constants
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests that when the end of a block is expected, the appropriate
 		/// error is thrown.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException), ExpectedMessage = "Expected }: Line 4, Column 2")]
-		public void ExpectedBlockCloseTest()		
+		public void ExpectedBlockCloseTest()
 		{
 			using (TextReader reader = CSharpTestFile.GetTestFileReader("ExpectedBlockClose.cs"))
 			{
 			    CSharpParser parser = new CSharpParser();
 			    parser.Parse(reader);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests that when an initial value is expected, the appropriate
 		/// error is thrown.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException), ExpectedMessage = "Unexpected end of file. Expected ;: Line 9, Column 2")]
-		public void ExpectedFieldEndOfStatementTest()		
+		public void ExpectedFieldEndOfStatementTest()
 		{
 			using (TextReader reader = CSharpTestFile.GetTestFileReader("ExpectedFieldEndOfStatement.cs"))
 			{
 			    CSharpParser parser = new CSharpParser();
 			    parser.Parse(reader);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests that when an initial value is expected, the appropriate
 		/// error is thrown.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException), ExpectedMessage = "Expected an initial value: Line 7, Column 32")]
-		public void ExpectedFieldInitialValueTest()		
+		public void ExpectedFieldInitialValueTest()
 		{
 			using (TextReader reader = CSharpTestFile.GetTestFileReader("ExpectedFieldInitialValue.cs"))
 			{
 			    CSharpParser parser = new CSharpParser();
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of assembly attributes.
 		/// </summary>
 		[Test]
-		public void ParseAssemblyAttributesTest()		
+		public void ParseAssemblyAttributesTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -233,8 +233,8 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(3, namespaceElement.HeaderCommentLines.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an attribute where the closing is expected.
 		/// </summary>
@@ -242,20 +242,20 @@ namespace NArrange.Tests.CSharp
 		[ExpectedException(typeof(ParseException),
            MatchType = MessageMatch.Contains,
           ExpectedMessage = "Unexpected end of file. Expected ]")]
-		public void ParseAttributeCloseExpectedTest()		
+		public void ParseAttributeCloseExpectedTest()
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly\")");
 			
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an attribute.
 		/// </summary>
 		[Test]
-		public void ParseAttributeTest()		
+		public void ParseAttributeTest()
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly\")]");
@@ -272,14 +272,14 @@ namespace NArrange.Tests.CSharp
 			    "assembly: AssemblyDescription(\"SampleAssembly\")", 
 			    attributeElement.BodyText,
 			    "Unexpected attribute text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing an attribute that contains an attribute
 		/// character in a string.
 		/// </summary>
 		[Test]
-		public void ParseAttributeWithAttributeCharacterTest()		
+		public void ParseAttributeWithAttributeCharacterTest()
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly]\")]");
@@ -296,14 +296,14 @@ namespace NArrange.Tests.CSharp
 			    "assembly: AssemblyDescription(\"SampleAssembly]\")",
 			    attributeElement.BodyText,
 			    "Unexpected attribute text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of a single namespace with a single class
 		/// definition.
 		/// </summary>
 		[Test]
-		public void ParseClassDefinitionTest()		
+		public void ParseClassDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -356,13 +356,13 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(CodeAccess.Public, classElement.Access,
 			        "Unexpected class code access level.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a class with unspecified access.
 		/// </summary>
 		[Test]
-		public void ParseClassPartialUnspecifiedAccessTest()		
+		public void ParseClassPartialUnspecifiedAccessTest()
 		{
 			StringReader reader = new StringReader(
 			    "partial class Test{}");
@@ -383,13 +383,13 @@ namespace NArrange.Tests.CSharp
 			    "Expected a partial class.");
 			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a constructor with parameters.
 		/// </summary>
 		[Test]
-		public void ParseConstructorParametersTest()		
+		public void ParseConstructorParametersTest()
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max){}");
@@ -408,13 +408,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual("int value, int max", constructorElement.Params,
 			    "Unexpected parameter string.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a constructor with constructor reference.
 		/// </summary>
 		[Test]
-		public void ParseConstructorReferenceTest()		
+		public void ParseConstructorReferenceTest()
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max) : base(value){}");
@@ -435,28 +435,28 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected parameter string.");
 			Assert.AreEqual("base(value)", constructorElement.Reference,
 			    "Unexpected constructor reference.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a constructor with constructor reference.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException), ExpectedMessage="Unexpected end of file",
             MatchType=MessageMatch.Contains)]
-		public void ParseConstructorReferenceUnexpectedEofTest()		
+		public void ParseConstructorReferenceUnexpectedEofTest()
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max) : base");
 			
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a constructor.
 		/// </summary>
 		[Test]
-		public void ParseConstructorTest()		
+		public void ParseConstructorTest()
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(){}");
@@ -475,14 +475,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(string.Empty, constructorElement.Params,
 			    "Unexpected parameter string.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of constructor members from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseConstructorsTest()		
+		public void ParseConstructorsTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -545,14 +545,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsEmpty(constructor.Params,
 			        "Parameter string should be empty.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of delegates from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseDelegatesTest()		
+		public void ParseDelegatesTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -590,14 +590,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual("object sender, bool boolParam", delegateElement.Params,
 			        "Unexpected parameter string.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of events from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseEventsTest()		
+		public void ParseEventsTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -692,13 +692,13 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(eventElement.BodyText.Contains("remove"),
 			        "Unexpected body text.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a generic field.
 		/// </summary>
 		[Test]
-		public void ParseFieldGenericTest()		
+		public void ParseFieldGenericTest()
 		{
 			StringReader reader = new StringReader(
 			    "private static Dictionary<string, int> _dictionary = new Dictionary<string, int>();");
@@ -721,14 +721,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("new Dictionary<string, int>()", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a field with an initial value that contains
 		/// character symbols.
 		/// </summary>
 		[Test]
-		public void ParseFieldWithCharInitialValueTest()		
+		public void ParseFieldWithCharInitialValueTest()
 		{
 			StringReader reader = new StringReader(
 			    "private char val = 'X';");
@@ -749,13 +749,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("'X'", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a field with an initial value.
 		/// </summary>
 		[Test]
-		public void ParseFieldWithInitialValueTest()		
+		public void ParseFieldWithInitialValueTest()
 		{
 			StringReader reader = new StringReader(
 			    "private int val = 17;");
@@ -776,14 +776,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("17", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a field with an initial value that contains
 		/// character symbols.
 		/// </summary>
 		[Test]
-		public void ParseFieldWithNestedCharInitialValueTest()		
+		public void ParseFieldWithNestedCharInitialValueTest()
 		{
 			string fieldText = "private char val = '\\'';";
 			StringReader reader = new StringReader(fieldText);
@@ -804,14 +804,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("'\\''", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of field members from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseFieldsTest()		
+		public void ParseFieldsTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -1038,13 +1038,13 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing header comments.
 		/// </summary>
 		[Test]
-		public void ParseHeaderCommentsBlockTest()		
+		public void ParseHeaderCommentsBlockTest()
 		{
 			StringReader reader = new StringReader(
 			    "/*Comment1\r\nComment2*/</summary>\r\npublic TestClass(){}");
@@ -1069,13 +1069,13 @@ namespace NArrange.Tests.CSharp
 			Assert.IsFalse(constructorElement.HeaderCommentLines[0].IsXmlComment);
 			Assert.AreEqual("Comment2", constructorElement.HeaderCommentLines[1].Text);
 			Assert.IsFalse(constructorElement.HeaderCommentLines[1].IsXmlComment);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing header comments.
 		/// </summary>
 		[Test]
-		public void ParseHeaderCommentsTest()		
+		public void ParseHeaderCommentsTest()
 		{
 			StringReader reader = new StringReader(
 			    "//Comment1\r\n//Comment2\r\npublic TestClass(){}");
@@ -1100,13 +1100,13 @@ namespace NArrange.Tests.CSharp
 			Assert.IsFalse(constructorElement.HeaderCommentLines[0].IsXmlComment);
 			Assert.AreEqual("Comment2", constructorElement.HeaderCommentLines[1].Text);
 			Assert.IsFalse(constructorElement.HeaderCommentLines[1].IsXmlComment);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing header comments.
 		/// </summary>
 		[Test]
-		public void ParseHeaderCommentsXmlTest()		
+		public void ParseHeaderCommentsXmlTest()
 		{
 			StringReader reader = new StringReader(
 			    "///<summary>Comment1\r\n///Comment2</summary>\r\npublic TestClass(){}");
@@ -1131,14 +1131,14 @@ namespace NArrange.Tests.CSharp
 			Assert.IsTrue(constructorElement.HeaderCommentLines[0].IsXmlComment);
 			Assert.AreEqual("Comment2</summary>", constructorElement.HeaderCommentLines[1].Text);
 			Assert.IsTrue(constructorElement.HeaderCommentLines[1].IsXmlComment);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of a single namespace with a single interface
 		/// definition.
 		/// </summary>
 		[Test]
-		public void ParseInterfaceDefinitionTest()		
+		public void ParseInterfaceDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -1187,14 +1187,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(CodeAccess.Public, interfaceElement.Access,
 			        "Unexpected code access level.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies that the correct number of members are parsed from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseMembersCountTest()		
+		public void ParseMembersCountTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -1207,13 +1207,13 @@ namespace NArrange.Tests.CSharp
 			        classElement.Children.Count,
 			        "Unexpected number of class members.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a method.
 		/// </summary>
 		[Test]
-		public void ParseMethodTest()		
+		public void ParseMethodTest()
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){}");
@@ -1232,14 +1232,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a method with a block character in a comment of the 
 		/// body text.
 		/// </summary>
 		[Test]
-		public void ParseMethodWithBlockCharBlockCommentTest()		
+		public void ParseMethodWithBlockCharBlockCommentTest()
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){/*Test }*/}");
@@ -1260,14 +1260,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("/*Test }*/", methodElement.BodyText,
 			    "Unexpected body text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a method with a block character in a comment of the 
 		/// body text.
 		/// </summary>
 		[Test]
-		public void ParseMethodWithBlockCharLineCommentTest()		
+		public void ParseMethodWithBlockCharLineCommentTest()
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){\r\n//Test }\r\n}");
@@ -1288,13 +1288,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("//Test }", methodElement.BodyText,
 			    "Unexpected body text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a method with a block character in the body text.
 		/// </summary>
 		[Test]
-		public void ParseMethodWithBlockCharTest()		
+		public void ParseMethodWithBlockCharTest()
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){Console.WriteLine(\"}\";Console.WriteLine();}");
@@ -1315,14 +1315,14 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("Console.WriteLine(\"}\";Console.WriteLine();", methodElement.BodyText,
 			    "Unexpected body text.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of methods from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseMethodsTest()		
+		public void ParseMethodsTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -1559,14 +1559,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(0, method.TypeParameters.Count,
 			        "Unexpected number of type parameters.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of a single namespace with a multiple class
 		/// definitions.
 		/// </summary>
 		[Test]
-		public void ParseMultiClassDefinitionTest()		
+		public void ParseMultiClassDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -1778,13 +1778,13 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(classElement8.IsAbstract,
 			       "Class should be abstract.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing multiple fields with an initial value from a single statement.
 		/// </summary>
 		[Test]
-		public void ParseMultiFieldInitialValueTest()		
+		public void ParseMultiFieldInitialValueTest()
 		{
 			StringReader reader = new StringReader(
 			    "private int val1, val2 = 1;");
@@ -1805,13 +1805,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("1", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing multiple fields from a single statement.
 		/// </summary>
 		[Test]
-		public void ParseMultiFieldTest()		
+		public void ParseMultiFieldTest()
 		{
 			StringReader reader = new StringReader(
 			    "private int val1, val2;");
@@ -1832,13 +1832,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of multiple namespaces
 		/// </summary>
 		[Test]
-		public void ParseMultipleNamespaceTest()		
+		public void ParseMultipleNamespaceTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -1861,8 +1861,8 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual("SampleNamespace2", namespaceElement2.Name,
 			        "Unexpected namespace name.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing of a namepsace where a closing 
 		/// brace is expected.";
@@ -1871,15 +1871,15 @@ namespace NArrange.Tests.CSharp
 		[ExpectedException(typeof(ParseException), 
             MatchType=MessageMatch.Contains, 
             ExpectedMessage="Expected }")]
-		public void ParseNamespaceExpectedBlockEnd()		
+		public void ParseNamespaceExpectedBlockEnd()
 		{
 			StringReader reader = new StringReader(
 			    "namespace TestNamespace{");
 			
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing of a namepsace where an opening 
 		/// brace is expected.";
@@ -1888,21 +1888,21 @@ namespace NArrange.Tests.CSharp
 		[ExpectedException(typeof(ParseException),
             MatchType = MessageMatch.Contains,
             ExpectedMessage = "Expected {")]
-		public void ParseNamespaceExpectedBlockStart()		
+		public void ParseNamespaceExpectedBlockStart()
 		{
 			StringReader reader = new StringReader(
 			    "namespace TestNamespace");
 			
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of nested types from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParseNestedTypesTest()		
+		public void ParseNestedTypesTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -1996,24 +1996,24 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, type.Children.Count,
 			        "Unexpected number of child elements.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a null stream.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void ParseNullStreamTest()		
+		public void ParseNullStreamTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of operators.
 		/// </summary>
 		[Test]
-		public void ParseOperatorsTest()		
+		public void ParseOperatorsTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetOperatorsFile();
 			using (TextReader reader = testFile.GetReader())
@@ -2141,14 +2141,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 			        "Unexpected operator body text.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies the parsing of properties members from the 
 		/// sample class.
 		/// </summary>
 		[Test]
-		public void ParsePropertiesTest()		
+		public void ParsePropertiesTest()
 		{
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
@@ -2355,13 +2355,13 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(0, property.Attributes.Count,
 			        "Unexpected number of attributes.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a simple class.
 		/// </summary>
 		[Test]
-		public void ParseSimpleClassTest()		
+		public void ParseSimpleClassTest()
 		{
 			StringReader reader = new StringReader(
 			    "public class Test{}");
@@ -2380,13 +2380,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a simple field.
 		/// </summary>
 		[Test]
-		public void ParseSimpleFieldTest()		
+		public void ParseSimpleFieldTest()
 		{
 			StringReader reader = new StringReader(
 			    "private int val;");
@@ -2407,13 +2407,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of a single namespace.
 		/// </summary>
 		[Test]
-		public void ParseSingleNamespaceTest()		
+		public void ParseSingleNamespaceTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -2435,14 +2435,14 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(0, namespaceElement.Children.Count,
 			        "Children collection should not be null.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the parsing of a single namespace with a single structure
 		/// definition.
 		/// </summary>
 		[Test]
-		public void ParseStructDefinitionTest()		
+		public void ParseStructDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
 			
@@ -2491,8 +2491,8 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(CodeAccess.Public, structElement.Access,
 			        "Unexpected code access level.");
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a using statement where an end 
 		/// of statement is expected.";
@@ -2501,20 +2501,20 @@ namespace NArrange.Tests.CSharp
 		[ExpectedException(typeof(ParseException),
             MatchType = MessageMatch.Contains,
             ExpectedMessage = "Expected = or ;")]
-		public void ParseUsingExpectedStatementEnd()		
+		public void ParseUsingExpectedStatementEnd()
 		{
 			StringReader reader = new StringReader(
 			    "using System.Text");
 			
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a using statement that redefines a class/namespace.
 		/// </summary>
 		[Test]
-		public void ParseUsingRedefineTest()		
+		public void ParseUsingRedefineTest()
 		{
 			StringReader reader = new StringReader(
 			    "using Redefined = System.Text.Encoder;");
@@ -2529,13 +2529,13 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("System.Text.Encoder", usingElement.Name,
 			    "Unexpected name.");
 			Assert.AreEqual("Redefined", usingElement.Redefine);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests parsing a simple using statement.";
 		/// </summary>
 		[Test]
-		public void ParseUsingTest()		
+		public void ParseUsingTest()
 		{
 			StringReader reader = new StringReader(
 			    "using System.Text;");
@@ -2550,33 +2550,33 @@ namespace NArrange.Tests.CSharp
 			    "Element is not a UsingElement.");
 			Assert.AreEqual("System.Text", usingElement.Name,
 			    "Unexpected name.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests that when the end of file is not expected, the appropriate
 		/// error is thrown.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException), ExpectedMessage = "Unexpected end of file: Line 3, Column 11")]
-		public void UnexpectedEndOfFileTest()		
+		public void UnexpectedEndOfFileTest()
 		{
 			using (TextReader reader = CSharpTestFile.GetTestFileReader("UnexpectedEndOfFile.cs"))
 			{
 			    CSharpParser parser = new CSharpParser();
 			    parser.Parse(reader);
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Gets the ClassMembers test class.
 		/// </summary>
 		/// <param name="reader"></param>
 		/// <returns></returns>
-		private static TypeElement GetMembersTestClass(TextReader reader)		
+		private static TypeElement GetMembersTestClass(TextReader reader)
 		{
 			TypeElement classElement;
 			CSharpParser parser = new CSharpParser();
@@ -2604,8 +2604,8 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected class name.");
 			
 			return classElement;
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

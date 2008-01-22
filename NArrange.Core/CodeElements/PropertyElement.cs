@@ -41,48 +41,48 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Property element
 	/// </summary>
-	public class PropertyElement : MemberElement	
+	public class PropertyElement : MemberElement
 	{
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()		
+		protected override MemberElement DoMemberClone()
 		{
 			return new PropertyElement();
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Property;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitPropertyElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

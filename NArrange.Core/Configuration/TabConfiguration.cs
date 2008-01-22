@@ -34,47 +34,69 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
+using System.Xml.Serialization;
 
-namespace NArrange.Core.CodeElements
+namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Code element base class with text.
+	/// Specifies tab style configuration
 	/// </summary>
-	public abstract class TextCodeElement : CommentedElement
+	[XmlType("Tabs")]
+	public class TabConfiguration : ICloneable
 	{
+		#region Fields
+
+		private int _spacesPerTab;		
+		private TabStyle _stlye;		
+		
+		#endregion Fields
+
 		#region Constructors
 
 		/// <summary>
-		/// Default constructor
+		/// Creates a new TabConfiguration instance
 		/// </summary>
-		protected TextCodeElement()
+		public TabConfiguration()
 		{
+			_stlye = TabStyle.Tabs;
+			_spacesPerTab = 4;
 		}
 
 		#endregion Constructors
 
-		#region Fields
-
-		private string _bodyText;		
-		
-		#endregion Fields
-
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the body text
+		/// Gets or sets the number of spaces per tab
 		/// </summary>
-		public virtual string BodyText
+		[XmlAttribute("SpacesPerTab")]
+		public int SpacesPerTab
 		{
 			get
 			{
-			    return _bodyText;
+			    return _spacesPerTab;
 			}
 			set
 			{
-			    _bodyText = value;
+			    _spacesPerTab = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the tab style
+		/// </summary>
+		[XmlAttribute("Style")]
+		public TabStyle Style
+		{
+			get
+			{
+			    return _stlye;
+			}
+			set
+			{
+			    _stlye = value;
 			}
 		}
 
@@ -83,19 +105,26 @@ namespace NArrange.Core.CodeElements
 		#region Public Methods
 
 		/// <summary>
-		/// Clones the 
+		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public override object Clone()
+		public object Clone()
 		{
-			TextCodeElement clone = base.Clone() as TextCodeElement;
+			TabConfiguration clone = new TabConfiguration();
 			
-			//
-			// Copy state
-			//
-			clone._bodyText = _bodyText;
+			clone._stlye = _stlye;
+			clone._spacesPerTab = _spacesPerTab;
 			
 			return clone;
+		}
+
+		/// <summary>
+		/// Gets the string representation
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return string.Format("Tabs: {0}, {1}", this.Style, this.SpacesPerTab);
 		}
 
 		#endregion Public Methods

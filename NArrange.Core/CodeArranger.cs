@@ -45,28 +45,28 @@ namespace NArrange.Core
 	/// <summary>
 	/// Code arranger
 	/// </summary>
-	public sealed class CodeArranger : ICodeArranger	
+	public sealed class CodeArranger : ICodeArranger
 	{
 		#region Fields
-		
+
 		private object _codeArrangeChainLock = new object();		
 		private ChainElementArranger _elementArrangerChain;		
 		
 		#endregion Fields
-		
+
 		#region Read-Only Fields
-		
-		private readonly CodeConfiguration _configuration;		
-		
+
+		private readonly CodeConfiguration _configuration;
+
 		#endregion Read-Only Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new code arranger with the specified configuration
 		/// </summary>
 		/// <param name="configuration">Configuration</param>
-		public CodeArranger(CodeConfiguration configuration)		
+		public CodeArranger(CodeConfiguration configuration)
 		{
 			if (configuration == null)
 			{
@@ -78,19 +78,19 @@ namespace NArrange.Core
 			// changing during processing.
 			//
 			_configuration = configuration.Clone() as CodeConfiguration;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Arranges the code elements according to the configuration supplied 
 		/// in the constructor.
 		/// </summary>
 		/// <param name="originalElements">Original elements</param>
 		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements)		
+		public ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements)
 		{
 			GroupElement rootElement = new GroupElement();
 			
@@ -105,13 +105,13 @@ namespace NArrange.Core
 			}
 			
 			return rootElement.Children;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Properties
-		
-		private ChainElementArranger ArrangerChain		
+
+		private ChainElementArranger ArrangerChain
 		{
 			get
 			{
@@ -134,8 +134,8 @@ namespace NArrange.Core
 			
 			    return _elementArrangerChain;
 			}
-		}		
-		
+		}
+
 		#endregion Private Properties
 	}
 }

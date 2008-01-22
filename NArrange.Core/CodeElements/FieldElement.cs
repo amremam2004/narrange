@@ -41,32 +41,32 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Field code element
 	/// </summary>
-	public class FieldElement : MemberElement	
+	public class FieldElement : MemberElement
 	{
 		#region Fields
-		
+
 		private string _initialValue;		
 		private bool _isVolatile;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get 
 			{
 			    return ElementType.Field;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the initial value of the field.
 		/// </summary>
-		public string InitialValue		
+		public string InitialValue
 		{
 			get
 			{
@@ -76,34 +76,34 @@ namespace NArrange.Core.CodeElements
 			{
 			    _initialValue = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the field is a constant.
 		/// </summary>
-		public bool IsConstant		
+		public bool IsConstant
 		{
 			get
 			{
 			    return (MemberModifiers & MemberModifier.Constant) == MemberModifier.Constant;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets whether or not the field is read-only.
 		/// </summary>
-		public bool IsReadOnly		
+		public bool IsReadOnly
 		{
 			get
 			{
 			    return (MemberModifiers & MemberModifier.ReadOnly) == MemberModifier.ReadOnly;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets whether or not the field is volatile.
 		/// </summary>
-		public bool IsVolatile		
+		public bool IsVolatile
 		{
 			get
 			{
@@ -113,17 +113,17 @@ namespace NArrange.Core.CodeElements
 			{
 			    _isVolatile = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()		
+		protected override MemberElement DoMemberClone()
 		{
 			FieldElement fieldElement = new FieldElement();
 			
@@ -134,22 +134,22 @@ namespace NArrange.Core.CodeElements
 			fieldElement._isVolatile = _isVolatile;
 			
 			return fieldElement;
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitFieldElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

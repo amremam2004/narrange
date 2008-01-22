@@ -42,18 +42,18 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Interface for a code element with attributes.
 	/// </summary>
-	public interface IAttributedElement : ICodeElement	
+	public interface IAttributedElement : ICodeElement
 	{
 		#region Properties
-		
+
 		/// <summary>
 		/// Gets the collection of attributes associated with this element.
 		/// </summary>
-		ReadOnlyCollection<IAttribute> Attributes		
+		ReadOnlyCollection<IAttribute> Attributes
 		{
 			get;
-		}		
-		
+		}
+
 		#endregion Properties
 	}
 }

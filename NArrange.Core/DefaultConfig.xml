@@ -10,6 +10,7 @@
 			</SourceExtensions>
 		</SourceHandler>
 	</Handlers>
+	<Tabs Style="Tabs" SpacesPerTab="4"/>
 	<Elements>
 		<Element Type="Using">
 			<Group By="Name" AttributeCapture="^(.*?)(\.|$)" SeparatorType="NewLine"/>

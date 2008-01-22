@@ -14,54 +14,54 @@ namespace NArrange.Tests.CSharp
 	/// <summary>
 	/// C# test file information
 	/// </summary>
-	public class CSharpTestFile	
+	public class CSharpTestFile
 	{
 		#region Fields
-		
+
 		private Assembly _assembly;		
 		private static Dictionary<string, Assembly> _compiledSourceFiles = new Dictionary<string, Assembly>();		
 		private string _resourceName;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new test file using the specified resource.
 		/// </summary>
 		/// <param name="resourceName"></param>
-		public CSharpTestFile(string resourceName)		
+		public CSharpTestFile(string resourceName)
 		{
 			_resourceName = resourceName;
 			_assembly = GetAssembly(resourceName);
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the assembly associated with the test file
 		/// </summary>
-		public Assembly Assembly		
+		public Assembly Assembly
 		{
 			get
 			{
 			    return _assembly;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Compiles C# source code
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		public static CompilerResults Compile(string source, string name)		
+		public static CompilerResults Compile(string source, string name)
 		{
 			//
 			// Compile the test source file
@@ -80,14 +80,14 @@ namespace NArrange.Tests.CSharp
 			CompilerResults results = provider.CompileAssemblyFromSource(parameters, source);
 			
 			return results;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Retrieves a compiler error from a compiler result
 		/// </summary>
 		/// <param name="results"></param>
 		/// <returns></returns>
-		public static CompilerError GetCompilerError(CompilerResults results)		
+		public static CompilerError GetCompilerError(CompilerResults results)
 		{
 			CompilerError error = null;
 			
@@ -101,33 +101,33 @@ namespace NArrange.Tests.CSharp
 			}
 			
 			return error;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets a TextReader for this test file
 		/// </summary>
 		/// <returns></returns>
-		public TextReader GetReader()		
+		public TextReader GetReader()
 		{
 			return GetTestFileReader(_resourceName);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Retrieves a reader for the specified resource
 		/// </summary>
 		/// <param name="resourceName"></param>
 		/// <returns></returns>
-		public static TextReader GetTestFileReader(string resourceName)		
+		public static TextReader GetTestFileReader(string resourceName)
 		{
 			return new StreamReader(GetTestFileStream(resourceName), Encoding.Default);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Opens a test file resource stream.
 		/// </summary>
 		/// <param name="resourceName"></param>
 		/// <returns></returns>
-		public static Stream GetTestFileStream(string resourceName)		
+		public static Stream GetTestFileStream(string resourceName)
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			Stream stream = assembly.GetManifestResourceStream(
@@ -137,13 +137,13 @@ namespace NArrange.Tests.CSharp
 			    "Test stream could not be retrieved.");
 			
 			return stream;
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
-		private static Assembly GetAssembly(string resourceName)		
+
+		private static Assembly GetAssembly(string resourceName)
 		{
 			if (_compiledSourceFiles.ContainsKey(resourceName))
 			{
@@ -184,8 +184,8 @@ namespace NArrange.Tests.CSharp
 			
 			    return assembly;
 			}
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

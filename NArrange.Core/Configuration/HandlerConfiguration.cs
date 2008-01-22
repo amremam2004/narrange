@@ -44,34 +44,34 @@ namespace NArrange.Core.Configuration
 	/// Specifies source code extension handler assembly
 	/// </summary>
 	[XmlType("SourceHandler")]
-	public class HandlerConfiguration : ICloneable	
+	public class HandlerConfiguration : ICloneable
 	{
 		#region Fields
-		
+
 		private string _assembly;		
 		private List<ExtensionConfiguration> _projectExtensions;		
 		private List<ExtensionConfiguration> _sourceExtensions;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new ExtensionConfiguration instance
 		/// </summary>
-		public HandlerConfiguration()		
+		public HandlerConfiguration()
 		{
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the extension handler assembly
 		/// </summary>
 		[XmlAttribute("Assembly")]
-		public string AssemblyName		
+		public string AssemblyName
 		{
 			get
 			{
@@ -81,14 +81,14 @@ namespace NArrange.Core.Configuration
 			{
 			    _assembly = value;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Extensions
 		/// </summary>
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
 		[Description("Project extension configurations")]
-		public List<ExtensionConfiguration> ProjectExtensions		
+		public List<ExtensionConfiguration> ProjectExtensions
 		{
 			get
 			{
@@ -105,14 +105,14 @@ namespace NArrange.Core.Configuration
 			
 			    return _projectExtensions;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Extensions
 		/// </summary>
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
 		[Description("Source extension configurations")]
-		public List<ExtensionConfiguration> SourceExtensions		
+		public List<ExtensionConfiguration> SourceExtensions
 		{
 			get
 			{
@@ -129,17 +129,17 @@ namespace NArrange.Core.Configuration
 			
 			    return _sourceExtensions;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			HandlerConfiguration clone = new HandlerConfiguration();
 			
@@ -158,17 +158,17 @@ namespace NArrange.Core.Configuration
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets the string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Handler: {1}", this._assembly);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

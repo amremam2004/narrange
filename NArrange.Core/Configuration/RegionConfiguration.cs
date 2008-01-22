@@ -44,22 +44,22 @@ namespace NArrange.Core.Configuration
 	/// Configuration element for regions
 	/// </summary>
 	[XmlType("Region")]
-	public class RegionConfiguration : ConfigurationElement	
+	public class RegionConfiguration : ConfigurationElement
 	{
 		#region Fields
-		
+
 		private string _name;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets or sets the region name.
 		/// </summary>
 		[XmlAttribute("Name")]
 		[Description("Region name")]
-		public string Name		
+		public string Name
 		{
 			get
 			{
@@ -69,38 +69,38 @@ namespace NArrange.Core.Configuration
 			{
 			    _name = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets a string representation
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("Region: {0}", this.Name);
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override ConfigurationElement DoClone()		
+		protected override ConfigurationElement DoClone()
 		{
 			RegionConfiguration clone = new RegionConfiguration();
 			
 			clone._name = _name;
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

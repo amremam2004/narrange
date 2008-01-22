@@ -31,6 +31,7 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//      - Added a TabStyle enumeration.
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace NArrange.Core
 	/// Code access level
 	/// </summary>
 	[Flags]
-	public enum CodeAccess	
+	public enum CodeAccess
 	{
 		/// <summary>
 		/// Not specified
@@ -73,7 +74,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Element attribute
 	/// </summary>
-	public enum ElementAttribute	
+	public enum ElementAttribute
 	{
 		/// <summary>
 		/// None
@@ -109,7 +110,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Element type
 	/// </summary>
-	public enum ElementType	
+	public enum ElementType
 	{
 		/// <summary>
 		/// Not specified
@@ -175,7 +176,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Expression operator
 	/// </summary>
-	public enum ExpressionOperator	
+	public enum ExpressionOperator
 	{
 		/// <summary>
 		/// Equality
@@ -201,7 +202,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Grouping separator type
 	/// </summary>
-	public enum GroupSeparatorType	
+	public enum GroupSeparatorType
 	{
 		/// <summary>
 		/// New line
@@ -217,7 +218,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Log level
 	/// </summary>
-	public enum LogLevel	
+	public enum LogLevel
 	{
 		/// <summary>
 		/// Error message
@@ -244,7 +245,7 @@ namespace NArrange.Core
 	/// Member attributes
 	/// </summary>
 	[Flags]
-	public enum MemberModifier	
+	public enum MemberModifier
 	{
 		/// <summary>
 		/// None
@@ -306,7 +307,7 @@ namespace NArrange.Core
 	/// Operator type
 	/// </summary>
 	[Flags]
-	public enum OperatorType	
+	public enum OperatorType
 	{
 		/// <summary>
 		/// Not specified
@@ -325,9 +326,25 @@ namespace NArrange.Core
 	}	
 	
 	/// <summary>
+	/// Tabbing style
+	/// </summary>
+	public enum TabStyle
+	{
+		/// <summary>
+		/// Use tabs when writing elements
+		/// </summary>
+		Tabs,
+		
+		/// <summary>
+		/// Uses spaces when writing elements
+		/// </summary>
+		Spaces
+	}	
+	
+	/// <summary>
 	/// Type element type
 	/// </summary>
-	public enum TypeElementType	
+	public enum TypeElementType
 	{
 		/// <summary>
 		/// Class
@@ -355,7 +372,7 @@ namespace NArrange.Core
 	/// </summary>
 	/// <remarks>This is a subset of member attributes that apply to types.</remarks>
 	[Flags]
-	public enum TypeModifier	
+	public enum TypeModifier
 	{
 		/// <summary>
 		/// None

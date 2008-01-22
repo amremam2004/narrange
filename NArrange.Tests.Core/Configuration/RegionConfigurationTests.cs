@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.Configuration
 	/// Test fixture for the RegionConfiguration class
 	/// </summary>
 	[TestFixture]
-	public class RegionConfigurationTests	
+	public class RegionConfigurationTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a new RegionConfiguration
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			
@@ -34,13 +34,13 @@ namespace NArrange.Tests.Core.Configuration
 			    "Elements collection should not be null.");
 			Assert.AreEqual(0, regionConfiguration.Elements.Count,
 			    "Elements collection should be empty.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests the ToString method
 		/// </summary>
 		[Test]
-		public void ToStringTest()		
+		public void ToStringTest()
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
@@ -49,8 +49,8 @@ namespace NArrange.Tests.Core.Configuration
 			
 			Assert.AreEqual("Region: Test Region", str,
 			    "Unexpected string representation.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

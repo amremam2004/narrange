@@ -41,32 +41,32 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Represents a using/import statement within code.
 	/// </summary>
-	public sealed class UsingElement : CommentedElement	
+	public sealed class UsingElement : CommentedElement
 	{
 		#region Fields
-		
+
 		private string _redefine;		
 		
 		#endregion Fields
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the element type
 		/// </summary>
-		public override ElementType ElementType		
+		public override ElementType ElementType
 		{
 			get
 			{
 			    return ElementType.Using;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Namespace to be redefined to the name of this
 		/// UsingElement.
 		/// </summary>
-		public string Redefine		
+		public string Redefine
 		{
 			get
 			{
@@ -76,38 +76,38 @@ namespace NArrange.Core.CodeElements
 			{
 			    _redefine = value;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Clones this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override CodeElement DoClone()		
+		protected override CodeElement DoClone()
 		{
 			UsingElement clone = new UsingElement();
 			clone._redefine = _redefine;
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Protected Methods
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)		
+		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitUsingElement(this);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

@@ -42,30 +42,30 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Type parameter definition for generic types.
 	/// </summary>
-	public class TypeParameter : ICloneable	
+	public class TypeParameter : ICloneable
 	{
 		#region Fields
-		
+
 		private List<string> _constraints;		
 		private object _constraintsLock = new object();		
 		private string _name;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new TypeParameter
 		/// </summary>
-		public TypeParameter()		
+		public TypeParameter()
 		{
 			_name = string.Empty;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a new TypeParameter
 		/// </summary>
-		public TypeParameter(string name, params string[] constraints)		
+		public TypeParameter(string name, params string[] constraints)
 			: this()
 		{
 			_name = name;
@@ -73,27 +73,27 @@ namespace NArrange.Core.CodeElements
 			{
 			    this.AddConstraint(constraint);
 			}
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the collection of constraints for this type parameter.
 		/// </summary>
-		public ReadOnlyCollection<string> Constraints		
+		public ReadOnlyCollection<string> Constraints
 		{
 			get
 			{
 			    return BaseConstraints.AsReadOnly();
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Gets or sets the type parameter name.
 		/// </summary>
-		public string Name		
+		public string Name
 		{
 			get
 			{
@@ -103,16 +103,16 @@ namespace NArrange.Core.CodeElements
 			{
 			    _name = value; 
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Protected Properties
-		
+
 		/// <summary>
 		/// Gets the list of parameter constraints
 		/// </summary>
-		protected List<string> BaseConstraints		
+		protected List<string> BaseConstraints
 		{
 			get
 			{
@@ -129,26 +129,26 @@ namespace NArrange.Core.CodeElements
 			
 			    return _constraints;
 			}
-		}		
-		
+		}
+
 		#endregion Protected Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Adds a constraint for the type parameter.
 		/// </summary>
 		/// <param name="constraint"></param>
-		public void AddConstraint(string constraint)		
+		public void AddConstraint(string constraint)
 		{
 			BaseConstraints.Add(constraint);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()		
+		public object Clone()
 		{
 			TypeParameter clone = new TypeParameter();
 			
@@ -162,8 +162,8 @@ namespace NArrange.Core.CodeElements
 			}
 			
 			return clone;
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

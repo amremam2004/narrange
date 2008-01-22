@@ -50,21 +50,21 @@ namespace NArrange.ConsoleApplication
 	/// <summary>
 	/// NArrange console application
 	/// </summary>
-	public class Program	
+	public class Program
 	{
 		#region Constants
-		
-		private const int Fail = -1;		
-		
+
+		private const int Fail = -1;
+
 		#endregion Constants
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Application entry point
 		/// </summary>
 		/// <param name="args"></param>
-		public static void Main(string[] args)		
+		public static void Main(string[] args)
 		{
 			ConsoleLogger logger = new ConsoleLogger();
 			
@@ -110,12 +110,12 @@ namespace NArrange.ConsoleApplication
 			{
 			    logger.LogMessage(LogLevel.Info, "Arrange successful.");
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Parses the command line arguments
 		/// </summary>
@@ -124,7 +124,7 @@ namespace NArrange.ConsoleApplication
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
 		private static void ParseArguments(string[] args,
-			ref string configFile, ref string inputFile, ref string outputFile)		
+			ref string configFile, ref string inputFile, ref string outputFile)
 		{
 			List<string> argList = new List<string>(args);
 			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
@@ -179,12 +179,12 @@ namespace NArrange.ConsoleApplication
 			    WriteUsage();
 			    Environment.Exit(Fail);
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes usage information to the console
 		/// </summary>
-		private static void WriteUsage()		
+		private static void WriteUsage()
 		{
 			Console.WriteLine("Usage:");
 			Console.WriteLine("narrange.console [/c:configuration] <input> [output]");
@@ -201,8 +201,8 @@ namespace NArrange.ConsoleApplication
 			Console.WriteLine("\t[Optional] If not specified the input source");
 			Console.WriteLine("\tfile will be overwritten.");
 			Console.WriteLine();
-		}		
-		
+		}
+
 		#endregion Private Methods
 	}
 }

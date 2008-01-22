@@ -43,25 +43,25 @@ namespace NArrange.ConsoleApplication
 	/// <summary>
 	/// Console logger
 	/// </summary>
-	public class ConsoleLogger : ILogger	
+	public class ConsoleLogger : ILogger
 	{
 		#region Constants
-		
-		private const ConsoleColor ErrorColor = ConsoleColor.Red;		
-		private const ConsoleColor InfoColor = ConsoleColor.Cyan;		
-		private const ConsoleColor WarningColor = ConsoleColor.Yellow;		
-		
+
+		private const ConsoleColor ErrorColor = ConsoleColor.Red;
+		private const ConsoleColor InfoColor = ConsoleColor.Cyan;
+		private const ConsoleColor WarningColor = ConsoleColor.Yellow;
+
 		#endregion Constants
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Logs a message to the console
 		/// </summary>
 		/// <param name="level"></param>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-		public void LogMessage(LogLevel level, string message, params object[] args)		
+		public void LogMessage(LogLevel level, string message, params object[] args)
 		{
 			switch (level)
 			{
@@ -81,15 +81,15 @@ namespace NArrange.ConsoleApplication
 			        WriteMessage(Console.ForegroundColor, message, args);
 			        break;
 			}
-		}		
-		
+		}
+
 		/// <summary>
 		/// Writes a message to the console using the specified color.
 		/// </summary>
 		/// <param name="color"></param>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-		public void WriteMessage(ConsoleColor color, string message, params object[] args)		
+		public void WriteMessage(ConsoleColor color, string message, params object[] args)
 		{
 			ConsoleColor origColor = Console.ForegroundColor;
 			
@@ -109,8 +109,8 @@ namespace NArrange.ConsoleApplication
 			{
 			    Console.ForegroundColor = origColor;
 			}
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

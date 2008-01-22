@@ -43,18 +43,18 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Interface for attribute code elements.
 	/// </summary>
-	public interface IAttribute : ICodeElement	
+	public interface IAttribute : ICodeElement
 	{
 		#region Properties
-		
+
 		/// <summary>
 		/// Gets the body text.
 		/// </summary>
-		string BodyText		
+		string BodyText
 		{
 			get;
-		}		
-		
+		}
+
 		#endregion Properties
 	}
 }

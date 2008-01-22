@@ -41,53 +41,53 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// String expression
 	/// </summary>
-	public class StringExpression : LeafExpression	
+	public class StringExpression : LeafExpression
 	{
 		#region Fields
-		
+
 		private string _text;		
 		
 		#endregion Fields
-		
+
 		#region Constructors
-		
+
 		/// <summary>
 		/// Creates a new string expression
 		/// </summary>
 		/// <param name="text"></param>
-		public StringExpression(string text)		
+		public StringExpression(string text)
 		{
 			_text = text;
-		}		
-		
+		}
+
 		#endregion Constructors
-		
+
 		#region Public Properties
-		
+
 		/// <summary>
 		/// Gets the expression text
 		/// </summary>
-		public string Text		
+		public string Text
 		{
 			get
 			{
 			    return _text;
 			}
-		}		
-		
+		}
+
 		#endregion Public Properties
-		
+
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()		
+		public override string ToString()
 		{
 			return string.Format("'{0}'", _text);
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

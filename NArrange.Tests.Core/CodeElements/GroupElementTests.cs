@@ -13,15 +13,15 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the GroupElement class
 	/// </summary>
 	[TestFixture]
-	public class GroupElementTests : CodeElementTests<GroupElement>	
+	public class GroupElementTests : CodeElementTests<GroupElement>
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests constructing a new GroupElement
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			GroupElement element = new GroupElement();
 			
@@ -36,17 +36,17 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Children collection should not be null.");
 			Assert.AreEqual(0, element.Children.Count,
 			    "Children collection should be empty.");
-		}		
-		
+		}
+
 		#endregion Public Methods
-		
+
 		#region Protected Methods
-		
+
 		/// <summary>
 		/// Creates an instance for cloning
 		/// </summary>
 		/// <returns></returns>
-		protected override GroupElement DoCreateClonePrototype()		
+		protected override GroupElement DoCreateClonePrototype()
 		{
 			GroupElement prototype = new GroupElement();
 			prototype.Name = "Test Group";
@@ -54,12 +54,12 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.CustomSeparator = "//\r\n// Some elements\r\n//";
 			
 			return prototype;
-		}		
-		
+		}
+
 		/// <summary>
 		/// Test for ToString()
 		/// </summary>
-		protected override void DoToStringTest()		
+		protected override void DoToStringTest()
 		{
 			NamespaceElement element = new NamespaceElement();
 			element.Name = "Test";
@@ -67,20 +67,20 @@ namespace NArrange.Tests.Core.CodeElements
 			string str = element.ToString();
 			Assert.AreEqual("Test", str,
 			    "Unexpected value returned for ToString.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Verifies that a clone has the same state as the original
 		/// </summary>
 		/// <param name="original"></param>
 		/// <param name="clone"></param>
-		protected override void DoVerifyClone(GroupElement original, GroupElement clone)		
+		protected override void DoVerifyClone(GroupElement original, GroupElement clone)
 		{
 			Assert.AreEqual(original.Name, clone.Name);
 			Assert.AreEqual(original.SeparatorType, clone.SeparatorType);
 			Assert.AreEqual(original.CustomSeparator, clone.CustomSeparator);
-		}		
-		
+		}
+
 		#endregion Protected Methods
 	}
 }

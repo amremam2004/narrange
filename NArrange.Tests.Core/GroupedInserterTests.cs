@@ -15,36 +15,36 @@ namespace NArrange.Tests.Core
 	/// Test fixture for the GroupedInserter class.
 	/// </summary>
 	[TestFixture]
-	public class GroupedInserterTests	
+	public class GroupedInserterTests
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Tests the creation of a GroupedInserter instance.
 		/// </summary>
 		[Test]
-		public void CreateTest()		
+		public void CreateTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			
 			GroupedInserter regionedInserter = new GroupedInserter(groupBy);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Test construction with a null configuration
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullTest()		
+		public void CreateWithNullTest()
 		{
 			GroupedInserter regionedInserter = new GroupedInserter(null);
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements.
 		/// </summary>
 		[Test]
-		public void InsertSortedTest()		
+		public void InsertSortedTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			groupBy.By = ElementAttribute.Name;
@@ -109,13 +109,13 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, groupElement.Children[0].Children.IndexOf(using3),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		/// <summary>
 		/// Tests inserting elements.
 		/// </summary>
 		[Test]
-		public void InsertTest()		
+		public void InsertTest()
 		{
 			GroupBy groupBy = new GroupBy();
 			groupBy.By = ElementAttribute.Name;
@@ -176,8 +176,8 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(2, groupElement.Children[0].Children.IndexOf(using3),
 			    "Element is not at the correct index.");
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }

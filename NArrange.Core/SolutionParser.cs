@@ -31,6 +31,9 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//      - Fixed an issue with parsing of project files from a solution.  
+//        The solution parser was attempting to parse a project name when a 
+//        ProjectSection was encountered.
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
@@ -44,16 +47,16 @@ namespace NArrange.Core
 	/// <summary>
 	/// Parses a solution for individual project file names
 	/// </summary>
-	public class SolutionParser	
+	public class SolutionParser
 	{
 		#region Public Methods
-		
+
 		/// <summary>
 		/// Parses project file names from a solution file.
 		/// </summary>
 		/// <param name="solutionFile"></param>
 		/// <returns>A list of project filenames</returns>
-		public ReadOnlyCollection<string> Parse(string solutionFile)		
+		public ReadOnlyCollection<string> Parse(string solutionFile)
 		{
 			if (solutionFile == null)
 			{
@@ -73,7 +76,7 @@ namespace NArrange.Core
 			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
 			
 			        string line = reader.ReadLine().TrimStart();
-			        if (line.StartsWith("Project"))
+			        if (line.StartsWith("Project("))
 			        {
 			            string[] projectData = line.Split(',');
 			            string projectFile = projectData[1].Trim().Trim('"');
@@ -84,8 +87,8 @@ namespace NArrange.Core
 			}
 			
 			return projectFiles.AsReadOnly();
-		}		
-		
+		}
+
 		#endregion Public Methods
 	}
 }
