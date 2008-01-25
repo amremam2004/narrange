@@ -224,10 +224,10 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
-		/// Performs test fixture setup
+		/// Performs test setup
 		/// </summary>
-		[TestFixtureSetUp]
-		public void TestFixtureSetup()
+		[SetUp]
+		public void TestSetup()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			
@@ -261,8 +261,8 @@ namespace NArrange.Tests.Core
 		/// <summary>
 		/// Performs test fixture cleanup
 		/// </summary>
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown()
+		[TearDown]
+		public void TestTearDown()
 		{
 			try
 			{

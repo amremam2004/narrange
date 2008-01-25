@@ -1,6 +1,4 @@
 The following changes were made in this release:
 
-0.1.02.0
-- Fixed an issue with the parsing of project files from a solution.  The solution parser was attempting to parse a project name when a ProjectSection was encountered.
-- Fixed several places where the C# writer was adding extraneous tabs after member definitions.
-- Allow configuration of tab style.
+0.1.03.0
+- Improved the CSharpParser performance by reducing the number of calls to TryParseElement.

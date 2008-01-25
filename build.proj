@@ -8,7 +8,7 @@
 		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
 		<Major>0</Major>
 		<Minor>1</Minor>
-		<Build>02</Build>
+		<Build>03</Build>
 	</PropertyGroup>
 	<ItemGroup>
 		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>
@@ -50,7 +50,12 @@
 	</Target>
 		
 	<Target Name="Build">
-		<MakeDir Directories="$(BinDirectory)"/>   
+		<MakeDir Directories="$(BinDirectory)"/>  
+		
+		<CreateItem Include="$(MSBuildProjectDirectory)\Dependencies\*.*">
+			<Output ItemName="Dependencies" TaskParameter="Include" />
+		</CreateItem>
+		<Copy SourceFiles="@(Dependencies)" DestinationFolder="$(BinDirectory)"/>
 		
 		<MSBuild Projects="@(Projects)" Properties="Configuration=Release">
 			<Output ItemName="OutputFiles" TaskParameter="TargetOutputs"/>

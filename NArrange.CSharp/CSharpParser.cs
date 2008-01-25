@@ -32,6 +32,8 @@
 //      James Nies
 //      - Initial creation
 //      - Fixed parsing of events with generic return types
+//      - Improved parsing performance by reducing the number of calls to 
+//        TryParseElement
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
@@ -394,6 +396,7 @@ namespace NArrange.CSharp
 			            wordGroup = wordGroup + " " + wordList[wordIndex + 1];
 			            wordList[wordIndex] = wordGroup;
 			            wordList.RemoveAt(wordIndex + 1);
+			            wordIndex--;
 			        }
 			    }
 			}
@@ -830,27 +833,33 @@ namespace NArrange.CSharp
 			
 			        default:
 			            elementBuilder.Append(_ch);
+			            nextChar = NextChar();
 			
-			            //
-			            // Try to parse a code element
-			            //
-			            ICodeElement element = TryParseElement(
-			                elementBuilder, commentLines, attributes);
-			            if (element != null)
+			            if (char.IsWhiteSpace(_ch) || CSharpSymbol.IsCSharpSymbol(_ch) ||
+			                char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(nextChar))
 			            {
-			                codeElements.Add(element);
-			                elementBuilder = new StringBuilder();
-			                commentLines = new List<ICommentLine>();
-			                if (element is IAttributedElement)
+			                //
+			                // Try to parse a code element
+			                //
+			                ICodeElement element = TryParseElement(
+			                    elementBuilder, commentLines, attributes);
+			                if (element != null)
 			                {
-			                    foreach (AttributeElement attribute in attributes)
+			                    codeElements.Add(element);
+			                    elementBuilder = new StringBuilder();
+			                    commentLines = new List<ICommentLine>();
+			                    if (element is IAttributedElement)
 			                    {
-			                        codeElements.Remove(attribute);
-			                    }
+			                        foreach (AttributeElement attribute in attributes)
+			                        {
+			                            codeElements.Remove(attribute);
+			                        }
 			
-			                    attributes = new List<AttributeElement>();
+			                        attributes = new List<AttributeElement>();
+			                    }
 			                }
 			            }
+			
 			            break;
 			    }
 			

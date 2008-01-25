@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NArrange")]
-[assembly: AssemblyCopyright("Copyright © 2007-2008")]
+[assembly: AssemblyCopyright("Copyright © 2007-2008 James Nies and NArrange contributors")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -15,5 +15,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.1.02")]
-[assembly: AssemblyFileVersion("0.1.02")]
+[assembly: AssemblyVersion("0.1.03")]
+[assembly: AssemblyFileVersion("0.1.03")]
