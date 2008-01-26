@@ -835,8 +835,7 @@ namespace NArrange.CSharp
 			            elementBuilder.Append(_ch);
 			            nextChar = NextChar();
 			
-			            if (char.IsWhiteSpace(_ch) || CSharpSymbol.IsCSharpSymbol(_ch) ||
-			                char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(nextChar))
+			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(_ch))
 			            {
 			                //
 			                // Try to parse a code element
