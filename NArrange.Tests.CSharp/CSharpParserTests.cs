@@ -359,6 +359,87 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a class with an empty parameter constraint list.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected a class or interface name")]
+		public void ParseClassEmptyParameterConstraintListTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where T : {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class where a type implementation specification is expected.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Expected :")]
+		public void ParseClassExpectedTypeImplementsTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where T {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class where a type parameter constraint is expected.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+        ExpectedMessage = "Expected type parameter constraint")]
+		public void ParseClassExpectedTypeParameterConstraintTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> when T : {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an invalid New type parameter constraint.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException), 
+            MatchType=MessageMatch.Contains, 
+            ExpectedMessage="Invalid new constraint, use new()")]
+		public void ParseClassInvalidNewConstraintTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where T : IDisposable, new {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class where the new() constraint is not the last 
+		/// type parameter constraint.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+         ExpectedMessage = "must be the last declared type parameter constraint")]
+		public void ParseClassNewConstraintOrderTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where T : new(), IDisposable {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Tests parsing a class with unspecified access.
 		/// </summary>
 		[Test]
@@ -383,6 +464,54 @@ namespace NArrange.Tests.CSharp
 			    "Expected a partial class.");
 			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an unclosed type parameter constraint.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected >")]
+		public void ParseClassUnclosedTypeParameterConstraintTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where T : IComparable<T {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an unclosed type parameter.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected >")]
+		public void ParseClassUnclosedTypeParameterTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an unknown type parameter constraint.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Unknown type parameter")]
+		public void ParseClassUnknownTypeParameterTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test<T> where S : new() {}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
 
 		/// <summary>
@@ -1190,6 +1319,22 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing an invalid type definition.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected {")]
+		public void ParseInvalidTypeDefinitionTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class struct Test{}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Verifies that the correct number of members are parsed from the 
 		/// sample class.
 		/// </summary>
@@ -1207,6 +1352,22 @@ namespace NArrange.Tests.CSharp
 			        classElement.Children.Count,
 			        "Unexpected number of class members.");
 			}
+		}
+
+		/// <summary>
+		/// Tests parsing a method without a closing brace
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unexpected end of file")]
+		public void ParseMethodBodyUnexpectedEndOfFileTest()
+		{
+			StringReader reader = new StringReader(
+			    "private void DoSomething(){");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
 
 		/// <summary>
@@ -1813,25 +1974,35 @@ namespace NArrange.Tests.CSharp
 		[Test]
 		public void ParseMultiFieldTest()
 		{
-			StringReader reader = new StringReader(
-			    "private int val1, val2;");
+			string[] fieldDefinitions = new string[]
+			{
+			    "private int val1, val2;",
+			    "private int val1 , val2;",
+			    "private int val1 ,val2;"
+			};
 			
-			CSharpParser parser = new CSharpParser();
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			foreach (string fieldDefinition in fieldDefinitions)
+			{
+			    StringReader reader = new StringReader(fieldDefinition);
 			
-			Assert.AreEqual(1, elements.Count,
-			    "An unexpected number of elements were parsed.");
-			FieldElement fieldElement = elements[0] as FieldElement;
-			Assert.IsNotNull(fieldElement,
-			    "Element is not a FieldElement.");
-			Assert.AreEqual("val1, val2", fieldElement.Name,
-			    "Unexpected name.");
-			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
-			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.Type,
-			    "Unexpected member type.");
-			Assert.IsNull(fieldElement.InitialValue,
-			    "Unexpected initial value.");
+			    CSharpParser parser = new CSharpParser();
+			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			    Assert.AreEqual(1, elements.Count,
+			        "An unexpected number of elements were parsed. Field definition: {0}", 
+			        fieldDefinition);
+			    FieldElement fieldElement = elements[0] as FieldElement;
+			    Assert.IsNotNull(fieldElement,
+			        "Element is not a FieldElement.");
+			    Assert.AreEqual("val1, val2", fieldElement.Name,
+			        "Unexpected name. Field definition: {0}", fieldDefinition);
+			    Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+			        "Unexpected code access. Field definition: {0}", fieldDefinition);
+			    Assert.AreEqual("int", fieldElement.Type,
+			        "Unexpected member type. Field definition: {0}", fieldDefinition);
+			    Assert.IsNull(fieldElement.InitialValue,
+			        "Unexpected initial value. Field definition: {0}", fieldDefinition);
+			}
 		}
 
 		/// <summary>
@@ -1996,6 +2167,27 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, type.Children.Count,
 			        "Unexpected number of child elements.");
 			}
+		}
+
+		/// <summary>
+		/// Tests parsing a non-region preprocessor directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Cannot arrange files with preprocessor directives")]
+		public void ParseNonRegionPreprocessorTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n" + 
+			    "{\r\n" + 
+			    "#if DEBUG\r\n" + 
+			    "\tprivate bool _test = false;\r\n" +
+			    "#endif\r\n" + 
+			    "}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
 
 		/// <summary>
@@ -2358,6 +2550,30 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a region preprocessor directive.  This should not throw 
+		/// an exception.
+		/// </summary>
+		[Test]
+		public void ParseRegionPreprocessorTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n" +
+			    "{\r\n" +
+			    "#region Fields\r\n" +
+			    "\tprivate bool _test = false;\r\n" +
+			    "#endregion\r\n" +
+			    "}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			Assert.AreEqual(1, elements.Count, 
+			    "An unexpected number of elements were parsed.");
+			Assert.AreEqual(1, elements[0].Children.Count,
+			    "An unexpected number of child elements were parsed.");
+		}
+
+		/// <summary>
 		/// Tests parsing a simple class.
 		/// </summary>
 		[Test]
@@ -2491,6 +2707,38 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(CodeAccess.Public, structElement.Access,
 			        "Unexpected code access level.");
 			}
+		}
+
+		/// <summary>
+		/// Tests parsing an empty using statement.";
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Expected a namepace name")]
+		public void ParseUsingEmptyNamespaceTest()
+		{
+			StringReader reader = new StringReader(
+			    "using ;");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing an empty using statement with a redefine.";
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Expected a type or namepace name")]
+		public void ParseUsingEmptyTypeOrNamespaceTest()
+		{
+			StringReader reader = new StringReader(
+			    "using Test = ;");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
 
 		/// <summary>

@@ -136,6 +136,45 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing an element with an unknown tab style.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void TabStyleUnknownTest()
+		{
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "TestClass";
+			classElement.Type = TypeElementType.Class;
+			classElement.Access = CodeAccess.Public;
+			
+			MethodElement methodElement = new MethodElement();
+			methodElement.Name = "DoSomething";
+			methodElement.Access = CodeAccess.Public;
+			methodElement.Type = "bool";
+			methodElement.BodyText = "\treturn false;";
+			
+			classElement.AddChild(methodElement);
+			
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			StringWriter writer;
+			codeElements.Add(classElement);
+			
+			CodeConfiguration configuration = new CodeConfiguration();
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Configuration = configuration;
+			
+			//
+			// Unknown tab style
+			//
+			configuration.Tabs.SpacesPerTab = 4;
+			configuration.Tabs.Style = (TabStyle)int.MinValue;
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+		}
+
+		/// <summary>
 		/// Tests writing a tree of arranged elements
 		/// </summary>
 		[Test]
@@ -563,6 +602,60 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a group of elements.
+		/// </summary>
+		[Test]
+		public void WriteGroupTest()
+		{
+			string[] nameSpaces = new string[]
+			{
+			    "System",
+			    "System.IO",
+			    "System.Text"
+			};
+			
+			GroupElement group = new GroupElement();
+			
+			foreach (string nameSpace in nameSpaces)
+			{
+			    UsingElement usingElement = new UsingElement();
+			    usingElement.Name = nameSpace;
+			    group.AddChild(usingElement);
+			}
+			
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			codeElements.Add(group);
+			
+			StringWriter writer;
+			CSharpWriter csharpWriter = new CSharpWriter();
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "using System;\r\n" +
+			    "using System.IO;\r\n" +
+			    "using System.Text;\r\n\r\n",
+			    text,
+			    "Group was not written correctly.");
+			
+			group.SeparatorType = GroupSeparatorType.Custom;
+			group.CustomSeparator = "\r\n";
+			
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "using System;\r\n\r\n" +
+			    "using System.IO;\r\n\r\n" +
+			    "using System.Text;\r\n\r\n",
+			    text,
+			    "Group was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an implicit operator
 		/// </summary>
 		[Test]
@@ -622,6 +715,91 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n}",
 			    text,
 			    "Interface element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing an abstract method.
+		/// </summary>
+		[Test]
+		public void WriteMethodAbstractTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Protected;
+			methodElement.MemberModifiers = MemberModifier.Abstract;
+			methodElement.Type = "void";
+			methodElement.Name = "DoSomething";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual("protected abstract void DoSomething();",
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a sealed method.
+		/// </summary>
+		[Test]
+		public void WriteMethodSealedTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Public;
+			methodElement.MemberModifiers = MemberModifier.Sealed | MemberModifier.Override;
+			methodElement.Type = "void";
+			methodElement.Name = "DoSomething";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual("public override sealed void DoSomething();",
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a method.
+		/// </summary>
+		[Test]
+		public void WriteMethodTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Public;
+			methodElement.MemberModifiers = MemberModifier.Static;
+			methodElement.Type = "int";
+			methodElement.Name = "DoSomething";
+			methodElement.Params = "bool flag";
+			methodElement.BodyText = "\treturn 0;";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "public static int DoSomething(bool flag)\r\n" + 
+			    "{\r\n" + 
+			    "\treturn 0;\r\n" + 
+			    "}"
+			    ,
+			    text,
+			    "Method element was not written correctly.");
 		}
 
 		/// <summary>

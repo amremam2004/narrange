@@ -2,3 +2,5 @@ The following changes were made in this release:
 
 0.1.03.0
 - Improved the CSharpParser performance by reducing the number of calls to TryParseElement.
+- Fixed an issue with parsing multi-value field definitions.
+- Fixed writing of groups with a custom separator string.

@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -71,10 +72,7 @@ namespace NArrange.CSharp
 			    throw new ArgumentNullException("writer");
 			}
 			
-			if (configuration == null)
-			{
-			    throw new ArgumentNullException("configuration");
-			}
+			Debug.Assert(configuration != null, "Configuration should not be null.");
 			
 			_writer = writer;
 			_configuration = configuration;
@@ -593,7 +591,8 @@ namespace NArrange.CSharp
 			
 			    childElement.Accept(this);
 			
-			    if (element.SeparatorType == GroupSeparatorType.Custom)
+			    if (childIndex < element.Children.Count - 1 &&
+			        element.SeparatorType == GroupSeparatorType.Custom)
 			    {
 			        WriteIndentedLine(element.CustomSeparator);
 			    }

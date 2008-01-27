@@ -388,9 +388,11 @@ namespace NArrange.CSharp
 			            else
 			            {
 			                wordList[wordIndex - 1] = wordList[wordIndex - 1] + wordGroup;
+			                wordList.RemoveAt(wordIndex);
+			                wordIndex--;
 			            }
 			        }
-			        else if (wordIndex < wordList.Count - 1 &&
+			        else if (wordIndex < wordList.Count &&
 			            wordGroup[wordGroup.Length - 1] == CSharpSymbol.AliasSeparator)
 			        {
 			            wordGroup = wordGroup + " " + wordList[wordIndex + 1];
@@ -473,10 +475,7 @@ namespace NArrange.CSharp
 			TypeElementType type = TypeElementType.Class;
 			
 			bool singleDefinition = isClass ^ isStruct ^ isEnum ^ isInterface;
-			if (!singleDefinition)
-			{
-			    this.OnParseError("Invalid type definition");
-			}
+			Debug.Assert(singleDefinition, "Invalid type definition.");
 			
 			if (isClass)
 			{
@@ -556,6 +555,8 @@ namespace NArrange.CSharp
 		private string[] ParseAliasList()
 		{
 			List<string> aliases = new List<string>();
+			
+			EatWhitespace();
 			
 			char nextChar = NextChar();
 			if (nextChar == CSharpSymbol.BeginBlock)
@@ -767,7 +768,7 @@ namespace NArrange.CSharp
 			            string line = ReadLine().Trim();
 			            if (!(line.StartsWith(CSharpKeyword.Region) || line.StartsWith(CSharpKeyword.EndRegion)))
 			            {
-			                this.OnParseError("Cannot arrange files with preprocessor directives.");
+			                this.OnParseError("Cannot arrange files with preprocessor directives");
 			            }
 			            break;
 			
@@ -1331,7 +1332,7 @@ namespace NArrange.CSharp
 			        string name = CaptureWord();
 			        if (string.IsNullOrEmpty(name))
 			        {
-			            this.OnParseError("Expected a namepace name");
+			            this.OnParseError("Expected a type or namepace name");
 			        }
 			        else
 			        {

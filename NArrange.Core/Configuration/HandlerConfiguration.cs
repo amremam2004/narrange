@@ -166,7 +166,7 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Handler: {1}", this._assembly);
+			return string.Format("Handler: {0}", this._assembly);
 		}
 
 		#endregion Public Methods

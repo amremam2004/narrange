@@ -79,7 +79,7 @@ namespace NArrange.ConsoleApplication
 			if(copyrightAttributes.Length > 0)
 			{
 			    AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
-			    Console.WriteLine(copyRight.Copyright.Replace("© ", ""));
+			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
 			}
 			Console.WriteLine();
 			

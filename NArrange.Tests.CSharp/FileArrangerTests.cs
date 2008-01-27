@@ -35,6 +35,39 @@ namespace NArrange.Tests.Core
 		#region Public Methods
 
 		/// <summary>
+		/// Tests arranging an empty project file
+		/// </summary>
+		[Test]
+		public void ArrangeEmptyProjectTest()
+		{
+			TestLogger logger = new TestLogger();
+			FileArranger fileArranger = new FileArranger(null, logger);
+			
+			string emptyProjectFile = Path.Combine(Path.GetTempPath(), 
+			    Guid.NewGuid().ToString().Replace('-','_') + ".csproj");
+			File.WriteAllText(emptyProjectFile, "<Project></Project>");
+			
+			try
+			{
+			    bool success = fileArranger.Arrange(emptyProjectFile, null);
+			
+			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
+			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, 
+			        "does not contain any source files"));
+			}
+			finally
+			{
+			    try
+			    {
+			        File.Delete(emptyProjectFile);
+			    }
+			    catch
+			    {
+			    }
+			}
+		}
+
+		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
