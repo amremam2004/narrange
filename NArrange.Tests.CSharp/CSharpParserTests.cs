@@ -21,13 +21,21 @@ namespace NArrange.Tests.CSharp
 	{
 		#region Constants
 
-		private const int NumConstructors = 4;
-		private const int NumDelegates = 1;
-		private const int NumEvents = 3;
-		private const int NumFields = 12;
-		private const int NumMethods = 7;
-		private const int NumNestedTypes = 4;
-		private const int NumProperties = 7;
+		private const int ConstructorRegionIndex = 1;
+		private const int DelegateRegionIndex = 4;
+		private const int EventRegionIndex = 5;
+
+		//private const int NumConstructors = 4;
+		//private const int NumDelegates = 1;
+		//private const int NumEvents = 3;
+		//private const int NumFields = 12;
+		//private const int NumMethods = 7;
+		//private const int NumNestedTypes = 4;
+		//private const int NumProperties = 7;
+		private const int FieldRegionIndex = 0;
+		private const int MethodRegionIndex = 3;
+		private const int NestedTypeRegionIndex = 6;
+		private const int PropertyRegionIndex = 2;
 
 		#endregion Constants
 
@@ -423,6 +431,45 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a class with a missing endregion tag
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected #endregion")]
+		public void ParseClassMissingEndregionTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n" + 
+			    "{\r\n" + 
+			    "\t#region Fields\r\n" + 
+			    "}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with a missing region name
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+           ExpectedMessage = "Expected region name")]
+		public void ParseClassMissingRegionNameTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n" +
+			    "{\r\n" +
+			    "\t#region\r\n" +
+			    "\t#endregion\r\n" + 
+			    "}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Tests parsing a class where the new() constraint is not the last 
 		/// type parameter constraint.
 		/// </summary>
@@ -620,9 +667,10 @@ namespace NArrange.Tests.CSharp
 			
 			    ConstructorElement constructor;
 			
-			    int constructorOffset = NumFields;
+			    RegionElement regionElement = classElement.Children[ConstructorRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    constructor = classElement.Children[constructorOffset + 0] as ConstructorElement;
+			    constructor = regionElement.Children[0] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
 			        "Unexpected constructor name.");
@@ -635,7 +683,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsEmpty(constructor.Params,
 			        "Parameter string should be empty.");
 			
-			    constructor = classElement.Children[constructorOffset + 1] as ConstructorElement;
+			    constructor = regionElement.Children[1] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
 			        "Unexpected constructor name.");
@@ -648,7 +696,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual("string[] arrayParam", constructor.Params,
 			        "Unexpected parameters string.");
 			
-			    constructor = classElement.Children[constructorOffset + 2] as ConstructorElement;
+			    constructor = regionElement.Children[2] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
 			        "Unexpected constructor name.");
@@ -661,7 +709,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsEmpty(constructor.Params,
 			        "Parameter string should be empty.");
 			
-			    constructor = classElement.Children[constructorOffset + 3] as ConstructorElement;
+			    constructor = regionElement.Children[3] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("~SampleClass", constructor.Name,
 			        "Unexpected constructor name.");
@@ -690,9 +738,10 @@ namespace NArrange.Tests.CSharp
 			
 			    DelegateElement delegateElement;
 			
-			    int delegateOffset = NumFields + NumConstructors + NumProperties + NumMethods;
+			    RegionElement regionElement = classElement.Children[DelegateRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    delegateElement = classElement.Children[delegateOffset + 0] as DelegateElement;
+			    delegateElement = regionElement.Children[0] as DelegateElement;
 			    Assert.IsNotNull(delegateElement, "Expected a delegate.");
 			    Assert.AreEqual("SampleEventHandler", delegateElement.Name,
 			        "Unexpected delegate name.");
@@ -735,10 +784,10 @@ namespace NArrange.Tests.CSharp
 			
 			    EventElement eventElement;
 			
-			    int eventOffset = NumFields + NumConstructors + 
-			        NumProperties + NumMethods + NumDelegates;
+			    RegionElement regionElement = classElement.Children[EventRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    eventElement = classElement.Children[eventOffset + 0] as EventElement;
+			    eventElement = regionElement.Children[0] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("SimpleEvent", eventElement.Name,
 			        "Unexpected event name.");
@@ -765,7 +814,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNull(eventElement.BodyText,
 			        "Unexpected body text.");
 			
-			    eventElement = classElement.Children[eventOffset + 1] as EventElement;
+			    eventElement = regionElement.Children[1] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("GenericEvent", eventElement.Name,
 			        "Unexpected event name.");
@@ -792,7 +841,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNull(eventElement.BodyText,
 			        "Unexpected body text.");
 			
-			    eventElement = classElement.Children[eventOffset + 2] as EventElement;
+			    eventElement = regionElement.Children[2] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("ExplicitEvent", eventElement.Name,
 			        "Unexpected event name.");
@@ -949,7 +998,10 @@ namespace NArrange.Tests.CSharp
 			
 			    FieldElement field;
 			
-			    field = classElement.Children[0] as FieldElement;
+			    RegionElement regionElement = classElement.Children[FieldRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
+			
+			    field = regionElement.Children[0] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_simpleField", field.Name,
 			        "Unexpected field name.");
@@ -968,7 +1020,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsConstant,
 			       "Field should not be a constant.");
 			
-			    field = classElement.Children[1] as FieldElement;
+			    field = regionElement.Children[1] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_fieldWithInitialVal", field.Name,
 			        "Unexpected field name.");
@@ -983,7 +1035,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
 			
-			    field = classElement.Children[2] as FieldElement;
+			    field = regionElement.Children[2] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("StaticStr", field.Name,
 			        "Unexpected field name.");
@@ -1000,7 +1052,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(field.IsReadOnly,
 			        "Field should be readonly.");
 			
-			    field = classElement.Children[3] as FieldElement;
+			    field = regionElement.Children[3] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_genericField", field.Name,
 			        "Unexpected field name.");
@@ -1015,7 +1067,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
 			
-			    field = classElement.Children[4] as FieldElement;
+			    field = regionElement.Children[4] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_arrayField", field.Name,
 			        "Unexpected field name.");
@@ -1030,7 +1082,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
 			
-			    field = classElement.Children[5] as FieldElement;
+			    field = regionElement.Children[5] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("@internal", field.Name,
 			        "Unexpected field name.");
@@ -1045,7 +1097,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
 			
-			    field = classElement.Children[6] as FieldElement;
+			    field = regionElement.Children[6] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_globalNamespaceTypeField", field.Name,
 			        "Unexpected field name.");
@@ -1060,7 +1112,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
 			
-			    field = classElement.Children[7] as FieldElement;
+			    field = regionElement.Children[7] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_attributedField", field.Name,
 			        "Unexpected field name.");
@@ -1077,7 +1129,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, field.Attributes.Count,
 			        "Unexpected number of attributes.");
 			
-			    field = classElement.Children[8] as FieldElement;
+			    field = regionElement.Children[8] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("ConstantStr", field.Name,
 			        "Unexpected field name.");
@@ -1098,7 +1150,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be readonly.");
 			
-			    field = classElement.Children[9] as FieldElement;
+			    field = regionElement.Children[9] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_volatileField", field.Name,
 			        "Unexpected field name.");
@@ -1121,7 +1173,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
 			
-			    field = classElement.Children[10] as FieldElement;
+			    field = regionElement.Children[10] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val1, _val2", field.Name,
 			        "Unexpected field name.");
@@ -1144,7 +1196,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
 			
-			    field = classElement.Children[11] as FieldElement;
+			    field = regionElement.Children[11] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val3, _val4, _val5, _val6", field.Name,
 			        "Unexpected field name.");
@@ -1347,8 +1399,7 @@ namespace NArrange.Tests.CSharp
 			    TypeElement classElement = GetMembersTestClass(reader);
 			
 			    Assert.AreEqual(
-			        NumFields + NumConstructors + NumProperties + 
-			        NumMethods + NumNestedTypes + NumDelegates + NumEvents, 
+			        NestedTypeRegionIndex + 1, 
 			        classElement.Children.Count,
 			        "Unexpected number of class members.");
 			}
@@ -1492,9 +1543,10 @@ namespace NArrange.Tests.CSharp
 			
 			    MethodElement method;
 			
-			    int methodOffset = NumFields + NumConstructors + NumProperties;
+			    RegionElement regionElement = classElement.Children[MethodRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    method = classElement.Children[methodOffset + 0] as MethodElement;
+			    method = regionElement.Children[0] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("DoSomething", method.Name,
 			        "Unexpected method name.");
@@ -1521,7 +1573,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(string.Empty, method.Params,
 			        "Unexpected parameter string.");
 			
-			    method = classElement.Children[methodOffset + 1] as MethodElement;
+			    method = regionElement.Children[1] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("ToString", method.Name,
 			        "Unexpected method name.");
@@ -1548,7 +1600,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(string.Empty, method.Params,
 			        "Unexpected parameter string.");
 			
-			    method = classElement.Children[methodOffset + 2] as MethodElement;
+			    method = regionElement.Children[2] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetBoolValue", method.Name,
 			        "Unexpected method name.");
@@ -1577,7 +1629,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(method.BodyText.Contains("return true;"),
 			        "Unexpected body text.");
 			
-			    method = classElement.Children[methodOffset + 3] as MethodElement;
+			    method = regionElement.Children[3] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetWithParamAttributes", method.Name,
 			        "Unexpected method name.");
@@ -1610,7 +1662,7 @@ namespace NArrange.Tests.CSharp
 			        "[Description(\"String parameter\")] string stringParam"),
 			        "Unexpected params string.");
 			
-			    method = classElement.Children[methodOffset + 4] as MethodElement;
+			    method = regionElement.Children[4] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetWithTypeParameters", method.Name,
 			        "Unexpected method name.");
@@ -1651,7 +1703,7 @@ namespace NArrange.Tests.CSharp
 			    //
 			    // External method
 			    //
-			    method = classElement.Children[methodOffset + 5] as MethodElement;
+			    method = regionElement.Children[5] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("MessageBox", method.Name,
 			        "Unexpected method name.");
@@ -1686,7 +1738,7 @@ namespace NArrange.Tests.CSharp
 			    //
 			    // Unsafe method
 			    //
-			    method = classElement.Children[methodOffset + 6] as MethodElement;
+			    method = regionElement.Children[6] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("UnsafeSqrPtrParam", method.Name,
 			        "Unexpected method name.");
@@ -2082,10 +2134,10 @@ namespace NArrange.Tests.CSharp
 			
 			    TypeElement type;
 			
-			    int nestedTypeOffset = NumFields + NumConstructors + NumProperties + 
-			        NumMethods + NumDelegates + NumEvents;
+			    RegionElement regionElement = classElement.Children[NestedTypeRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    type = classElement.Children[nestedTypeOffset + 0] as TypeElement;
+			    type = regionElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Enum, type.Type,
 			        "Unexpected type element type.");
@@ -2104,7 +2156,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, type.Attributes.Count,
 			        "Unexpected number of attributes.");
 			
-			    type = classElement.Children[nestedTypeOffset + 1] as TypeElement;
+			    type = regionElement.Children[1] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Structure, type.Type,
 			        "Unexpected type element type.");
@@ -2125,7 +2177,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(2, type.Children.Count,
 			        "Unexpected number of child elements.");
 			
-			    type = classElement.Children[nestedTypeOffset + 2] as TypeElement;
+			    type = regionElement.Children[2] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Class, type.Type,
 			        "Unexpected type element type.");
@@ -2146,7 +2198,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(1, type.Children.Count,
 			        "Unexpected number of child elements.");
 			
-			    type = classElement.Children[nestedTypeOffset + 3] as TypeElement;
+			    type = regionElement.Children[3] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Class, type.Type,
 			        "Unexpected type element type.");
@@ -2349,9 +2401,10 @@ namespace NArrange.Tests.CSharp
 			
 			    PropertyElement property;
 			
-			    int propertyOffset = NumFields + NumConstructors;
+			    RegionElement regionElement = classElement.Children[PropertyRegionIndex] as RegionElement;
+			    Assert.IsNotNull(regionElement, "Expected a region element.");
 			
-			    property = classElement.Children[propertyOffset + 0] as PropertyElement;
+			    property = regionElement.Children[0] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("SimpleProperty", property.Name,
 			        "Unexpected property name.");
@@ -2376,7 +2429,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsTrue(
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			
-			    property = classElement.Children[propertyOffset + 1] as PropertyElement;
+			    property = regionElement.Children[1] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("ProtectedProperty", property.Name,
 			        "Unexpected property name.");
@@ -2401,7 +2454,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsFalse(
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			
-			    property = classElement.Children[propertyOffset + 2] as PropertyElement;
+			    property = regionElement.Children[2] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("StaticProperty", property.Name,
 			        "Unexpected property name.");
@@ -2428,7 +2481,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(0, property.Attributes.Count,
 			        "Unexpected number of attributes.");
 			
-			    property = classElement.Children[propertyOffset + 3] as PropertyElement;
+			    property = regionElement.Children[3] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("AttributedProperty", property.Name,
 			        "Unexpected property name.");
@@ -2455,7 +2508,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(2, property.Attributes.Count,
 			        "Unexpected number of attributes.");
 			
-			    property = classElement.Children[propertyOffset + 4] as PropertyElement;
+			    property = regionElement.Children[4] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("GenericProperty", property.Name,
 			        "Unexpected property name.");
@@ -2486,7 +2539,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual("Obsolete", property.Attributes[0].BodyText,
 			        "Unexpected attribute text.");
 			
-			    property = classElement.Children[propertyOffset + 5] as PropertyElement;
+			    property = regionElement.Children[5] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("ArrayProperty", property.Name,
 			        "Unexpected property name.");
@@ -2518,7 +2571,7 @@ namespace NArrange.Tests.CSharp
 			    //
 			    // Indexer property
 			    //
-			    property = classElement.Children[propertyOffset + 6] as PropertyElement;
+			    property = regionElement.Children[6] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("this[int index]", property.Name,
 			        "Unexpected property name.");
@@ -2550,18 +2603,59 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
-		/// Tests parsing a region preprocessor directive.  This should not throw 
-		/// an exception.
+		/// Tests parsing nested regions.  
 		/// </summary>
 		[Test]
-		public void ParseRegionPreprocessorTest()
+		public void ParseRegionNestedTest()
 		{
 			StringReader reader = new StringReader(
 			    "public class Test\r\n" +
 			    "{\r\n" +
-			    "#region Fields\r\n" +
+			    "\t#region Fields\r\n" +
+			    "\t#region Private\r\n" +
 			    "\tprivate bool _test = false;\r\n" +
-			    "#endregion\r\n" +
+			    "\t#endregion\r\n" +
+			    "\t#endregion\r\n" +
+			    "}");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			Assert.AreEqual(1, elements[0].Children.Count,
+			    "An unexpected number of child elements were parsed.");
+			
+			RegionElement regionElement = elements[0].Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Fields", regionElement.Name,
+			    "Unexpected region name.");
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Unexpected number of region child elements.");
+			
+			RegionElement childRegionElement = regionElement.Children[0] as RegionElement;
+			Assert.IsNotNull(childRegionElement, "Expected a region element.");
+			Assert.AreEqual("Private", childRegionElement.Name,
+			    "Unexpected region name.");
+			Assert.AreEqual(1, childRegionElement.Children.Count,
+			    "Unexpected number of region child elements.");
+			
+			FieldElement fieldElement = childRegionElement.Children[0] as FieldElement;
+			Assert.IsNotNull(fieldElement, "Expected a field element.");
+		}
+
+		/// <summary>
+		/// Tests parsing a region preprocessor directive. 
+		/// </summary>
+		[Test]
+		public void ParseRegionTest()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n" +
+			    "{\r\n" +
+			    "\t#region Fields\r\n" +
+			    "\tprivate bool _test = false;\r\n" +
+			    "\t#endregion\r\n" +
 			    "}");
 			
 			CSharpParser parser = new CSharpParser();
@@ -2571,6 +2665,16 @@ namespace NArrange.Tests.CSharp
 			    "An unexpected number of elements were parsed.");
 			Assert.AreEqual(1, elements[0].Children.Count,
 			    "An unexpected number of child elements were parsed.");
+			
+			RegionElement regionElement = elements[0].Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Fields", regionElement.Name,
+			    "Unexpected region name.");
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Unexpected number of region child elements.");
+			
+			FieldElement fieldElement = regionElement.Children[0] as FieldElement;
+			Assert.IsNotNull(fieldElement, "Expected a field element.");
 		}
 
 		/// <summary>

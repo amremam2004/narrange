@@ -170,7 +170,12 @@ namespace NArrange.Core
 		/// <summary>
 		/// Attribute
 		/// </summary>
-		Attribute
+		Attribute,
+		
+		/// <summary>
+		/// Region
+		/// </summary>
+		Region
 	}	
 	
 	/// <summary>

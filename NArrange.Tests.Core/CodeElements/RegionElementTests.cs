@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.CodeElements
 			//
 			// Verify default values
 			//
-			Assert.AreEqual(ElementType.NotSpecified, element.ElementType,
+			Assert.AreEqual(ElementType.Region, element.ElementType,
 			    "Unexpected element type.");
 			Assert.AreEqual(string.Empty, element.Name,
 			    "Unexpected default value for Name.");

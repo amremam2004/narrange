@@ -96,7 +96,21 @@ namespace NArrange.Core
 			
 			    foreach (ICodeElement childElement in children)
 			    {
-			        _childrenArranger.ArrangeElement(codeElement, childElement);
+			        RegionElement regionElement = childElement as RegionElement;
+			        if (regionElement != null)
+			        {
+			            List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
+			            regionElement.ClearChildren();
+			
+			            foreach (ICodeElement regionChildElement in regionChildren)
+			            {
+			                _childrenArranger.ArrangeElement(codeElement, regionChildElement);
+			            }
+			        }
+			        else
+			        {
+			            _childrenArranger.ArrangeElement(codeElement, childElement);
+			        }
 			    }
 			}
 			

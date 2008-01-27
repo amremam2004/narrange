@@ -34,6 +34,7 @@
 //      - Fixed parsing of events with generic return types
 //      - Improved parsing performance by reducing the number of calls to 
 //        TryParseElement
+//      - Parse regions to the element tree
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
@@ -617,9 +618,80 @@ namespace NArrange.CSharp
 			return aliases.ToArray();
 		}
 
+		/// <summary>
+		/// Parses an attribute
+		/// </summary>
+		/// <param name="commentLineArray"></param>
+		/// <returns></returns>
+		private AttributeElement ParseAttribute(ICommentLine[] commentLineArray)
+		{
+			AttributeElement attributeElement;
+			string attributeText = ParseNestedText(CSharpSymbol.BeginAttribute, CSharpSymbol.EndAttribute,
+			    false, true);
+			attributeElement = new AttributeElement();
+			attributeElement.BodyText = attributeText;
+			
+			if (commentLineArray.Length > 0)
+			{
+			    foreach (ICommentLine commentLine in commentLineArray)
+			    {
+			        attributeElement.AddHeaderCommentLine(commentLine);
+			    }
+			}
+			return attributeElement;
+		}
+
 		private string ParseBlock(bool beginExpected)
 		{
 			return ParseNestedText(CSharpSymbol.BeginBlock, CSharpSymbol.EndBlock, beginExpected, true);
+		}
+
+		/// <summary>
+		/// Parses a comment block
+		/// </summary>
+		/// <returns></returns>
+		private string[] ParseCommentBlock()
+		{
+			string[] lines;
+			
+			TryReadChar();
+			TryReadChar();
+			TryReadChar();
+			
+			StringBuilder blockComment = new StringBuilder();
+			
+			while (!(_lastCh == CSharpSymbol.BlockCommentModifier &&
+			    _ch == CSharpSymbol.BeginComment))
+			{
+			    blockComment.Append(_lastCh);
+			    TryReadChar();
+			}
+			
+			lines = blockComment.ToString().Split(
+			    new string[] { Environment.NewLine }, StringSplitOptions.None);
+			return lines;
+		}
+
+		/// <summary>
+		/// Parses a comment line
+		/// </summary>
+		/// <returns></returns>
+		private CommentLine ParseCommentLine()
+		{
+			CommentLine commentLine;
+			TryReadChar();
+			
+			bool isXmlComment = false;
+			if (_reader.Peek() == (int)CSharpSymbol.BeginComment)
+			{
+			    isXmlComment = true;
+			    TryReadChar();
+			}
+			
+			string commentText = ReadLine();
+			commentLine = new CommentLine(
+			    commentText, isXmlComment);
+			return commentLine;
 		}
 
 		/// <summary>
@@ -702,6 +774,7 @@ namespace NArrange.CSharp
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			List<ICommentLine> commentLines = new List<ICommentLine>();
 			List<AttributeElement> attributes = new List<AttributeElement>();
+			Stack<RegionElement> regionStack = new Stack<RegionElement>();
 			
 			StringBuilder elementBuilder = new StringBuilder();
 			
@@ -718,38 +791,12 @@ namespace NArrange.CSharp
 			            nextChar = NextChar();
 			            if (nextChar == CSharpSymbol.BeginComment)
 			            {
-			                TryReadChar();
-			
-			                bool isXmlComment = false;
-			                if (_reader.Peek() == (int)CSharpSymbol.BeginComment)
-			                {
-			                    isXmlComment = true;
-			                    TryReadChar();
-			                }
-			
-			                string commentText = ReadLine();
-			                CommentLine commentLine = new CommentLine(
-			                    commentText, isXmlComment);
+			                CommentLine commentLine = ParseCommentLine();
 			                commentLines.Add(commentLine);
 			            }
 			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
 			            {
-			                TryReadChar();
-			                TryReadChar();
-			                TryReadChar();
-			
-			                StringBuilder blockComment = new StringBuilder();
-			
-			                while (!(_lastCh == CSharpSymbol.BlockCommentModifier &&
-			                    _ch == CSharpSymbol.BeginComment))
-			                {
-			                    blockComment.Append(_lastCh);
-			                    TryReadChar();
-			                }
-			
-			                string[] lines = blockComment.ToString().Split(
-			                    new string[] { Environment.NewLine }, StringSplitOptions.None);
-			
+			                string[] lines = ParseCommentBlock();
 			                foreach (string blockLine in lines)
 			                {
 			                    CommentLine commentLine = new CommentLine(blockLine);
@@ -765,10 +812,31 @@ namespace NArrange.CSharp
 			            //
 			            // TODO: Besides regions, parse preprocessor elements so that
 			            // member preprocessor information is preserved.
+			            //
 			            string line = ReadLine().Trim();
-			            if (!(line.StartsWith(CSharpKeyword.Region) || line.StartsWith(CSharpKeyword.EndRegion)))
+			            if (line.StartsWith(CSharpKeyword.Region))
 			            {
-			                this.OnParseError("Cannot arrange files with preprocessor directives");
+			                RegionElement regionElement = ParseRegion(line);
+			                regionStack.Push(regionElement);
+			            }
+			            else if (line.StartsWith(CSharpKeyword.EndRegion))
+			            {
+			                RegionElement regionElement = regionStack.Pop();
+			
+			                if (regionStack.Count > 0)
+			                {
+			                    regionStack.Peek().AddChild(regionElement);
+			                }
+			                else
+			                {
+			                    codeElements.Add(regionElement);
+			                }
+			            }
+			            else
+			            {
+			                this.OnParseError(
+			                    "Cannot arrange files with preprocessor directives " + 
+			                    "other than #region and #endregion");
 			            }
 			            break;
 			
@@ -777,6 +845,10 @@ namespace NArrange.CSharp
 			        //
 			        case CSharpSymbol.BeginAttribute:
 			            nextChar = NextChar();
+			
+			            //
+			            // Parse array definition
+			            //
 			            if (elementBuilder.Length > 0)
 			            {
 			                if (nextChar == CSharpSymbol.EndAttribute)
@@ -794,34 +866,21 @@ namespace NArrange.CSharp
 			            }
 			            else
 			            {
-			                string attributeText = ParseNestedText(CSharpSymbol.BeginAttribute, CSharpSymbol.EndAttribute,
-			                    false, true);
-			                AttributeElement attributeElement = new AttributeElement();
-			                attributeElement.BodyText = attributeText;
+			                //
+			                // Parse attribute
+			                //
+			                ICommentLine[] commentLineArray = commentLines.ToArray();
+			                commentLines = new List<ICommentLine>();
 			
-			                if (commentLines.Count > 0)
-			                {
-			                    foreach (CommentLine commentLine in commentLines)
-			                    {
-			                        attributeElement.AddHeaderCommentLine(commentLine);
-			                    }
-			                    commentLines = new List<ICommentLine>();
-			                }
+			                AttributeElement attributeElement = ParseAttribute(commentLineArray);
 			
 			                attributes.Add(attributeElement);
 			                codeElements.Add(attributeElement);
 			            }
 			            break;
 			
-			        case ' ':
-			            if (elementBuilder.Length > 0 &&
-			                elementBuilder[elementBuilder.Length - 1] != ' ')
-			            {
-			                elementBuilder.Append(' ');
-			            }
-			            break;
-			
 			        // Eat any unneeded whitespace
+			        case ' ':
 			        case '\n':
 			        case '\r':
 			        case '\t':
@@ -845,7 +904,14 @@ namespace NArrange.CSharp
 			                    elementBuilder, commentLines, attributes);
 			                if (element != null)
 			                {
-			                    codeElements.Add(element);
+			                    if (regionStack.Count > 0)
+			                    {
+			                        regionStack.Peek().AddChild(element);
+			                    }
+			                    else
+			                    {
+			                        codeElements.Add(element);
+			                    }
 			                    elementBuilder = new StringBuilder();
 			                    commentLines = new List<ICommentLine>();
 			                    if (element is IAttributedElement)
@@ -873,6 +939,14 @@ namespace NArrange.CSharp
 			    {
 			        break;
 			    }
+			}
+			
+			//
+			// Make sure that all region elements have been closed
+			//
+			if (regionStack.Count > 0)
+			{
+			    this.OnParseError("Expected #endregion");
 			}
 			
 			return codeElements;
@@ -1149,6 +1223,26 @@ namespace NArrange.CSharp
 			property.BodyText = this.ParseBlock(false);
 			
 			return property;
+		}
+
+		/// <summary>
+		/// Parses a region from the preprocessor line
+		/// </summary>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		private RegionElement ParseRegion(string line)
+		{
+			RegionElement regionElement;
+			string regionName = line.Substring(CSharpKeyword.Region.Length).Trim();
+			
+			if (string.IsNullOrEmpty(regionName))
+			{
+			    this.OnParseError("Expected region name");
+			}
+			
+			regionElement = new RegionElement();
+			regionElement.Name = regionName;
+			return regionElement;
 		}
 
 		/// <summary>

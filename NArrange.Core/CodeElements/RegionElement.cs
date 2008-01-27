@@ -66,7 +66,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return ElementType.NotSpecified;
+			    return ElementType.Region;
 			}
 		}
 
