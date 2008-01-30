@@ -44,19 +44,6 @@ namespace NArrange.Core.CodeElements
 	/// <remarks>Region elements are not parsed.</remarks>
 	public class RegionElement : CodeElement
 	{
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override CodeElement DoClone()
-		{
-			return new RegionElement();
-		}
-
-		#endregion Protected Methods
-
 		#region Public Properties
 
 		/// <summary>
@@ -71,6 +58,19 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Public Properties
+
+		#region Protected Methods
+
+		/// <summary>
+		/// Creates a clone of this instance
+		/// </summary>
+		/// <returns></returns>
+		protected override CodeElement DoClone()
+		{
+			return new RegionElement();
+		}
+
+		#endregion Protected Methods
 
 		#region Public Methods
 

@@ -46,63 +46,6 @@ namespace NArrange.Core
 	/// </summary>
 	public static class ElementArrangerFactory
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Creates an element arranger using the specified configuration information.
-		/// </summary>
-		/// <param name="configuration"></param>
-		/// <param name="parentRegion"></param>
-		/// <returns>Returns an IElementArranger if succesful, otherwise null</returns>
-		public static IElementArranger CreateElementArranger(
-			ConfigurationElement configuration, RegionConfiguration parentRegion)
-		{
-			IElementArranger arranger = null;
-			
-			if (configuration == null)
-			{
-			    throw new ArgumentNullException("configuration");
-			}
-			
-			RegionConfiguration regionConfiguration = configuration as RegionConfiguration;
-			
-			ChainElementArranger childrenArranger = new ChainElementArranger();
-			foreach (ConfigurationElement childConfiguration in configuration.Elements)
-			{
-			    IElementArranger childElementArranger = CreateElementArranger(childConfiguration, regionConfiguration);
-			    if (childElementArranger != null)
-			    {
-			        childrenArranger.AddArranger(childElementArranger);
-			    }
-			}
-			
-			ElementConfiguration elementConfiguration = configuration as ElementConfiguration;
-			if (elementConfiguration != null)
-			{
-			    ElementArranger elementArranger = null;
-			
-			    IElementInserter inserter =
-			        CreateElementInserter(elementConfiguration.ElementType,
-			        elementConfiguration.SortBy, elementConfiguration.GroupBy, parentRegion);
-			
-			    IElementFilter elementFilter =
-			       CreateElementFilter(elementConfiguration.FilterBy);
-			
-			    elementArranger = new ElementArranger(elementConfiguration.ElementType,
-			        inserter, elementFilter, childrenArranger);
-			
-			    arranger = elementArranger;
-			}
-			else
-			{
-			    arranger = childrenArranger;
-			}
-			
-			return arranger;
-		}
-
-		#endregion Public Methods
-
 		#region Private Methods
 
 		/// <summary>
@@ -128,10 +71,12 @@ namespace NArrange.Core
 		/// <param name="elementType"></param>
 		/// <param name="sortBy"></param>
 		/// <param name="groupBy"></param>
+		/// <param name="parentConfiguration"></param>
 		/// <param name="parentRegion"></param>
 		/// <returns></returns>
 		private static IElementInserter CreateElementInserter(
 			ElementType elementType, SortBy sortBy, GroupBy groupBy,
+			ConfigurationElement parentConfiguration,
 			RegionConfiguration parentRegion)
 		{
 			IElementInserter inserter = null;
@@ -148,7 +93,7 @@ namespace NArrange.Core
 			
 			if (parentRegion != null)
 			{
-			    inserter = new RegionedInserter(parentRegion, inserter);
+			    inserter = new RegionedInserter(parentRegion, parentConfiguration, inserter);
 			}
 			
 			if (inserter == null)
@@ -160,5 +105,76 @@ namespace NArrange.Core
 		}
 
 		#endregion Private Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Creates an element arranger using the specified configuration information.
+		/// </summary>
+		/// <param name="configuration"></param>
+		/// <param name="parentConfiguration"></param>
+		/// <param name="parentRegionConfiguration"></param>
+		/// <returns>Returns an IElementArranger if succesful, otherwise null</returns>
+		public static IElementArranger CreateElementArranger(
+			ConfigurationElement configuration, ConfigurationElement parentConfiguration,
+			RegionConfiguration parentRegionConfiguration)
+		{
+			IElementArranger arranger = null;
+			
+			if (configuration == null)
+			{
+			    throw new ArgumentNullException("configuration");
+			}
+			
+			RegionConfiguration regionConfiguration = configuration as RegionConfiguration;
+			
+			ChainElementArranger childrenArranger = new ChainElementArranger();
+			foreach (ConfigurationElement childConfiguration in configuration.Elements)
+			{
+			    IElementArranger childElementArranger;
+			    if (regionConfiguration == null)
+			    {
+			        childElementArranger = CreateElementArranger(childConfiguration, configuration,
+			            regionConfiguration);
+			    }
+			    else
+			    {
+			        childElementArranger = CreateElementArranger(childConfiguration, parentConfiguration,
+			            regionConfiguration);
+			    }
+			
+			    if (childElementArranger != null)
+			    {
+			        childrenArranger.AddArranger(childElementArranger);
+			    }
+			}
+			
+			ElementConfiguration elementConfiguration = configuration as ElementConfiguration;
+			if (elementConfiguration != null)
+			{
+			    ElementArranger elementArranger = null;
+			
+			    IElementInserter inserter =
+			        CreateElementInserter(elementConfiguration.ElementType,
+			        elementConfiguration.SortBy, elementConfiguration.GroupBy,
+			        parentConfiguration, parentRegionConfiguration);
+			
+			    IElementFilter elementFilter =
+			       CreateElementFilter(elementConfiguration.FilterBy);
+			
+			    elementArranger = new ElementArranger(elementConfiguration.ElementType,
+			        inserter, elementFilter, childrenArranger);
+			
+			    arranger = elementArranger;
+			}
+			else
+			{
+			    arranger = childrenArranger;
+			}
+			
+			return arranger;
+		}
+
+		#endregion Public Methods
 	}
 }

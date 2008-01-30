@@ -43,12 +43,12 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public class CommentLine : ICommentLine
 	{
-		#region Read-Only Fields
+		#region Fields
 
-		private readonly bool _isXmlComment;
-		private readonly string _text;
-
-		#endregion Read-Only Fields
+		private readonly bool _isXmlComment;		
+		private readonly string _text;		
+		
+		#endregion Fields
 
 		#region Constructors
 

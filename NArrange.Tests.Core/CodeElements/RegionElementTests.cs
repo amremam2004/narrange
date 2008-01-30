@@ -15,31 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class RegionElementTests : CodeElementTests<RegionElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests constructing a new RegionElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			RegionElement element = new RegionElement();
-			
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(ElementType.Region, element.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -78,5 +53,30 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests constructing a new RegionElement
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			RegionElement element = new RegionElement();
+			
+			//
+			// Verify default values
+			//
+			Assert.AreEqual(ElementType.Region, element.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(string.Empty, element.Name,
+			    "Unexpected default value for Name.");
+			Assert.IsNotNull(element.Children,
+			    "Children collection should not be null.");
+			Assert.AreEqual(0, element.Children.Count,
+			    "Children collection should be empty.");
+		}
+
+		#endregion Public Methods
 	}
 }

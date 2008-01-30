@@ -31,9 +31,11 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//      - Fixed an ordering issue when inserting region elements.
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -50,6 +52,8 @@ namespace NArrange.Core
 		#region Fields
 
 		private IElementInserter _innerInserter;		
+		private readonly ReadOnlyCollection<string> _levelRegions;		
+		private ConfigurationElement _parentConfiguration;		
 		private RegionConfiguration _regionConfiguration;		
 		
 		#endregion Fields
@@ -57,29 +61,52 @@ namespace NArrange.Core
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new GroupedInserter using the specified grouping configuration
+		/// Creates a new RegionedInserter using the specified configuration
 		/// </summary>
 		/// <param name="regionConfiguration"></param>
-		public RegionedInserter(RegionConfiguration regionConfiguration)
-			: this(regionConfiguration, null)
+		/// <param name="parentConfiguration"></param>
+		public RegionedInserter(RegionConfiguration regionConfiguration, 
+			ConfigurationElement parentConfiguration)
+			: this(regionConfiguration, parentConfiguration, null)
 		{
 		}
 
 		/// <summary>
-		/// Creates a new GroupedInserter using the specified grouping configuration
+		/// Creates a new RegionedInserter using the specified configuration
 		/// and sorter.
 		/// </summary>
 		/// <param name="regionConfiguration"></param>
+		/// <param name="parentConfiguration"></param>
 		/// <param name="innerInserter"></param>
-		public RegionedInserter(RegionConfiguration regionConfiguration, IElementInserter innerInserter)
+		public RegionedInserter(RegionConfiguration regionConfiguration, 
+			ConfigurationElement parentConfiguration, IElementInserter innerInserter)
 		{
 			if (regionConfiguration == null)
 			{
 			    throw new ArgumentNullException("regionConfiguration");
 			}
 			
+			if (parentConfiguration == null)
+			{
+			    throw new ArgumentNullException("parentConfiguration");
+			}
+			
 			_regionConfiguration = regionConfiguration.Clone() as RegionConfiguration;
+			_parentConfiguration = parentConfiguration.Clone() as ConfigurationElement;
 			_innerInserter = innerInserter;
+			
+			List<string> levelRegions = new List<string>();
+			foreach (ConfigurationElement siblingConfiguration in
+			    _parentConfiguration.Elements)
+			{
+			    RegionConfiguration siblingRegionConfiguration = siblingConfiguration as RegionConfiguration;
+			    if (siblingRegionConfiguration != null)
+			    {
+			        levelRegions.Add(siblingRegionConfiguration.Name);
+			    }
+			}
+			
+			_levelRegions = levelRegions.AsReadOnly();
 		}
 
 		#endregion Constructors
@@ -111,7 +138,42 @@ namespace NArrange.Core
 			{
 			    region = new RegionElement();
 			    region.Name = regionName;
-			    parentElement.AddChild(region);
+			
+			    if (parentElement.Children.Count == 0)
+			    {
+			        parentElement.AddChild(region);
+			    }
+			    else
+			    {
+			        //
+			        // Determine where to insert the new region
+			        //
+			        int insertIndex = 0;
+			        int compareIndex = _levelRegions.IndexOf(region.Name);
+			
+			        for (int siblingIndex = 0; siblingIndex < parentElement.Children.Count;
+			            siblingIndex++)
+			        {
+			            RegionElement siblingRegion = parentElement.Children[siblingIndex] 
+			                as RegionElement;
+			            if (siblingRegion != null)
+			            {
+			                insertIndex = siblingIndex;
+			
+			                int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
+			                if (compareIndex <= siblingCompareIndex)
+			                {
+			                    break;
+			                }
+			                else
+			                {
+			                    insertIndex++;
+			                }
+			            }
+			        }
+			
+			        parentElement.InsertChild(insertIndex, region);
+			    }
 			}
 			
 			if (_innerInserter != null)

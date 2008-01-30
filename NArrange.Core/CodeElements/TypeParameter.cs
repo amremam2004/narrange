@@ -77,6 +77,32 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Constructors
 
+		#region Protected Properties
+
+		/// <summary>
+		/// Gets the list of parameter constraints
+		/// </summary>
+		protected List<string> BaseConstraints
+		{
+			get
+			{
+			    if (_constraints == null)
+			    {
+			        lock (_constraintsLock)
+			        {
+			            if (_constraints == null)
+			            {
+			                _constraints = new List<string>();
+			            }
+			        }
+			    }
+			
+			    return _constraints;
+			}
+		}
+
+		#endregion Protected Properties
+
 		#region Public Properties
 
 		/// <summary>
@@ -106,32 +132,6 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Public Properties
-
-		#region Protected Properties
-
-		/// <summary>
-		/// Gets the list of parameter constraints
-		/// </summary>
-		protected List<string> BaseConstraints
-		{
-			get
-			{
-			    if (_constraints == null)
-			    {
-			        lock (_constraintsLock)
-			        {
-			            if (_constraints == null)
-			            {
-			                _constraints = new List<string>();
-			            }
-			        }
-			    }
-			
-			    return _constraints;
-			}
-		}
-
-		#endregion Protected Properties
 
 		#region Public Methods
 

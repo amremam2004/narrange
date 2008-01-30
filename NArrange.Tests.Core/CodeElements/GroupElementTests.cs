@@ -15,31 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class GroupElementTests : CodeElementTests<GroupElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests constructing a new GroupElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			GroupElement element = new GroupElement();
-			
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(ElementType.NotSpecified, element.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -82,5 +57,30 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests constructing a new GroupElement
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			GroupElement element = new GroupElement();
+			
+			//
+			// Verify default values
+			//
+			Assert.AreEqual(ElementType.NotSpecified, element.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(string.Empty, element.Name,
+			    "Unexpected default value for Name.");
+			Assert.IsNotNull(element.Children,
+			    "Children collection should not be null.");
+			Assert.AreEqual(0, element.Children.Count,
+			    "Children collection should be empty.");
+		}
+
+		#endregion Public Methods
 	}
 }

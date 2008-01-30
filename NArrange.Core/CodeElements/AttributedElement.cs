@@ -120,19 +120,6 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Public Properties
 
-		#region Public Methods
-
-		/// <summary>
-		/// Adds an attribute to this code element.
-		/// </summary>
-		/// <param name="attribute"></param>
-		public void AddAttribute(IAttribute attribute)
-		{
-			BaseAttributes.Add(attribute);
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -161,5 +148,18 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Adds an attribute to this code element.
+		/// </summary>
+		/// <param name="attribute"></param>
+		public void AddAttribute(IAttribute attribute)
+		{
+			BaseAttributes.Add(attribute);
+		}
+
+		#endregion Public Methods
 	}
 }

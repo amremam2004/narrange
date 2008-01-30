@@ -50,23 +50,6 @@ namespace NArrange.Core.CodeElements
 		
 		#endregion Fields
 
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override CodeElement DoClone()
-		{
-			GroupElement clone = new GroupElement();
-			clone._customSeparator = _customSeparator;
-			clone._separatorType = _separatorType;
-			
-			return clone;
-		}
-
-		#endregion Protected Methods
-
 		#region Public Properties
 
 		/// <summary>
@@ -111,6 +94,23 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Public Properties
+
+		#region Protected Methods
+
+		/// <summary>
+		/// Creates a clone of this instance
+		/// </summary>
+		/// <returns></returns>
+		protected override CodeElement DoClone()
+		{
+			GroupElement clone = new GroupElement();
+			clone._customSeparator = _customSeparator;
+			clone._separatorType = _separatorType;
+			
+			return clone;
+		}
+
+		#endregion Protected Methods
 
 		#region Public Methods
 

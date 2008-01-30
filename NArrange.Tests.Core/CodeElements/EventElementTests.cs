@@ -15,49 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class EventElementTests : CommentedElementTests<EventElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests the creation of a new instance.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			EventElement eventElement = new EventElement();
-			
-			//
-			// Verify default property values
-			//
-			Assert.AreEqual(ElementType.Event, eventElement.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(CodeAccess.Public, eventElement.Access,
-			    "Unexpected default value for Access.");
-			Assert.IsNotNull(eventElement.Attributes,
-			    "Attributes collection should be instantiated.");
-			Assert.AreEqual(0, eventElement.Attributes.Count,
-			    "Attributes collection should be empty.");
-			Assert.IsNull(eventElement.BodyText,
-			    "Unexpected default value for BodyText.");
-			Assert.IsNotNull(eventElement.Children,
-			    "Children collection should be instantiated.");
-			Assert.AreEqual(0, eventElement.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(eventElement.HeaderCommentLines,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, eventElement.HeaderCommentLines.Count,
-			    "HeaderCommentLines collection should be empty.");
-			Assert.IsFalse(eventElement.IsAbstract,
-			    "Unexpected default value for IsAbstract.");
-			Assert.IsFalse(eventElement.IsSealed,
-			    "Unexpected default value for IsSealed.");
-			Assert.IsFalse(eventElement.IsStatic,
-			    "Unexpected default value for IsStatic.");
-			Assert.AreEqual(string.Empty, eventElement.Name,
-			    "Unexpected default value for Name.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -113,5 +70,48 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests the creation of a new instance.
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			EventElement eventElement = new EventElement();
+			
+			//
+			// Verify default property values
+			//
+			Assert.AreEqual(ElementType.Event, eventElement.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(CodeAccess.Public, eventElement.Access,
+			    "Unexpected default value for Access.");
+			Assert.IsNotNull(eventElement.Attributes,
+			    "Attributes collection should be instantiated.");
+			Assert.AreEqual(0, eventElement.Attributes.Count,
+			    "Attributes collection should be empty.");
+			Assert.IsNull(eventElement.BodyText,
+			    "Unexpected default value for BodyText.");
+			Assert.IsNotNull(eventElement.Children,
+			    "Children collection should be instantiated.");
+			Assert.AreEqual(0, eventElement.Children.Count,
+			    "Children collection should be empty.");
+			Assert.IsNotNull(eventElement.HeaderCommentLines,
+			    "HeaderCommentLines collection should not be null.");
+			Assert.AreEqual(0, eventElement.HeaderCommentLines.Count,
+			    "HeaderCommentLines collection should be empty.");
+			Assert.IsFalse(eventElement.IsAbstract,
+			    "Unexpected default value for IsAbstract.");
+			Assert.IsFalse(eventElement.IsSealed,
+			    "Unexpected default value for IsSealed.");
+			Assert.IsFalse(eventElement.IsStatic,
+			    "Unexpected default value for IsStatic.");
+			Assert.AreEqual(string.Empty, eventElement.Name,
+			    "Unexpected default value for Name.");
+		}
+
+		#endregion Public Methods
 	}
 }

@@ -55,6 +55,32 @@ namespace NArrange.Core.CodeElements
 		
 		#endregion Fields
 
+		#region Protected Properties
+
+		/// <summary>
+		/// List of implemented interface names
+		/// </summary>
+		protected List<string> BaseInterfaces
+		{
+			get
+			{
+			    if (_interfaces == null)
+			    {
+			        lock (_interacesLock)
+			        {
+			            if (_interfaces == null)
+			            {
+			                _interfaces = new List<string>();
+			            }
+			        }
+			    }
+			
+			    return _interfaces;
+			}
+		}
+
+		#endregion Protected Properties
+
 		#region Public Properties
 
 		/// <summary>
@@ -189,55 +215,6 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Public Properties
 
-		#region Protected Properties
-
-		/// <summary>
-		/// List of implemented interface names
-		/// </summary>
-		protected List<string> BaseInterfaces
-		{
-			get
-			{
-			    if (_interfaces == null)
-			    {
-			        lock (_interacesLock)
-			        {
-			            if (_interfaces == null)
-			            {
-			                _interfaces = new List<string>();
-			            }
-			        }
-			    }
-			
-			    return _interfaces;
-			}
-		}
-
-		#endregion Protected Properties
-
-		#region Public Methods
-
-		/// <summary>
-		/// Allows an ICodeElementVisitor to process (or visit) this element.
-		/// </summary>
-		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
-		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)
-		{
-			visitor.VisitTypeElement(this);
-		}
-
-		/// <summary>
-		/// Adds an interface implementation to the type definition.
-		/// </summary>
-		/// <param name="interfaceName"></param>
-		public void AddInterface(string interfaceName)
-		{
-			BaseInterfaces.Add(interfaceName);
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -267,5 +244,28 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Allows an ICodeElementVisitor to process (or visit) this element.
+		/// </summary>
+		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
+		/// <param name="visitor"></param>
+		public override void Accept(ICodeElementVisitor visitor)
+		{
+			visitor.VisitTypeElement(this);
+		}
+
+		/// <summary>
+		/// Adds an interface implementation to the type definition.
+		/// </summary>
+		/// <param name="interfaceName"></param>
+		public void AddInterface(string interfaceName)
+		{
+			BaseInterfaces.Add(interfaceName);
+		}
+
+		#endregion Public Methods
 	}
 }

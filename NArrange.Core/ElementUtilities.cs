@@ -46,6 +46,31 @@ namespace NArrange.Core
 	/// </summary>
 	public static class ElementUtilities
 	{
+		#region Private Methods
+
+		private static string GetTypeAttribute(ICodeElement codeElement)
+		{
+			string attributeString = string.Empty;
+			
+			MemberElement memberElement = codeElement as MemberElement;
+			if (memberElement != null)
+			{
+			    attributeString = memberElement.Type;
+			}
+			else
+			{
+			    TypeElement typeElement = codeElement as TypeElement;
+			    if (typeElement != null)
+			    {
+			        attributeString = typeElement.Type.ToString();
+			    }
+			}
+			
+			return attributeString;
+		}
+
+		#endregion Private Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -119,30 +144,5 @@ namespace NArrange.Core
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		private static string GetTypeAttribute(ICodeElement codeElement)
-		{
-			string attributeString = string.Empty;
-			
-			MemberElement memberElement = codeElement as MemberElement;
-			if (memberElement != null)
-			{
-			    attributeString = memberElement.Type;
-			}
-			else
-			{
-			    TypeElement typeElement = codeElement as TypeElement;
-			    if (typeElement != null)
-			    {
-			        attributeString = typeElement.Type.ToString();
-			    }
-			}
-			
-			return attributeString;
-		}
-
-		#endregion Private Methods
 	}
 }

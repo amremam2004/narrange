@@ -46,21 +46,6 @@ namespace NArrange.Core.Configuration
 
 		#endregion Public Properties
 
-		#region Public Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public virtual object Clone()
-		{
-			ConfigurationElement configurationElement = this.BaseClone();
-			
-			return configurationElement;
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -87,5 +72,20 @@ namespace NArrange.Core.Configuration
 		protected abstract ConfigurationElement DoClone();
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Creates a clone of this instance
+		/// </summary>
+		/// <returns></returns>
+		public virtual object Clone()
+		{
+			ConfigurationElement configurationElement = this.BaseClone();
+			
+			return configurationElement;
+		}
+
+		#endregion Public Methods
 	}
 }

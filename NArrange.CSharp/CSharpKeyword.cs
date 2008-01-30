@@ -212,7 +212,7 @@ namespace NArrange.CSharp
 
 		#endregion Constants
 
-		#region Read-Only Fields
+		#region Static Fields
 
 		/// <summary>
 		/// new()
@@ -220,6 +220,6 @@ namespace NArrange.CSharp
 		public static readonly string NewConstraint = New + 
             CSharpSymbol.BeginParamList + CSharpSymbol.EndParamList;
 
-		#endregion Read-Only Fields
+		#endregion Static Fields
 	}
 }

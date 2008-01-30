@@ -49,17 +49,6 @@ namespace NArrange.Core
 	/// </summary>
 	public interface ICodeWriter
 	{
-		#region Methods
-
-		/// <summary>
-		/// Writes code elements to a stream.
-		/// </summary>
-		/// <param name="codeElements">Read only collection of elements</param>
-		/// <param name="writer">Code file writer</param>
-		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);
-
-		#endregion Methods
-
 		#region Properties
 
 		/// <summary>
@@ -72,5 +61,16 @@ namespace NArrange.Core
 		}
 
 		#endregion Properties
+
+		#region Methods
+
+		/// <summary>
+		/// Writes code elements to a stream.
+		/// </summary>
+		/// <param name="codeElements">Read only collection of elements</param>
+		/// <param name="writer">Code file writer</param>
+		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);
+
+		#endregion Methods
 	}
 }

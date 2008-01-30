@@ -122,19 +122,6 @@ namespace NArrange.Core.Configuration
 
 		#endregion Public Properties
 
-		#region Public Methods
-
-		/// <summary>
-		/// Gets a string representation
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return string.Format("Type: {0}", this.ElementType);
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -166,5 +153,18 @@ namespace NArrange.Core.Configuration
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Gets a string representation
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return string.Format("Type: {0}", this.ElementType);
+		}
+
+		#endregion Public Methods
 	}
 }

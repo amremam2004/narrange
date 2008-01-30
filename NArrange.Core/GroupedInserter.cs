@@ -90,6 +90,40 @@ namespace NArrange.Core
 
 		#endregion Constructors
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the name of the group the element falls into
+		/// </summary>
+		/// <param name="elementFilterType"></param>
+		/// <param name="captureExpression"></param>
+		/// <param name="codeElement"></param>
+		/// <returns></returns>
+		private string GetGroupName(ElementAttribute elementFilterType, string captureExpression, 
+			ICodeElement codeElement)
+		{
+			string groupName = string.Empty;
+			
+			string attribute = ElementUtilities.GetAttribute(elementFilterType, codeElement);
+			
+			if (_captureRegex != null)
+			{
+			    Match match = _captureRegex.Match(attribute);
+			    if (match != null && match.Groups.Count > 1)
+			    {
+			        groupName = match.Groups[1].Value;
+			    }
+			}
+			else
+			{
+			    groupName = attribute;
+			}
+			
+			return groupName;
+		}
+
+		#endregion Private Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -133,39 +167,5 @@ namespace NArrange.Core
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		/// <summary>
-		/// Gets the name of the group the element falls into
-		/// </summary>
-		/// <param name="elementFilterType"></param>
-		/// <param name="captureExpression"></param>
-		/// <param name="codeElement"></param>
-		/// <returns></returns>
-		private string GetGroupName(ElementAttribute elementFilterType, string captureExpression, 
-			ICodeElement codeElement)
-		{
-			string groupName = string.Empty;
-			
-			string attribute = ElementUtilities.GetAttribute(elementFilterType, codeElement);
-			
-			if (_captureRegex != null)
-			{
-			    Match match = _captureRegex.Match(attribute);
-			    if (match != null && match.Groups.Count > 1)
-			    {
-			        groupName = match.Groups[1].Value;
-			    }
-			}
-			else
-			{
-			    groupName = attribute;
-			}
-			
-			return groupName;
-		}
-
-		#endregion Private Methods
 	}
 }

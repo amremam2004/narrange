@@ -49,28 +49,11 @@ namespace NArrange.CSharp
 	/// </summary>
 	public class CSharpWriter : ICodeWriter
 	{
-		#region Public Methods
+		#region Fields
 
-		/// <summary>
-		/// Writes code elements to the specified writer
-		/// </summary>
-		/// <param name="codeElements"></param>
-		/// <param name="writer"></param>
-		public void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)
-		{
-			if (codeElements == null)
-			{
-			    throw new ArgumentNullException("codeElements");
-			}
-			
-			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer, Configuration);
-			foreach (ICodeElement codeElement in codeElements)
-			{
-			    codeElement.Accept(visitor);
-			}
-		}
-
-		#endregion Public Methods
+		private CodeConfiguration _configuration;		
+		
+		#endregion Fields
 
 		#region Public Properties
 
@@ -96,10 +79,27 @@ namespace NArrange.CSharp
 
 		#endregion Public Properties
 
-		#region Fields
+		#region Public Methods
 
-		private CodeConfiguration _configuration;		
-		
-		#endregion Fields
+		/// <summary>
+		/// Writes code elements to the specified writer
+		/// </summary>
+		/// <param name="codeElements"></param>
+		/// <param name="writer"></param>
+		public void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)
+		{
+			if (codeElements == null)
+			{
+			    throw new ArgumentNullException("codeElements");
+			}
+			
+			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer, Configuration);
+			foreach (ICodeElement codeElement in codeElements)
+			{
+			    codeElement.Accept(visitor);
+			}
+		}
+
+		#endregion Public Methods
 	}
 }

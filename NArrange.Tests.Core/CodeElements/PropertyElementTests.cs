@@ -15,49 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class PropertyElementTests : CommentedElementTests<PropertyElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests the creation of a new instance.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			PropertyElement propertyElement = new PropertyElement();
-			
-			//
-			// Verify default property values
-			//
-			Assert.AreEqual(ElementType.Property, propertyElement.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(CodeAccess.Public, propertyElement.Access,
-			    "Unexpected default value for Access.");
-			Assert.IsNotNull(propertyElement.Attributes,
-			    "Attributes collection should be instantiated.");
-			Assert.AreEqual(0, propertyElement.Attributes.Count,
-			    "Attributes collection should be empty.");
-			Assert.IsNull(propertyElement.BodyText,
-			    "Unexpected default value for BodyText.");
-			Assert.IsNotNull(propertyElement.Children,
-			    "Children collection should be instantiated.");
-			Assert.AreEqual(0, propertyElement.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(propertyElement.HeaderCommentLines,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, propertyElement.HeaderCommentLines.Count,
-			    "HeaderCommentLines collection should be empty.");
-			Assert.IsFalse(propertyElement.IsAbstract,
-			    "Unexpected default value for IsAbstract.");
-			Assert.IsFalse(propertyElement.IsSealed,
-			    "Unexpected default value for IsSealed.");
-			Assert.IsFalse(propertyElement.IsStatic,
-			    "Unexpected default value for IsStatic.");
-			Assert.AreEqual(string.Empty, propertyElement.Name,
-			    "Unexpected default value for Name.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -113,5 +70,48 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests the creation of a new instance.
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			PropertyElement propertyElement = new PropertyElement();
+			
+			//
+			// Verify default property values
+			//
+			Assert.AreEqual(ElementType.Property, propertyElement.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(CodeAccess.Public, propertyElement.Access,
+			    "Unexpected default value for Access.");
+			Assert.IsNotNull(propertyElement.Attributes,
+			    "Attributes collection should be instantiated.");
+			Assert.AreEqual(0, propertyElement.Attributes.Count,
+			    "Attributes collection should be empty.");
+			Assert.IsNull(propertyElement.BodyText,
+			    "Unexpected default value for BodyText.");
+			Assert.IsNotNull(propertyElement.Children,
+			    "Children collection should be instantiated.");
+			Assert.AreEqual(0, propertyElement.Children.Count,
+			    "Children collection should be empty.");
+			Assert.IsNotNull(propertyElement.HeaderCommentLines,
+			    "HeaderCommentLines collection should not be null.");
+			Assert.AreEqual(0, propertyElement.HeaderCommentLines.Count,
+			    "HeaderCommentLines collection should be empty.");
+			Assert.IsFalse(propertyElement.IsAbstract,
+			    "Unexpected default value for IsAbstract.");
+			Assert.IsFalse(propertyElement.IsSealed,
+			    "Unexpected default value for IsSealed.");
+			Assert.IsFalse(propertyElement.IsStatic,
+			    "Unexpected default value for IsStatic.");
+			Assert.AreEqual(string.Empty, propertyElement.Name,
+			    "Unexpected default value for Name.");
+		}
+
+		#endregion Public Methods
 	}
 }

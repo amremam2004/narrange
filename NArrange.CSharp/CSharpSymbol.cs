@@ -43,37 +43,6 @@ namespace NArrange.CSharp
 	/// </summary>
 	public static class CSharpSymbol
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Determines if the specified char is a Csharp symbol character
-		/// </summary>
-		/// <param name="ch"></param>
-		/// <returns></returns>
-		public static bool IsCSharpSymbol(char ch)
-		{
-			return ch == CSharpSymbol.AliasSeparator ||
-			    ch == CSharpSymbol.Assignment ||
-			    ch == CSharpSymbol.BeginAttribute ||
-			    ch == CSharpSymbol.BeginBlock ||
-			    ch == CSharpSymbol.BeginCharLiteral ||
-			    ch == CSharpSymbol.BeginComment ||
-			    ch == CSharpSymbol.BeginFinalizer ||
-			    ch == CSharpSymbol.BeginGeneric ||
-			    ch == CSharpSymbol.BeginParamList ||
-			    ch == CSharpSymbol.BeginString ||
-			    ch == CSharpSymbol.BlockCommentModifier ||
-			    ch == CSharpSymbol.EndAttribute ||
-			    ch == CSharpSymbol.EndBlock ||
-			    ch == CSharpSymbol.EndGeneric ||
-			    ch == CSharpSymbol.EndOfStatement ||
-			    ch == CSharpSymbol.EndParamList ||
-			    ch == CSharpSymbol.Preprocessor ||
-			    ch == CSharpSymbol.TypeImplements;
-		}
-
-		#endregion Public Methods
-
 		#region Constants
 
 		/// <summary>
@@ -167,5 +136,36 @@ namespace NArrange.CSharp
 		public const char TypeImplements = ':';
 
 		#endregion Constants
+
+		#region Public Methods
+
+		/// <summary>
+		/// Determines if the specified char is a Csharp symbol character
+		/// </summary>
+		/// <param name="ch"></param>
+		/// <returns></returns>
+		public static bool IsCSharpSymbol(char ch)
+		{
+			return ch == CSharpSymbol.AliasSeparator ||
+			    ch == CSharpSymbol.Assignment ||
+			    ch == CSharpSymbol.BeginAttribute ||
+			    ch == CSharpSymbol.BeginBlock ||
+			    ch == CSharpSymbol.BeginCharLiteral ||
+			    ch == CSharpSymbol.BeginComment ||
+			    ch == CSharpSymbol.BeginFinalizer ||
+			    ch == CSharpSymbol.BeginGeneric ||
+			    ch == CSharpSymbol.BeginParamList ||
+			    ch == CSharpSymbol.BeginString ||
+			    ch == CSharpSymbol.BlockCommentModifier ||
+			    ch == CSharpSymbol.EndAttribute ||
+			    ch == CSharpSymbol.EndBlock ||
+			    ch == CSharpSymbol.EndGeneric ||
+			    ch == CSharpSymbol.EndOfStatement ||
+			    ch == CSharpSymbol.EndParamList ||
+			    ch == CSharpSymbol.Preprocessor ||
+			    ch == CSharpSymbol.TypeImplements;
+		}
+
+		#endregion Public Methods
 	}
 }

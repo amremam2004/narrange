@@ -44,6 +44,12 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public abstract class TextCodeElement : CommentedElement
 	{
+		#region Fields
+
+		private string _bodyText;		
+		
+		#endregion Fields
+
 		#region Constructors
 
 		/// <summary>
@@ -54,12 +60,6 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Constructors
-
-		#region Fields
-
-		private string _bodyText;		
-		
-		#endregion Fields
 
 		#region Public Properties
 

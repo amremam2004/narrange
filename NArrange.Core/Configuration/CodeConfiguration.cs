@@ -47,10 +47,15 @@ namespace NArrange.Core.Configuration
 	/// </summary>
 	public class CodeConfiguration : ConfigurationElement
 	{
+		#region Static Fields
+
+		private static CodeConfiguration _default;
+		private static object _defaultLock = new object();
+
+		#endregion Static Fields
+
 		#region Fields
 
-		private static CodeConfiguration _default;		
-		private static object _defaultLock = new object();		
 		private List<HandlerConfiguration> _handlers;		
 		private TabConfiguration _tabs;		
 		
@@ -67,50 +72,6 @@ namespace NArrange.Core.Configuration
 		}
 
 		#endregion Constructors
-
-		#region Public Methods
-
-		/// <summary>
-		/// Loads a configuration from file
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public static CodeConfiguration Load(string filename)
-		{
-			using (FileStream fileStream = new FileStream(filename, FileMode.Open))
-			{
-			    return Load(fileStream);
-			}
-		}
-
-		/// <summary>
-		/// Loads a configuration from a stream
-		/// </summary>
-		/// <param name="stream"></param>
-		/// <returns></returns>
-		public static CodeConfiguration Load(Stream stream)
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CodeConfiguration));
-			CodeConfiguration configuration = 
-			    serializer.Deserialize(stream) as CodeConfiguration;
-			
-			return configuration;
-		}
-
-		/// <summary>
-		/// Saves the configuration to a file.
-		/// </summary>
-		/// <param name="filename"></param>
-		public void Save(string filename)
-		{
-			XmlSerializer serializer = new XmlSerializer(this.GetType());
-			using (FileStream stream = new FileStream(filename, FileMode.Create))
-			{
-			    serializer.Serialize(stream, this);
-			}
-		}
-
-		#endregion Public Methods
 
 		#region Public Properties
 
@@ -222,5 +183,49 @@ namespace NArrange.Core.Configuration
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Loads a configuration from file
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <returns></returns>
+		public static CodeConfiguration Load(string filename)
+		{
+			using (FileStream fileStream = new FileStream(filename, FileMode.Open))
+			{
+			    return Load(fileStream);
+			}
+		}
+
+		/// <summary>
+		/// Loads a configuration from a stream
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <returns></returns>
+		public static CodeConfiguration Load(Stream stream)
+		{
+			XmlSerializer serializer = new XmlSerializer(typeof(CodeConfiguration));
+			CodeConfiguration configuration = 
+			    serializer.Deserialize(stream) as CodeConfiguration;
+			
+			return configuration;
+		}
+
+		/// <summary>
+		/// Saves the configuration to a file.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void Save(string filename)
+		{
+			XmlSerializer serializer = new XmlSerializer(this.GetType());
+			using (FileStream stream = new FileStream(filename, FileMode.Create))
+			{
+			    serializer.Serialize(stream, this);
+			}
+		}
+
+		#endregion Public Methods
 	}
 }

@@ -15,51 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class ConstructorElementTests : CommentedElementTests<ConstructorElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests the creation of a new instance.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			ConstructorElement constructorElement = new ConstructorElement();
-			
-			//
-			// Verify default property values
-			//
-			Assert.AreEqual(ElementType.Constructor, constructorElement.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
-			    "Unexpected default value for Access.");
-			Assert.AreEqual(string.Empty, constructorElement.Params,
-			    "Unexpected default value for Params.");
-			Assert.IsNotNull(constructorElement.Attributes,
-			    "Attributes collection should be instantiated.");
-			Assert.AreEqual(0, constructorElement.Attributes.Count,
-			    "Attributes collection should be empty.");
-			Assert.IsNull(constructorElement.BodyText,
-			    "Unexpected default value for BodyText.");
-			Assert.IsNotNull(constructorElement.Children,
-			    "Children collection should be instantiated.");
-			Assert.AreEqual(0, constructorElement.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(constructorElement.HeaderCommentLines,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, constructorElement.HeaderCommentLines.Count,
-			    "HeaderCommentLines collection should be empty.");
-			Assert.IsFalse(constructorElement.IsAbstract,
-			    "Unexpected default value for IsAbstract.");
-			Assert.IsFalse(constructorElement.IsSealed,
-			    "Unexpected default value for IsSealed.");
-			Assert.IsFalse(constructorElement.IsStatic,
-			    "Unexpected default value for IsStatic.");
-			Assert.AreEqual(string.Empty, constructorElement.Name,
-			    "Unexpected default value for Name.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -118,5 +73,50 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests the creation of a new instance.
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			ConstructorElement constructorElement = new ConstructorElement();
+			
+			//
+			// Verify default property values
+			//
+			Assert.AreEqual(ElementType.Constructor, constructorElement.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+			    "Unexpected default value for Access.");
+			Assert.AreEqual(string.Empty, constructorElement.Params,
+			    "Unexpected default value for Params.");
+			Assert.IsNotNull(constructorElement.Attributes,
+			    "Attributes collection should be instantiated.");
+			Assert.AreEqual(0, constructorElement.Attributes.Count,
+			    "Attributes collection should be empty.");
+			Assert.IsNull(constructorElement.BodyText,
+			    "Unexpected default value for BodyText.");
+			Assert.IsNotNull(constructorElement.Children,
+			    "Children collection should be instantiated.");
+			Assert.AreEqual(0, constructorElement.Children.Count,
+			    "Children collection should be empty.");
+			Assert.IsNotNull(constructorElement.HeaderCommentLines,
+			    "HeaderCommentLines collection should not be null.");
+			Assert.AreEqual(0, constructorElement.HeaderCommentLines.Count,
+			    "HeaderCommentLines collection should be empty.");
+			Assert.IsFalse(constructorElement.IsAbstract,
+			    "Unexpected default value for IsAbstract.");
+			Assert.IsFalse(constructorElement.IsSealed,
+			    "Unexpected default value for IsSealed.");
+			Assert.IsFalse(constructorElement.IsStatic,
+			    "Unexpected default value for IsStatic.");
+			Assert.AreEqual(string.Empty, constructorElement.Name,
+			    "Unexpected default value for Name.");
+		}
+
+		#endregion Public Methods
 	}
 }

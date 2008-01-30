@@ -47,12 +47,12 @@ namespace NArrange.Core
 	/// </summary>
 	public sealed class ConditionExpressionEvaluator
 	{
-		#region Fields
+		#region Static Fields
 
-		private static ConditionExpressionEvaluator _instance;		
-		private static object _instanceLock = new object();		
-		
-		#endregion Fields
+		private static ConditionExpressionEvaluator _instance;
+		private static object _instanceLock = new object();
+
+		#endregion Static Fields
 
 		#region Constructors
 
@@ -64,6 +64,61 @@ namespace NArrange.Core
 		}
 
 		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the single instance of the expression evaluator
+		/// </summary>
+		public static ConditionExpressionEvaluator Instance
+		{
+			get
+			{
+			    if (_instance == null)
+			    {
+			        lock (_instanceLock)
+			        {
+			            if (_instance == null)
+			            {
+			                _instance = new ConditionExpressionEvaluator();
+			            }
+			        }
+			    }
+			
+			    return _instance;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Private Methods
+
+		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)
+		{
+			string value = string.Empty;
+			
+			if (expression != null && element != null)
+			{
+			    StringExpression stringExpression = expression as StringExpression;
+			    if (stringExpression != null)
+			    {
+			        value = stringExpression.Text;
+			    }
+			    else
+			    {
+			        AttributeExpression attributeExpression = expression as AttributeExpression;
+			        if (attributeExpression != null)
+			        {
+			            value = ElementUtilities.GetAttribute(attributeExpression.ElementAttribute,
+			                element);
+			        }
+			    }
+			}
+			
+			return value;
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 
@@ -129,60 +184,5 @@ namespace NArrange.Core
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)
-		{
-			string value = string.Empty;
-			
-			if (expression != null && element != null)
-			{
-			    StringExpression stringExpression = expression as StringExpression;
-			    if (stringExpression != null)
-			    {
-			        value = stringExpression.Text;
-			    }
-			    else
-			    {
-			        AttributeExpression attributeExpression = expression as AttributeExpression;
-			        if (attributeExpression != null)
-			        {
-			            value = ElementUtilities.GetAttribute(attributeExpression.ElementAttribute,
-			                element);
-			        }
-			    }
-			}
-			
-			return value;
-		}
-
-		#endregion Private Methods
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets the single instance of the expression evaluator
-		/// </summary>
-		public static ConditionExpressionEvaluator Instance
-		{
-			get
-			{
-			    if (_instance == null)
-			    {
-			        lock (_instanceLock)
-			        {
-			            if (_instance == null)
-			            {
-			                _instance = new ConditionExpressionEvaluator();
-			            }
-			        }
-			    }
-			
-			    return _instance;
-			}
-		}
-
-		#endregion Public Properties
 	}
 }

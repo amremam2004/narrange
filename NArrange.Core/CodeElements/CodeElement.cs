@@ -44,6 +44,15 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public abstract class CodeElement : ICodeElement
 	{
+		#region Fields
+
+		private List<ICodeElement> _children;		
+		private object _childrenLock = new object();		
+		private string _name;		
+		private ICodeElement _parent;		
+		
+		#endregion Fields
+
 		#region Constructors
 
 		/// <summary>
@@ -59,14 +68,31 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Constructors
 
-		#region Fields
+		#region Protected Properties
 
-		private List<ICodeElement> _children;		
-		private object _childrenLock = new object();		
-		private string _name;		
-		private ICodeElement _parent;		
-		
-		#endregion Fields
+		/// <summary>
+		/// Gets the base child collection
+		/// </summary>
+		protected List<ICodeElement> BaseChildren
+		{
+			get
+			{
+			    if (_children == null)
+			    {
+			        lock (_childrenLock)
+			        {
+			            if (_children == null)
+			            {
+			                _children = new List<ICodeElement>();
+			            }
+			        }
+			    }
+			
+			    return _children;
+			}
+		}
+
+		#endregion Protected Properties
 
 		#region Public Properties
 
@@ -133,31 +159,15 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Public Properties
 
-		#region Protected Properties
+		#region Protected Methods
 
 		/// <summary>
-		/// Gets the base child collection
+		/// Creates a clone of the instance and assigns any state
 		/// </summary>
-		protected List<ICodeElement> BaseChildren
-		{
-			get
-			{
-			    if (_children == null)
-			    {
-			        lock (_childrenLock)
-			        {
-			            if (_children == null)
-			            {
-			                _children = new List<ICodeElement>();
-			            }
-			        }
-			    }
-			
-			    return _children;
-			}
-		}
+		/// <returns></returns>
+		protected abstract CodeElement DoClone();
 
-		#endregion Protected Properties
+		#endregion Protected Methods
 
 		#region Public Methods
 
@@ -254,15 +264,5 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Public Methods
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of the instance and assigns any state
-		/// </summary>
-		/// <returns></returns>
-		protected abstract CodeElement DoClone();
-
-		#endregion Protected Methods
 	}
 }

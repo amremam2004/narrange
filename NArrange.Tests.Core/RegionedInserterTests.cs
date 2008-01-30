@@ -28,7 +28,10 @@ namespace NArrange.Tests.Core
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
 			
-			RegionedInserter regionedInserter = new RegionedInserter(regionConfiguration);
+			ElementConfiguration elementConfiguration = new ElementConfiguration();
+			elementConfiguration.ElementType = ElementType.Type;
+			
+			RegionedInserter regionedInserter = new RegionedInserter(regionConfiguration, elementConfiguration);
 		}
 
 		/// <summary>
@@ -36,9 +39,19 @@ namespace NArrange.Tests.Core
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullTest()
+		public void CreateWithNullParentConfigurationTest()
 		{
-			RegionedInserter regionedInserter = new RegionedInserter(null);
+			RegionedInserter regionedInserter = new RegionedInserter(new RegionConfiguration(), null);
+		}
+
+		/// <summary>
+		/// Test construction with a null configuration
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void CreateWithNullRegionConfigurationTest()
+		{
+			RegionedInserter regionedInserter = new RegionedInserter(null, new ElementConfiguration());
 		}
 
 		/// <summary>
@@ -50,7 +63,11 @@ namespace NArrange.Tests.Core
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
 			
-			RegionedInserter regionedInserter = new RegionedInserter(regionConfiguration);
+			ElementConfiguration typeConfiguration = new ElementConfiguration();
+			typeConfiguration.ElementType = ElementType.Type;
+			
+			RegionedInserter regionedInserter = new RegionedInserter(
+			    regionConfiguration, typeConfiguration);
 			
 			//
 			// Create a parent element

@@ -44,12 +44,12 @@ namespace NArrange.Core.Configuration
 	/// </summary>
 	public sealed class ConditionExpressionParser
 	{
-		#region Fields
+		#region Static Fields
 
-		private static ConditionExpressionParser _instance;		
-		private static object _instanceLock = new object();		
-		
-		#endregion Fields
+		private static ConditionExpressionParser _instance;
+		private static object _instanceLock = new object();
+
+		#endregion Static Fields
 
 		#region Constructors
 
@@ -61,6 +61,32 @@ namespace NArrange.Core.Configuration
 		}
 
 		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the single instance of the expression parser
+		/// </summary>
+		public static ConditionExpressionParser Instance
+		{
+			get
+			{
+			    if (_instance == null)
+			    {
+			        lock (_instanceLock)
+			        {
+			            if (_instance == null)
+			            {
+			                _instance = new ConditionExpressionParser();
+			            }
+			        }
+			    }
+			
+			    return _instance;
+			}
+		}
+
+		#endregion Public Properties
 
 		#region Public Methods
 
@@ -320,32 +346,6 @@ namespace NArrange.Core.Configuration
 		}
 
 		#endregion Public Methods
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets the single instance of the expression parser
-		/// </summary>
-		public static ConditionExpressionParser Instance
-		{
-			get
-			{
-			    if (_instance == null)
-			    {
-			        lock (_instanceLock)
-			        {
-			            if (_instance == null)
-			            {
-			                _instance = new ConditionExpressionParser();
-			            }
-			        }
-			    }
-			
-			    return _instance;
-			}
-		}
-
-		#endregion Public Properties
 
 		#region Other
 

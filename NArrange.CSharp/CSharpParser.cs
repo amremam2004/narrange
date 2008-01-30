@@ -61,11 +61,11 @@ namespace NArrange.CSharp
 
 		#endregion Constants
 
-		#region Read-Only Fields
+		#region Static Fields
 
 		private static readonly char[] WhitespaceChars = { ' ', '\t', '\r', '\n' };
 
-		#endregion Read-Only Fields
+		#endregion Static Fields
 
 		#region Fields
 
@@ -77,32 +77,6 @@ namespace NArrange.CSharp
 		private TextReader _reader;		
 		
 		#endregion Fields
-
-		#region Public Methods
-
-		/// <summary>
-		/// Parses a collection of code elements from a stream reader.
-		/// </summary>
-		/// <param name="reader">Code stream reader</param>
-		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> Parse(TextReader reader)
-		{
-			if (reader == null)
-			{
-			    throw new ArgumentNullException("reader");
-			}
-			
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-			
-			Reset();
-			_reader = reader;
-			
-			codeElements = ParseElements();
-			
-			return codeElements.AsReadOnly();
-		}
-
-		#endregion Public Methods
 
 		#region Private Methods
 
@@ -1723,5 +1697,31 @@ namespace NArrange.CSharp
 		}
 
 		#endregion Private Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Parses a collection of code elements from a stream reader.
+		/// </summary>
+		/// <param name="reader">Code stream reader</param>
+		/// <returns></returns>
+		public ReadOnlyCollection<ICodeElement> Parse(TextReader reader)
+		{
+			if (reader == null)
+			{
+			    throw new ArgumentNullException("reader");
+			}
+			
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			Reset();
+			_reader = reader;
+			
+			codeElements = ParseElements();
+			
+			return codeElements.AsReadOnly();
+		}
+
+		#endregion Public Methods
 	}
 }

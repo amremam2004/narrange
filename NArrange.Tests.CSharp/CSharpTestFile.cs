@@ -16,10 +16,15 @@ namespace NArrange.Tests.CSharp
 	/// </summary>
 	public class CSharpTestFile
 	{
+		#region Static Fields
+
+		private static Dictionary<string, Assembly> _compiledSourceFiles = new Dictionary<string, Assembly>();
+
+		#endregion Static Fields
+
 		#region Fields
 
 		private Assembly _assembly;		
-		private static Dictionary<string, Assembly> _compiledSourceFiles = new Dictionary<string, Assembly>();		
 		private string _resourceName;		
 		
 		#endregion Fields
@@ -52,6 +57,53 @@ namespace NArrange.Tests.CSharp
 		}
 
 		#endregion Public Properties
+
+		#region Private Methods
+
+		private static Assembly GetAssembly(string resourceName)
+		{
+			if (_compiledSourceFiles.ContainsKey(resourceName))
+			{
+			    return _compiledSourceFiles[resourceName];
+			}
+			else
+			{
+			    Assembly assembly = null;
+			
+			    using (TextReader reader = GetTestFileReader(resourceName))
+			    {
+			        string source = reader.ReadToEnd();
+			
+			        CompilerResults results = Compile(source, resourceName);
+			
+			        if (results.Errors.Count > 0)
+			        {
+			            CompilerError error = null;
+			
+			            error = GetCompilerError(results);
+			
+			            if (error != null)
+			            {
+			                Assert.Fail("Test source code should not produce compiler errors. " +
+			                    "Error: {0} - {1}, line {2}, column {3} ",
+			                    error.ErrorText, resourceName,
+			                    error.Line, error.Column);
+			            }
+			
+			            assembly = results.CompiledAssembly;
+			        }
+			    }
+			
+			    if (assembly != null)
+			    {
+			        _compiledSourceFiles.Add(resourceName, assembly);
+			    }
+			
+			    return assembly;
+			}
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 
@@ -140,52 +192,5 @@ namespace NArrange.Tests.CSharp
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		private static Assembly GetAssembly(string resourceName)
-		{
-			if (_compiledSourceFiles.ContainsKey(resourceName))
-			{
-			    return _compiledSourceFiles[resourceName];
-			}
-			else
-			{
-			    Assembly assembly = null;
-			
-			    using (TextReader reader = GetTestFileReader(resourceName))
-			    {
-			        string source = reader.ReadToEnd();
-			
-			        CompilerResults results = Compile(source, resourceName);
-			
-			        if (results.Errors.Count > 0)
-			        {
-			            CompilerError error = null;
-			
-			            error = GetCompilerError(results);
-			
-			            if (error != null)
-			            {
-			                Assert.Fail("Test source code should not produce compiler errors. " +
-			                    "Error: {0} - {1}, line {2}, column {3} ",
-			                    error.ErrorText, resourceName,
-			                    error.Line, error.Column);
-			            }
-			
-			            assembly = results.CompiledAssembly;
-			        }
-			    }
-			
-			    if (assembly != null)
-			    {
-			        _compiledSourceFiles.Add(resourceName, assembly);
-			    }
-			
-			    return assembly;
-			}
-		}
-
-		#endregion Private Methods
 	}
 }

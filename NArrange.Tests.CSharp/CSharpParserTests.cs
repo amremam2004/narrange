@@ -39,6 +39,45 @@ namespace NArrange.Tests.CSharp
 
 		#endregion Constants
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the ClassMembers test class.
+		/// </summary>
+		/// <param name="reader"></param>
+		/// <returns></returns>
+		private static TypeElement GetMembersTestClass(TextReader reader)
+		{
+			TypeElement classElement;
+			CSharpParser parser = new CSharpParser();
+			
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			Assert.AreEqual(9, elements.Count,
+			    "Unexpected number of top-level elements.");
+			
+			NamespaceElement namespaceElement = elements[8] as NamespaceElement;
+			Assert.IsNotNull(namespaceElement, "Expected a namespace element.");
+			
+			Assert.AreEqual(2, namespaceElement.Children.Count,
+			    "Unexpected number of namespace elements.");
+			
+			UsingElement usingElement = namespaceElement.Children[0] as UsingElement;
+			Assert.IsNotNull(usingElement, "Expected a using element.");
+			Assert.AreEqual("System.ComponentModel", usingElement.Name,
+			    "Unexpected using element name.");
+			
+			classElement = namespaceElement.Children[1] as TypeElement;
+			Assert.IsNotNull(classElement, "Expected a type element.");
+			Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
+			Assert.AreEqual("SampleClass", classElement.Name,
+			    "Unexpected class name.");
+			
+			return classElement;
+		}
+
+		#endregion Private Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -2920,44 +2959,5 @@ namespace NArrange.Tests.CSharp
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		/// <summary>
-		/// Gets the ClassMembers test class.
-		/// </summary>
-		/// <param name="reader"></param>
-		/// <returns></returns>
-		private static TypeElement GetMembersTestClass(TextReader reader)
-		{
-			TypeElement classElement;
-			CSharpParser parser = new CSharpParser();
-			
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
-			Assert.AreEqual(9, elements.Count,
-			    "Unexpected number of top-level elements.");
-			
-			NamespaceElement namespaceElement = elements[8] as NamespaceElement;
-			Assert.IsNotNull(namespaceElement, "Expected a namespace element.");
-			
-			Assert.AreEqual(2, namespaceElement.Children.Count,
-			    "Unexpected number of namespace elements.");
-			
-			UsingElement usingElement = namespaceElement.Children[0] as UsingElement;
-			Assert.IsNotNull(usingElement, "Expected a using element.");
-			Assert.AreEqual("System.ComponentModel", usingElement.Name,
-			    "Unexpected using element name.");
-			
-			classElement = namespaceElement.Children[1] as TypeElement;
-			Assert.IsNotNull(classElement, "Expected a type element.");
-			Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
-			Assert.AreEqual("SampleClass", classElement.Name,
-			    "Unexpected class name.");
-			
-			return classElement;
-		}
-
-		#endregion Private Methods
 	}
 }

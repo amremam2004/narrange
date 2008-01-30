@@ -50,15 +50,10 @@ namespace NArrange.Core
 		#region Fields
 
 		private object _codeArrangeChainLock = new object();		
+		private readonly CodeConfiguration _configuration;		
 		private ChainElementArranger _elementArrangerChain;		
 		
 		#endregion Fields
-
-		#region Read-Only Fields
-
-		private readonly CodeConfiguration _configuration;
-
-		#endregion Read-Only Fields
 
 		#region Constructors
 
@@ -81,6 +76,35 @@ namespace NArrange.Core
 		}
 
 		#endregion Constructors
+
+		#region Private Properties
+
+		private ChainElementArranger ArrangerChain
+		{
+			get
+			{
+			    if (_elementArrangerChain == null)
+			    {
+			        lock (_codeArrangeChainLock)
+			        {
+			            if (_elementArrangerChain == null)
+			            {
+			                _elementArrangerChain = new ChainElementArranger();
+			                foreach (ConfigurationElement configuration in _configuration.Elements)
+			                {
+			                    IElementArranger elementArranger = ElementArrangerFactory.CreateElementArranger(
+			                        configuration, _configuration, null);
+			                    _elementArrangerChain.AddArranger(elementArranger);
+			                }
+			            }
+			        }
+			    }
+			
+			    return _elementArrangerChain;
+			}
+		}
+
+		#endregion Private Properties
 
 		#region Public Methods
 
@@ -108,34 +132,5 @@ namespace NArrange.Core
 		}
 
 		#endregion Public Methods
-
-		#region Private Properties
-
-		private ChainElementArranger ArrangerChain
-		{
-			get
-			{
-			    if (_elementArrangerChain == null)
-			    {
-			        lock (_codeArrangeChainLock)
-			        {
-			            if (_elementArrangerChain == null)
-			            {
-			                _elementArrangerChain = new ChainElementArranger();
-			                foreach (ConfigurationElement configuration in _configuration.Elements)
-			                {
-			                    IElementArranger elementArranger = ElementArrangerFactory.CreateElementArranger(
-			                        configuration, null);
-			                    _elementArrangerChain.AddArranger(elementArranger);
-			                }
-			            }
-			        }
-			    }
-			
-			    return _elementArrangerChain;
-			}
-		}
-
-		#endregion Private Properties
 	}
 }

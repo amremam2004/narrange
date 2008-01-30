@@ -76,139 +76,6 @@ namespace NArrange.Core
 
 		#endregion Constructors
 
-		#region Public Methods
-
-		/// <summary>
-		/// Arranges an individual source code file
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <param name="outputFile"></param>
-		/// <returns></returns>
-		public bool Arrange(string inputFile, string outputFile)
-		{
-			bool success = true;
-			_filesProcessed = 0;
-			
-			success = InitializeConfiguration();
-			
-			if (success)
-			{
-			    bool isProject = IsProject(inputFile);
-			    if (isProject)
-			    {
-			        success = ArrangeProject(inputFile);
-			    }
-			    else if (GetExtension(inputFile) == "sln")
-			    {
-			        SolutionParser solutionParser = new SolutionParser();
-			        ReadOnlyCollection<string> projectFiles = solutionParser.Parse(inputFile);
-			        if (projectFiles.Count > 0)
-			        {
-			            foreach (string projectFile in projectFiles)
-			            {
-			                ArrangeProject(projectFile);
-			            }
-			        }
-			        else
-			        {
-			            LogMessage(LogLevel.Warning, "Solution {0} does not contain any project files.",
-			                inputFile);
-			        }
-			    }
-			    else
-			    {
-			        if (outputFile == null)
-			        {
-			            outputFile = new FileInfo(inputFile).FullName;
-			        }
-			
-			        success = ArrangeSourceFile(inputFile, outputFile);
-			        if (success)
-			        {
-			            _filesProcessed++;
-			        }
-			    }
-			}
-			
-			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
-			
-			return success;
-		}
-
-		/// <summary>
-		/// Determines whether or not the specified file can be parsed
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public bool CanParse(string inputFile)
-		{
-			InitializeConfiguration();
-			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}
-
-		/// <summary>
-		/// Retrieves an extension handler for a project file
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public SourceHandler GetProjectHandler(string filename)
-		{
-			InitializeConfiguration();
-			string extension = GetExtension(filename);
-			return _projectExtensionHandlers[extension];
-		}
-
-		/// <summary>
-		/// Retrieves an extension handler
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public SourceHandler GetSourceHandler(string filename)
-		{
-			InitializeConfiguration();
-			string extension = GetExtension(filename);
-			return _sourceExtensionHandlers[extension];
-		}
-
-		/// <summary>
-		/// Determines whether or not the specified file is a project
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public bool IsProject(string inputFile)
-		{
-			InitializeConfiguration();
-			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}
-
-		/// <summary>
-		/// Parses code elements from the input file
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
-		{
-			InitializeConfiguration();
-			
-			ReadOnlyCollection<ICodeElement> elements = null;
-			SourceHandler sourceHandler = GetSourceHandler(inputFile);
-			if (sourceHandler != null)
-			{
-			    ICodeParser parser = sourceHandler.CodeParser;
-			    if (parser != null)
-			    {
-			        using (StreamReader reader = new StreamReader(inputFile, Encoding.Default))
-			        {
-			            elements = parser.Parse(reader);
-			        }
-			    }
-			}
-			
-			return elements;
-		}
-
-		#endregion Public Methods
-
 		#region Private Methods
 
 		/// <summary>
@@ -514,5 +381,138 @@ namespace NArrange.Core
 		}
 
 		#endregion Private Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Arranges an individual source code file
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <param name="outputFile"></param>
+		/// <returns></returns>
+		public bool Arrange(string inputFile, string outputFile)
+		{
+			bool success = true;
+			_filesProcessed = 0;
+			
+			success = InitializeConfiguration();
+			
+			if (success)
+			{
+			    bool isProject = IsProject(inputFile);
+			    if (isProject)
+			    {
+			        success = ArrangeProject(inputFile);
+			    }
+			    else if (GetExtension(inputFile) == "sln")
+			    {
+			        SolutionParser solutionParser = new SolutionParser();
+			        ReadOnlyCollection<string> projectFiles = solutionParser.Parse(inputFile);
+			        if (projectFiles.Count > 0)
+			        {
+			            foreach (string projectFile in projectFiles)
+			            {
+			                ArrangeProject(projectFile);
+			            }
+			        }
+			        else
+			        {
+			            LogMessage(LogLevel.Warning, "Solution {0} does not contain any project files.",
+			                inputFile);
+			        }
+			    }
+			    else
+			    {
+			        if (outputFile == null)
+			        {
+			            outputFile = new FileInfo(inputFile).FullName;
+			        }
+			
+			        success = ArrangeSourceFile(inputFile, outputFile);
+			        if (success)
+			        {
+			            _filesProcessed++;
+			        }
+			    }
+			}
+			
+			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
+			
+			return success;
+		}
+
+		/// <summary>
+		/// Determines whether or not the specified file can be parsed
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public bool CanParse(string inputFile)
+		{
+			InitializeConfiguration();
+			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
+		}
+
+		/// <summary>
+		/// Retrieves an extension handler for a project file
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <returns></returns>
+		public SourceHandler GetProjectHandler(string filename)
+		{
+			InitializeConfiguration();
+			string extension = GetExtension(filename);
+			return _projectExtensionHandlers[extension];
+		}
+
+		/// <summary>
+		/// Retrieves an extension handler
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <returns></returns>
+		public SourceHandler GetSourceHandler(string filename)
+		{
+			InitializeConfiguration();
+			string extension = GetExtension(filename);
+			return _sourceExtensionHandlers[extension];
+		}
+
+		/// <summary>
+		/// Determines whether or not the specified file is a project
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public bool IsProject(string inputFile)
+		{
+			InitializeConfiguration();
+			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
+		}
+
+		/// <summary>
+		/// Parses code elements from the input file
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
+		{
+			InitializeConfiguration();
+			
+			ReadOnlyCollection<ICodeElement> elements = null;
+			SourceHandler sourceHandler = GetSourceHandler(inputFile);
+			if (sourceHandler != null)
+			{
+			    ICodeParser parser = sourceHandler.CodeParser;
+			    if (parser != null)
+			    {
+			        using (StreamReader reader = new StreamReader(inputFile, Encoding.Default))
+			        {
+			            elements = parser.Parse(reader);
+			        }
+			    }
+			}
+			
+			return elements;
+		}
+
+		#endregion Public Methods
 	}
 }

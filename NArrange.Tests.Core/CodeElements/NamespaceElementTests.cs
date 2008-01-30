@@ -15,35 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class NamespaceElementTests : CodeElementTests<NamespaceElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests constructing a new NamespaceElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			NamespaceElement element = new NamespaceElement();
-			
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(ElementType.Namespace, element.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(element.HeaderCommentLines,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, element.HeaderCommentLines.Count,
-			    "HeaderCommentLines collection should be empty.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -82,5 +53,34 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests constructing a new NamespaceElement
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			NamespaceElement element = new NamespaceElement();
+			
+			//
+			// Verify default values
+			//
+			Assert.AreEqual(ElementType.Namespace, element.ElementType,
+			    "Unexpected element type.");
+			Assert.AreEqual(string.Empty, element.Name,
+			    "Unexpected default value for Name.");
+			Assert.IsNotNull(element.Children,
+			    "Children collection should not be null.");
+			Assert.AreEqual(0, element.Children.Count,
+			    "Children collection should be empty.");
+			Assert.IsNotNull(element.HeaderCommentLines,
+			    "HeaderCommentLines collection should not be null.");
+			Assert.AreEqual(0, element.HeaderCommentLines.Count,
+			    "HeaderCommentLines collection should be empty.");
+		}
+
+		#endregion Public Methods
 	}
 }

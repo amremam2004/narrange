@@ -4,3 +4,4 @@ The following changes were made in this release:
 - Improved the CSharpParser performance by reducing the number of calls to TryParseElement.
 - Fixed an issue with parsing multi-value field definitions.
 - Fixed writing of groups with a custom separator string.
+- Fixed ordering of regions to respect the order in the configuration file

@@ -32,6 +32,26 @@ namespace NArrange.Tests.Core
 		
 		#endregion Fields
 
+		#region Private Methods
+
+		private static string GetTestFileContents(string filename)
+		{
+			string contents = null;
+			
+			using (Stream stream = CSharpTestFile.GetTestFileStream(filename))
+			{
+			    Assert.IsNotNull(stream,
+			        "Test stream could not be retrieved.");
+			
+			    StreamReader reader = new StreamReader(stream);
+			    contents = reader.ReadToEnd();
+			}
+			
+			return contents;
+		}
+
+		#endregion Private Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -315,25 +335,5 @@ namespace NArrange.Tests.Core
 		}
 
 		#endregion Public Methods
-
-		#region Private Methods
-
-		private static string GetTestFileContents(string filename)
-		{
-			string contents = null;
-			
-			using (Stream stream = CSharpTestFile.GetTestFileStream(filename))
-			{
-			    Assert.IsNotNull(stream,
-			        "Test stream could not be retrieved.");
-			
-			    StreamReader reader = new StreamReader(stream);
-			    contents = reader.ReadToEnd();
-			}
-			
-			return contents;
-		}
-
-		#endregion Private Methods
 	}
 }

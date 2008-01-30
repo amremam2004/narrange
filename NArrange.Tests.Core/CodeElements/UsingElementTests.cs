@@ -15,6 +15,34 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class UsingElementTests : CommentedElementTests<UsingElement>
 	{
+		#region Protected Methods
+
+		/// <summary>
+		/// Creates an instance for cloning
+		/// </summary>
+		/// <returns></returns>
+		protected override UsingElement DoCreateClonePrototype()
+		{
+			UsingElement prototype = new UsingElement();
+			prototype.Name = "SampleNamespace";
+			prototype.Redefine = "MySampleNamespace";
+			
+			return prototype;
+		}
+
+		/// <summary>
+		/// Verifies that a clone has the same state as the original
+		/// </summary>
+		/// <param name="original"></param>
+		/// <param name="clone"></param>
+		protected override void DoVerifyClone(UsingElement original, UsingElement clone)
+		{
+			Assert.AreEqual(original.Name, clone.Name);
+			Assert.AreEqual(original.Redefine, clone.Redefine);
+		}
+
+		#endregion Protected Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -44,33 +72,5 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Public Methods
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates an instance for cloning
-		/// </summary>
-		/// <returns></returns>
-		protected override UsingElement DoCreateClonePrototype()
-		{
-			UsingElement prototype = new UsingElement();
-			prototype.Name = "SampleNamespace";
-			prototype.Redefine = "MySampleNamespace";
-			
-			return prototype;
-		}
-
-		/// <summary>
-		/// Verifies that a clone has the same state as the original
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected override void DoVerifyClone(UsingElement original, UsingElement clone)
-		{
-			Assert.AreEqual(original.Name, clone.Name);
-			Assert.AreEqual(original.Redefine, clone.Redefine);
-		}
-
-		#endregion Protected Methods
 	}
 }

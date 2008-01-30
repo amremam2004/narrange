@@ -91,10 +91,10 @@
 								</Element>
 							</Elements>
 						</Region>
-						<Region Name="Read-Only Fields">
+						<Region Name="Static Fields">
 							<Elements>
 								<Element Type="Field">
-									<Filter Condition="$(Modifier) : 'ReadOnly'"/>
+									<Filter Condition="$(Modifier) : 'Static'"/>
 									<!-- Do not sort statics due to dependencies among fields -->
 								</Element>
 							</Elements>

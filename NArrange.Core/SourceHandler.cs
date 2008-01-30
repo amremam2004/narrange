@@ -71,35 +71,6 @@ namespace NArrange.Core
 
 		#endregion Constructors
 
-		#region Private Methods
-
-		/// <summary>
-		/// Initializes the extension handler
-		/// </summary>
-		private void Initialize()
-		{
-			_assembly = Assembly.Load(_assemblyName);
-			
-			Type[] types = _assembly.GetTypes();
-			foreach (Type type in types)
-			{
-			    if (_codeParser == null && type.GetInterface(typeof(ICodeParser).ToString()) != null)
-			    {
-			        _codeParser = Activator.CreateInstance(type) as ICodeParser;
-			    }
-			    else if (_writer == null && type.GetInterface(typeof(ICodeWriter).ToString()) != null)
-			    {
-			        _writer = Activator.CreateInstance(type) as ICodeWriter;
-			    }
-			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
-			    {
-			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
-			    }
-			}
-		}
-
-		#endregion Private Methods
-
 		#region Public Properties
 
 		/// <summary>
@@ -136,5 +107,34 @@ namespace NArrange.Core
 		}
 
 		#endregion Public Properties
+
+		#region Private Methods
+
+		/// <summary>
+		/// Initializes the extension handler
+		/// </summary>
+		private void Initialize()
+		{
+			_assembly = Assembly.Load(_assemblyName);
+			
+			Type[] types = _assembly.GetTypes();
+			foreach (Type type in types)
+			{
+			    if (_codeParser == null && type.GetInterface(typeof(ICodeParser).ToString()) != null)
+			    {
+			        _codeParser = Activator.CreateInstance(type) as ICodeParser;
+			    }
+			    else if (_writer == null && type.GetInterface(typeof(ICodeWriter).ToString()) != null)
+			    {
+			        _writer = Activator.CreateInstance(type) as ICodeWriter;
+			    }
+			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
+			    {
+			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
+			    }
+			}
+		}
+
+		#endregion Private Methods
 	}
 }

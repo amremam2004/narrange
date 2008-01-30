@@ -58,62 +58,6 @@ namespace NArrange.ConsoleApplication
 
 		#endregion Constants
 
-		#region Public Methods
-
-		/// <summary>
-		/// Application entry point
-		/// </summary>
-		/// <param name="args"></param>
-		public static void Main(string[] args)
-		{
-			ConsoleLogger logger = new ConsoleLogger();
-			
-			Assembly assembly = Assembly.GetExecutingAssembly();
-			Version version = assembly.GetName().Version;
-			Console.WriteLine();
-			logger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
-			Console.WriteLine(new string('_', 60));
-			
-			object[] copyrightAttributes = assembly.GetCustomAttributes(
-			    typeof(AssemblyCopyrightAttribute), false);
-			if(copyrightAttributes.Length > 0)
-			{
-			    AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
-			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
-			}
-			Console.WriteLine();
-			
-			if (args.Length < 1 || args[0] == "?" || args[0] == "/?" || args[0] == "help")
-			{
-			    WriteUsage();
-			    Environment.Exit(Fail);
-			}
-			
-			string configFile = null;
-			string inputFile = null;
-			string outputFile = null;
-			
-			ParseArguments(args, ref configFile, ref inputFile, ref outputFile);
-			
-			//
-			// Arrange the source code file
-			//
-			FileArranger fileArranger = new FileArranger(configFile, logger);
-			bool success = fileArranger.Arrange(inputFile, outputFile);
-			
-			if (!success)
-			{
-			    logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);
-			    Environment.Exit(Fail);
-			}
-			else
-			{
-			    logger.LogMessage(LogLevel.Info, "Arrange successful.");
-			}
-		}
-
-		#endregion Public Methods
-
 		#region Private Methods
 
 		/// <summary>
@@ -204,5 +148,61 @@ namespace NArrange.ConsoleApplication
 		}
 
 		#endregion Private Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Application entry point
+		/// </summary>
+		/// <param name="args"></param>
+		public static void Main(string[] args)
+		{
+			ConsoleLogger logger = new ConsoleLogger();
+			
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			Version version = assembly.GetName().Version;
+			Console.WriteLine();
+			logger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
+			Console.WriteLine(new string('_', 60));
+			
+			object[] copyrightAttributes = assembly.GetCustomAttributes(
+			    typeof(AssemblyCopyrightAttribute), false);
+			if(copyrightAttributes.Length > 0)
+			{
+			    AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
+			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
+			}
+			Console.WriteLine();
+			
+			if (args.Length < 1 || args[0] == "?" || args[0] == "/?" || args[0] == "help")
+			{
+			    WriteUsage();
+			    Environment.Exit(Fail);
+			}
+			
+			string configFile = null;
+			string inputFile = null;
+			string outputFile = null;
+			
+			ParseArguments(args, ref configFile, ref inputFile, ref outputFile);
+			
+			//
+			// Arrange the source code file
+			//
+			FileArranger fileArranger = new FileArranger(configFile, logger);
+			bool success = fileArranger.Arrange(inputFile, outputFile);
+			
+			if (!success)
+			{
+			    logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);
+			    Environment.Exit(Fail);
+			}
+			else
+			{
+			    logger.LogMessage(LogLevel.Info, "Arrange successful.");
+			}
+		}
+
+		#endregion Public Methods
 	}
 }

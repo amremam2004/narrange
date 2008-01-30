@@ -43,19 +43,6 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public sealed class NamespaceElement : CommentedElement
 	{
-		#region Protected Methods
-
-		/// <summary>
-		/// Clones this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override CodeElement DoClone()
-		{
-			return new NamespaceElement();
-		}
-
-		#endregion Protected Methods
-
 		#region Public Properties
 
 		/// <summary>
@@ -70,6 +57,19 @@ namespace NArrange.Core.CodeElements
 		}
 
 		#endregion Public Properties
+
+		#region Protected Methods
+
+		/// <summary>
+		/// Clones this instance
+		/// </summary>
+		/// <returns></returns>
+		protected override CodeElement DoClone()
+		{
+			return new NamespaceElement();
+		}
+
+		#endregion Protected Methods
 
 		#region Public Methods
 

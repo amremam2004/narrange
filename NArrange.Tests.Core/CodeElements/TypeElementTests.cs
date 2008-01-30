@@ -15,57 +15,6 @@ namespace NArrange.Tests.Core.CodeElements
 	[TestFixture]
 	public class TypeElementTests : CommentedElementTests<TypeElement>
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Tests the creation of a new instance.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			TypeElement typeElement = new TypeElement();
-			
-			//
-			// Verify default property values
-			//
-			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
-			    "Unexpected default value for Type.");
-			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
-			    "Unexpected default value for Access.");
-			Assert.IsNotNull(typeElement.Attributes,
-			    "Attributes collection should be instantiated.");
-			Assert.AreEqual(0, typeElement.Attributes.Count,
-			    "Attributes collection should be empty.");
-			Assert.IsNull(typeElement.BodyText,
-			    "Unexpected default value for BodyText.");
-			Assert.IsNotNull(typeElement.Children,
-			    "Children collection should be instantiated.");
-			Assert.AreEqual(0, typeElement.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(typeElement.HeaderCommentLines,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, typeElement.HeaderCommentLines.Count,
-			    "HeaderCommentLines collection should be empty.");
-			Assert.IsNotNull(typeElement.Interfaces,
-			    "Interfaces collection should not be null.");
-			Assert.AreEqual(0, typeElement.Interfaces.Count,
-			    "Interfaces collection should be empty.");
-			Assert.IsFalse(typeElement.IsAbstract,
-			    "Unexpected default value for IsAbstract.");
-			Assert.IsFalse(typeElement.IsSealed,
-			    "Unexpected default value for IsSealed.");
-			Assert.IsFalse(typeElement.IsStatic,
-			    "Unexpected default value for IsStatic.");
-			Assert.AreEqual(string.Empty, typeElement.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(typeElement.TypeParameters,
-			    "TypeParameters collection should not be null.");
-			Assert.AreEqual(0, typeElement.TypeParameters.Count,
-			    "TypeParameters collection should be empty.");
-		}
-
-		#endregion Public Methods
-
 		#region Protected Methods
 
 		/// <summary>
@@ -133,5 +82,56 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Tests the creation of a new instance.
+		/// </summary>
+		[Test]
+		public void CreateTest()
+		{
+			TypeElement typeElement = new TypeElement();
+			
+			//
+			// Verify default property values
+			//
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+			    "Unexpected default value for Type.");
+			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
+			    "Unexpected default value for Access.");
+			Assert.IsNotNull(typeElement.Attributes,
+			    "Attributes collection should be instantiated.");
+			Assert.AreEqual(0, typeElement.Attributes.Count,
+			    "Attributes collection should be empty.");
+			Assert.IsNull(typeElement.BodyText,
+			    "Unexpected default value for BodyText.");
+			Assert.IsNotNull(typeElement.Children,
+			    "Children collection should be instantiated.");
+			Assert.AreEqual(0, typeElement.Children.Count,
+			    "Children collection should be empty.");
+			Assert.IsNotNull(typeElement.HeaderCommentLines,
+			    "HeaderCommentLines collection should not be null.");
+			Assert.AreEqual(0, typeElement.HeaderCommentLines.Count,
+			    "HeaderCommentLines collection should be empty.");
+			Assert.IsNotNull(typeElement.Interfaces,
+			    "Interfaces collection should not be null.");
+			Assert.AreEqual(0, typeElement.Interfaces.Count,
+			    "Interfaces collection should be empty.");
+			Assert.IsFalse(typeElement.IsAbstract,
+			    "Unexpected default value for IsAbstract.");
+			Assert.IsFalse(typeElement.IsSealed,
+			    "Unexpected default value for IsSealed.");
+			Assert.IsFalse(typeElement.IsStatic,
+			    "Unexpected default value for IsStatic.");
+			Assert.AreEqual(string.Empty, typeElement.Name,
+			    "Unexpected default value for Name.");
+			Assert.IsNotNull(typeElement.TypeParameters,
+			    "TypeParameters collection should not be null.");
+			Assert.AreEqual(0, typeElement.TypeParameters.Count,
+			    "TypeParameters collection should be empty.");
+		}
+
+		#endregion Public Methods
 	}
 }

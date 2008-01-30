@@ -18,6 +18,21 @@ namespace NArrange.Tests.Core
 		
 		#endregion Fields
 
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the log event history
+		/// </summary>
+		public ReadOnlyCollection<TestLogEvent> Events
+		{
+			get
+			{
+			    return _events.AsReadOnly();
+			}
+		}
+
+		#endregion Public Properties
+
 		#region Public Methods
 
 		/// <summary>
@@ -87,21 +102,6 @@ namespace NArrange.Tests.Core
 		}
 
 		#endregion Public Methods
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets the log event history
-		/// </summary>
-		public ReadOnlyCollection<TestLogEvent> Events
-		{
-			get
-			{
-			    return _events.AsReadOnly();
-			}
-		}
-
-		#endregion Public Properties
 
 		#region Other
 
