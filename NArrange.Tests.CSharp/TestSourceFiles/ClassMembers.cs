@@ -203,7 +203,7 @@ namespace SampleNamespace
         }
 
         /* 
-         * Block comment here 
+         * Block comment here
          */
         public override string ToString()
         {

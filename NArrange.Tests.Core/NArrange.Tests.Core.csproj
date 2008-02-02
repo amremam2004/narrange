@@ -43,7 +43,7 @@
     </Compile>
     <Compile Include="CodeElements\CodeElementTests.cs" />
     <Compile Include="CodeElements\CommentedElementTests.cs" />
-    <Compile Include="CodeElements\CommentLineTests.cs" />
+    <Compile Include="CodeElements\CommentLineElementTests.cs" />
     <Compile Include="CodeElements\ConstructorElementTests.cs" />
     <Compile Include="CodeElements\GroupElementTests.cs" />
     <Compile Include="CodeElements\MethodElementTests.cs" />

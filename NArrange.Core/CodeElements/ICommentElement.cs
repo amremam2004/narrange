@@ -38,98 +38,31 @@ using System.Text;
 
 using NArrange.Core.CodeElements;
 
-namespace NArrange.Core
+namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Standard IElementArranger implementation
+	/// Interface for comments
 	/// </summary>
-	public class ElementArranger : IElementArranger
+	public interface ICommentElement : ICodeElement
 	{
-		#region Fields
-
-		private IElementArranger _childrenArranger;		
-		private ElementType _elementType;		
-		private IElementFilter _filter;		
-		private IElementInserter _inserter;		
-		
-		#endregion Fields
-
-		#region Constructors
+		#region Properties
 
 		/// <summary>
-		/// Creates a new ElementArranger
+		/// Comment text
 		/// </summary>
-		/// <param name="elementType"></param>
-		/// <param name="inserter"></param>
-		/// <param name="filter"></param>
-		/// <param name="childrenArranger"></param>
-		protected internal ElementArranger(ElementType elementType,
-			IElementInserter inserter, IElementFilter filter, IElementArranger childrenArranger)
+		string Text
 		{
-			if (inserter == null)
-			{
-			    throw new ArgumentNullException("inserter");
-			}
-			
-			_elementType = elementType;
-			_inserter = inserter;
-			_filter = filter;
-			_childrenArranger = childrenArranger;
-		}
-
-		#endregion Constructors
-
-		#region Public Methods
-
-		/// <summary>
-		/// Arranges the element in within the code tree represented in the specified
-		/// builder.
-		/// </summary>
-		/// <param name="parentElement"></param>
-		/// <param name="codeElement"></param>
-		public virtual void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
-		{
-			if (_childrenArranger != null)
-			{
-			    List<ICodeElement> children = new List<ICodeElement>(codeElement.Children);
-			    codeElement.ClearChildren();
-			
-			    foreach (ICodeElement childElement in children)
-			    {
-			        RegionElement regionElement = childElement as RegionElement;
-			        if (regionElement != null)
-			        {
-			            List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
-			            regionElement.ClearChildren();
-			
-			            foreach (ICodeElement regionChildElement in regionChildren)
-			            {
-			                _childrenArranger.ArrangeElement(codeElement, regionChildElement);
-			            }
-			        }
-			        else
-			        {
-			            _childrenArranger.ArrangeElement(codeElement, childElement);
-			        }
-			    }
-			}
-			
-			_inserter.InsertElement(parentElement, codeElement);
+			get;
 		}
 
 		/// <summary>
-		/// Determines whether or not the specified element can be arranged by 
-		/// this arranger.
+		/// Gets the type of comment.
 		/// </summary>
-		/// <param name="codeElement"></param>
-		/// <returns></returns>
-		public virtual bool CanArrange(ICodeElement codeElement)
+		CommentType Type
 		{
-			return (_elementType == ElementType.NotSpecified ||
-			    codeElement.ElementType == _elementType) && 
-			    (_filter == null || _filter.IsMatch(codeElement));
+			get;
 		}
 
-		#endregion Public Methods
+		#endregion Properties
 	}
 }

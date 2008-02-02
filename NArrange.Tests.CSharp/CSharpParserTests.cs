@@ -175,7 +175,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyTitle(\"NArrange.Core.Tests\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(3, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[4] as AttributeElement;
@@ -183,7 +183,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyDescription(\"\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[5] as AttributeElement;
@@ -191,7 +191,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyConfiguration(\"\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[6] as AttributeElement;
@@ -199,7 +199,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyCompany(\"\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[7] as AttributeElement;
@@ -207,7 +207,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyProduct(\"NArrange.Core.Tests\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[8] as AttributeElement;
@@ -215,7 +215,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyCopyright(\"Copyright ©  2007\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[9] as AttributeElement;
@@ -223,7 +223,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyTrademark(\"\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[10] as AttributeElement;
@@ -231,7 +231,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyCulture(\"\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[11] as AttributeElement;
@@ -239,7 +239,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: ComVisible(false)", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(3, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[12] as AttributeElement;
@@ -247,7 +247,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: Guid(\"def01aba-79c5-4082-9522-e570c52a2df1\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(1, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(1, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[13] as AttributeElement;
@@ -255,7 +255,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyVersion(\"1.0.0.0\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(9, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(9, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    attributeElement = elements[14] as AttributeElement;
@@ -263,7 +263,7 @@ namespace NArrange.Tests.CSharp
 			        "Element is not an AttributeElement.");
 			    Assert.AreEqual("assembly: AssemblyFileVersion(\"1.0.0.0\")", attributeElement.BodyText,
 			        "Unexpected attribute text.");
-			    Assert.AreEqual(0, attributeElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			
 			    //
@@ -277,7 +277,7 @@ namespace NArrange.Tests.CSharp
 			        "Children collection should not be null.");
 			    Assert.AreEqual(0, namespaceElement.Children.Count,
 			        "Children collection should not be null.");
-			    Assert.AreEqual(3, namespaceElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, namespaceElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
 			}
 		}
@@ -392,12 +392,12 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(classElement, "Expected a TypeElement.");
 			    Assert.AreEqual("SampleClass", classElement.Name,
 			        "Unexpected class name.");
-			    Assert.AreEqual(3, classElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, classElement.HeaderComments.Count,
 			        "An unexpected number of class header comment lines were parsed.");
-			    foreach (ICommentLine commentLine in
-			        classElement.HeaderCommentLines)
+			    foreach (ICommentElement comment in
+			        classElement.HeaderComments)
 			    {
-			        Assert.IsTrue(commentLine.IsXmlComment,
+			        Assert.AreEqual(CommentType.XmlLine, comment.Type,
 			            "Class header comment should be an XML comment.");
 			    }
 			    Assert.AreEqual(CodeAccess.Public, classElement.Access,
@@ -601,6 +601,38 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a comment block.
+		/// </summary>
+		[Test]
+		public void ParseCommentBlockTest()
+		{
+			StringReader reader = new StringReader(
+			    "/*\r\n" + 
+			    " * Block comment here\r\n" + 
+			    " */\r\n");
+			
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			CommentElement commentBlockElement = elements[0] as CommentElement;
+			Assert.AreEqual(CommentType.Block, commentBlockElement.Type,
+			    "Element is not a CommentBlockElement.");
+			
+			string[] lines = commentBlockElement.Text.Split(
+			    new string[] { Environment.NewLine }, StringSplitOptions.None);
+			Assert.AreEqual(3, lines.Length,
+			    "An unexpected number of comment lines were parsed.");
+			Assert.AreEqual(string.Empty, lines[0],
+			    "Unexpected comment line at index 0.");
+			Assert.AreEqual(" * Block comment here", lines[1],
+			    "Unexpected comment line at index 1.");
+			Assert.AreEqual(" ", lines[2],
+			    "Unexpected comment line at index 2.");
+		}
+
+		/// <summary>
 		/// Tests parsing a constructor with parameters.
 		/// </summary>
 		[Test]
@@ -715,7 +747,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected constructor name.");
 			    Assert.AreEqual(CodeAccess.Public, constructor.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, constructor.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, constructor.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(constructor.IsStatic,
 			        "Constructor should not be static.");
@@ -728,7 +760,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected constructor name.");
 			    Assert.AreEqual(CodeAccess.Internal, constructor.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(4, constructor.HeaderCommentLines.Count,
+			    Assert.AreEqual(4, constructor.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(constructor.IsStatic,
 			        "Constructor should not be static.");
@@ -741,7 +773,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected constructor name.");
 			    Assert.AreEqual(CodeAccess.NotSpecified, constructor.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(1, constructor.HeaderCommentLines.Count,
+			    Assert.AreEqual(1, constructor.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(constructor.IsStatic,
 			        "Constructor should be static.");
@@ -754,7 +786,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected constructor name.");
 			    Assert.AreEqual(CodeAccess.NotSpecified, constructor.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(4, constructor.HeaderCommentLines.Count,
+			    Assert.AreEqual(4, constructor.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(constructor.IsStatic,
 			        "Constructor should not be static.");
@@ -786,7 +818,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected delegate name.");
 			    Assert.AreEqual(CodeAccess.Public, delegateElement.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(5, delegateElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(5, delegateElement.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(delegateElement.IsStatic,
 			        "Delegate should not be static.");
@@ -832,7 +864,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected event name.");
 			    Assert.AreEqual(CodeAccess.Public, eventElement.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, eventElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, eventElement.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
@@ -859,7 +891,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected event name.");
 			    Assert.AreEqual(CodeAccess.Public, eventElement.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, eventElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, eventElement.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
@@ -886,7 +918,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected event name.");
 			    Assert.AreEqual(CodeAccess.Public, eventElement.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, eventElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, eventElement.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
@@ -1050,7 +1082,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(1, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(1, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1069,7 +1101,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.AreEqual("1", field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1084,7 +1116,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.AreEqual("\"static; string;\"", field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(3, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(field.IsStatic,
 			        "Field should be static.");
@@ -1101,7 +1133,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1116,7 +1148,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.AreEqual("{ }", field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1131,7 +1163,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1146,7 +1178,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1161,7 +1193,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsTrue(field.InitialValue.Contains("null"),
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(3, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(field.IsStatic,
 			        "Field should be static.");
@@ -1178,7 +1210,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsTrue(field.InitialValue.Contains("\"constant string\""), 
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
@@ -1199,7 +1231,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(field.IsVolatile,
 			        "Field should be volatile.");
@@ -1222,7 +1254,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsVolatile,
 			        "Field should not be volatile.");
@@ -1245,7 +1277,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected field access level.");
 			    Assert.AreEqual("10", field.InitialValue,
 			        "Unexpected field initial value.");
-			    Assert.AreEqual(0, field.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, field.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsVolatile,
 			        "Field should not be volatile.");
@@ -1283,12 +1315,11 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(string.Empty, constructorElement.Params,
 			    "Unexpected parameter string.");
-			Assert.AreEqual(2, constructorElement.HeaderCommentLines.Count,
+			Assert.AreEqual(1, constructorElement.HeaderComments.Count,
 			    "Unexpected number of header comment lines.");
-			Assert.AreEqual("Comment1", constructorElement.HeaderCommentLines[0].Text);
-			Assert.IsFalse(constructorElement.HeaderCommentLines[0].IsXmlComment);
-			Assert.AreEqual("Comment2", constructorElement.HeaderCommentLines[1].Text);
-			Assert.IsFalse(constructorElement.HeaderCommentLines[1].IsXmlComment);
+			Assert.AreEqual(CommentType.Block, constructorElement.HeaderComments[0].Type,
+			    "Expected a block comment.");
+			Assert.AreEqual("Comment1\r\nComment2", constructorElement.HeaderComments[0].Text);
 		}
 
 		/// <summary>
@@ -1314,12 +1345,12 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(string.Empty, constructorElement.Params,
 			    "Unexpected parameter string.");
-			Assert.AreEqual(2, constructorElement.HeaderCommentLines.Count,
+			Assert.AreEqual(2, constructorElement.HeaderComments.Count,
 			    "Unexpected number of header comment lines.");
-			Assert.AreEqual("Comment1", constructorElement.HeaderCommentLines[0].Text);
-			Assert.IsFalse(constructorElement.HeaderCommentLines[0].IsXmlComment);
-			Assert.AreEqual("Comment2", constructorElement.HeaderCommentLines[1].Text);
-			Assert.IsFalse(constructorElement.HeaderCommentLines[1].IsXmlComment);
+			Assert.AreEqual("Comment1", constructorElement.HeaderComments[0].Text);
+			Assert.AreEqual(CommentType.Line, constructorElement.HeaderComments[0].Type);
+			Assert.AreEqual("Comment2", constructorElement.HeaderComments[1].Text);
+			Assert.AreEqual(CommentType.Line, constructorElement.HeaderComments[1].Type);
 		}
 
 		/// <summary>
@@ -1345,12 +1376,12 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(string.Empty, constructorElement.Params,
 			    "Unexpected parameter string.");
-			Assert.AreEqual(2, constructorElement.HeaderCommentLines.Count,
+			Assert.AreEqual(2, constructorElement.HeaderComments.Count,
 			    "Unexpected number of header comment lines.");
-			Assert.AreEqual("<summary>Comment1", constructorElement.HeaderCommentLines[0].Text);
-			Assert.IsTrue(constructorElement.HeaderCommentLines[0].IsXmlComment);
-			Assert.AreEqual("Comment2</summary>", constructorElement.HeaderCommentLines[1].Text);
-			Assert.IsTrue(constructorElement.HeaderCommentLines[1].IsXmlComment);
+			Assert.AreEqual("<summary>Comment1", constructorElement.HeaderComments[0].Text);
+			Assert.AreEqual(CommentType.XmlLine, constructorElement.HeaderComments[0].Type);
+			Assert.AreEqual("Comment2</summary>", constructorElement.HeaderComments[1].Text);
+			Assert.AreEqual(CommentType.XmlLine, constructorElement.HeaderComments[1].Type);
 		}
 
 		/// <summary>
@@ -1396,12 +1427,12 @@ namespace NArrange.Tests.CSharp
 			        "Interfaces should not be considered sealed.");
 			    Assert.AreEqual("SampleInterface", interfaceElement.Name,
 			        "Unexpected interface name.");
-			    Assert.AreEqual(3, interfaceElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, interfaceElement.HeaderComments.Count,
 			        "An unexpected number of class header comment lines were parsed.");
-			    foreach (ICommentLine commentLine in
-			        interfaceElement.HeaderCommentLines)
+			    foreach (ICommentElement comment in
+			        interfaceElement.HeaderComments)
 			    {
-			        Assert.IsTrue(commentLine.IsXmlComment,
+			        Assert.AreEqual(CommentType.XmlLine, comment.Type,
 			            "Interface header comment should be an XML comment.");
 			    }
 			    Assert.AreEqual(CodeAccess.Public, interfaceElement.Access,
@@ -1591,7 +1622,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Public, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(1, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(1, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
@@ -1618,8 +1649,12 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Public, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, method.HeaderCommentLines.Count,
-			        "Unexpected number of header comment lines.");
+			    Assert.AreEqual(1, method.HeaderComments.Count,
+			        "Unexpecte number of comments.");
+			    Assert.AreEqual(CommentType.Block, method.HeaderComments[0].Type,
+			        "Expected a block comment.");
+			    Assert.AreEqual(" \r\n         * Block comment here\r\n         ", method.HeaderComments[0].Text,
+			        "Unexpected header comment text.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
 			    Assert.AreEqual("string", method.Type,
@@ -1645,7 +1680,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Private, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(6, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(6, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
@@ -1674,7 +1709,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Internal, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(5, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(5, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
@@ -1707,7 +1742,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Public, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
@@ -1748,7 +1783,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.Public, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(0, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(0, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
@@ -1783,7 +1818,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected method name.");
 			    Assert.AreEqual(CodeAccess.NotSpecified, method.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(4, method.HeaderCommentLines.Count,
+			    Assert.AreEqual(4, method.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
@@ -2184,7 +2219,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Private, type.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, type.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, type.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(type.IsStatic,
 			        "Type should not be static.");
@@ -2203,7 +2238,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Public, type.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, type.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, type.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(type.IsStatic,
 			        "Type should not be static.");
@@ -2224,7 +2259,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Private, type.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, type.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, type.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(type.IsStatic,
 			        "Type should not be static.");
@@ -2245,7 +2280,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Internal, type.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, type.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, type.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(type.IsStatic,
 			        "Type should be static.");
@@ -2320,7 +2355,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Public, classElement.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, classElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, classElement.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(classElement.IsStatic,
 			        "Type should not be static.");
@@ -2449,7 +2484,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
@@ -2474,7 +2509,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Protected, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
@@ -2499,7 +2534,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(4, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(4, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(property.IsStatic,
 			        "Property should be static.");
@@ -2526,7 +2561,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(2, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(2, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(property.IsStatic,
 			        "Property should be static.");
@@ -2553,7 +2588,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Internal, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(6, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(6, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
@@ -2584,7 +2619,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(3, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
@@ -2616,7 +2651,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected property name.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
-			    Assert.AreEqual(5, property.HeaderCommentLines.Count,
+			    Assert.AreEqual(5, property.HeaderComments.Count,
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
@@ -2839,12 +2874,11 @@ namespace NArrange.Tests.CSharp
 			        "Structures should not be sealed.");
 			    Assert.AreEqual("SampleStruct", structElement.Name,
 			        "Unexpected structure name.");
-			    Assert.AreEqual(3, structElement.HeaderCommentLines.Count,
+			    Assert.AreEqual(3, structElement.HeaderComments.Count,
 			        "An unexpected number of class header comment lines were parsed.");
-			    foreach (ICommentLine commentLine in
-			        structElement.HeaderCommentLines)
+			    foreach (ICommentElement comment in structElement.HeaderComments)
 			    {
-			        Assert.IsTrue(commentLine.IsXmlComment,
+			        Assert.AreEqual(CommentType.XmlLine, comment.Type,
 			            "Structure header comment should be an XML comment.");
 			    }
 			    Assert.AreEqual(CodeAccess.Public, structElement.Access,

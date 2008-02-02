@@ -60,7 +60,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "BodyText was not copied correctly.");
 			Assert.AreEqual(original.Children.Count, clone.Children.Count,
 			    "Children were not copied correctly.");
-			Assert.AreEqual(original.HeaderCommentLines.Count, clone.HeaderCommentLines.Count,
+			Assert.AreEqual(original.HeaderComments.Count, clone.HeaderComments.Count,
 			    "HeaderCommentLines were not copied correctly.");
 			Assert.AreEqual(original.IsAbstract, clone.IsAbstract,
 			    "IsAbstract was not copied correctly.");
@@ -103,9 +103,9 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Children collection should be instantiated.");
 			Assert.AreEqual(0, constructorElement.Children.Count,
 			    "Children collection should be empty.");
-			Assert.IsNotNull(constructorElement.HeaderCommentLines,
+			Assert.IsNotNull(constructorElement.HeaderComments,
 			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, constructorElement.HeaderCommentLines.Count,
+			Assert.AreEqual(0, constructorElement.HeaderComments.Count,
 			    "HeaderCommentLines collection should be empty.");
 			Assert.IsFalse(constructorElement.IsAbstract,
 			    "Unexpected default value for IsAbstract.");

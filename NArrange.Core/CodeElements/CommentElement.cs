@@ -36,98 +36,115 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using NArrange.Core.CodeElements;
-
-namespace NArrange.Core
+namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Standard IElementArranger implementation
+	/// Comment line implementation
 	/// </summary>
-	public class ElementArranger : IElementArranger
+	public class CommentElement : CodeElement, ICommentElement
 	{
 		#region Fields
 
-		private IElementArranger _childrenArranger;		
-		private ElementType _elementType;		
-		private IElementFilter _filter;		
-		private IElementInserter _inserter;		
+		private readonly CommentType _commentType;		
+		private readonly string _text;		
 		
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ElementArranger
+		/// Creates a new comment line
 		/// </summary>
-		/// <param name="elementType"></param>
-		/// <param name="inserter"></param>
-		/// <param name="filter"></param>
-		/// <param name="childrenArranger"></param>
-		protected internal ElementArranger(ElementType elementType,
-			IElementInserter inserter, IElementFilter filter, IElementArranger childrenArranger)
+		/// <param name="text">Comment text</param>
+		public CommentElement(string text)
 		{
-			if (inserter == null)
-			{
-			    throw new ArgumentNullException("inserter");
-			}
-			
-			_elementType = elementType;
-			_inserter = inserter;
-			_filter = filter;
-			_childrenArranger = childrenArranger;
+			_text = text;
+		}
+
+		/// <summary>
+		/// Creates a new comment line
+		/// </summary>
+		/// <param name="text">Comment text</param>
+		/// <param name="commentType">Whether or not this is an XML comment or block comment</param>
+		public CommentElement(string text, CommentType commentType)
+			: this(text)
+		{
+			_commentType = commentType;
 		}
 
 		#endregion Constructors
 
-		#region Public Methods
+		#region Public Properties
 
 		/// <summary>
-		/// Arranges the element in within the code tree represented in the specified
-		/// builder.
+		/// Gets the code element type
 		/// </summary>
-		/// <param name="parentElement"></param>
-		/// <param name="codeElement"></param>
-		public virtual void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
+		public override ElementType ElementType
 		{
-			if (_childrenArranger != null)
+			get
 			{
-			    List<ICodeElement> children = new List<ICodeElement>(codeElement.Children);
-			    codeElement.ClearChildren();
-			
-			    foreach (ICodeElement childElement in children)
-			    {
-			        RegionElement regionElement = childElement as RegionElement;
-			        if (regionElement != null)
-			        {
-			            List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
-			            regionElement.ClearChildren();
-			
-			            foreach (ICodeElement regionChildElement in regionChildren)
-			            {
-			                _childrenArranger.ArrangeElement(codeElement, regionChildElement);
-			            }
-			        }
-			        else
-			        {
-			            _childrenArranger.ArrangeElement(codeElement, childElement);
-			        }
-			    }
+			    return ElementType.CommentLine;
 			}
-			
-			_inserter.InsertElement(parentElement, codeElement);
 		}
 
 		/// <summary>
-		/// Determines whether or not the specified element can be arranged by 
-		/// this arranger.
+		/// Gets the comment text.
 		/// </summary>
-		/// <param name="codeElement"></param>
-		/// <returns></returns>
-		public virtual bool CanArrange(ICodeElement codeElement)
+		public string Text
 		{
-			return (_elementType == ElementType.NotSpecified ||
-			    codeElement.ElementType == _elementType) && 
-			    (_filter == null || _filter.IsMatch(codeElement));
+			get
+			{
+			    return _text;
+			}
+		}
+
+		/// <summary>
+		/// Gets the type of the comment
+		/// </summary>
+		public CommentType Type
+		{
+			get
+			{
+			    return _commentType;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Protected Methods
+
+		/// <summary>
+		/// Creates a clone of this instance
+		/// </summary>
+		/// <returns></returns>
+		protected override CodeElement DoClone()
+		{
+			CommentElement clone = new CommentElement(_text, _commentType);
+			
+			return clone;
+		}
+
+		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Allows an ICodeElementVisitor to process (or visit) this element.
+		/// </summary>
+		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
+		/// <param name="visitor"></param>
+		public override void Accept(ICodeElementVisitor visitor)
+		{
+			visitor.VisitCommentElement(this);
+		}
+
+		/// <summary>
+		/// Gets the string representation of this object.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return _text;
 		}
 
 		#endregion Public Methods

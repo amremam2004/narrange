@@ -1,37 +1,37 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                        
-// Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
-// 	    All rights reserved.                   				      
-//                                                                             
-// This program and the accompanying materials are made available under       
-// the terms of the Common Public License v1.0 which accompanies this         
-// distribution.							      
-//                                                                             
-// Redistribution and use in source and binary forms, with or                 
-// without modification, are permitted provided that the following            
-// conditions are met:                                                        
-//                                                                             
-// Redistributions of source code must retain the above copyright             
-// notice, this list of conditions and the following disclaimer.              
-// Redistributions in binary form must reproduce the above copyright          
-// notice, this list of conditions and the following disclaimer in            
-// the documentation and/or other materials provided with the distribution.   
-//                                                                             
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
-// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
-// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
-//                                                                             
-// Contributors:
-//      James Nies
-//      - Initial creation
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
+ * 	    All rights reserved.                   				      
+ *                                                                             
+ * This program and the accompanying materials are made available under       
+ * the terms of the Common Public License v1.0 which accompanies this         
+ * distribution.							      
+ *                                                                             
+ * Redistribution and use in source and binary forms, with or                 
+ * without modification, are permitted provided that the following            
+ * conditions are met:                                                        
+ *                                                                             
+ * Redistributions of source code must retain the above copyright             
+ * notice, this list of conditions and the following disclaimer.              
+ * Redistributions in binary form must reproduce the above copyright          
+ * notice, this list of conditions and the following disclaimer in            
+ * the documentation and/or other materials provided with the distribution.   
+ *                                                                             
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
+ *                                                                             
+ * Contributors:
+ *      James Nies
+ *      - Initial creation
+ *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -137,7 +137,7 @@ namespace NArrange.CSharp
 			
 			    FieldElement childFieldElement = childElement as FieldElement;
 			    if (childIndex > 0 && childFieldElement != null && 
-			        childFieldElement.HeaderCommentLines.Count > 0)
+			        childFieldElement.HeaderComments.Count > 0)
 			    {
 			        _writer.WriteLine();
 			    }
@@ -158,27 +158,6 @@ namespace NArrange.CSharp
 			}
 		}
 
-		/// <summary>
-		/// Writes a comment line
-		/// </summary>
-		/// <param name="commentLine"></param>
-		private void WriteCommentLine(ICommentLine commentLine)
-		{
-			StringBuilder builder = new StringBuilder();
-			if (commentLine.IsXmlComment)
-			{
-			    builder.Append("///");
-			}
-			else
-			{
-			    builder.Append("//");
-			}
-			
-			builder.Append(commentLine.Text);
-			
-			WriteIndentedLine(builder.ToString());
-		}
-
 		private void WriteEndBlock()
 		{
 			WriteEndBlock(true);
@@ -197,12 +176,12 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// Writes a collection of header comment lines
 		/// </summary>
-		/// <param name="headerCommentLines"></param>
-		private void WriteHeaderCommentLines(ReadOnlyCollection<ICommentLine> headerCommentLines)
+		/// <param name="headerComments"></param>
+		private void WriteHeaderComments(ReadOnlyCollection<ICommentElement> headerComments)
 		{
-			foreach (ICommentLine commentLine in headerCommentLines)
+			foreach (ICommentElement comment in headerComments)
 			{
-			    this.WriteCommentLine(commentLine);
+			    comment.Accept(this);
 			}
 		}
 
@@ -443,7 +422,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitAttributeElement(AttributeElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpSymbol.BeginAttribute);
@@ -454,12 +433,44 @@ namespace NArrange.CSharp
 		}
 
 		/// <summary>
+		/// Writes a comment line
+		/// </summary>
+		/// <param name="comment"></param>
+		public void VisitCommentElement(CommentElement comment)
+		{
+			StringBuilder builder = new StringBuilder();
+			
+			if (comment.Type == CommentType.Block)
+			{
+			    builder.Append("/*");
+			    builder.Append(comment.Text);
+			    builder.Append("*/");
+			}
+			else
+			{
+			    if (comment.Type == CommentType.XmlLine)
+			    {
+			        builder.Append("///");
+			    }
+			    else
+			    {
+			        builder.Append("//");
+			    }
+			
+			    builder.Append(comment.Text);
+			
+			}
+			
+			WriteIndentedLine(builder.ToString());
+		}
+
+		/// <summary>
 		/// Processes a constructor element
 		/// </summary>
 		/// <param name="element"></param>
 		public void VisitConstructorElement(ConstructorElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -488,7 +499,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitDelegateElement(DelegateElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -514,7 +525,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitEventElement(EventElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -546,7 +557,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitFieldElement(FieldElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -584,7 +595,7 @@ namespace NArrange.CSharp
 			
 			    FieldElement childFieldElement = childElement as FieldElement;
 			    if (childIndex > 0 && childFieldElement != null &&
-			        childFieldElement.HeaderCommentLines.Count > 0)
+			        childFieldElement.HeaderComments.Count > 0)
 			    {
 			        WriteIndentedLine();
 			    }
@@ -611,7 +622,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitMethodElement(MethodElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -669,7 +680,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitNamespaceElement(NamespaceElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpKeyword.Namespace);
@@ -704,7 +715,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitPropertyElement(PropertyElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			WriteAccess(element.Access);
@@ -760,7 +771,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitTypeElement(TypeElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 			
 			if (element.Access != CodeAccess.NotSpecified)
@@ -888,7 +899,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitUsingElement(UsingElement element)
 		{
-			this.WriteHeaderCommentLines(element.HeaderCommentLines);
+			this.WriteHeaderComments(element.HeaderComments);
 			
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpKeyword.Using);

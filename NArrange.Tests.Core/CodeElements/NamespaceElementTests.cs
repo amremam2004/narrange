@@ -75,9 +75,9 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Children collection should not be null.");
 			Assert.AreEqual(0, element.Children.Count,
 			    "Children collection should be empty.");
-			Assert.IsNotNull(element.HeaderCommentLines,
+			Assert.IsNotNull(element.HeaderComments,
 			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, element.HeaderCommentLines.Count,
+			Assert.AreEqual(0, element.HeaderComments.Count,
 			    "HeaderCommentLines collection should be empty.");
 		}
 

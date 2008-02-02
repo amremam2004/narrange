@@ -24,17 +24,17 @@ namespace NArrange.Tests.Core.CodeElements
 		public void ClearHeaderCommentLinesTest()
 		{
 			TCodeElement codeElement = new TCodeElement();
-			codeElement.AddHeaderCommentLine(
-			    new CommentLine("Test 1"));
-			codeElement.AddHeaderCommentLine(
-			   new CommentLine("Test 2"));
+			codeElement.AddHeaderComment(
+			    new CommentElement("Test 1"));
+			codeElement.AddHeaderComment(
+			   new CommentElement("Test 2"));
 			
-			Assert.AreEqual(2, codeElement.HeaderCommentLines.Count,
+			Assert.AreEqual(2, codeElement.HeaderComments.Count,
 			    "Unexpected number of header comment lines.");
 			
 			codeElement.ClearHeaderCommentLines();
 			
-			Assert.AreEqual(0, codeElement.HeaderCommentLines.Count,
+			Assert.AreEqual(0, codeElement.HeaderComments.Count,
 			    "Header comment lines was not cleared.");
 		}
 

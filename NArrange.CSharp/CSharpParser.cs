@@ -1,41 +1,42 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                        
-// Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
-// 	    All rights reserved.                   				      
-//                                                                             
-// This program and the accompanying materials are made available under       
-// the terms of the Common Public License v1.0 which accompanies this         
-// distribution.							      
-//                                                                             
-// Redistribution and use in source and binary forms, with or                 
-// without modification, are permitted provided that the following            
-// conditions are met:                                                        
-//                                                                             
-// Redistributions of source code must retain the above copyright             
-// notice, this list of conditions and the following disclaimer.              
-// Redistributions in binary form must reproduce the above copyright          
-// notice, this list of conditions and the following disclaimer in            
-// the documentation and/or other materials provided with the distribution.   
-//                                                                             
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
-// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
-// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
-//                                                                             
-// Contributors:
-//      James Nies
-//      - Initial creation
-//      - Fixed parsing of events with generic return types
-//      - Improved parsing performance by reducing the number of calls to 
-//        TryParseElement
-//      - Parse regions to the element tree
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
+ * 	    All rights reserved.                   				      
+ *                                                                             
+ * This program and the accompanying materials are made available under       
+ * the terms of the Common Public License v1.0 which accompanies this         
+ * distribution.							      
+ *                                                                             
+ * Redistribution and use in source and binary forms, with or                 
+ * without modification, are permitted provided that the following            
+ * conditions are met:                                                        
+ *                                                                             
+ * Redistributions of source code must retain the above copyright             
+ * notice, this list of conditions and the following disclaimer.              
+ * Redistributions in binary form must reproduce the above copyright          
+ * notice, this list of conditions and the following disclaimer in            
+ * the documentation and/or other materials provided with the distribution.   
+ *                                                                             
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
+ *                                                                             
+ * Contributors:
+ *      James Nies
+ *      - Initial creation
+ *      - Fixed parsing of events with generic return types
+ *      - Improved parsing performance by reducing the number of calls to 
+ *        TryParseElement
+ *      - Parse regions to the element tree
+ *      - Preserve block comments
+ *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -595,9 +596,9 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// Parses an attribute
 		/// </summary>
-		/// <param name="commentLineArray"></param>
+		/// <param name="comments"></param>
 		/// <returns></returns>
-		private AttributeElement ParseAttribute(ICommentLine[] commentLineArray)
+		private AttributeElement ParseAttribute(ReadOnlyCollection<ICommentElement> comments)
 		{
 			AttributeElement attributeElement;
 			string attributeText = ParseNestedText(CSharpSymbol.BeginAttribute, CSharpSymbol.EndAttribute,
@@ -605,13 +606,14 @@ namespace NArrange.CSharp
 			attributeElement = new AttributeElement();
 			attributeElement.BodyText = attributeText;
 			
-			if (commentLineArray.Length > 0)
+			if (comments.Count > 0)
 			{
-			    foreach (ICommentLine commentLine in commentLineArray)
+			    foreach (ICommentElement comment in comments)
 			    {
-			        attributeElement.AddHeaderCommentLine(commentLine);
+			        attributeElement.AddHeaderComment(comment);
 			    }
 			}
+			
 			return attributeElement;
 		}
 
@@ -624,10 +626,8 @@ namespace NArrange.CSharp
 		/// Parses a comment block
 		/// </summary>
 		/// <returns></returns>
-		private string[] ParseCommentBlock()
+		private CommentElement ParseCommentBlock()
 		{
-			string[] lines;
-			
 			TryReadChar();
 			TryReadChar();
 			TryReadChar();
@@ -641,30 +641,27 @@ namespace NArrange.CSharp
 			    TryReadChar();
 			}
 			
-			lines = blockComment.ToString().Split(
-			    new string[] { Environment.NewLine }, StringSplitOptions.None);
-			return lines;
+			return new CommentElement(blockComment.ToString(), CommentType.Block);
 		}
 
 		/// <summary>
 		/// Parses a comment line
 		/// </summary>
 		/// <returns></returns>
-		private CommentLine ParseCommentLine()
+		private CommentElement ParseCommentLine()
 		{
-			CommentLine commentLine;
+			CommentElement commentLine;
 			TryReadChar();
 			
-			bool isXmlComment = false;
+			CommentType commentType = CommentType.Line;
 			if (_reader.Peek() == (int)CSharpSymbol.BeginComment)
 			{
-			    isXmlComment = true;
+			    commentType = CommentType.XmlLine;
 			    TryReadChar();
 			}
 			
 			string commentText = ReadLine();
-			commentLine = new CommentLine(
-			    commentText, isXmlComment);
+			commentLine = new CommentElement(commentText, commentType);
 			return commentLine;
 		}
 
@@ -746,7 +743,7 @@ namespace NArrange.CSharp
 		private List<ICodeElement> ParseElements()
 		{
 			List<ICodeElement> codeElements = new List<ICodeElement>();
-			List<ICommentLine> commentLines = new List<ICommentLine>();
+			List<ICommentElement> comments = new List<ICommentElement>();
 			List<AttributeElement> attributes = new List<AttributeElement>();
 			Stack<RegionElement> regionStack = new Stack<RegionElement>();
 			
@@ -765,17 +762,13 @@ namespace NArrange.CSharp
 			            nextChar = NextChar();
 			            if (nextChar == CSharpSymbol.BeginComment)
 			            {
-			                CommentLine commentLine = ParseCommentLine();
-			                commentLines.Add(commentLine);
+			                CommentElement commentLine = ParseCommentLine();
+			                comments.Add(commentLine);
 			            }
 			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
 			            {
-			                string[] lines = ParseCommentBlock();
-			                foreach (string blockLine in lines)
-			                {
-			                    CommentLine commentLine = new CommentLine(blockLine);
-			                    commentLines.Add(commentLine);
-			                }
+			                CommentElement commentBlock = ParseCommentBlock();
+			                comments.Add(commentBlock);
 			            }
 			            break;
 			
@@ -843,13 +836,11 @@ namespace NArrange.CSharp
 			                //
 			                // Parse attribute
 			                //
-			                ICommentLine[] commentLineArray = commentLines.ToArray();
-			                commentLines = new List<ICommentLine>();
-			
-			                AttributeElement attributeElement = ParseAttribute(commentLineArray);
+			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
 			
 			                attributes.Add(attributeElement);
 			                codeElements.Add(attributeElement);
+			                comments.Clear();
 			            }
 			            break;
 			
@@ -875,7 +866,7 @@ namespace NArrange.CSharp
 			                // Try to parse a code element
 			                //
 			                ICodeElement element = TryParseElement(
-			                    elementBuilder, commentLines, attributes);
+			                    elementBuilder, comments.AsReadOnly(), attributes);
 			                if (element != null)
 			                {
 			                    if (regionStack.Count > 0)
@@ -887,7 +878,7 @@ namespace NArrange.CSharp
 			                        codeElements.Add(element);
 			                    }
 			                    elementBuilder = new StringBuilder();
-			                    commentLines = new List<ICommentLine>();
+			                    comments.Clear();
 			                    if (element is IAttributedElement)
 			                    {
 			                        foreach (AttributeElement attribute in attributes)
@@ -912,6 +903,14 @@ namespace NArrange.CSharp
 			    if (nextCh == CSharpSymbol.EndBlock)
 			    {
 			        break;
+			    }
+			}
+			
+			if (comments.Count > 0)
+			{
+			    foreach (ICommentElement comment in comments)
+			    {
+			        codeElements.Add(comment);
 			    }
 			}
 			
@@ -1434,10 +1433,11 @@ namespace NArrange.CSharp
 		/// Tries to parse a code element
 		/// </summary>
 		/// <param name="elementBuilder"></param>
-		/// <param name="commentLines"></param>
+		/// <param name="comments"></param>
 		/// <param name="attributes"></param>
 		/// <returns></returns>
-		private ICodeElement TryParseElement(StringBuilder elementBuilder, List<ICommentLine> commentLines,
+		private ICodeElement TryParseElement(StringBuilder elementBuilder, 
+			ReadOnlyCollection<ICommentElement> comments,
 			List<AttributeElement> attributes)
 		{
 			CodeElement codeElement = null;
@@ -1612,9 +1612,9 @@ namespace NArrange.CSharp
 			    //
 			    // Add any header comments
 			    //
-			    foreach (ICommentLine commentLine in commentLines)
+			    foreach (ICommentElement comment in comments)
 			    {
-			        commentedElement.AddHeaderCommentLine(commentLine);
+			        commentedElement.AddHeaderComment(comment);
 			    }
 			}
 			
@@ -1628,11 +1628,11 @@ namespace NArrange.CSharp
 			        //
 			        // Treat attribute comments as header comments
 			        //
-			        if (attribute.HeaderCommentLines.Count > 0)
+			        if (attribute.HeaderComments.Count > 0)
 			        {
-			            foreach (ICommentLine commentLine in attribute.HeaderCommentLines)
+			            foreach (ICommentElement comment in attribute.HeaderComments)
 			            {
-			                attributedElement.AddHeaderCommentLine(commentLine);
+			                attributedElement.AddHeaderComment(comment);
 			            }
 			
 			            attribute.ClearHeaderCommentLines();

@@ -44,6 +44,7 @@
     </Compile>
     <Compile Include="CodeElements\CommentedElement.cs" />
     <Compile Include="CodeElements\GroupElement.cs" />
+    <Compile Include="CodeElements\ICommentElement.cs" />
     <Compile Include="CodeElements\TextCodeElement.cs" />
     <Compile Include="CodeElements\RegionElement.cs" />
     <Compile Include="ConditionExpressionEvaluator.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="CodeElements\CodeElement.cs" />
     <Compile Include="CodeElements\TypeParameter.cs" />
     <Compile Include="CodeElements\UsingElement.cs" />
-    <Compile Include="CodeElements\CommentLine.cs" />
+    <Compile Include="CodeElements\CommentElement.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="CodeElements\IAttribute.cs" />
     <Compile Include="CodeElements\IAttributedElement.cs" />
     <Compile Include="ICodeArranger.cs" />
-    <Compile Include="ICommentLine.cs" />
     <Compile Include="CodeElements\ICodeElement.cs" />
     <Compile Include="ICodeParser.cs" />
     <Compile Include="CodeElements\NamespaceElement.cs" />
