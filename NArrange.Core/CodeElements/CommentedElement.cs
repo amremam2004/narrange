@@ -125,7 +125,7 @@ namespace NArrange.Core.CodeElements
 			}
 			else
 			{
-			    BaseHeaderComments.Add(new CommentElement(commentLine));
+			    AddHeaderCommentLine(commentLine);
 			}
 		}
 

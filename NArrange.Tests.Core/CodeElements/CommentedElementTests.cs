@@ -4,6 +4,7 @@ using System.Text;
 
 using NUnit.Framework;
 
+using NArrange.Core;
 using NArrange.Core.CodeElements;
 
 namespace NArrange.Tests.Core.CodeElements
@@ -16,6 +17,29 @@ namespace NArrange.Tests.Core.CodeElements
 		where TCodeElement : CommentedElement, new()
 	{
 		#region Public Methods
+
+		/// <summary>
+		/// Tests the AddHeaderCommentLine method
+		/// </summary>
+		[Test]
+		public void AddHeaderCommentLineTest()
+		{
+			TCodeElement codeElement = new TCodeElement();
+			
+			codeElement.AddHeaderCommentLine("Regular comment line", false);
+			codeElement.AddHeaderCommentLine("<summary>XML comment line</summary>", true);
+			
+			Assert.AreEqual(2, codeElement.HeaderComments.Count,
+			    "AddHeaderCommentLine did not add a comment to the collection.");
+			Assert.AreEqual(CommentType.Line, codeElement.HeaderComments[0].Type,
+			    "Unexpected comment type.");
+			Assert.AreEqual("Regular comment line", codeElement.HeaderComments[0].Text,
+			    "Unexpected comment text.");
+			Assert.AreEqual(CommentType.XmlLine, codeElement.HeaderComments[1].Type,
+			    "Unexpected comment type.");
+			Assert.AreEqual("<summary>XML comment line</summary>", codeElement.HeaderComments[1].Text,
+			    "Unexpected comment text.");
+		}
 
 		/// <summary>
 		/// Tests the ClearHeaderCommentLines method

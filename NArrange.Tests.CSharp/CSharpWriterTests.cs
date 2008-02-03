@@ -858,6 +858,27 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing an ungrecognized Type element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void WriteUnrecognizedTypeTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			TypeElement classElement = new TypeElement();
+			classElement.Access = CodeAccess.Public;
+			classElement.Type = (TypeElementType)int.MinValue;
+			classElement.Name = "TestType";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(classElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+		}
+
+		/// <summary>
 		/// Tests writing a using element
 		/// </summary>
 		[Test]
