@@ -55,7 +55,7 @@ namespace NArrange.Core
 		/// Parses project file names from a solution file.
 		/// </summary>
 		/// <param name="solutionFile"></param>
-		/// <returns>A list of project filenames</returns>
+		/// <returns>A list of project file names</returns>
 		public ReadOnlyCollection<string> Parse(string solutionFile)
 		{
 			if (solutionFile == null)

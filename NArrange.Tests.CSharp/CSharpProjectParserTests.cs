@@ -26,7 +26,7 @@ namespace NArrange.Tests.CSharp
 		#region Public Methods
 
 		/// <summary>
-		/// Tests parsing a null project filename
+		/// Tests parsing a null project fileName
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -98,8 +98,8 @@ namespace NArrange.Tests.CSharp
 		/// <summary>
 		/// Writes the test project to a file
 		/// </summary>
-		/// <param name="filename"></param>
-		public static void WriteTestProject(string filename)
+		/// <param name="fileName"></param>
+		public static void WriteTestProject(string fileName)
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			using (Stream stream = assembly.GetManifestResourceStream(
@@ -111,7 +111,7 @@ namespace NArrange.Tests.CSharp
 			    StreamReader reader = new StreamReader(stream);
 			    string contents = reader.ReadToEnd();
 			
-			    File.WriteAllText(filename, contents);
+			    File.WriteAllText(fileName, contents);
 			}
 		}
 

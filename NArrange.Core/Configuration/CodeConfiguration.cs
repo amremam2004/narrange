@@ -189,11 +189,11 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Loads a configuration from file
 		/// </summary>
-		/// <param name="filename"></param>
+		/// <param name="fileName"></param>
 		/// <returns></returns>
-		public static CodeConfiguration Load(string filename)
+		public static CodeConfiguration Load(string fileName)
 		{
-			using (FileStream fileStream = new FileStream(filename, FileMode.Open))
+			using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
 			{
 			    return Load(fileStream);
 			}
@@ -216,11 +216,11 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Saves the configuration to a file.
 		/// </summary>
-		/// <param name="filename"></param>
-		public void Save(string filename)
+		/// <param name="fileName"></param>
+		public void Save(string fileName)
 		{
 			XmlSerializer serializer = new XmlSerializer(this.GetType());
-			using (FileStream stream = new FileStream(filename, FileMode.Create))
+			using (FileStream stream = new FileStream(fileName, FileMode.Create))
 			{
 			    serializer.Serialize(stream, this);
 			}

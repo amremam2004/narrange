@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added a backup and restore feature
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -56,8 +57,7 @@ namespace NArrange.Core
 		private CodeConfiguration _configuration;		
 		private int _filesProcessed;		
 		private ILogger _logger;		
-		private Dictionary<string, SourceHandler> _projectExtensionHandlers;		
-		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;		
+		private ProjectManager _projectManager;		
 		
 		#endregion Fields
 
@@ -92,49 +92,6 @@ namespace NArrange.Core
 			return elements;
 		}
 
-		private bool ArrangeProject(string inputFile)
-		{
-			bool success = true;
-			
-			SourceHandler handler = GetProjectHandler(inputFile);
-			IProjectParser projectParser = handler.ProjectParser;
-			
-			List<string> extensions = new List<string>();
-			foreach (string key in _sourceExtensionHandlers.Keys)
-			{
-			    SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-			    if (sourceHandler == handler)
-			    {
-			        extensions.Add(key);
-			    }
-			}
-			
-			ReadOnlyCollection<string> filenames = projectParser.Parse(inputFile);
-			if (filenames.Count > 0)
-			{
-			    foreach (string sourceFile in filenames)
-			    {
-			        string extension = GetExtension(sourceFile);
-			        if (extensions.Contains(extension))
-			        {
-			            bool fileSuccess = ArrangeSourceFile(sourceFile, sourceFile);
-			
-			            if (fileSuccess)
-			            {
-			                _filesProcessed++;
-			            }
-			        }
-			    }
-			}
-			else
-			{
-			    LogMessage(LogLevel.Warning, "Project {0} does not contain any source files that can be parsed.",
-			        inputFile);
-			}
-			
-			return success;
-		}
-
 		/// <summary>
 		/// Arranges an individual source file
 		/// </summary>
@@ -146,16 +103,7 @@ namespace NArrange.Core
 			bool success = true;
 			
 			ReadOnlyCollection<ICodeElement> elements = null;
-			bool canParse = CanParse(inputFile);
-			if (!canParse)
-			{
-			    LogMessage(LogLevel.Warning, 
-			        "No assembly is registered to handle file {0}.  Please update the configuration.",
-			        inputFile);
-			    success = false;
-			}
-			else
-			{
+			
 			    try
 			    {
 			        elements = ParseElements(inputFile);
@@ -190,7 +138,6 @@ namespace NArrange.Core
 			            inputFile, parseEx.Message);
 			        success = false;
 			    }
-			}
 			
 			if (success)
 			{
@@ -208,40 +155,30 @@ namespace NArrange.Core
 			
 			if (success)
 			{
-			    try
-			    {
-			        success = WriteElements(outputFile, elements);
-			        if (!success)
-			        {
-			            LogMessage(LogLevel.Warning, "Unable to write file {0}",
-			            inputFile);
-			        }
-			    }
-			    catch (IOException ioEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
-			            inputFile, ioEx.Message);
-			        success = false;
-			    }
-			    catch (UnauthorizedAccessException ioEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
-			            inputFile, ioEx.Message);
-			        success = false;
-			    }
+				try
+				{
+					success = WriteElements(outputFile, elements);
+					if (!success)
+					{
+						LogMessage(LogLevel.Warning, "Unable to write file {0}",
+						inputFile);
+					}
+				}
+				catch (IOException ioEx)
+				{
+					LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
+						inputFile, ioEx.Message);
+					success = false;
+				}
+				catch (UnauthorizedAccessException ioEx)
+				{
+					LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
+						inputFile, ioEx.Message);
+					success = false;
+				}
 			}
 			
 			return success;
-		}
-
-		/// <summary>
-		/// Gets the file extension
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		private static string GetExtension(string inputFile)
-		{
-			return Path.GetExtension(inputFile).TrimStart('.');
 		}
 
 		private bool InitializeConfiguration()
@@ -251,6 +188,7 @@ namespace NArrange.Core
 			try
 			{
 			    LoadConfiguration(_configFile);
+			    _projectManager = new ProjectManager(_configuration);
 			}
 			catch (InvalidOperationException xmlEx)
 			{
@@ -297,28 +235,6 @@ namespace NArrange.Core
 			    {
 			        _configuration = CodeConfiguration.Default;
 			    }
-			
-			    //
-			    // Load extension handlers
-			    //
-			    _projectExtensionHandlers = new Dictionary<string, SourceHandler>(
-			        StringComparer.InvariantCultureIgnoreCase);
-			    _sourceExtensionHandlers = new Dictionary<string, SourceHandler>(
-			        StringComparer.InvariantCultureIgnoreCase);
-			    foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
-			    {
-			        SourceHandler handler = new SourceHandler(handlerConfiguration.AssemblyName);
-			
-			        foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
-			        {
-			            _projectExtensionHandlers.Add(extension.Name, handler);
-			        }
-			
-			        foreach (ExtensionConfiguration extension in handlerConfiguration.SourceExtensions)
-			        {
-			            _sourceExtensionHandlers.Add(extension.Name, handler);
-			        }
-			    }
 			}
 		}
 
@@ -346,7 +262,7 @@ namespace NArrange.Core
 			string outputFile, ReadOnlyCollection<ICodeElement> elements)
 		{
 			bool success = true;
-			ICodeWriter codeWriter = GetSourceHandler(outputFile).Writer;
+			ICodeWriter codeWriter = _projectManager.GetSourceHandler(outputFile).Writer;
 			codeWriter.Configuration = _configuration;
 			
 			StringWriter writer = new StringWriter();
@@ -385,12 +301,24 @@ namespace NArrange.Core
 		#region Public Methods
 
 		/// <summary>
-		/// Arranges an individual source code file
+		/// Arranges a file, project or solution
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
 		/// <returns></returns>
 		public bool Arrange(string inputFile, string outputFile)
+		{
+			return Arrange(inputFile, outputFile, false);
+		}
+
+		/// <summary>
+		/// Arranges a file, project or solution
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <param name="outputFile"></param>
+		/// <param name="backup"></param>
+		/// <returns></returns>
+		public bool Arrange(string inputFile, string outputFile, bool backup)
 		{
 			bool success = true;
 			_filesProcessed = 0;
@@ -399,92 +327,77 @@ namespace NArrange.Core
 			
 			if (success)
 			{
-			    bool isProject = IsProject(inputFile);
-			    if (isProject)
-			    {
-			        success = ArrangeProject(inputFile);
-			    }
-			    else if (GetExtension(inputFile) == "sln")
-			    {
-			        SolutionParser solutionParser = new SolutionParser();
-			        ReadOnlyCollection<string> projectFiles = solutionParser.Parse(inputFile);
-			        if (projectFiles.Count > 0)
-			        {
-			            foreach (string projectFile in projectFiles)
-			            {
-			                ArrangeProject(projectFile);
-			            }
-			        }
-			        else
-			        {
-			            LogMessage(LogLevel.Warning, "Solution {0} does not contain any project files.",
-			                inputFile);
-			        }
-			    }
-			    else
-			    {
-			        if (outputFile == null)
-			        {
-			            outputFile = new FileInfo(inputFile).FullName;
-			        }
+				bool isProject = _projectManager.IsProject(inputFile);
+				bool isSolution = !isProject && _projectManager.IsSolution(inputFile);
 			
-			        success = ArrangeSourceFile(inputFile, outputFile);
-			        if (success)
-			        {
-			            _filesProcessed++;
-			        }
-			    }
+				if (!(isProject || isSolution))
+				{
+					if (outputFile == null)
+					{
+						outputFile = new FileInfo(inputFile).FullName;
+					}
+			
+					bool canParse = _projectManager.CanParse(inputFile);
+					if (!canParse)
+					{
+						LogMessage(LogLevel.Warning,
+							"No assembly is registered to handle file {0}.  Please update the configuration.",
+							inputFile);
+						success = false;
+					}
+				}
+			
+				if (success)
+				{
+					ReadOnlyCollection<string> sourceFiles = _projectManager.GetSourceFiles(inputFile);
+					if (sourceFiles.Count > 0)
+					{
+						if (backup)
+						{
+							LogMessage(LogLevel.Info, "Creating backup for {0}...", inputFile);
+							string key = BackupUtilities.CreateFileNameKey(inputFile);
+							string backupLocation = BackupUtilities.BackupFiles(
+								BackupUtilities.BackupRoot, key, sourceFiles);
+							LogMessage(LogLevel.Verbose, "Backup created at {0}", backupLocation);
+						}
+			
+						foreach (string sourceFile in sourceFiles)
+						{
+							if (outputFile == null)
+							{
+								outputFile = sourceFile;
+							}
+			
+							bool fileSuccess = ArrangeSourceFile(sourceFile, sourceFile);
+							if (fileSuccess)
+							{
+								_filesProcessed++;
+							}
+							else if (sourceFiles.Count <= 1 && !(isProject || isSolution))
+							{
+								success = false;
+							}
+						}
+					}
+					else
+					{
+						if (isSolution)
+						{
+							LogMessage(LogLevel.Warning, "Solution {0} does not contain any supported source files.",
+								inputFile);
+						}
+						else if (isProject)
+						{
+							LogMessage(LogLevel.Warning, "Project {0} does not contain any supported source files.",
+							   inputFile);
+						}
+					}
+				}
 			}
 			
 			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
 			
 			return success;
-		}
-
-		/// <summary>
-		/// Determines whether or not the specified file can be parsed
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public bool CanParse(string inputFile)
-		{
-			InitializeConfiguration();
-			return _sourceExtensionHandlers.ContainsKey(GetExtension(inputFile));
-		}
-
-		/// <summary>
-		/// Retrieves an extension handler for a project file
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public SourceHandler GetProjectHandler(string filename)
-		{
-			InitializeConfiguration();
-			string extension = GetExtension(filename);
-			return _projectExtensionHandlers[extension];
-		}
-
-		/// <summary>
-		/// Retrieves an extension handler
-		/// </summary>
-		/// <param name="filename"></param>
-		/// <returns></returns>
-		public SourceHandler GetSourceHandler(string filename)
-		{
-			InitializeConfiguration();
-			string extension = GetExtension(filename);
-			return _sourceExtensionHandlers[extension];
-		}
-
-		/// <summary>
-		/// Determines whether or not the specified file is a project
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public bool IsProject(string inputFile)
-		{
-			InitializeConfiguration();
-			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
 		}
 
 		/// <summary>
@@ -497,7 +410,7 @@ namespace NArrange.Core
 			InitializeConfiguration();
 			
 			ReadOnlyCollection<ICodeElement> elements = null;
-			SourceHandler sourceHandler = GetSourceHandler(inputFile);
+			SourceHandler sourceHandler = _projectManager.GetSourceHandler(inputFile);
 			if (sourceHandler != null)
 			{
 			    ICodeParser parser = sourceHandler.CodeParser;

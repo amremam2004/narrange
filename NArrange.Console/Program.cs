@@ -32,6 +32,7 @@
  *      James Nies
  *      - Initial creation
  *      - Moved logging into a ConsoleLogger class
+ *		- Added a backup and restore feature
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -67,8 +68,11 @@ namespace NArrange.ConsoleApplication
 		/// <param name="configFile"></param>
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
+		/// <param name="backup"></param>
+		/// <param name="restore"></param>
 		private static void ParseArguments(string[] args,
-			ref string configFile, ref string inputFile, ref string outputFile)
+			ref string configFile, ref string inputFile, ref string outputFile,
+			ref bool backup, ref bool restore)
 		{
 			List<string> argList = new List<string>(args);
 			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
@@ -78,7 +82,7 @@ namespace NArrange.ConsoleApplication
 			    if (arg.StartsWith("/"))
 			    {
 			        string argLower = arg.ToLower();
-			        if (arg.Length > 3)
+			        if (arg.Length == 2)
 			        {
 			            char flag = argLower[1];
 			
@@ -89,6 +93,18 @@ namespace NArrange.ConsoleApplication
 			                    argList.RemoveAt(argIndex);
 			                    argIndex--;
 			                    break;
+			
+							case 'b':
+								backup = true;
+								argList.RemoveAt(argIndex);
+								argIndex--;
+								break;
+			
+							case 'r':
+								restore = true;
+								argList.RemoveAt(argIndex);
+								argIndex--;
+								break;
 			
 			                default:
 			                    WriteUsage();
@@ -131,19 +147,26 @@ namespace NArrange.ConsoleApplication
 		private static void WriteUsage()
 		{
 			Console.WriteLine("Usage:");
-			Console.WriteLine("narrange.console [/c:configuration] <input> [output]");
+			Console.WriteLine("narrange.console <input> [output] [/c:configuration]");
+			Console.WriteLine("\t[/b:backup] [/r:restore]");
 			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("input\tSpecifies the source code file, project or solution to arrange.");
+			Console.WriteLine();
+			Console.WriteLine("output\tFor a single source file, specifies the output file ");
+			Console.WriteLine("\tto write arranged code to.");
+			Console.WriteLine("\t[Optional] If not specified the input source");
+			Console.WriteLine("\tfile will be overwritten.");
 			Console.WriteLine();
 			Console.WriteLine("/c\tConfiguration - Specifies the XML configuration file to use.");
 			Console.WriteLine("\t[Optional] If not specified the default ");
 			Console.WriteLine("\tconfiguration will be used.");
 			Console.WriteLine();
-			Console.WriteLine("input\tSpecifies the source code file, project or solution to arrange.");
+			Console.WriteLine("/b\tBackup - Specifies to create a backup before arranging");
+			Console.WriteLine("\t[Optional] If not specified, no backup will be created ");
 			Console.WriteLine();
-			Console.WriteLine("output\tFor single source file, specifies the output file ");
-			Console.WriteLine("\tto write arranged code to.");
-			Console.WriteLine("\t[Optional] If not specified the input source");
-			Console.WriteLine("\tfile will be overwritten.");
+			Console.WriteLine("/r\tRestore - Restores arranged files from the latest backup");
+			Console.WriteLine("\t[Optional] When this flag is provided, no files will be arranged ");
 			Console.WriteLine();
 		}
 
@@ -183,23 +206,43 @@ namespace NArrange.ConsoleApplication
 			string configFile = null;
 			string inputFile = null;
 			string outputFile = null;
+			bool backup = false;
+			bool restore = false;
 			
-			ParseArguments(args, ref configFile, ref inputFile, ref outputFile);
+			ParseArguments(args, ref configFile, ref inputFile,
+					ref outputFile, ref backup, ref restore);
 			
-			//
-			// Arrange the source code file
-			//
-			FileArranger fileArranger = new FileArranger(configFile, logger);
-			bool success = fileArranger.Arrange(inputFile, outputFile);
-			
-			if (!success)
+			if (restore)
 			{
-			    logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);
-			    Environment.Exit(Fail);
+				logger.LogMessage(LogLevel.Verbose, "Restoring {0}...", inputFile);
+				string key = BackupUtilities.CreateFileNameKey(inputFile);
+				bool success = BackupUtilities.RestoreFiles(BackupUtilities.BackupRoot, key);
+				if (success)
+				{
+					logger.LogMessage(LogLevel.Info, "Restored");
+				}
+				else
+				{
+					logger.LogMessage(LogLevel.Error, "Restore failed.");
+				}
 			}
 			else
 			{
-			    logger.LogMessage(LogLevel.Info, "Arrange successful.");
+				//
+				// Arrange the source code file
+				//
+				FileArranger fileArranger = new FileArranger(configFile, logger);
+				bool success = fileArranger.Arrange(inputFile, outputFile, backup);
+			
+				if (!success)
+				{
+					logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);
+					Environment.Exit(Fail);
+				}
+				else
+				{
+					logger.LogMessage(LogLevel.Info, "Arrange successful.");
+				}
 			}
 		}
 

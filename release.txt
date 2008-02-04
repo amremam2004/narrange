@@ -2,3 +2,4 @@ The following changes were made in this release:
 
 0.1.04.0
 - Preserve block header comments.  Previously, these were being parsed and converted to individual line comments.
+- Added a backup and restore feature.

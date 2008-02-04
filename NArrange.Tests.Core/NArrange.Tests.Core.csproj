@@ -41,6 +41,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BackupUtilitiesTests.cs" />
     <Compile Include="CodeElements\CodeElementTests.cs" />
     <Compile Include="CodeElements\CommentedElementTests.cs" />
     <Compile Include="CodeElements\CommentLineElementTests.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortedInserterTests.cs" />
     <Compile Include="TestLogger.cs" />
+    <Compile Include="TestUtilities.cs" />
     <Compile Include="ZipUtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>

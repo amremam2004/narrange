@@ -78,9 +78,9 @@ namespace NArrange.CSharp
 			    {
 			        if (node.SelectSingleNode("ns:Link", namespaceManager) == null)
 			        {
-			            string filename = node.Attributes["Include"].Value;
+			            string fileName = node.Attributes["Include"].Value;
 			
-			            string sourceFilePath = Path.Combine(projectPath, filename);
+			            string sourceFilePath = Path.Combine(projectPath, fileName);
 			            sourceFiles.Add(sourceFilePath);
 			        }
 			    }

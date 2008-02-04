@@ -274,7 +274,12 @@ namespace NArrange.Core
 		/// <summary>
 		/// Verbose
 		/// </summary>
-		Verbose
+		Verbose,
+		
+		/// <summary>
+		/// Trace
+		/// </summary>
+		Trace
 	}	
 	
 	/// <summary>

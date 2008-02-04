@@ -43,7 +43,7 @@ using NArrange.Core.CodeElements;
 namespace NArrange.Core
 {
 	/// <summary>
-	/// Interface for parsing individual filenames from a project.
+	/// Interface for parsing individual fileNames from a project.
 	/// </summary>
 	public interface IProjectParser
 	{
@@ -53,7 +53,7 @@ namespace NArrange.Core
 		/// Parses source file names from a project file.
 		/// </summary>
 		/// <param name="projectFile"></param>
-		/// <returns>A list of source code filenames</returns>
+		/// <returns>A list of source code fileNames</returns>
 		ReadOnlyCollection<string> Parse(string projectFile);
 
 		#endregion Methods

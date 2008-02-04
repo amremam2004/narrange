@@ -34,11 +34,11 @@ namespace NArrange.Tests.Core
 
 		#region Private Methods
 
-		private static string GetTestFileContents(string filename)
+		private static string GetTestFileContents(string fileName)
 		{
 			string contents = null;
 			
-			using (Stream stream = CSharpTestFile.GetTestFileStream(filename))
+			using (Stream stream = CSharpTestFile.GetTestFileStream(fileName))
 			{
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");
@@ -73,7 +73,7 @@ namespace NArrange.Tests.Core
 			
 			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, 
-			        "does not contain any source files"));
+			        "does not contain any supported source files"));
 			}
 			finally
 			{

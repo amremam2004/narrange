@@ -42,6 +42,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BackupUtilities.cs" />
     <Compile Include="CodeElements\CommentedElement.cs" />
     <Compile Include="CodeElements\GroupElement.cs" />
     <Compile Include="CodeElements\ICommentElement.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Configuration\StringExpression.cs" />
     <Compile Include="FileArranger.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="ProjectManager.cs" />
     <Compile Include="SolutionParser.cs" />
     <Compile Include="IProjectParser.cs" />
     <Compile Include="ElementUtilities.cs" />

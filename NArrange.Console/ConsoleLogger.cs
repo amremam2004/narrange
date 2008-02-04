@@ -49,6 +49,7 @@ namespace NArrange.ConsoleApplication
 
 		private const ConsoleColor ErrorColor = ConsoleColor.Red;
 		private const ConsoleColor InfoColor = ConsoleColor.Cyan;
+		private const ConsoleColor TraceColor = ConsoleColor.Gray;
 		private const ConsoleColor WarningColor = ConsoleColor.Yellow;
 
 		#endregion Constants
@@ -76,6 +77,12 @@ namespace NArrange.ConsoleApplication
 			    case LogLevel.Info:
 			        WriteMessage(InfoColor, message, args);
 			        break;
+			
+				case LogLevel.Trace:
+					#if TRACE
+					WriteMessage(TraceColor, message, args);
+					#endif
+					break;
 			
 			    default:
 			        WriteMessage(Console.ForegroundColor, message, args);

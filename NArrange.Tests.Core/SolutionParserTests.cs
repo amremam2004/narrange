@@ -26,7 +26,7 @@ namespace NArrange.Tests.Core
 		#region Public Methods
 
 		/// <summary>
-		/// Tests parsing a null filename
+		/// Tests parsing a null fileName
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -92,8 +92,8 @@ namespace NArrange.Tests.Core
 		/// <summary>
 		/// Writes the test solution to a file
 		/// </summary>
-		/// <param name="filename"></param>
-		public static void WriteTestSolution(string filename)
+		/// <param name="fileName"></param>
+		public static void WriteTestSolution(string fileName)
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			using (Stream stream = assembly.GetManifestResourceStream(
@@ -105,7 +105,7 @@ namespace NArrange.Tests.Core
 			    StreamReader reader = new StreamReader(stream);
 			    string contents = reader.ReadToEnd();
 			
-			    File.WriteAllText(filename, contents);
+			    File.WriteAllText(fileName, contents);
 			}
 		}
 

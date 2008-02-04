@@ -15,25 +15,6 @@ namespace NArrange.Tests.Core
 	[TestFixture]
 	public class ZipUtilitiesTest
 	{
-		#region Private Methods
-
-		private static void AssertNotEmpty(string fileName)
-		{
-			using (FileStream fs = new FileStream(fileName, FileMode.Open))
-			{
-			    Assert.IsTrue(fs.Length > 0, "File {0} should not be empty.", fileName);
-			}
-		}
-
-		private static string GetTempFileName()
-		{
-			string filename = Path.Combine(Path.GetTempPath(), 
-			    Guid.NewGuid().ToString().Replace('-', '_'));
-			return filename;
-		}
-
-		#endregion Private Methods
-
 		#region Public Methods
 
 		/// <summary>
@@ -42,9 +23,9 @@ namespace NArrange.Tests.Core
 		[Test]
 		public void ZipAndUnzipTest()
 		{
-			string sourceFolder = GetTempFileName();
-			string destinationFolder = GetTempFileName();
-			string zipFile = GetTempFileName() + ".zip";
+			string sourceFolder = BackupUtilities.GetTempFilePath();
+			string destinationFolder = BackupUtilities.GetTempFilePath();
+			string zipFile = BackupUtilities.GetTempFilePath() + ".zip";
 			
 			try
 			{
@@ -69,7 +50,7 @@ namespace NArrange.Tests.Core
 			    ZipUtilities.Zip(sourceFolder, zipFile);
 			
 			    Assert.IsTrue(File.Exists(zipFile), "Expected zip file to exist.");
-			    AssertNotEmpty(zipFile);
+			    TestUtilities.AssertNotEmpty(zipFile);
 			
 			    ZipUtilities.Unzip(zipFile, destinationFolder);
 			
