@@ -69,6 +69,8 @@ namespace NArrange.Core
 		public static void Zip(string sourceDirectory, string zipFileName)
 		{
 			FastZip fastZip = new FastZip();
+			fastZip.RestoreAttributesOnExtract = true;
+			fastZip.RestoreDateTimeOnExtract = true;
 			fastZip.CreateZip(zipFileName, sourceDirectory, true, null);
 		}
 

@@ -70,9 +70,10 @@ namespace NArrange.ConsoleApplication
 		/// <param name="outputFile"></param>
 		/// <param name="backup"></param>
 		/// <param name="restore"></param>
+		/// <param name="trace"></param>
 		private static void ParseArguments(string[] args,
 			ref string configFile, ref string inputFile, ref string outputFile,
-			ref bool backup, ref bool restore)
+			ref bool backup, ref bool restore, ref bool trace)
 		{
 			List<string> argList = new List<string>(args);
 			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
@@ -90,20 +91,18 @@ namespace NArrange.ConsoleApplication
 			            {
 			                case 'c':
 			                    configFile = arg.Substring(3);
-			                    argList.RemoveAt(argIndex);
-			                    argIndex--;
 			                    break;
 			
 							case 'b':
 								backup = true;
-								argList.RemoveAt(argIndex);
-								argIndex--;
 								break;
 			
 							case 'r':
 								restore = true;
-								argList.RemoveAt(argIndex);
-								argIndex--;
+								break;
+			
+							case 't':
+								trace = true;
 								break;
 			
 			                default:
@@ -111,6 +110,9 @@ namespace NArrange.ConsoleApplication
 			                    Environment.Exit(Fail);
 			                    break;
 			            }
+			
+						argList.RemoveAt(argIndex);
+						argIndex--;
 			        }
 			        else
 			        {
@@ -148,7 +150,7 @@ namespace NArrange.ConsoleApplication
 		{
 			Console.WriteLine("Usage:");
 			Console.WriteLine("narrange.console <input> [output] [/c:configuration]");
-			Console.WriteLine("\t[/b:backup] [/r:restore]");
+			Console.WriteLine("\t[/b:backup] [/r:restore] [/t:trace]");
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("input\tSpecifies the source code file, project or solution to arrange.");
@@ -167,6 +169,8 @@ namespace NArrange.ConsoleApplication
 			Console.WriteLine();
 			Console.WriteLine("/r\tRestore - Restores arranged files from the latest backup");
 			Console.WriteLine("\t[Optional] When this flag is provided, no files will be arranged ");
+			Console.WriteLine();
+			Console.WriteLine("/t\tTrace - Detailed logging");
 			Console.WriteLine();
 		}
 
@@ -208,9 +212,12 @@ namespace NArrange.ConsoleApplication
 			string outputFile = null;
 			bool backup = false;
 			bool restore = false;
+			bool trace = false;
 			
 			ParseArguments(args, ref configFile, ref inputFile,
-					ref outputFile, ref backup, ref restore);
+					ref outputFile, ref backup, ref restore, ref trace);
+			
+			logger.Trace = trace;
 			
 			if (restore)
 			{

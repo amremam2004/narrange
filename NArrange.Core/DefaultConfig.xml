@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0"?>
 <CodeConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<Handlers>
+		<!-- Source handlers are plugins that help NArrange parse and write source files -->
 		<SourceHandler Assembly="NArrange.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+			<!-- List of project extensions handled by the handler's IProjectParser -->
 			<ProjectExtensions>
 				<Extension Name="csproj"/>
 			</ProjectExtensions>
+			<!-- List of source file extensions valid for the handler's ICodeParser-->
 			<SourceExtensions>
-				<Extension Name="cs"/>			 
+				<Extension Name="cs"/>
+				<!-- If your project uses other extensions for C# files add them here-->
 			</SourceExtensions>
 		</SourceHandler>
 	</Handlers>
@@ -43,6 +47,7 @@
 					</Elements>
 				</Region>
 				<Element Type="Type">
+					<!-- Interfaces only -->
 					<Sort By="Access">
 						<Sort By="Name"/>
 					</Sort>
@@ -78,7 +83,9 @@
 						</Region>
 					</Elements>
 				</Element>
+				<!-- End Interface -->
 				<Element Type="Type">
+					<!-- Classes and structures -->
 					<Sort By="Access">
 						<Sort By="Name"/>
 					</Sort>

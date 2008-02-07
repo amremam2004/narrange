@@ -15,6 +15,7 @@ namespace NArrange.Tests.Core
 		#region Fields
 
 		private List<TestLogEvent> _events = new List<TestLogEvent>();		
+		private bool _writeToConsole = false;		
 		
 		#endregion Fields
 
@@ -28,6 +29,22 @@ namespace NArrange.Tests.Core
 			get
 			{
 			    return _events.AsReadOnly();
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether or not messages should be written 
+		/// to the console.
+		/// </summary>
+		public bool WriteToConsole
+		{
+			get
+			{
+				return _writeToConsole;
+			}
+			set
+			{
+				_writeToConsole = value;
 			}
 		}
 
@@ -96,6 +113,12 @@ namespace NArrange.Tests.Core
 		public void LogMessage(LogLevel level, string message, params object[] args)
 		{
 			string formatted = string.Format(message, args);
+			
+			if (WriteToConsole)
+			{
+				Console.WriteLine(formatted);
+			}
+			
 			TestLogEvent logEvent = new TestLogEvent(level, formatted);
 			
 			_events.Add(logEvent);

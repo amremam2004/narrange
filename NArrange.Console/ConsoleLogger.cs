@@ -54,6 +54,43 @@ namespace NArrange.ConsoleApplication
 
 		#endregion Constants
 
+		#region Fields
+
+		private bool _trace;		
+		
+		#endregion Fields
+
+		#region Constructors
+
+		/// <summary>
+		/// Creates a new ConsoleLogger
+		/// </summary>
+		public ConsoleLogger()
+		{
+		}
+
+		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets or sets a value for whether or not trace messages should be 
+		/// written.
+		/// </summary>
+		public bool Trace
+		{
+			get
+			{
+				return _trace;
+			}
+			set
+			{
+				_trace = value;
+			}
+		}
+
+		#endregion Public Properties
+
 		#region Public Methods
 
 		/// <summary>
@@ -79,9 +116,10 @@ namespace NArrange.ConsoleApplication
 			        break;
 			
 				case LogLevel.Trace:
-					#if TRACE
-					WriteMessage(TraceColor, message, args);
-					#endif
+					if (_trace)
+					{
+						WriteMessage(TraceColor, message, args);
+					} 
 					break;
 			
 			    default:

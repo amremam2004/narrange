@@ -85,6 +85,9 @@ namespace NArrange.Core
 				throw new ArgumentException("Invalid backup key", "key");
 			}
 			
+			
+			
+			
 			if(!Directory.Exists(backupRoot))
 			{
 				Directory.CreateDirectory(backupRoot);
@@ -244,22 +247,17 @@ namespace NArrange.Core
 			
 								FileAttributes origAttributes = File.GetAttributes(fileBackupPath);
 			
-								if (File.Exists(restorePath))
-								{
-									File.SetAttributes(restorePath, FileAttributes.Normal);
-								}
-			
 								string backupText = File.ReadAllText(fileBackupPath);
 								string restoreText = null;
 								if (File.Exists(restorePath))
 								{
 									restoreText = File.ReadAllText(restorePath);
+									File.SetAttributes(restorePath, FileAttributes.Normal);
 								}
 			
 								if (backupText != restoreText)
 								{
 									File.Copy(fileBackupPath, restorePath, true);
-									File.SetAttributes(restorePath, origAttributes);
 								}
 							}
 						}

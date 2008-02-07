@@ -53,9 +53,12 @@ namespace NArrange.Core
 	{
 		#region Fields
 
+		private Dictionary<string, ArrangeResult> _arrangeResults;		
+		private CodeArranger _codeArranger;		
 		private string _configFile;		
 		private CodeConfiguration _configuration;		
-		private int _filesProcessed;		
+		private int _filesParsed;		
+		private int _filesWritten;		
 		private ILogger _logger;		
 		private ProjectManager _projectManager;		
 		
@@ -81,14 +84,17 @@ namespace NArrange.Core
 		/// <summary>
 		/// Arranges code elements
 		/// </summary>
-		/// <param name="codeConfiguration"></param>
 		/// <param name="elements"></param>
 		/// <returns></returns>
-		private static ReadOnlyCollection<ICodeElement> ArrangeElements(
-			CodeConfiguration codeConfiguration, ReadOnlyCollection<ICodeElement> elements)
+		private ReadOnlyCollection<ICodeElement> ArrangeElements(ReadOnlyCollection<ICodeElement> elements)
 		{
-			CodeArranger arranger = new CodeArranger(codeConfiguration);
-			elements = arranger.Arrange(elements);
+			if (_codeArranger == null)
+			{
+				_codeArranger = new CodeArranger(_configuration);
+			}
+			
+			elements = _codeArranger.Arrange(elements);
+			
 			return elements;
 		}
 
@@ -98,97 +104,106 @@ namespace NArrange.Core
 		/// <param name="inputFile"></param>
 		/// <param name="outputFile"></param>
 		/// <returns></returns>
-		private bool ArrangeSourceFile(string inputFile, string outputFile)
+		private void ArrangeSourceFile(string inputFile, string outputFile)
 		{
-			bool success = true;
-			
 			ReadOnlyCollection<ICodeElement> elements = null;
+			string inputFileText = null;
 			
-			    try
-			    {
-			        elements = ParseElements(inputFile);
-			    }
-			    catch (DirectoryNotFoundException)
-			    {
-			        LogMessage(LogLevel.Warning, "File {0} does not exist.",
-			            inputFile);
-			        success = false;
-			    }
-			    catch (FileNotFoundException)
-			    {
-			        LogMessage(LogLevel.Warning, "File {0} does not exist.",
-			            inputFile);
-			        success = false;
-			    }
-			    catch (IOException ioEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to read file {0}: {1}",
-			            inputFile, ioEx.ToString());
-			        success = false;
-			    }
-			    catch (UnauthorizedAccessException ioEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to read file {0}: {1}",
-			            inputFile, ioEx.Message);
-			        success = false;
-			    }
-			    catch (ParseException parseEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to parse file {0}: {1}",
-			            inputFile, parseEx.Message);
-			        success = false;
-			    }
-			
-			if (success)
+			try
 			{
-			    try
-			    {
-			        elements = ArrangeElements(_configuration, elements);
-			    }
-			    catch (InvalidOperationException invalidEx)
-			    {
-			        LogMessage(LogLevel.Warning, "Unable to arrange file {0}: {1}",
-			           inputFile, invalidEx.ToString());
-			        success = false;
-			    }
+				FileAttributes fileAttributes = File.GetAttributes(inputFile);
+				if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				{
+					LogMessage(LogLevel.Trace, "File {0} is read-only", inputFile);
+				}
+				else
+				{
+					inputFileText = File.ReadAllText(inputFile, Encoding.Default);
+					elements = ParseElements(inputFile, inputFileText);
+					LogMessage(LogLevel.Trace, "Parsed {0}", inputFile);
+				}
+			}
+			catch (DirectoryNotFoundException)
+			{
+				LogMessage(LogLevel.Warning, "File {0} does not exist.",
+					inputFile);
+			}
+			catch (FileNotFoundException)
+			{
+				LogMessage(LogLevel.Warning, "File {0} does not exist.",
+					inputFile);
+			}
+			catch (IOException ioEx)
+			{
+				LogMessage(LogLevel.Warning, "Unable to read file {0}: {1}",
+					inputFile, ioEx.ToString());
+			}
+			catch (UnauthorizedAccessException ioEx)
+			{
+				LogMessage(LogLevel.Warning, "Unable to read file {0}: {1}",
+					inputFile, ioEx.Message);
+			}
+			catch (ParseException parseEx)
+			{
+				LogMessage(LogLevel.Warning, "Unable to parse file {0}: {1}",
+					inputFile, parseEx.Message);
 			}
 			
-			if (success)
+			if (elements != null)
 			{
 				try
 				{
-					success = WriteElements(outputFile, elements);
-					if (!success)
-					{
-						LogMessage(LogLevel.Warning, "Unable to write file {0}",
-						inputFile);
-					}
+					elements = ArrangeElements(elements);
 				}
-				catch (IOException ioEx)
+				catch (InvalidOperationException invalidEx)
 				{
-					LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
-						inputFile, ioEx.Message);
-					success = false;
-				}
-				catch (UnauthorizedAccessException ioEx)
-				{
-					LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
-						inputFile, ioEx.Message);
-					success = false;
+					LogMessage(LogLevel.Warning, "Unable to arrange file {0}: {1}",
+					   inputFile, invalidEx.ToString());
+					elements = null;
 				}
 			}
 			
-			return success;
+			string outputFileText = null;
+			if (elements != null)
+			{
+				ICodeWriter codeWriter = _projectManager.GetSourceHandler(outputFile).Writer;
+				codeWriter.Configuration = _configuration;
+			
+				StringWriter writer = new StringWriter();
+				try
+				{
+					codeWriter.Write(elements, writer);
+				}
+				catch (Exception ex)
+				{
+					LogMessage(LogLevel.Error, ex.ToString());
+					throw;
+				}
+			
+				outputFileText = writer.ToString();
+			}
+			
+			if (outputFileText != null)
+			{
+				//
+				// Store the arranged elements so that we can create a backup before writing
+				//
+				_arrangeResults.Add(outputFile, new ArrangeResult(
+					inputFile, inputFileText, outputFile, outputFileText));
+			}
 		}
 
-		private bool InitializeConfiguration()
+		private bool Initialize()
 		{
 			bool success = true;
+			
+			_filesParsed = 0;
+			_filesWritten = 0;
+			_arrangeResults = new Dictionary<string, ArrangeResult>();
 			
 			try
 			{
 			    LoadConfiguration(_configFile);
-			    _projectManager = new ProjectManager(_configuration);
 			}
 			catch (InvalidOperationException xmlEx)
 			{
@@ -235,6 +250,8 @@ namespace NArrange.Core
 			    {
 			        _configuration = CodeConfiguration.Default;
 			    }
+			
+				_projectManager = new ProjectManager(_configuration);
 			}
 		}
 
@@ -253,44 +270,110 @@ namespace NArrange.Core
 		}
 
 		/// <summary>
-		/// Writes arranged elements to the output file
+		/// Parses code elements from the input file
 		/// </summary>
-		/// <param name="outputFile"></param>
-		/// <param name="elements"></param>
+		/// <param name="inputFile"></param>
+		/// <param name="text"></param>
 		/// <returns></returns>
-		private bool WriteElements(
-			string outputFile, ReadOnlyCollection<ICodeElement> elements)
+		private ReadOnlyCollection<ICodeElement> ParseElements(string inputFile, string text)
+		{
+			ReadOnlyCollection<ICodeElement> elements = null;
+			SourceHandler sourceHandler = _projectManager.GetSourceHandler(inputFile);
+			if (sourceHandler != null)
+			{
+			    ICodeParser parser = sourceHandler.CodeParser;
+			    if (parser != null)
+			    {
+					using (StringReader reader = new StringReader(text))
+			        {
+			            elements = parser.Parse(reader);
+			        }
+			    }
+			}
+			
+			return elements;
+		}
+
+		private bool WriteFile(ArrangeResult arrangeResult)
 		{
 			bool success = true;
-			ICodeWriter codeWriter = _projectManager.GetSourceHandler(outputFile).Writer;
-			codeWriter.Configuration = _configuration;
 			
-			StringWriter writer = new StringWriter();
 			try
 			{
-			    codeWriter.Write(elements, writer);
+				File.WriteAllText(arrangeResult.OutputFile, arrangeResult.OutputFileText,
+					Encoding.Default);
+				LogMessage(LogLevel.Trace, "Wrote {0}", arrangeResult.OutputFile); 
 			}
-			catch (Exception ex)
+			catch (IOException ioEx)
 			{
-			    LogMessage(LogLevel.Error, ex.ToString());
-			    throw;
+				LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
+					arrangeResult.OutputFile, ioEx.Message);
+				success = false;
+			}
+			catch (UnauthorizedAccessException ioEx)
+			{
+				LogMessage(LogLevel.Warning, "Unable to write file {0}: {1}",
+					arrangeResult.OutputFile, ioEx.Message);
+				success = false;
 			}
 			
 			if (success)
 			{
-			    string content = writer.ToString();
+				_filesWritten++;
+			}
 			
-			    bool sameContents = false;
-			    if (File.Exists(outputFile))
-			    {
-			        string existingContent = File.ReadAllText(outputFile, Encoding.Default);
-			        sameContents = existingContent == content;
-			    }
+			return success;
+		}
+
+		private bool WriteFiles(string inputFile, bool backup)
+		{
+			bool success = true;
 			
-			    if (!sameContents)
-			    {
-			        File.WriteAllText(outputFile, content, Encoding.Default);
-			    }
+			List<string> filesToModify = new List<string>();
+			_filesParsed = _arrangeResults.Count;
+			LogMessage(LogLevel.Verbose, "{0} files parsed.", _filesParsed);
+			
+			Dictionary<string, ArrangeResult>.Enumerator enumerator = _arrangeResults.GetEnumerator();
+			while(enumerator.MoveNext())
+			{
+				ArrangeResult fileResult = enumerator.Current.Value;
+				if (fileResult.Modified)
+				{
+					filesToModify.Add(fileResult.OutputFile);
+				}
+				else
+				{
+					LogMessage(LogLevel.Trace, "File {0} will not be modified",
+						fileResult.OutputFile);
+				}
+			}
+			
+			if (backup && filesToModify.Count > 0)
+			{
+				try
+				{
+					LogMessage(LogLevel.Verbose, "Creating backup for {0}...", inputFile);
+					string key = BackupUtilities.CreateFileNameKey(inputFile);
+					string backupLocation = BackupUtilities.BackupFiles(
+						BackupUtilities.BackupRoot, key, filesToModify);
+					LogMessage(LogLevel.Info, "Backup created at {0}", backupLocation);
+				}
+				catch(Exception ex)
+				{
+					LogMessage(LogLevel.Error, 
+						"Unable to create backup for {0} - {1}", inputFile, ex.Message);
+					success = false;
+					_filesParsed = 0;
+				}
+			}
+			
+			if (success)
+			{
+				LogMessage(LogLevel.Verbose, "Writing files...");
+				foreach (string fileToModify in filesToModify)
+				{
+					WriteFile(_arrangeResults[fileToModify]);
+				}
 			}
 			
 			return success;
@@ -321,9 +404,8 @@ namespace NArrange.Core
 		public bool Arrange(string inputFile, string outputFile, bool backup)
 		{
 			bool success = true;
-			_filesProcessed = 0;
 			
-			success = InitializeConfiguration();
+			success = Initialize();
 			
 			if (success)
 			{
@@ -352,15 +434,7 @@ namespace NArrange.Core
 					ReadOnlyCollection<string> sourceFiles = _projectManager.GetSourceFiles(inputFile);
 					if (sourceFiles.Count > 0)
 					{
-						if (backup)
-						{
-							LogMessage(LogLevel.Info, "Creating backup for {0}...", inputFile);
-							string key = BackupUtilities.CreateFileNameKey(inputFile);
-							string backupLocation = BackupUtilities.BackupFiles(
-								BackupUtilities.BackupRoot, key, sourceFiles);
-							LogMessage(LogLevel.Verbose, "Backup created at {0}", backupLocation);
-						}
-			
+						LogMessage(LogLevel.Verbose, "Parsing files...");
 						foreach (string sourceFile in sourceFiles)
 						{
 							if (outputFile == null)
@@ -368,15 +442,12 @@ namespace NArrange.Core
 								outputFile = sourceFile;
 							}
 			
-							bool fileSuccess = ArrangeSourceFile(sourceFile, sourceFile);
-							if (fileSuccess)
-							{
-								_filesProcessed++;
-							}
-							else if (sourceFiles.Count <= 1 && !(isProject || isSolution))
-							{
-								success = false;
-							}
+							ArrangeSourceFile(sourceFile, sourceFile);
+						}
+			
+						if (success && _arrangeResults.Count > 0)
+						{
+							success = WriteFiles(inputFile, backup);
 						}
 					}
 					else
@@ -392,40 +463,92 @@ namespace NArrange.Core
 							   inputFile);
 						}
 					}
+			
+					if (_filesParsed == 0 && (sourceFiles.Count <= 1 && !(isProject || isSolution)))
+					{
+						success = false;
+					}
 				}
 			}
 			
-			LogMessage(LogLevel.Verbose, "{0} files processed.", _filesProcessed);
+			LogMessage(LogLevel.Verbose, "{0} files written.", _filesWritten);
 			
 			return success;
 		}
 
+		#endregion Public Methods
+
+		#region Other
+
 		/// <summary>
-		/// Parses code elements from the input file
+		/// Arrange result
 		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
+		private class ArrangeResult
 		{
-			InitializeConfiguration();
-			
-			ReadOnlyCollection<ICodeElement> elements = null;
-			SourceHandler sourceHandler = _projectManager.GetSourceHandler(inputFile);
-			if (sourceHandler != null)
+			private readonly string _inputFile;
+			private readonly string _outputFile;
+			private readonly string _inputFileText;
+			private readonly string _outputFileText;
+			private readonly bool _modified;
+			/// <summary>
+			/// Creates a new ArrangeResult
+			/// </summary>
+			/// <param name="inputFile"></param>
+			/// <param name="inputFileText"></param>
+			/// <param name="outputFile"></param>
+			/// <param name="outputFileText"></param>
+			public ArrangeResult(string inputFile, string inputFileText, 
+				string outputFile, string outputFileText)
 			{
-			    ICodeParser parser = sourceHandler.CodeParser;
-			    if (parser != null)
-			    {
-			        using (StreamReader reader = new StreamReader(inputFile, Encoding.Default))
-			        {
-			            elements = parser.Parse(reader);
-			        }
-			    }
+				_inputFile = inputFile;
+				_inputFileText = inputFileText;
+				_outputFile = outputFile;
+				_outputFileText = outputFileText;
+				_modified = _inputFile == _outputFile &&
+					inputFileText != outputFileText;
 			}
-			
-			return elements;
+
+			public string InputFile
+			{
+				get
+				{
+					return _inputFile;
+				}
+			}
+
+			public string OutputFile
+			{
+				get
+				{
+					return _outputFile;
+				}
+			}
+
+			public string InputFileText
+			{
+				get
+				{
+					return InputFileText;
+				}
+			}
+
+			public string OutputFileText
+			{
+				get
+				{
+					return _outputFileText;
+				}
+			}
+
+			public bool Modified
+			{
+				get
+				{
+					return _modified;
+				}
+			}
 		}
 
-		#endregion Public Methods
+		#endregion Other
 	}
 }

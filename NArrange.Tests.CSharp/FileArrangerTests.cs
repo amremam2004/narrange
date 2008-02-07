@@ -188,7 +188,7 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testInvalidSourceFile, null);
 			
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files processed."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."));
 		}
 
 		/// <summary>
@@ -218,7 +218,7 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testProjectFile, null);
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files processed."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
 		}
 
 		/// <summary>
@@ -237,8 +237,7 @@ namespace NArrange.Tests.Core
 			    bool success = fileArranger.Arrange(_testValidSourceFile1, null);
 			
 			    Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
-			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, "Unable to write file"));
-			    Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files processed."));
+			    Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."));
 			}
 			finally
 			{
@@ -258,7 +257,7 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testValidSourceFile1, null);
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files processed."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files written."));
 		}
 
 		/// <summary>
@@ -273,7 +272,7 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testSolutionFile, null);
 			
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files processed."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
 		}
 
 		/// <summary>
