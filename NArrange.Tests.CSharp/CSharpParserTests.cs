@@ -1076,7 +1076,7 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("'\\\\'", fieldElement.InitialValue,
 				"Unexpected initial value.");
 			
-			fieldText = "private string val = \"\\\\Server\\share\";";
+			fieldText = "private string val = \"\\\\\\\\Server\\\\share\\\\\";";
 			reader = new StringReader(fieldText);
 			
 			parser = new CSharpParser();
@@ -1093,7 +1093,27 @@ namespace NArrange.Tests.CSharp
 				"Unexpected code access.");
 			Assert.AreEqual("string", fieldElement.Type,
 				"Unexpected member type.");
-			Assert.AreEqual("\"\\\\Server\\share\"", fieldElement.InitialValue,
+			Assert.AreEqual("\"\\\\\\\\Server\\\\share\\\\\"", fieldElement.InitialValue,
+				"Unexpected initial value.");
+			
+			fieldText = "private string val = @\"\\\\Server\\share\\\";";
+			reader = new StringReader(fieldText);
+			
+			parser = new CSharpParser();
+			elements = parser.Parse(reader);
+			
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+				"Element is not a FieldElement.");
+			Assert.AreEqual("val", fieldElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual("string", fieldElement.Type,
+				"Unexpected member type.");
+			Assert.AreEqual("@\"\\\\Server\\share\\\"", fieldElement.InitialValue,
 				"Unexpected initial value.");
 		}
 

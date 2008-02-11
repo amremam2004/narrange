@@ -96,6 +96,11 @@ namespace NArrange.CSharp
 		public const char BeginString = '"';
 
 		/// <summary>
+		/// Begin verbatim string
+		/// </summary>
+		public const char BeginVerbatimString = '@';
+
+		/// <summary>
 		/// Beginning of block comment
 		/// </summary>
 		public const char BlockCommentModifier = '*';
@@ -169,7 +174,8 @@ namespace NArrange.CSharp
 			    ch == CSharpSymbol.EndParamList ||
 			    ch == CSharpSymbol.Preprocessor ||
 			    ch == CSharpSymbol.TypeImplements ||
-				ch == CSharpSymbol.Negate;
+				ch == CSharpSymbol.Negate ||
+				ch == CSharpSymbol.BeginVerbatimString;
 		}
 
 		#endregion Public Methods

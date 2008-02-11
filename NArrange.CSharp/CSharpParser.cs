@@ -41,6 +41,7 @@
  *		- Fixed parsing of string and character literals containing
  *		  backslashes
  *		- Fixed parsing of equal and not equal operators
+ *		- Fixed parsing of verbatim string literals (e.g. @"\\Server\")
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -515,38 +516,8 @@ namespace NArrange.CSharp
 				// TODO: Assign any parsed comments to the parent element
 				ParseComments();
 			}
-
+			
 			return ParseNestedText(CSharpSymbol.BeginBlock, CSharpSymbol.EndBlock, beginExpected, true);
-		}
-
-		private ReadOnlyCollection<ICommentElement> ParseComments()
-		{
-			List<ICommentElement> comments = new List<ICommentElement>();
-
-			char nextChar = NextChar();
-			if (nextChar == CSharpSymbol.BeginComment)
-			{
-				TryReadChar();
-
-				nextChar = NextChar();
-				if (nextChar == CSharpSymbol.BeginComment)
-				{
-					CommentElement commentLine = ParseCommentLine();
-					comments.Add(commentLine);
-				}
-				else if (nextChar == CSharpSymbol.BlockCommentModifier)
-				{
-					CommentElement commentBlock = ParseCommentBlock();
-					comments.Add(commentBlock);
-				}
-				else
-				{
-					this.OnParseError(
-						string.Format("Invalid character '{0}'", CSharpSymbol.BeginComment));
-				}
-			}
-
-			return comments.AsReadOnly();
 		}
 
 		/// <summary>
@@ -590,6 +561,36 @@ namespace NArrange.CSharp
 			string commentText = ReadLine();
 			commentLine = new CommentElement(commentText, commentType);
 			return commentLine;
+		}
+
+		private ReadOnlyCollection<ICommentElement> ParseComments()
+		{
+			List<ICommentElement> comments = new List<ICommentElement>();
+			
+			char nextChar = NextChar();
+			if (nextChar == CSharpSymbol.BeginComment)
+			{
+				TryReadChar();
+			
+				nextChar = NextChar();
+				if (nextChar == CSharpSymbol.BeginComment)
+				{
+					CommentElement commentLine = ParseCommentLine();
+					comments.Add(commentLine);
+				}
+				else if (nextChar == CSharpSymbol.BlockCommentModifier)
+				{
+					CommentElement commentBlock = ParseCommentBlock();
+					comments.Add(commentBlock);
+				}
+				else
+				{
+					this.OnParseError(
+						string.Format("Invalid character '{0}'", CSharpSymbol.BeginComment));
+				}
+			}
+			
+			return comments.AsReadOnly();
 		}
 
 		/// <summary>
@@ -784,9 +785,9 @@ namespace NArrange.CSharp
 			namespaceElement.Name = namepaceName;
 			
 			EatChar(CSharpSymbol.BeginBlock);
-
+			
 			EatWhitespace();
-
+			
 			if (NextChar() != CSharpSymbol.EndBlock)
 			{
 				//
@@ -831,6 +832,7 @@ namespace NArrange.CSharp
 			    bool inCharLiteral = false;
 			    bool inLineComment = false;
 			    bool inBlockComment = false;
+				bool inVerbatimString = false;
 			
 			    while (depth > 0)
 			    {
@@ -849,10 +851,12 @@ namespace NArrange.CSharp
 			        if(!inComment)
 			        {
 			            if (!inCharLiteral && CurrentChar == CSharpSymbol.BeginString 
-							&& (PreviousChar != EscapeChar || 
-							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar)))
+							&& (inVerbatimString || 
+							(PreviousChar != EscapeChar || 
+							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar))))
 			            {
 			                inString = !inString;
+							inVerbatimString = inString && PreviousChar == CSharpSymbol.BeginVerbatimString;
 			            }
 						else if (!inString && CurrentChar == CSharpSymbol.BeginCharLiteral
 							&& (PreviousChar != EscapeChar ||
@@ -1040,14 +1044,14 @@ namespace NArrange.CSharp
 			    EatWhitespace();
 			
 			    ParseTypeParameterConstraints(typeElement.TypeParameters);
-
+			
 				// TODO: Associate any additional comments in the type definition with the type.
 				ReadOnlyCollection<ICommentElement> additionalComments = ParseComments();
-
+			
 			    EatChar(CSharpSymbol.BeginBlock);
-
+			
 				EatWhitespace();
-
+			
 				if (NextChar() != CSharpSymbol.EndBlock)
 				{
 					//

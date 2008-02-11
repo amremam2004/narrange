@@ -5,4 +5,5 @@ The following changes were made in this release:
 - Fixed parsing of C# interface event types and non-specified access constructors.
 - Fixed parsing of C# string and character literals containing backslashes.
 - Fixed parsing of C# equal and not equal operators.
-- Fixed parsing issues with comments that are intermixed in member definitions or before the body text block.
+- Fixed C# parsing issues with comments that are intermixed in member definitions or before the body text block.
+- Fixed parsing of C# verbatim string literals (e.g. @"\\Server\")
