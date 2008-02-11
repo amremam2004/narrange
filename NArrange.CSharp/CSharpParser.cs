@@ -36,6 +36,11 @@
  *        TryParseElement
  *      - Parse regions to the element tree
  *      - Preserve block comments
+ *		- Fixed parsing of interface event types and non-specified 
+ *		  access constructors
+ *		- Fixed parsing of string and character literals containing
+ *		  backslashes
+ *		- Fixed parsing of equal and not equal operators
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -52,33 +57,10 @@ using NArrange.Core.Configuration;
 namespace NArrange.CSharp
 {
 	/// <summary>
-	/// Standard NArrange CSharp parser implementation.
+	/// NArrange CSharp parser implementation.
 	/// </summary>
-	public sealed class CSharpParser : ICodeParser
+	public sealed class CSharpParser : CodeParser
 	{
-		#region Constants
-
-		private const char EmptyChar = '\0';
-
-		#endregion Constants
-
-		#region Static Fields
-
-		private static readonly char[] WhitespaceChars = { ' ', '\t', '\r', '\n' };
-
-		#endregion Static Fields
-
-		#region Fields
-
-		private char _ch = '\0';		
-		private char[] _charBuffer = new char[1];		
-		private char _lastCh = '\0';		
-		private int _lineNumber = 1;		
-		private int _position = 1;		
-		private TextReader _reader;		
-		
-		#endregion Fields
-
 		#region Private Methods
 
 		/// <summary>
@@ -109,7 +91,7 @@ namespace NArrange.CSharp
 			
 			StringBuilder word = new StringBuilder();
 			
-			int data = _reader.Peek();
+			int data = Reader.Peek();
 			while (data > 0)
 			{
 			    char ch = (char)data;
@@ -126,8 +108,8 @@ namespace NArrange.CSharp
 			    else
 			    {
 			        TryReadChar();
-			        word.Append(_ch);
-			        data = _reader.Peek();
+			        word.Append(CurrentChar);
+			        data = Reader.Peek();
 			    }
 			}
 			
@@ -154,59 +136,6 @@ namespace NArrange.CSharp
 			field.IsVolatile = isVolatile;
 			
 			return field;
-		}
-
-		/// <summary>
-		/// Eats the specified character
-		/// </summary>
-		/// <param name="ch">Character to eat</param>
-		private void EatChar(char ch)
-		{
-			EatWhitespace();
-			TryReadChar();
-			if (_ch != ch)
-			{
-			    this.OnParseError("Expected " + ch);
-			}
-		}
-
-		/// <summary>
-		/// Reads until the next non-whitespace character is reached.
-		/// </summary>
-		private void EatWhitespace()
-		{
-			EatWhitespace(false);
-		}
-
-		/// <summary>
-		/// Reads until the next non-whitespace character is reached.
-		/// </summary>
-		private void EatWhitespace(bool spacesOnly)
-		{
-			int data = _reader.Peek();
-			while (data > 0)
-			{
-			    char ch = (char)data;
-			
-			    if (spacesOnly && ch == ' ')
-			    {
-			        TryReadChar();
-			    }
-			    else if (!spacesOnly && IsWhitespace(ch))
-			    {
-			        TryReadChar();
-			    }
-			    else
-			    {
-			        return;
-			    }
-			
-			    data = _reader.Peek();
-			    if (data <= 0)
-			    {
-			        UnexpectedEndOfFile();
-			    }
-			}
 		}
 
 		private static CodeAccess GetAccess(string processedElementText)
@@ -490,44 +419,6 @@ namespace NArrange.CSharp
 			        ch == CSharpSymbol.EndBlock;
 		}
 
-		/// <summary>
-		/// Determines whether or not the specified character is whitespace.
-		/// </summary>
-		/// <param name="ch"></param>
-		/// <returns></returns>
-		private static bool IsWhitespace(char ch)
-		{
-			return ch == ' ' || ch == '\t' ||
-			    ch == '\n' || ch == '\r';
-		}
-
-		/// <summary>
-		/// Returns the next character in the file, if any
-		/// </summary>
-		/// <returns></returns>
-		private char NextChar()
-		{
-			int data = _reader.Peek();
-			if (data > 0)
-			{
-			    char ch = (char)data;
-			    return ch;
-			}
-			else
-			{
-			    return EmptyChar;
-			}
-		}
-
-		/// <summary>
-		/// Throws a parse error 
-		/// </summary>
-		/// <param name="message"></param>
-		private void OnParseError(string message)
-		{
-			throw new ParseException(message, _lineNumber, _position);
-		}
-
 		private string[] ParseAliasList()
 		{
 			List<string> aliases = new List<string>();
@@ -548,15 +439,15 @@ namespace NArrange.CSharp
 			        nextChar = NextChar();
 			        if (nextChar == CSharpSymbol.BeginGeneric)
 			        {
-			            while (_ch != CSharpSymbol.EndGeneric)
+			            while (CurrentChar != CSharpSymbol.EndGeneric)
 			            {
 			                TryReadChar();
-			                if (_ch == CSharpSymbol.BeginBlock)
+							if (CurrentChar == CSharpSymbol.BeginBlock)
 			                {
 			                    this.OnParseError("Expected " + CSharpSymbol.EndGeneric);
 			                }
 			
-			                alias += _ch;
+							alias += CurrentChar;
 			            }
 			        }
 			
@@ -619,7 +510,43 @@ namespace NArrange.CSharp
 
 		private string ParseBlock(bool beginExpected)
 		{
+			if (beginExpected)
+			{
+				// TODO: Assign any parsed comments to the parent element
+				ParseComments();
+			}
+
 			return ParseNestedText(CSharpSymbol.BeginBlock, CSharpSymbol.EndBlock, beginExpected, true);
+		}
+
+		private ReadOnlyCollection<ICommentElement> ParseComments()
+		{
+			List<ICommentElement> comments = new List<ICommentElement>();
+
+			char nextChar = NextChar();
+			if (nextChar == CSharpSymbol.BeginComment)
+			{
+				TryReadChar();
+
+				nextChar = NextChar();
+				if (nextChar == CSharpSymbol.BeginComment)
+				{
+					CommentElement commentLine = ParseCommentLine();
+					comments.Add(commentLine);
+				}
+				else if (nextChar == CSharpSymbol.BlockCommentModifier)
+				{
+					CommentElement commentBlock = ParseCommentBlock();
+					comments.Add(commentBlock);
+				}
+				else
+				{
+					this.OnParseError(
+						string.Format("Invalid character '{0}'", CSharpSymbol.BeginComment));
+				}
+			}
+
+			return comments.AsReadOnly();
 		}
 
 		/// <summary>
@@ -634,10 +561,10 @@ namespace NArrange.CSharp
 			
 			StringBuilder blockComment = new StringBuilder();
 			
-			while (!(_lastCh == CSharpSymbol.BlockCommentModifier &&
-			    _ch == CSharpSymbol.BeginComment))
+			while (!(PreviousChar == CSharpSymbol.BlockCommentModifier &&
+			    CurrentChar == CSharpSymbol.BeginComment))
 			{
-			    blockComment.Append(_lastCh);
+				blockComment.Append(PreviousChar);
 			    TryReadChar();
 			}
 			
@@ -654,7 +581,7 @@ namespace NArrange.CSharp
 			TryReadChar();
 			
 			CommentType commentType = CommentType.Line;
-			if (_reader.Peek() == (int)CSharpSymbol.BeginComment)
+			if (NextChar() == CSharpSymbol.BeginComment)
 			{
 			    commentType = CommentType.XmlLine;
 			    TryReadChar();
@@ -698,7 +625,7 @@ namespace NArrange.CSharp
 			        else
 			        {
 			            TryReadChar();
-			            referenceBuilder.Append(_ch);
+			            referenceBuilder.Append(CurrentChar);
 			        }
 			
 			        nextChar = NextChar();
@@ -737,195 +664,6 @@ namespace NArrange.CSharp
 		}
 
 		/// <summary>
-		/// Parses elements from the current point in the stream
-		/// </summary>
-		/// <returns></returns>
-		private List<ICodeElement> ParseElements()
-		{
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-			List<ICommentElement> comments = new List<ICommentElement>();
-			List<AttributeElement> attributes = new List<AttributeElement>();
-			Stack<RegionElement> regionStack = new Stack<RegionElement>();
-			
-			StringBuilder elementBuilder = new StringBuilder();
-			
-			char nextChar;
-			
-			while (TryReadChar())
-			{
-			    switch (_ch)
-			    {
-			        //
-			        // Comments
-			        //
-			        case CSharpSymbol.BeginComment:
-			            nextChar = NextChar();
-			            if (nextChar == CSharpSymbol.BeginComment)
-			            {
-			                CommentElement commentLine = ParseCommentLine();
-			                comments.Add(commentLine);
-			            }
-			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
-			            {
-			                CommentElement commentBlock = ParseCommentBlock();
-			                comments.Add(commentBlock);
-			            }
-			            break;
-			
-			        //
-			        // Preprocessor
-			        //
-			        case CSharpSymbol.Preprocessor:
-			            //
-			            // TODO: Besides regions, parse preprocessor elements so that
-			            // member preprocessor information is preserved.
-			            //
-			            string line = ReadLine().Trim();
-			            if (line.StartsWith(CSharpKeyword.Region))
-			            {
-			                RegionElement regionElement = ParseRegion(line);
-			                regionStack.Push(regionElement);
-			            }
-			            else if (line.StartsWith(CSharpKeyword.EndRegion))
-			            {
-			                RegionElement regionElement = regionStack.Pop();
-			
-			                if (regionStack.Count > 0)
-			                {
-			                    regionStack.Peek().AddChild(regionElement);
-			                }
-			                else
-			                {
-			                    codeElements.Add(regionElement);
-			                }
-			            }
-			            else
-			            {
-			                this.OnParseError(
-			                    "Cannot arrange files with preprocessor directives " + 
-			                    "other than #region and #endregion");
-			            }
-			            break;
-			
-			        //
-			        // Attribute
-			        //
-			        case CSharpSymbol.BeginAttribute:
-			            nextChar = NextChar();
-			
-			            //
-			            // Parse array definition
-			            //
-			            if (elementBuilder.Length > 0)
-			            {
-			                if (nextChar == CSharpSymbol.EndAttribute)
-			                {
-			                    // Array type
-			                    EatChar(CSharpSymbol.EndAttribute);
-			
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
-			                }
-			                else
-			                {
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                }
-			            }
-			            else
-			            {
-			                //
-			                // Parse attribute
-			                //
-			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
-			
-			                attributes.Add(attributeElement);
-			                codeElements.Add(attributeElement);
-			                comments.Clear();
-			            }
-			            break;
-			
-			        // Eat any unneeded whitespace
-			        case ' ':
-			        case '\n':
-			        case '\r':
-			        case '\t':
-			            if (elementBuilder.Length > 0 &&
-			                elementBuilder[elementBuilder.Length - 1] != ' ')
-			            {
-			                elementBuilder.Append(' ');
-			            }
-			            break;
-			
-			        default:
-			            elementBuilder.Append(_ch);
-			            nextChar = NextChar();
-			
-			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(_ch))
-			            {
-			                //
-			                // Try to parse a code element
-			                //
-			                ICodeElement element = TryParseElement(
-			                    elementBuilder, comments.AsReadOnly(), attributes);
-			                if (element != null)
-			                {
-			                    if (regionStack.Count > 0)
-			                    {
-			                        regionStack.Peek().AddChild(element);
-			                    }
-			                    else
-			                    {
-			                        codeElements.Add(element);
-			                    }
-			                    elementBuilder = new StringBuilder();
-			                    comments.Clear();
-			                    if (element is IAttributedElement)
-			                    {
-			                        foreach (AttributeElement attribute in attributes)
-			                        {
-			                            codeElements.Remove(attribute);
-			                        }
-			
-			                        attributes = new List<AttributeElement>();
-			                    }
-			                }
-			            }
-			
-			            break;
-			    }
-			
-			    int data = _reader.Peek();
-			    char nextCh = (char)data;
-			
-			    //
-			    // Elements should capture closing block characters
-			    //
-			    if (nextCh == CSharpSymbol.EndBlock)
-			    {
-			        break;
-			    }
-			}
-			
-			if (comments.Count > 0)
-			{
-			    foreach (ICommentElement comment in comments)
-			    {
-			        codeElements.Add(comment);
-			    }
-			}
-			
-			//
-			// Make sure that all region elements have been closed
-			//
-			if (regionStack.Count > 0)
-			{
-			    this.OnParseError("Expected #endregion");
-			}
-			
-			return codeElements;
-		}
-
-		/// <summary>
 		/// Parses an event
 		/// </summary>
 		/// <param name="access"></param>
@@ -956,7 +694,7 @@ namespace NArrange.CSharp
 
 		private string ParseInitialValue()
 		{
-			EatWhitespace(true);
+			EatWhitespace(Whitespace.Space);
 			
 			string initialValue = ParseNestedText(EmptyChar, CSharpSymbol.EndOfStatement, false, false);
 			
@@ -1046,14 +784,19 @@ namespace NArrange.CSharp
 			namespaceElement.Name = namepaceName;
 			
 			EatChar(CSharpSymbol.BeginBlock);
-			
-			//
-			// Parse child elements
-			//
-			List<ICodeElement> childElements = ParseElements();
-			foreach (ICodeElement childElement in childElements)
+
+			EatWhitespace();
+
+			if (NextChar() != CSharpSymbol.EndBlock)
 			{
-			    namespaceElement.AddChild(childElement);
+				//
+				// Parse child elements
+				//
+				List<ICodeElement> childElements = DoParseElements();
+				foreach (ICodeElement childElement in childElements)
+				{
+					namespaceElement.AddChild(childElement);
+				}
 			}
 			
 			EatChar(CSharpSymbol.EndBlock);
@@ -1091,6 +834,8 @@ namespace NArrange.CSharp
 			
 			    while (depth > 0)
 			    {
+					char previousPreviousChar = PreviousChar;
+			
 			        bool charRead = TryReadChar();
 			        if (!charRead)
 			        {
@@ -1103,11 +848,15 @@ namespace NArrange.CSharp
 			
 			        if(!inComment)
 			        {
-			            if (!inCharLiteral && _ch == CSharpSymbol.BeginString && _lastCh != '\\')
+			            if (!inCharLiteral && CurrentChar == CSharpSymbol.BeginString 
+							&& (PreviousChar != EscapeChar || 
+							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar)))
 			            {
 			                inString = !inString;
 			            }
-			            else if (!inString && _ch == CSharpSymbol.BeginCharLiteral && _lastCh != '\\')
+						else if (!inString && CurrentChar == CSharpSymbol.BeginCharLiteral
+							&& (PreviousChar != EscapeChar ||
+							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar)))
 			            {
 			                inCharLiteral = !inCharLiteral;
 			            }
@@ -1115,36 +864,39 @@ namespace NArrange.CSharp
 			
 			        if (!inCharLiteral && !inString)
 			        {
-			            if (!inBlockComment && _ch == CSharpSymbol.BeginComment && nextChar == CSharpSymbol.BeginComment)
+						if (!inBlockComment && CurrentChar == CSharpSymbol.BeginComment && 
+							nextChar == CSharpSymbol.BeginComment)
 			            {
 			                inLineComment = true;
 			            }
-			            else if (inLineComment && _ch == '\r' && nextChar == '\n')
+						else if (inLineComment && CurrentChar == '\r' && nextChar == '\n')
 			            {
 			                inLineComment = false;
 			            }
 			            else if (!inLineComment && !inBlockComment &&
-			                _ch == CSharpSymbol.BeginComment && nextChar == CSharpSymbol.BlockCommentModifier)
+							CurrentChar == CSharpSymbol.BeginComment && 
+							nextChar == CSharpSymbol.BlockCommentModifier)
 			            {
 			                inBlockComment = true;
 			            }
 			            else if (inBlockComment &&
-			                _ch == CSharpSymbol.BlockCommentModifier && nextChar == CSharpSymbol.BeginComment)
+							CurrentChar == CSharpSymbol.BlockCommentModifier && 
+							nextChar == CSharpSymbol.BeginComment)
 			            {
 			                inBlockComment = false;
 			            }
 			        }
 			
 			        inComment = inBlockComment || inLineComment;
-			        if (beginChar != EmptyChar && _ch == beginChar && 
+					if (beginChar != EmptyChar && CurrentChar == beginChar && 
 			            !inCharLiteral && !inString && !inComment)
 			        {
-			            blockText.Append(_ch);
+						blockText.Append(CurrentChar);
 			            depth++;
 			        }
 			        else
 			        {
-			            blockText.Append(_ch);
+						blockText.Append(CurrentChar);
 			        }
 			
 			        if (nextChar == endChar && !inString && !inCharLiteral && !inComment)
@@ -1288,17 +1040,25 @@ namespace NArrange.CSharp
 			    EatWhitespace();
 			
 			    ParseTypeParameterConstraints(typeElement.TypeParameters);
-			
+
+				// TODO: Associate any additional comments in the type definition with the type.
+				ReadOnlyCollection<ICommentElement> additionalComments = ParseComments();
+
 			    EatChar(CSharpSymbol.BeginBlock);
-			
-			    //
-			    // Parse child elements
-			    //
-			    List<ICodeElement> childElements = ParseElements();
-			    foreach (ICodeElement childElement in childElements)
-			    {
-			        typeElement.AddChild(childElement);
-			    }
+
+				EatWhitespace();
+
+				if (NextChar() != CSharpSymbol.EndBlock)
+				{
+					//
+					// Parse child elements
+					//
+					List<ICodeElement> childElements = DoParseElements();
+					foreach (ICodeElement childElement in childElements)
+					{
+						typeElement.AddChild(childElement);
+					}
+				}
 			
 			    EatChar(CSharpSymbol.EndBlock);
 			}
@@ -1318,6 +1078,7 @@ namespace NArrange.CSharp
 			    if (keyWord == CSharpKeyword.Where)
 			    {
 			        EatWhitespace();
+					ParseComments();
 			
 			        string parameterName = CaptureWord();
 			
@@ -1337,6 +1098,7 @@ namespace NArrange.CSharp
 			        }
 			
 			        EatWhitespace();
+					ParseComments();
 			
 			        bool separatorFound = TryReadChar(CSharpSymbol.TypeImplements);
 			        if (!separatorFound)
@@ -1366,6 +1128,7 @@ namespace NArrange.CSharp
 			    }
 			
 			    EatWhitespace();
+				ParseComments();
 			}
 		}
 
@@ -1413,22 +1176,6 @@ namespace NArrange.CSharp
 			return usingElement;
 		}
 
-		private string ReadLine()
-		{
-			string commentText = _reader.ReadLine();
-			_lineNumber++;
-			
-			return commentText;
-		}
-
-		private void Reset()
-		{
-			_ch = '\0';
-			_lastCh = '\0';
-			_lineNumber = 1;
-			_position = 1;
-		}
-
 		/// <summary>
 		/// Tries to parse a code element
 		/// </summary>
@@ -1438,7 +1185,7 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private ICodeElement TryParseElement(StringBuilder elementBuilder, 
 			ReadOnlyCollection<ICommentElement> comments,
-			List<AttributeElement> attributes)
+			ReadOnlyCollection<AttributeElement> attributes)
 		{
 			CodeElement codeElement = null;
 			
@@ -1466,19 +1213,25 @@ namespace NArrange.CSharp
 			        WhitespaceChars,
 			        StringSplitOptions.RemoveEmptyEntries);
 			
+				char lastChar = processedElementText[processedElementText.Length - 1];
+				bool isStatement = lastChar == CSharpSymbol.EndOfStatement;
+				bool hasParams = lastChar == CSharpSymbol.BeginParamList;
+				bool isProperty = lastChar == CSharpSymbol.BeginBlock;
+			
 			    if (words.Length > 0 &&
 			        (words.Length > 1 ||
 			        words[0] == CSharpKeyword.Class ||
 			        words[0] == CSharpKeyword.Structure ||
 			        words[0] == CSharpKeyword.Interface ||
 			        words[0] == CSharpKeyword.Enumeration ||
-			        words[0][0] == CSharpSymbol.BeginFinalizer))
+					words[0] == CSharpKeyword.Event ||
+			        words[0][0] == CSharpSymbol.BeginFinalizer ||
+					isStatement || hasParams || isProperty))
 			    {
-			        char lastChar = processedElementText[processedElementText.Length - 1];
-			        bool isStatement = lastChar == CSharpSymbol.EndOfStatement;
-			        bool isAssignment = lastChar == CSharpSymbol.Assignment;
-			        bool hasParams = lastChar == CSharpSymbol.BeginParamList;
-			        bool isProperty = lastChar == CSharpSymbol.BeginBlock;
+					bool isAssignment = lastChar == CSharpSymbol.Assignment && 
+						NextChar() != CSharpSymbol.Assignment &&
+						PreviousChar != CSharpSymbol.Assignment &&
+						PreviousChar != CSharpSymbol.Negate;
 			
 			        StringCollection wordList = new StringCollection();
 			        wordList.AddRange(words);                
@@ -1571,6 +1324,22 @@ namespace NArrange.CSharp
 			                        if (isOperator)
 			                        {
 			                            operatorType = GetOperatorType(wordList);
+			
+										//
+										// HACK: Need to somehow not remove '=' from 
+										// the word list for operators
+										//
+										if (elementBuilder[elementBuilder.Length - 2] == CSharpSymbol.Assignment)
+										{
+											if (memberName == CSharpKeyword.Operator)
+											{
+												memberName = "==";
+											}
+											else if (memberName == CSharpSymbol.Negate.ToString())
+											{
+												memberName = "!=";
+											}
+										}
 			                        }
 			
 			                        //
@@ -1606,122 +1375,204 @@ namespace NArrange.CSharp
 			    }
 			}
 			
-			CommentedElement commentedElement = codeElement as CommentedElement;
-			if (commentedElement != null)
-			{
-			    //
-			    // Add any header comments
-			    //
-			    foreach (ICommentElement comment in comments)
-			    {
-			        commentedElement.AddHeaderComment(comment);
-			    }
-			}
-			
-			AttributedElement attributedElement = codeElement as AttributedElement;
-			if (attributedElement != null)
-			{
-			    foreach (AttributeElement attribute in attributes)
-			    {
-			        attributedElement.AddAttribute(attribute);
-			
-			        //
-			        // Treat attribute comments as header comments
-			        //
-			        if (attribute.HeaderComments.Count > 0)
-			        {
-			            foreach (ICommentElement comment in attribute.HeaderComments)
-			            {
-			                attributedElement.AddHeaderComment(comment);
-			            }
-			
-			            attribute.ClearHeaderCommentLines();
-			        }
-			    }
-			}
+			ApplyCommentsAndAttributes(codeElement, comments, attributes);
 			
 			return codeElement;
 		}
 
-		/// <summary>
-		/// Tries to read any character from the stream
-		/// </summary>
-		/// <returns></returns>
-		private bool TryReadChar()
-		{
-			if (_reader.Read(_charBuffer, 0, 1) > 0)
-			{
-			    _lastCh = _ch;
-			    _ch = _charBuffer[0];
-			
-			    if (_lastCh == '\r' && _ch == '\n')
-			    {
-			        _lineNumber++;
-			        _position = 1;
-			    }
-			    else
-			    {
-			        _position++;
-			    }
-			
-			    return true;
-			}
-			
-			return false;
-		}
-
-		/// <summary>
-		/// Tries to read the specified character from the stream.
-		/// </summary>
-		/// <param name="ch"></param>
-		/// <returns></returns>
-		private bool TryReadChar(char ch)
-		{
-			int data = _reader.Peek();
-			char nextCh = (char)data;
-			if (nextCh == ch)
-			{
-			    TryReadChar();
-			    return true;
-			}
-			
-			return false;
-		}
-
-		/// <summary>
-		/// Throws an unexpected end of file error.
-		/// </summary>
-		private void UnexpectedEndOfFile()
-		{
-			throw new ParseException("Unexpected end of file", _lineNumber, _position);
-		}
-
 		#endregion Private Methods
 
-		#region Public Methods
+		#region Protected Methods
 
 		/// <summary>
-		/// Parses a collection of code elements from a stream reader.
+		/// Parses elements from the current point in the stream
 		/// </summary>
-		/// <param name="reader">Code stream reader</param>
 		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> Parse(TextReader reader)
+		protected override List<ICodeElement> DoParseElements()
 		{
-			if (reader == null)
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			List<ICommentElement> comments = new List<ICommentElement>();
+			List<AttributeElement> attributes = new List<AttributeElement>();
+			Stack<RegionElement> regionStack = new Stack<RegionElement>();
+			
+			StringBuilder elementBuilder = new StringBuilder();
+			
+			char nextChar;
+			
+			while (TryReadChar())
 			{
-			    throw new ArgumentNullException("reader");
+			    switch (CurrentChar)
+			    {
+			        //
+			        // Comments
+			        //
+			        case CSharpSymbol.BeginComment:
+			            nextChar = NextChar();
+			            if (nextChar == CSharpSymbol.BeginComment)
+			            {
+			                CommentElement commentLine = ParseCommentLine();
+			                comments.Add(commentLine);
+			            }
+			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
+			            {
+			                CommentElement commentBlock = ParseCommentBlock();
+			                comments.Add(commentBlock);
+			            }
+			            break;
+			
+			        //
+			        // Preprocessor
+			        //
+			        case CSharpSymbol.Preprocessor:
+			            //
+			            // TODO: Besides regions, parse preprocessor elements so that
+			            // member preprocessor information is preserved.
+			            //
+			            string line = ReadLine().Trim();
+			            if (line.StartsWith(CSharpKeyword.Region))
+			            {
+			                RegionElement regionElement = ParseRegion(line);
+			                regionStack.Push(regionElement);
+			            }
+			            else if (line.StartsWith(CSharpKeyword.EndRegion) && regionStack.Count > 0)
+			            {
+			                RegionElement regionElement = regionStack.Pop();
+			
+			                if (regionStack.Count > 0)
+			                {
+			                    regionStack.Peek().AddChild(regionElement);
+			                }
+			                else
+			                {
+			                    codeElements.Add(regionElement);
+			                }
+			            }
+			            else
+			            {
+			                this.OnParseError(
+			                    "Cannot arrange files with preprocessor directives " + 
+			                    "other than #region and #endregion");
+			            }
+			            break;
+			
+			        //
+			        // Attribute
+			        //
+			        case CSharpSymbol.BeginAttribute:
+			            nextChar = NextChar();
+			
+			            //
+			            // Parse array definition
+			            //
+			            if (elementBuilder.Length > 0)
+			            {
+			                if (nextChar == CSharpSymbol.EndAttribute)
+			                {
+			                    // Array type
+			                    EatChar(CSharpSymbol.EndAttribute);
+			
+			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
+			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
+			                }
+			                else
+			                {
+			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
+			                }
+			            }
+			            else
+			            {
+			                //
+			                // Parse attribute
+			                //
+			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
+			
+			                attributes.Add(attributeElement);
+			                codeElements.Add(attributeElement);
+			                comments.Clear();
+			            }
+			            break;
+			
+			        // Eat any unneeded whitespace
+			        case ' ':
+			        case '\n':
+			        case '\r':
+			        case '\t':
+			            if (elementBuilder.Length > 0 &&
+			                elementBuilder[elementBuilder.Length - 1] != ' ')
+			            {
+			                elementBuilder.Append(' ');
+			            }
+			            break;
+			
+			        default:
+			            elementBuilder.Append(CurrentChar);
+			            nextChar = NextChar();
+			
+			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
+			            {
+			                //
+			                // Try to parse a code element
+			                //
+			                ICodeElement element = TryParseElement(
+			                    elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
+			                if (element != null)
+			                {
+			                    if (regionStack.Count > 0)
+			                    {
+			                        regionStack.Peek().AddChild(element);
+			                    }
+			                    else
+			                    {
+			                        codeElements.Add(element);
+			                    }
+			                    elementBuilder = new StringBuilder();
+			                    comments.Clear();
+			                    if (element is IAttributedElement)
+			                    {
+			                        foreach (AttributeElement attribute in attributes)
+			                        {
+			                            codeElements.Remove(attribute);
+			                        }
+			
+			                        attributes = new List<AttributeElement>();
+			                    }
+			                }
+			            }
+			
+			            break;
+			    }
+			
+			    int data = Reader.Peek();
+			    char nextCh = (char)data;
+			
+			    //
+			    // Elements should capture closing block characters
+			    //
+			    if (nextCh == CSharpSymbol.EndBlock)
+			    {
+			        break;
+			    }
 			}
 			
-			List<ICodeElement> codeElements = new List<ICodeElement>();
+			if (comments.Count > 0)
+			{
+			    foreach (ICommentElement comment in comments)
+			    {
+			        codeElements.Add(comment);
+			    }
+			}
 			
-			Reset();
-			_reader = reader;
+			//
+			// Make sure that all region elements have been closed
+			//
+			if (regionStack.Count > 0)
+			{
+			    this.OnParseError("Expected #endregion");
+			}
 			
-			codeElements = ParseElements();
-			
-			return codeElements.AsReadOnly();
+			return codeElements;
 		}
 
-		#endregion Public Methods
+		#endregion Protected Methods
 	}
 }

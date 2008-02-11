@@ -96,6 +96,9 @@ namespace NArrange.Core
 			
 			    foreach (ICodeElement childElement in children)
 			    {
+					//
+					// Region elements are ignored.  Only process their children.
+					//
 			        RegionElement regionElement = childElement as RegionElement;
 			        if (regionElement != null)
 			        {

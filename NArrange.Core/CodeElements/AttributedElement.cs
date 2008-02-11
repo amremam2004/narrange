@@ -127,7 +127,6 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		/// <returns></returns>
 		protected abstract AttributedElement DoAttributedClone();
-
 		/// <summary>
 		/// Creates a clone of the instance and copies any state
 		/// </summary>

@@ -22,7 +22,6 @@ namespace NArrange.Tests.Core.CodeElements
 		/// </summary>
 		/// <returns></returns>
 		protected abstract TCodeElement DoCreateClonePrototype();
-
 		/// <summary>
 		/// Performs the ToString test
 		/// </summary>
@@ -34,6 +33,7 @@ namespace NArrange.Tests.Core.CodeElements
 			Assert.AreEqual("Element", str,
 			    "Unexpected string representation.");
 		}
+
 
 		/// <summary>
 		/// Verifies that a clone has the same state as the original

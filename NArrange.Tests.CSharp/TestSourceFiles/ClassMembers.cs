@@ -16,7 +16,7 @@ namespace SampleNamespace
     /// <summary>
     /// This is a class definition.
     /// </summary>
-    public class SampleClass
+    public class SampleClass	// Extra comment here
     {
         #region Fields
 
@@ -116,7 +116,7 @@ namespace SampleNamespace
         /// This property is static
         /// </summary>
         // Mixed comment style here
-        public static string StaticProperty
+        public static string StaticProperty		// Extra comment here
         {
             get
             {
@@ -193,7 +193,7 @@ namespace SampleNamespace
         #region Methods
 
         // Simple method
-        public void DoSomething()
+        public void DoSomething()	// Extra comment here
         {
             // 
             // Make sure we detect that we're in a string while 
@@ -218,6 +218,9 @@ namespace SampleNamespace
         /// <param name="stringParam"></param>
         /// <returns></returns>
         private bool GetBoolValue(int intParam, string stringParam)
+		/*
+		 * Extra block comment here
+		 */
         {
             return true;
         }
@@ -228,8 +231,8 @@ namespace SampleNamespace
         /// <param name="intParam">Int parameter</param>
         /// <returns></returns>
         [Description("Method with parameter attributes")]
-        internal static int? GetWithParamAttributes(
-            [Description("Int parameter")] int intParam,
+		internal static int? GetWithParamAttributes(			// Extra comment 1 here
+            [Description("Int parameter")] int intParam,		// Extra comment 2 here
             [Description("String parameter")] string stringParam)
         {
             if (intParam == 0)
@@ -247,7 +250,7 @@ namespace SampleNamespace
         /// </summary>
         public bool GetWithTypeParameters<T1,T2>(
             Action<T1> typeParam1, Action<T2> typeParam2) 
-            where T1 : IDisposable, new() 
+            where T1 : IDisposable, new()		// Extra comment here
             where T2 : IDisposable, new()
         {
             try

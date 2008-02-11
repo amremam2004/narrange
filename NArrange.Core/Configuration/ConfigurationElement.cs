@@ -65,6 +65,7 @@ namespace NArrange.Core.Configuration
 			return clone;
 		}
 
+
 		/// <summary>
 		/// Creates a new instance of this type and copies state
 		/// </summary>

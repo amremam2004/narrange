@@ -85,7 +85,14 @@ namespace NArrange.Core
 		private SourceHandler GetProjectHandler(string fileName)
 		{
 			string extension = GetExtension(fileName);
-			return _projectExtensionHandlers[extension];
+			if (extension.Length > 0)
+			{
+				return _projectExtensionHandlers[extension];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private ReadOnlyCollection<string> GetProjectSourceFiles(string fileName)
@@ -93,27 +100,30 @@ namespace NArrange.Core
 			List<string> sourceFiles = new List<string>();
 			
 			SourceHandler handler = GetProjectHandler(fileName);
-			IProjectParser projectParser = handler.ProjectParser;
-			
-			List<string> extensions = new List<string>();
-			foreach (string key in _sourceExtensionHandlers.Keys)
+			if (handler != null)
 			{
-				SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-				if (sourceHandler == handler)
-				{
-					extensions.Add(key);
-				}
-			}
+				IProjectParser projectParser = handler.ProjectParser;
 			
-			ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
-			if (fileNames.Count > 0)
-			{
-				foreach (string sourceFile in fileNames)
+				List<string> extensions = new List<string>();
+				foreach (string key in _sourceExtensionHandlers.Keys)
 				{
-					string extension = GetExtension(sourceFile);
-					if (extensions.Contains(extension))
+					SourceHandler sourceHandler = _sourceExtensionHandlers[key];
+					if (sourceHandler == handler)
 					{
-						sourceFiles.Add(sourceFile);
+						extensions.Add(key);
+					}
+				}
+			
+				ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
+				if (fileNames.Count > 0)
+				{
+					foreach (string sourceFile in fileNames)
+					{
+						string extension = GetExtension(sourceFile);
+						if (extensions.Contains(extension))
+						{
+							sourceFiles.Add(sourceFile);
+						}
 					}
 				}
 			}

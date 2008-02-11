@@ -180,6 +180,7 @@ namespace NArrange.Core.CodeElements
 			return clone;
 		}
 
+
 		/// <summary>
 		/// Clones this instance
 		/// </summary>

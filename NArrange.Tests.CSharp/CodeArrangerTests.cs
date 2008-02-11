@@ -193,6 +193,47 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging using statements in a region with the default configuration
+		/// </summary>
+		[Test]
+		public void DefualtArrangeUsingsInRegionTest()
+		{
+			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+			
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "Using Directives";
+			
+			UsingElement usingElement1 = new UsingElement();
+			usingElement1.Name = "System";
+			regionElement.AddChild(usingElement1);
+			
+			UsingElement usingElement2 = new UsingElement();
+			usingElement2.Name = "System.Text";
+			regionElement.AddChild(usingElement2);
+			
+			codeElements.Add(regionElement);
+			
+			ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(codeElements.AsReadOnly());
+			
+			//
+			// Verify using statements were stripped from the region
+			//
+			Assert.AreEqual(1, arranged.Count,
+				"An unexpected number of root elements were returned from Arrange.");
+			GroupElement groupElement = arranged[0] as GroupElement;
+			Assert.IsNotNull(groupElement,
+				"Expected a group element.");
+			Assert.AreEqual("System", groupElement.Name);
+			foreach (ICodeElement arrangedElement in groupElement.Children)
+			{
+				Assert.IsTrue(arrangedElement is UsingElement,
+					"Expected a using element.");
+			}
+		}
+
+		/// <summary>
 		/// Performs setup for this test fixture
 		/// </summary>
 		[TestFixtureSetUp]

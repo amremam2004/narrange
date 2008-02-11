@@ -514,6 +514,31 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing an event.
+		/// </summary>
+		[Test]
+		public void WriteEventTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			EventElement eventElement = new EventElement();
+			eventElement.Access = CodeAccess.Public;
+			eventElement.Type = "EventHandler";
+			eventElement.Name = "TestEvent";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(eventElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual("public event EventHandler TestEvent;",
+				text,
+				"Event element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an explicit operator
 		/// </summary>
 		[Test]

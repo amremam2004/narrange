@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Fixed arranging of region-nested using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -91,22 +92,39 @@ namespace NArrange.Core
 		{
 			bool arranged = false;
 			
-			foreach (IElementArranger arranger in _arrangers)
+			//
+			// Region elements are ignored.  Only process their children.
+			//
+			RegionElement regionElement = codeElement as RegionElement;
+			if (regionElement != null)
 			{
-			    if (arranger.CanArrange(codeElement))
-			    {
-			        arranger.ArrangeElement(parentElement, codeElement);
-			        arranged = true;
-			        break;
-			    }
-			}
+				List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
+				regionElement.ClearChildren();
 			
-			if (!arranged)
+				foreach (ICodeElement regionChildElement in regionChildren)
+				{
+					ArrangeElement(parentElement, regionChildElement);
+				}
+			}
+			else
 			{
-			    throw new InvalidOperationException(
-			        string.Format(
-			        "Cannot arrange element of type {0} with name '{1}'.",
-			        codeElement.GetType().Name, codeElement.Name));
+				foreach (IElementArranger arranger in _arrangers)
+				{
+					if (arranger.CanArrange(codeElement))
+					{
+						arranger.ArrangeElement(parentElement, codeElement);
+						arranged = true;
+						break;
+					}
+				}
+			
+				if (!arranged)
+				{
+					throw new InvalidOperationException(
+						string.Format(
+						"Cannot arrange element of type {0} with name '{1}'.",
+						codeElement.GetType().Name, codeElement.Name));
+				}
 			}
 		}
 

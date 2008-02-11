@@ -31,7 +31,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Added a TabStyle enumeration.
+ *      - Added a TabStyle enumeration
+ *		- Added an enumeration for whitespace characters
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -69,8 +70,8 @@ namespace NArrange.Core
 		/// Public
 		/// </summary>
 		Public = 8
-	}	
-	
+	}
+
 	/// <summary>
 	/// Comment type
 	/// </summary>
@@ -90,8 +91,8 @@ namespace NArrange.Core
 		/// Block comment
 		/// </summary>
 		Block
-	}	
-	
+	}
+
 	/// <summary>
 	/// Element attribute
 	/// </summary>
@@ -126,8 +127,8 @@ namespace NArrange.Core
 		/// Type
 		/// </summary>
 		Type
-	}	
-	
+	}
+
 	/// <summary>
 	/// Element type
 	/// </summary>
@@ -207,8 +208,8 @@ namespace NArrange.Core
 		/// Block comment
 		/// </summary>
 		CommentBlock
-	}	
-	
+	}
+
 	/// <summary>
 	/// Expression operator
 	/// </summary>
@@ -233,8 +234,8 @@ namespace NArrange.Core
 		/// Or
 		/// </summary>
 		Or
-	}	
-	
+	}
+
 	/// <summary>
 	/// Grouping separator type
 	/// </summary>
@@ -249,8 +250,8 @@ namespace NArrange.Core
 		/// Custom separator string
 		/// </summary>
 		Custom
-	}	
-	
+	}
+
 	/// <summary>
 	/// Log level
 	/// </summary>
@@ -280,8 +281,8 @@ namespace NArrange.Core
 		/// Trace
 		/// </summary>
 		Trace
-	}	
-	
+	}
+
 	/// <summary>
 	/// Member attributes
 	/// </summary>
@@ -342,8 +343,8 @@ namespace NArrange.Core
 		/// External
 		/// </summary>
 		External = 512
-	}	
-	
+	}
+
 	/// <summary>
 	/// Operator type
 	/// </summary>
@@ -364,8 +365,8 @@ namespace NArrange.Core
 		/// Implicit
 		/// </summary>
 		Implicit = 2
-	}	
-	
+	}
+
 	/// <summary>
 	/// Tabbing style
 	/// </summary>
@@ -380,8 +381,8 @@ namespace NArrange.Core
 		/// Uses spaces when writing elements
 		/// </summary>
 		Spaces
-	}	
-	
+	}
+
 	/// <summary>
 	/// Type element type
 	/// </summary>
@@ -406,8 +407,8 @@ namespace NArrange.Core
 		/// Enumeration
 		/// </summary>
 		Enum
-	}	
-	
+	}
+
 	/// <summary>
 	/// Type attributes
 	/// </summary>
@@ -444,5 +445,52 @@ namespace NArrange.Core
 		/// Partial
 		/// </summary>
 		Partial = 16
+	}
+
+	/// <summary>
+	/// Whitespace character types
+	/// </summary>
+	[Flags]
+	public enum Whitespace
+	{
+		/// <summary>
+		/// None
+		/// </summary>
+		None = 0,
+		
+		/// <summary>
+		/// Spaces
+		/// </summary>
+		Space = 1,
+		
+		/// <summary>
+		/// Tabs
+		/// </summary>
+		Tab = 2,
+		
+		/// <summary>
+		/// Carriage returns
+		/// </summary>
+		CarriageReturn = 4,
+		
+		/// <summary>
+		/// Line feeds
+		/// </summary>
+		LineFeed = 8,
+		
+		/// <summary>
+		/// Spaces and tabs
+		/// </summary>
+		SpaceAndTab = Space | Tab,
+		
+		/// <summary>
+		/// Carriage returns and line feeds
+		/// </summary>
+		CarriageReturnAndLineFeed = CarriageReturn | LineFeed,
+		
+		/// <summary>
+		/// All whitespace characters
+		/// </summary>
+		All = SpaceAndTab | CarriageReturnAndLineFeed
 	}
 }

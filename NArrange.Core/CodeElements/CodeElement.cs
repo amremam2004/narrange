@@ -177,7 +177,6 @@ namespace NArrange.Core.CodeElements
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
 		public abstract void Accept(ICodeElementVisitor visitor);
-
 		/// <summary>
 		/// Adds a child to this element
 		/// </summary>

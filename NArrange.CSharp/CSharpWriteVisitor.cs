@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Fixed an extra line feed for namespace-nested using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -135,9 +136,10 @@ namespace NArrange.CSharp
 			{
 			    ICodeElement childElement = element.Children[childIndex];
 			
-			    FieldElement childFieldElement = childElement as FieldElement;
-			    if (childIndex > 0 && childFieldElement != null && 
-			        childFieldElement.HeaderComments.Count > 0)
+				TextCodeElement textCodeElement = childElement as TextCodeElement;
+				if (childIndex > 0 && textCodeElement != null && 
+					textCodeElement.BodyText == null && textCodeElement.Children.Count == 0 &&
+			        textCodeElement.HeaderComments.Count > 0)
 			    {
 			        _writer.WriteLine();
 			    }
@@ -148,7 +150,8 @@ namespace NArrange.CSharp
 			    {
 			        if (!(childElement is GroupElement))
 			        {
-			            if (!(childElement is FieldElement))
+						textCodeElement = childElement as TextCodeElement;
+			            if (textCodeElement == null || textCodeElement.BodyText != null || textCodeElement.Children.Count > 0)
 			            {
 			                _writer.WriteLine();
 			            }
@@ -693,18 +696,7 @@ namespace NArrange.CSharp
 			//
 			// Process all children
 			//
-			for (int childIndex = 0; childIndex < element.Children.Count; childIndex++)
-			{
-			    ICodeElement childElement = element.Children[childIndex];
-			
-			    childElement.Accept(this);
-			
-			    if (childIndex < element.Children.Count - 1)
-			    {
-			        WriteIndentedLine();
-			        WriteIndentedLine();
-			    }
-			}
+			WriteChildren(element);
 			
 			WriteEndBlock();
 		}

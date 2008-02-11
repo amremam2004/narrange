@@ -126,6 +126,11 @@ namespace NArrange.CSharp
 		public const char EndParamList = ')';
 
 		/// <summary>
+		/// Negate
+		/// </summary>
+		public const char Negate = '!';
+
+		/// <summary>
 		/// Preprocessor
 		/// </summary>
 		public const char Preprocessor = '#';
@@ -163,7 +168,8 @@ namespace NArrange.CSharp
 			    ch == CSharpSymbol.EndOfStatement ||
 			    ch == CSharpSymbol.EndParamList ||
 			    ch == CSharpSymbol.Preprocessor ||
-			    ch == CSharpSymbol.TypeImplements;
+			    ch == CSharpSymbol.TypeImplements ||
+				ch == CSharpSymbol.Negate;
 		}
 
 		#endregion Public Methods

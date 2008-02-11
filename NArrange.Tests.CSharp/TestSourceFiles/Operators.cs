@@ -26,6 +26,18 @@ namespace SampleNamespace
             return new Fraction(a.num * b.num, a.den * b.den);
         }
 
+		// overload operator ==
+		public static bool operator ==(Fraction a, Fraction b)
+		{
+			return a.num == b.num && a.den == b.den;
+		}
+
+		// overload operator !=
+		public static bool operator !=(Fraction a, Fraction b)
+		{
+			return !(a == b);
+		}
+
         // define operator double
         public static implicit operator double(Fraction f)
         {
