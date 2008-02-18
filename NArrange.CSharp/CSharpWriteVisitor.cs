@@ -32,6 +32,7 @@
  *      James Nies
  *      - Initial creation
  *		- Fixed an extra line feed for namespace-nested using statements
+ *		- Fixed writing of C# redefine using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -718,6 +719,12 @@ namespace NArrange.CSharp
 			_writer.Write(' ');
 			
 			_writer.Write(element.Name);
+			if (element.IndexParameter != null)
+			{
+				_writer.Write(CSharpSymbol.BeginAttribute);
+				_writer.Write(element.IndexParameter);
+				_writer.Write(CSharpSymbol.EndAttribute);
+			}
 			
 			_writer.WriteLine();
 			
@@ -896,6 +903,11 @@ namespace NArrange.CSharp
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpKeyword.Using);
 			builder.Append(' ');
+			if (!string.IsNullOrEmpty(element.Redefine))
+			{
+				builder.Append(element.Redefine);
+				builder.Append(" " + CSharpSymbol.Assignment.ToString() + " ");
+			}
 			builder.Append(element.Name);
 			builder.Append(CSharpSymbol.EndOfStatement);
 			

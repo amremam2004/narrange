@@ -122,7 +122,7 @@ namespace NArrange.Tests.CSharp
 			
 			CompilerParameters parameters = new CompilerParameters();
 			parameters.GenerateInMemory = true;
-			parameters.OutputAssembly = name;
+			parameters.OutputAssembly = name + ".dll";
 			parameters.CompilerOptions = "/unsafe";
 			
 			parameters.ReferencedAssemblies.Add("mscorlib.dll");

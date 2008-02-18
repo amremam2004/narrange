@@ -904,6 +904,31 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a using element with a redefine
+		/// </summary>
+		[Test]
+		public void WriteUsingElementRedefineTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			UsingElement usingElement = new UsingElement();
+			usingElement.Name = "System.Text";
+			usingElement.Redefine = "SysText";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(usingElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"using SysText = System.Text;",
+				text,
+				"Using element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a using element
 		/// </summary>
 		[Test]

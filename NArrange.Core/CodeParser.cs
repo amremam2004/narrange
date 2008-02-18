@@ -56,17 +56,6 @@ namespace NArrange.Core
 		}
 
 		/// <summary>
-		/// Escape character
-		/// </summary>
-		protected virtual char EscapeChar
-		{
-			get
-			{
-				return '\\';
-			}
-		}
-
-		/// <summary>
 		/// Gets the previously read character (i.e. before CurrentChar)
 		/// </summary>
 		protected char PreviousChar

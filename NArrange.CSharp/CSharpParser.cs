@@ -62,6 +62,21 @@ namespace NArrange.CSharp
 	/// </summary>
 	public sealed class CSharpParser : CodeParser
 	{
+		#region Private Properties
+
+		/// <summary>
+		/// Escape character
+		/// </summary>
+		private char EscapeChar
+		{
+			get
+			{
+				return '\\';
+			}
+		}
+
+		#endregion Private Properties
+
 		#region Private Methods
 
 		/// <summary>
@@ -139,32 +154,79 @@ namespace NArrange.CSharp
 			return field;
 		}
 
-		private static CodeAccess GetAccess(string processedElementText)
+		private static CodeAccess GetAccess(StringCollection wordList)
 		{
 			CodeAccess access = CodeAccess.NotSpecified;
 			
-			if (processedElementText.Contains(CSharpKeyword.Public))
+			if (wordList.Contains(CSharpKeyword.Public))
 			{
 			    access = CodeAccess.Public;
 			}
-			else if (processedElementText.Contains(CSharpKeyword.Private))
+			else if (wordList.Contains(CSharpKeyword.Private))
 			{
 			    access = CodeAccess.Private;
 			}
 			else
 			{
-			    if (processedElementText.Contains(CSharpKeyword.Protected))
+				if (wordList.Contains(CSharpKeyword.Protected))
 			    {
 			        access |= CodeAccess.Protected;
 			    }
 			
-			    if (processedElementText.Contains(CSharpKeyword.Internal))
+				if (wordList.Contains(CSharpKeyword.Internal))
 			    {
 			        access |= CodeAccess.Internal;
 			    }
 			}
 			
 			return access;
+		}
+
+		private static void GetElementType(StringCollection wordList, 
+			out ElementType elementType, out TypeElementType? typeElementType)
+		{
+			elementType = ElementType.NotSpecified;
+			typeElementType = null;
+			
+			if(wordList.Contains(CSharpKeyword.Class))
+			{
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Class;
+				return;
+			}
+			
+			if (wordList.Contains(CSharpKeyword.Structure))
+			{
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Structure;
+				return;
+			}
+			
+			if (wordList.Contains(CSharpKeyword.Enumeration))
+			{
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Enum;
+				return;
+			}
+			
+			if (wordList.Contains(CSharpKeyword.Interface))
+			{
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Interface;
+				return;
+			}
+			
+			if (wordList.Contains(CSharpKeyword.Event))
+			{
+				elementType = ElementType.Event;
+				return;
+			}
+			
+			if (wordList.Contains(CSharpKeyword.Delegate))
+			{
+				elementType = ElementType.Delegate;
+				return;
+			}
 		}
 
 		private static MemberModifier GetMemberAttributes(StringCollection wordList)
@@ -366,41 +428,6 @@ namespace NArrange.CSharp
 			}
 			
 			return operatorType;
-		}
-
-		/// <summary>
-		/// Gets a type element type
-		/// </summary>
-		/// <param name="isClass"></param>
-		/// <param name="isStruct"></param>
-		/// <param name="isInterface"></param>
-		/// <param name="isEnum"></param>
-		/// <returns></returns>
-		private TypeElementType GetTypeElementType(bool isClass, bool isStruct, bool isInterface, bool isEnum)
-		{
-			TypeElementType type = TypeElementType.Class;
-			
-			bool singleDefinition = isClass ^ isStruct ^ isEnum ^ isInterface;
-			Debug.Assert(singleDefinition, "Invalid type definition.");
-			
-			if (isClass)
-			{
-			    type = TypeElementType.Class;
-			}
-			else if (isStruct)
-			{
-			    type = TypeElementType.Structure;
-			}
-			else if (isInterface)
-			{
-			    type = TypeElementType.Interface;
-			}
-			else if (isEnum)
-			{
-			    type = TypeElementType.Enum;
-			}
-			
-			return type;
 		}
 
 		/// <summary>
@@ -944,6 +971,16 @@ namespace NArrange.CSharp
 		private PropertyElement ParseProperty(string memberName, string returnType, CodeAccess access, MemberModifier memberAttributes)
 		{
 			PropertyElement property = new PropertyElement();
+			
+			int indexStart = memberName.IndexOf(CSharpSymbol.BeginAttribute);
+			if (indexStart >= 0)
+			{
+				string indexParameter = memberName.Substring(indexStart).Trim().Trim(
+					CSharpSymbol.BeginAttribute, CSharpSymbol.EndAttribute).Trim();
+				property.IndexParameter = indexParameter;
+				memberName = memberName.Substring(0, indexStart);
+			}
+			
 			property.Name = memberName;
 			property.Access = access;
 			property.Type = returnType;
@@ -1238,49 +1275,38 @@ namespace NArrange.CSharp
 						PreviousChar != CSharpSymbol.Negate;
 			
 			        StringCollection wordList = new StringCollection();
-			        wordList.AddRange(words);                
+			        wordList.AddRange(words);
 			
-			        bool isClass = false;
-			        bool isStruct = false;
-			        bool isEnum = false;
-			        bool isInterface = false;
-			        bool isEvent = false;
-			        bool isDelegate = false;
-			
-			        if (!isProperty)
-			        {
-			            isClass = wordList.Contains(CSharpKeyword.Class);
-			            isStruct = !isClass &&
-			                wordList.Contains(CSharpKeyword.Structure);
-			            isEnum = !isClass && !isStruct &&
-			                wordList.Contains(CSharpKeyword.Enumeration);
-			            isInterface = !isClass && !isStruct && !isEnum &&
-			                wordList.Contains(CSharpKeyword.Interface);
-			            isEvent = !isClass && !isStruct && !isEnum && !isInterface &&
-			                wordList.Contains(CSharpKeyword.Event);
-			            isDelegate = !isClass && !isStruct && !isEnum && !isInterface && !isDelegate &&
-			                wordList.Contains(CSharpKeyword.Delegate);
-			        }
+					ElementType elementType;
+					TypeElementType? typeElementType = null;
+					if (isProperty)
+					{
+						elementType = ElementType.Property;
+					}
+					else
+					{
+						GetElementType(wordList, out elementType, out typeElementType);
+					}
 			
 			        CodeAccess access = CodeAccess.NotSpecified;
 			        MemberModifier memberAttributes = MemberModifier.None;
 			
 			        if (isStatement || isAssignment || hasParams ||
-			            isProperty || isStruct || isClass || isInterface || isEnum || isEvent)
+						elementType == ElementType.Property ||
+						elementType == ElementType.Event ||
+						elementType == ElementType.Delegate ||
+						elementType == ElementType.Type)
 			        {
-			            access = GetAccess(processedElementText);
+						access = GetAccess(wordList);
 			            memberAttributes = GetMemberAttributes(wordList);
 			        }
 			
 			        //
 			        // Type definition?
 			        //
-			        if (isClass || isStruct || isInterface || isEnum)
+					if (elementType == ElementType.Type)
 			        {
-			            TypeElementType type = GetTypeElementType(isClass, isStruct, isInterface, isEnum);
-			
 			            TypeModifier typeAttributes = (TypeModifier)memberAttributes;
-			
 			            if (wordList.Contains(CSharpKeyword.Partial))
 			            {
 			                typeAttributes |= TypeModifier.Partial;
@@ -1289,9 +1315,9 @@ namespace NArrange.CSharp
 			            //
 			            // Parse a type definition
 			            //
-			            codeElement = ParseType(access, typeAttributes, type);
+			            codeElement = ParseType(access, typeAttributes, typeElementType.Value);
 			        }
-			        else if (isEvent)
+			        else if (elementType == ElementType.Event)
 			        {
 			            codeElement = ParseEvent(access, memberAttributes);
 			        }
@@ -1301,14 +1327,14 @@ namespace NArrange.CSharp
 			            string memberName = null;
 			            string returnType = null;
 			
-			            if (isStatement || isAssignment || hasParams || isProperty || isEvent)
+			            if (isStatement || isAssignment || hasParams || isProperty)
 			            {
 			                GetMemberNameAndType(words, out memberName, out returnType);
 			            }
 			
 			            if (hasParams)
 			            {
-			                if (isDelegate)
+			                if (elementType == ElementType.Delegate)
 			                {
 			                    codeElement = ParseDelegate(memberName, access, memberAttributes, returnType);
 			                }
@@ -1371,7 +1397,7 @@ namespace NArrange.CSharp
 			
 			                codeElement = field;
 			            }
-			            else if (isProperty)
+			            else if (elementType == ElementType.Property)
 			            {
 			                codeElement = ParseProperty(memberName, returnType, access, memberAttributes);
 			            }
@@ -1379,7 +1405,10 @@ namespace NArrange.CSharp
 			    }
 			}
 			
-			ApplyCommentsAndAttributes(codeElement, comments, attributes);
+			if (codeElement != null)
+			{
+				ApplyCommentsAndAttributes(codeElement, comments, attributes);
+			}
 			
 			return codeElement;
 		}

@@ -43,6 +43,12 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public class PropertyElement : MemberElement
 	{
+		#region Fields
+
+		private string _indexParameter;		
+		
+		#endregion Fields
+
 		#region Public Properties
 
 		/// <summary>
@@ -56,6 +62,21 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the property index parameter
+		/// </summary>
+		public string IndexParameter
+		{
+			get
+			{
+				return _indexParameter;
+			}
+			set
+			{
+				_indexParameter = value;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Protected Methods
@@ -66,7 +87,9 @@ namespace NArrange.Core.CodeElements
 		/// <returns></returns>
 		protected override MemberElement DoMemberClone()
 		{
-			return new PropertyElement();
+			PropertyElement propertyElement = new PropertyElement();
+			propertyElement._indexParameter = _indexParameter;
+			return propertyElement;
 		}
 
 		#endregion Protected Methods

@@ -24,14 +24,6 @@ namespace NArrange.Tests.CSharp
 		private const int ConstructorRegionIndex = 1;
 		private const int DelegateRegionIndex = 4;
 		private const int EventRegionIndex = 5;
-
-		//private const int NumConstructors = 4;
-		//private const int NumDelegates = 1;
-		//private const int NumEvents = 3;
-		//private const int NumFields = 12;
-		//private const int NumMethods = 7;
-		//private const int NumNestedTypes = 4;
-		//private const int NumProperties = 7;
 		private const int FieldRegionIndex = 0;
 		private const int MethodRegionIndex = 3;
 		private const int NestedTypeRegionIndex = 6;
@@ -2781,8 +2773,10 @@ namespace NArrange.Tests.CSharp
 			    //
 			    property = regionElement.Children[6] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
-			    Assert.AreEqual("this[int index]", property.Name,
+			    Assert.AreEqual("this", property.Name,
 			        "Unexpected property name.");
+				Assert.AreEqual("int index", property.IndexParameter,
+					"Unexpected index parameter.");
 			    Assert.AreEqual(CodeAccess.Public, property.Access,
 			        "Unexpected access level.");
 			    Assert.AreEqual(5, property.HeaderComments.Count,
