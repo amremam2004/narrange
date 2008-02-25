@@ -259,7 +259,7 @@ namespace NArrange.Tests.CSharp
 			classElement.TypeModifiers = TypeModifier.Static;
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
-			classElement.TypeParameters.Add(
+			classElement.AddTypeParameter(
 			    new TypeParameter("T", "class", "IDisposable", "new()"));
 			classElement.AddInterface("IDisposable");
 			
@@ -291,7 +291,7 @@ namespace NArrange.Tests.CSharp
 			classElement.TypeModifiers = TypeModifier.Static | TypeModifier.Partial;
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
-			classElement.TypeParameters.Add(
+			classElement.AddTypeParameter(
 			    new TypeParameter("T", "class", "IDisposable", "new()"));
 			classElement.AddInterface("IDisposable");
 			
@@ -511,6 +511,62 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual("public TestClass(int value)\r\n{\r\n}",
 			    text,
 			    "Constructor element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a generic delegate.
+		/// </summary>
+		[Test]
+		public void WriteDelegateGenericTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			DelegateElement delegateElement = new DelegateElement();
+			delegateElement.Access = CodeAccess.Public;
+			delegateElement.Type = "int";
+			delegateElement.Name = "Compare";
+			delegateElement.Params = "T t1, T t2";
+			delegateElement.AddTypeParameter(
+				new TypeParameter("T", "class"));
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(delegateElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"public delegate int Compare<T>(T t1, T t2)\r\n\twhere T : class;",
+				text,
+				"Delegate element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a delegate.
+		/// </summary>
+		[Test]
+		public void WriteDelegateTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			
+			DelegateElement delegateElement = new DelegateElement();
+			delegateElement.Access = CodeAccess.Public;
+			delegateElement.Type = "int";
+			delegateElement.Name = "DoSomething";
+			delegateElement.Params = "bool flag";
+			
+			StringWriter writer = new StringWriter();
+			codeElements.Add(delegateElement);
+			
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+			
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"public delegate int DoSomething(bool flag);",
+				text,
+				"Delegate element was not written correctly.");
 		}
 
 		/// <summary>

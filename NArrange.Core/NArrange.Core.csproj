@@ -46,6 +46,7 @@
     <Compile Include="CodeElements\CommentedElement.cs" />
     <Compile Include="CodeElements\GroupElement.cs" />
     <Compile Include="CodeElements\ICommentElement.cs" />
+    <Compile Include="CodeElements\IGenericElement.cs" />
     <Compile Include="CodeElements\TextCodeElement.cs" />
     <Compile Include="CodeElements\RegionElement.cs" />
     <Compile Include="CodeParser.cs" />

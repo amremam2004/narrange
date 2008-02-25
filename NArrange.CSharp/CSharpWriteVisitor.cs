@@ -365,11 +365,11 @@ namespace NArrange.CSharp
 			}
 		}
 
-		private void WriteTypeParameterConstraints(List<TypeParameter> typeParameters)
+		private void WriteTypeParameterConstraints(IGenericElement genericElement)
 		{
-			if (typeParameters.Count > 0)
+			if (genericElement.TypeParameters.Count > 0)
 			{
-			    foreach (TypeParameter typeParameter in typeParameters)
+			    foreach (TypeParameter typeParameter in genericElement.TypeParameters)
 			    {
 			        _writer.WriteLine();
 			        WriteIndented("\t");
@@ -396,17 +396,17 @@ namespace NArrange.CSharp
 			}
 		}
 
-		private void WriteTypeParameters(List<TypeParameter> typeParameters)
+		private void WriteTypeParameters(IGenericElement genericElement)
 		{
-			if (typeParameters.Count > 0)
+			if (genericElement.TypeParameters.Count > 0)
 			{
 			    _writer.Write(CSharpSymbol.BeginGeneric);
 			
-			    for (int parameterIndex = 0; parameterIndex < typeParameters.Count; parameterIndex++)
+			    for (int parameterIndex = 0; parameterIndex < genericElement.TypeParameters.Count; parameterIndex++)
 			    {
-			        TypeParameter typeParameter = typeParameters[parameterIndex];
+			        TypeParameter typeParameter = genericElement.TypeParameters[parameterIndex];
 			        _writer.Write(typeParameter.Name);
-			        if (parameterIndex < typeParameters.Count - 1)
+			        if (parameterIndex < genericElement.TypeParameters.Count - 1)
 			        {
 			            _writer.Write(CSharpSymbol.AliasSeparator);
 			        }
@@ -518,8 +518,9 @@ namespace NArrange.CSharp
 			
 			_writer.Write(element.Name);
 			
-			
+			WriteTypeParameters(element);			
 			WriteParameterList(element.Params);
+			WriteTypeParameterConstraints(element);
 			_writer.Write(CSharpSymbol.EndOfStatement);
 		}
 
@@ -663,9 +664,9 @@ namespace NArrange.CSharp
 			    _writer.Write(element.Type);
 			}
 			
-			WriteTypeParameters(element.TypeParameters);
+			WriteTypeParameters(element);
 			WriteParameterList(element.Params);
-			WriteTypeParameterConstraints(element.TypeParameters);
+			WriteTypeParameterConstraints(element);
 			
 			if (element.BodyText == null)
 			{
@@ -843,7 +844,7 @@ namespace NArrange.CSharp
 			
 			_writer.Write(builder.ToString());
 			
-			WriteTypeParameters(element.TypeParameters);
+			WriteTypeParameters(element);
 			
 			if (element.Interfaces.Count > 0)
 			{
@@ -868,7 +869,7 @@ namespace NArrange.CSharp
 			}
 			
 			
-			WriteTypeParameterConstraints(element.TypeParameters);
+			WriteTypeParameterConstraints(element);
 			_writer.WriteLine();
 			
 			if (element.Type == TypeElementType.Enum)

@@ -288,6 +288,15 @@ namespace SampleNamespace
         /// <param name="boolParam"></param>
         public delegate void SampleEventHandler(object sender, bool boolParam);
 
+		/// <summary>
+		/// Generic delegate
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t1"></param>
+		/// <param name="t2"></param>
+		/// <returns></returns>
+		private delegate int Compare<T>(T t1, T t2) where T : class;
+
         #endregion Delegates
 
         #region Events

@@ -29,7 +29,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 			prototype.Params = "T val";
 			prototype.Type = "bool";
-			prototype.TypeParameters.Add(
+			prototype.AddTypeParameter(
 			    new TypeParameter("T", "class", "new()"));
 			
 			prototype.AddHeaderCommentLine("/// <summary>");

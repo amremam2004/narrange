@@ -31,9 +31,11 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Implement the IGenericElement interface
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace NArrange.Core.CodeElements
@@ -41,7 +43,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Method element
 	/// </summary>
-	public class MethodElement : MemberElement
+	public class MethodElement : MemberElement, IGenericElement
 	{
 		#region Fields
 
@@ -52,6 +54,32 @@ namespace NArrange.Core.CodeElements
 		private object _typeParametersLock = new object();		
 		
 		#endregion Fields
+
+		#region Protected Properties
+
+		/// <summary>
+		/// List of type parameters
+		/// </summary>
+		protected List<TypeParameter> TypeParametersBase
+		{
+			get
+			{
+			    if (_typeParameters == null)
+			    {
+			        lock (_typeParametersLock)
+			        {
+			            if (_typeParameters == null)
+			            {
+			                _typeParameters = new List<TypeParameter>();
+			            }
+			        }
+			    }
+			
+			    return _typeParameters;
+			}
+		}
+
+		#endregion Protected Properties
 
 		#region Public Properties
 
@@ -123,24 +151,13 @@ namespace NArrange.Core.CodeElements
 		}
 
 		/// <summary>
-		/// List of type parameters
+		/// Gets the list of type parameters
 		/// </summary>
-		public List<TypeParameter> TypeParameters
+		public ReadOnlyCollection<TypeParameter> TypeParameters
 		{
-			get
+			get 
 			{
-			    if (_typeParameters == null)
-			    {
-			        lock (_typeParametersLock)
-			        {
-			            if (_typeParameters == null)
-			            {
-			                _typeParameters = new List<TypeParameter>();
-			            }
-			        }
-			    }
-			
-			    return _typeParameters;
+				return TypeParametersBase.AsReadOnly();
 			}
 		}
 
@@ -166,7 +183,7 @@ namespace NArrange.Core.CodeElements
 			foreach (TypeParameter typeParam in TypeParameters)
 			{
 			    TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
-			    clone.TypeParameters.Add(typeParamClone);
+			    clone.TypeParametersBase.Add(typeParamClone);
 			}
 			
 			return clone;
@@ -184,6 +201,20 @@ namespace NArrange.Core.CodeElements
 		public override void Accept(ICodeElementVisitor visitor)
 		{
 			visitor.VisitMethodElement(this);
+		}
+
+		/// <summary>
+		/// Adds a type parameter to the type parameter list
+		/// </summary>
+		/// <param name="typeParameter"></param>
+		public void AddTypeParameter(TypeParameter typeParameter)
+		{
+			if (typeParameter == null)
+			{
+				throw new ArgumentNullException("typeParameter");
+			}
+			
+			TypeParametersBase.Add(typeParameter);
 		}
 
 		#endregion Public Methods

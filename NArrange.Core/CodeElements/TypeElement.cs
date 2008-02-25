@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Implement the IGenericElement interface
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Class/struct code element
 	/// </summary>
-	public class TypeElement : AttributedElement
+	public class TypeElement : AttributedElement, IGenericElement
 	{
 		#region Fields
 
@@ -76,6 +77,28 @@ namespace NArrange.Core.CodeElements
 			    }
 			
 			    return _interfaces;
+			}
+		}
+
+		/// <summary>
+		/// List of type parameters
+		/// </summary>
+		protected List<TypeParameter> TypeParametersBase
+		{
+			get
+			{
+			    if (_typeParameters == null)
+			    {
+			        lock (_typeParametersLock)
+			        {
+			            if (_typeParameters == null)
+			            {
+			                _typeParameters = new List<TypeParameter>();
+			            }
+			        }
+			    }
+			
+			    return _typeParameters;
 			}
 		}
 
@@ -192,24 +215,13 @@ namespace NArrange.Core.CodeElements
 		}
 
 		/// <summary>
-		/// List of type parameters
+		/// Gets the list of type parameters
 		/// </summary>
-		public List<TypeParameter> TypeParameters
+		public ReadOnlyCollection<TypeParameter> TypeParameters
 		{
-			get
+			get 
 			{
-			    if (_typeParameters == null)
-			    {
-			        lock (_typeParametersLock)
-			        {
-			            if (_typeParameters == null)
-			            {
-			                _typeParameters = new List<TypeParameter>();
-			            }
-			        }
-			    }
-			
-			    return _typeParameters;
+				return TypeParametersBase.AsReadOnly();
 			}
 		}
 
@@ -237,7 +249,7 @@ namespace NArrange.Core.CodeElements
 			foreach (TypeParameter typeParam in TypeParameters)
 			{
 			    TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
-			    clone.TypeParameters.Add(typeParamClone);
+			    clone.TypeParametersBase.Add(typeParamClone);
 			}
 			
 			return clone;
@@ -264,6 +276,20 @@ namespace NArrange.Core.CodeElements
 		public void AddInterface(string interfaceName)
 		{
 			BaseInterfaces.Add(interfaceName);
+		}
+
+		/// <summary>
+		/// Adds a type parameter to the type parameter list
+		/// </summary>
+		/// <param name="typeParameter"></param>
+		public void AddTypeParameter(TypeParameter typeParameter)
+		{
+			if (typeParameter == null)
+			{
+				throw new ArgumentNullException("typeParameter");
+			}
+			
+			TypeParametersBase.Add(typeParameter);
 		}
 
 		#endregion Public Methods

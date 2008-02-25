@@ -832,6 +832,41 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual("object sender, bool boolParam", delegateElement.Params,
 			        "Unexpected parameter string.");
+			
+				delegateElement = regionElement.Children[1] as DelegateElement;
+				Assert.IsNotNull(delegateElement, "Expected a delegate.");
+				Assert.AreEqual("Compare", delegateElement.Name,
+					"Unexpected delegate name.");
+				Assert.AreEqual(CodeAccess.Private, delegateElement.Access,
+					"Unexpected access level.");
+				Assert.AreEqual(7, delegateElement.HeaderComments.Count,
+					"Unexpected number of header comment lines.");
+				Assert.IsFalse(delegateElement.IsStatic,
+					"Delegate should not be static.");
+				Assert.AreEqual("int", delegateElement.Type,
+					"Unexpected return type.");
+				Assert.IsFalse(delegateElement.IsAbstract,
+					"Delegate should not be abstract.");
+				Assert.IsFalse(delegateElement.IsOverride,
+					"Delegate should not be an override.");
+				Assert.IsFalse(delegateElement.IsSealed,
+					"Delegate should not be sealed.");
+				Assert.IsFalse(delegateElement.IsVirtual,
+					"Delegate should not be virtual.");
+				Assert.IsFalse(delegateElement.IsNew,
+					"Delegate should not be new.");
+				Assert.AreEqual(0, delegateElement.Attributes.Count,
+					"Unexpected number of attributes.");
+				Assert.AreEqual("T t1, T t2", delegateElement.Params,
+					"Unexpected parameter string.");
+				Assert.AreEqual(1, delegateElement.TypeParameters.Count,
+					"Unexpected number of type parameters");
+				Assert.AreEqual("T", delegateElement.TypeParameters[0].Name,
+					"Unexpected type parameter name.");
+				Assert.AreEqual(1, delegateElement.TypeParameters[0].Constraints.Count,
+					"Unexpected number of type parameter constraints.");
+				Assert.AreEqual("class", delegateElement.TypeParameters[0].Constraints[0],
+					"Unexpected type parameter constraint.");
 			}
 		}
 

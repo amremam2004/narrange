@@ -56,6 +56,27 @@ namespace NArrange.Core
 		}
 
 		/// <summary>
+		/// Returns the next character in the stream, if any
+		/// </summary>
+		/// <returns>Next character, if none then EmptyChar</returns>
+		protected char NextChar
+		{
+			get
+			{
+				int data = Reader.Peek();
+				if (data > 0)
+				{
+					char ch = (char)data;
+					return ch;
+				}
+				else
+				{
+					return EmptyChar;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the previously read character (i.e. before CurrentChar)
 		/// </summary>
 		protected char PreviousChar
@@ -205,24 +226,6 @@ namespace NArrange.Core
 		{
 			return ch == ' ' || ch == '\t' ||
 				ch == '\n' || ch == '\r';
-		}
-
-		/// <summary>
-		/// Returns the next character in the stream, if any
-		/// </summary>
-		/// <returns>Next character, if none then EmptyChar</returns>
-		protected char NextChar()
-		{
-			int data = Reader.Peek();
-			if (data > 0)
-			{
-				char ch = (char)data;
-				return ch;
-			}
-			else
-			{
-				return EmptyChar;
-			}
 		}
 
 		/// <summary>

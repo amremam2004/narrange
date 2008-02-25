@@ -43,7 +43,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.BodyText = "test";
 			
 			prototype.TypeModifiers = TypeModifier.Abstract;
-			prototype.TypeParameters.Add(new TypeParameter("T", "new()"));
+			prototype.AddTypeParameter(new TypeParameter("T", "new()"));
 			
 			return prototype;
 		}

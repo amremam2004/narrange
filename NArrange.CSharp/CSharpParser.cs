@@ -107,17 +107,15 @@ namespace NArrange.CSharp
 			
 			StringBuilder word = new StringBuilder();
 			
-			int data = Reader.Peek();
-			while (data > 0)
+			char nextChar = NextChar;
+			while (nextChar != EmptyChar)
 			{
-			    char ch = (char)data;
-			
-			    if (IsWhitespace(ch) ||
-			        (IsAliasBreak(ch) && 
-			        !(ch == CSharpSymbol.TypeImplements && (word.ToString() == CSharpKeyword.Global || word.ToString() == CSharpKeyword.Global + CSharpSymbol.TypeImplements.ToString())))||
+				if (IsWhitespace(nextChar) ||
+					(IsAliasBreak(nextChar) &&
+					!(nextChar == CSharpSymbol.TypeImplements && (word.ToString() == CSharpKeyword.Global || word.ToString() == CSharpKeyword.Global + CSharpSymbol.TypeImplements.ToString()))) ||
 			        (!captureGeneric &&
-			        (ch == CSharpSymbol.BeginGeneric ||
-			        ch == CSharpSymbol.EndGeneric)))
+					(nextChar == CSharpSymbol.BeginGeneric ||
+					nextChar == CSharpSymbol.EndGeneric)))
 			    {
 			        break;
 			    }
@@ -125,7 +123,7 @@ namespace NArrange.CSharp
 			    {
 			        TryReadChar();
 			        word.Append(CurrentChar);
-			        data = Reader.Peek();
+					nextChar = NextChar;
 			    }
 			}
 			
@@ -453,7 +451,7 @@ namespace NArrange.CSharp
 			
 			EatWhitespace();
 			
-			char nextChar = NextChar();
+			char nextChar = NextChar;
 			if (nextChar == CSharpSymbol.BeginBlock)
 			{
 			    this.OnParseError("Expected a class or interface name");
@@ -464,7 +462,7 @@ namespace NArrange.CSharp
 			    {
 			        string alias = CaptureWord(false);
 			
-			        nextChar = NextChar();
+			        nextChar = NextChar;
 			        if (nextChar == CSharpSymbol.BeginGeneric)
 			        {
 			            while (CurrentChar != CSharpSymbol.EndGeneric)
@@ -497,7 +495,7 @@ namespace NArrange.CSharp
 			
 			        EatWhitespace();
 			
-			        nextChar = NextChar();
+			        nextChar = NextChar;
 			        if (nextChar != CSharpSymbol.AliasSeparator)
 			        {
 			            break;
@@ -579,7 +577,7 @@ namespace NArrange.CSharp
 			TryReadChar();
 			
 			CommentType commentType = CommentType.Line;
-			if (NextChar() == CSharpSymbol.BeginComment)
+			if (NextChar == CSharpSymbol.BeginComment)
 			{
 			    commentType = CommentType.XmlLine;
 			    TryReadChar();
@@ -594,12 +592,12 @@ namespace NArrange.CSharp
 		{
 			List<ICommentElement> comments = new List<ICommentElement>();
 			
-			char nextChar = NextChar();
+			char nextChar = NextChar;
 			if (nextChar == CSharpSymbol.BeginComment)
 			{
 				TryReadChar();
 			
-				nextChar = NextChar();
+				nextChar = NextChar;
 				if (nextChar == CSharpSymbol.BeginComment)
 				{
 					CommentElement commentLine = ParseCommentLine();
@@ -643,7 +641,7 @@ namespace NArrange.CSharp
 			    EatWhitespace();
 			
 			    StringBuilder referenceBuilder = new StringBuilder();
-			    char nextChar = NextChar();
+			    char nextChar = NextChar;
 			    while (nextChar != CSharpSymbol.BeginBlock)
 			    {
 			        if (nextChar == EmptyChar)
@@ -656,7 +654,7 @@ namespace NArrange.CSharp
 			            referenceBuilder.Append(CurrentChar);
 			        }
 			
-			        nextChar = NextChar();
+			        nextChar = NextChar;
 			    }
 			
 			    constructor.Reference = referenceBuilder.ToString().Trim();
@@ -684,7 +682,30 @@ namespace NArrange.CSharp
 			delegateElement.Type = returnType;
 			delegateElement.MemberModifiers = memberAttributes;
 			
+			int genericIndex = memberName.IndexOf(CSharpSymbol.BeginGeneric);
+			bool isGeneric = genericIndex >= 0 && genericIndex < memberName.Length - 1;
+			if (isGeneric)
+			{
+				delegateElement.Name = memberName.Substring(0, genericIndex);
+				string typeParameterString = memberName.TrimEnd(CSharpSymbol.EndGeneric).Substring(
+					genericIndex + 1);
+			
+				string[] typeParameterNames = typeParameterString.Split(new char[] { CSharpSymbol.AliasSeparator, ' ' },
+					StringSplitOptions.RemoveEmptyEntries);
+				foreach (string typeParameterName in typeParameterNames)
+				{
+					TypeParameter typeParameter = new TypeParameter();
+					typeParameter.Name = typeParameterName;
+					delegateElement.AddTypeParameter(typeParameter);
+				}
+			}
+			
 			delegateElement.Params = this.ParseParams();
+			
+			if (isGeneric)
+			{
+				ParseTypeParameterConstraints(delegateElement);
+			}
 			
 			EatChar(CSharpSymbol.EndOfStatement);
 			
@@ -707,7 +728,7 @@ namespace NArrange.CSharp
 			
 			EatWhitespace();
 			
-			char nextChar = NextChar();
+			char nextChar = NextChar;
 			if (nextChar == CSharpSymbol.EndOfStatement)
 			{
 			    EatChar(CSharpSymbol.EndOfStatement);
@@ -775,7 +796,7 @@ namespace NArrange.CSharp
 			    {
 			        TypeParameter typeParameter = new TypeParameter();
 			        typeParameter.Name = typeParameterName;
-			        method.TypeParameters.Add(typeParameter);
+			        method.AddTypeParameter(typeParameter);
 			    }
 			}
 			
@@ -783,11 +804,11 @@ namespace NArrange.CSharp
 			
 			if (isGeneric)
 			{
-			    ParseTypeParameterConstraints(method.TypeParameters);
+			    ParseTypeParameterConstraints(method);
 			}
 			
 			EatWhitespace();
-			bool endOfStatement = NextChar() == CSharpSymbol.EndOfStatement;
+			bool endOfStatement = NextChar == CSharpSymbol.EndOfStatement;
 			if (endOfStatement)
 			{
 			    TryReadChar();
@@ -815,7 +836,7 @@ namespace NArrange.CSharp
 			
 			EatWhitespace();
 			
-			if (NextChar() != CSharpSymbol.EndBlock)
+			if (NextChar != CSharpSymbol.EndBlock)
 			{
 				//
 				// Parse child elements
@@ -844,7 +865,7 @@ namespace NArrange.CSharp
 			
 			int depth = 1;
 			
-			char nextChar = NextChar();
+			char nextChar = NextChar;
 			if (nextChar == EmptyChar)
 			{
 			    this.OnParseError("Unexpected end of file. Expected " + endChar);
@@ -871,7 +892,7 @@ namespace NArrange.CSharp
 			            this.OnParseError("Unexpected end of file. Expected " + endChar);
 			        }
 			
-			        nextChar = NextChar();
+			        nextChar = NextChar;
 			
 			        bool inComment = inBlockComment || inLineComment;
 			
@@ -1054,7 +1075,7 @@ namespace NArrange.CSharp
 			        {
 			            TypeParameter typeParameter = new TypeParameter();
 			            typeParameter.Name = typeParameterName;
-			            typeElement.TypeParameters.Add(typeParameter);
+						typeElement.AddTypeParameter(typeParameter);
 			        }
 			
 			        EatWhitespace();
@@ -1080,7 +1101,7 @@ namespace NArrange.CSharp
 			
 			    EatWhitespace();
 			
-			    ParseTypeParameterConstraints(typeElement.TypeParameters);
+			    ParseTypeParameterConstraints(typeElement);
 			
 				// TODO: Associate any additional comments in the type definition with the type.
 				ReadOnlyCollection<ICommentElement> additionalComments = ParseComments();
@@ -1089,7 +1110,7 @@ namespace NArrange.CSharp
 			
 				EatWhitespace();
 			
-				if (NextChar() != CSharpSymbol.EndBlock)
+				if (NextChar != CSharpSymbol.EndBlock)
 				{
 					//
 					// Parse child elements
@@ -1107,10 +1128,12 @@ namespace NArrange.CSharp
 			return typeElement;
 		}
 
-		private void ParseTypeParameterConstraints(List<TypeParameter> parameters)
+		private void ParseTypeParameterConstraints(IGenericElement genericElement)
 		{
 			char nextChar = EmptyChar;
-			while (parameters.Count > 0 && nextChar != CSharpSymbol.BeginBlock)
+			while (genericElement.TypeParameters.Count > 0 && 
+				nextChar != CSharpSymbol.BeginBlock &&
+				nextChar != CSharpSymbol.EndOfStatement)
 			{
 			    // 
 			    // Parse type parameter constraints
@@ -1124,7 +1147,7 @@ namespace NArrange.CSharp
 			        string parameterName = CaptureWord();
 			
 			        TypeParameter parameter = null;
-			        foreach (TypeParameter typeParameter in parameters)
+			        foreach (TypeParameter typeParameter in genericElement.TypeParameters)
 			        {
 			            if (typeParameter.Name == parameterName)
 			            {
@@ -1161,7 +1184,7 @@ namespace NArrange.CSharp
 			                " must be the last declared type parameter constraint");
 			        }
 			
-			        nextChar = NextChar();
+			        nextChar = NextChar;
 			    }
 			    else
 			    {
@@ -1270,7 +1293,7 @@ namespace NArrange.CSharp
 					isStatement || hasParams || isProperty))
 			    {
 					bool isAssignment = lastChar == CSharpSymbol.Assignment && 
-						NextChar() != CSharpSymbol.Assignment &&
+						NextChar != CSharpSymbol.Assignment &&
 						PreviousChar != CSharpSymbol.Assignment &&
 						PreviousChar != CSharpSymbol.Negate;
 			
@@ -1440,7 +1463,7 @@ namespace NArrange.CSharp
 			        // Comments
 			        //
 			        case CSharpSymbol.BeginComment:
-			            nextChar = NextChar();
+			            nextChar = NextChar;
 			            if (nextChar == CSharpSymbol.BeginComment)
 			            {
 			                CommentElement commentLine = ParseCommentLine();
@@ -1492,7 +1515,7 @@ namespace NArrange.CSharp
 			        // Attribute
 			        //
 			        case CSharpSymbol.BeginAttribute:
-			            nextChar = NextChar();
+			            nextChar = NextChar;
 			
 			            //
 			            // Parse array definition
@@ -1539,7 +1562,7 @@ namespace NArrange.CSharp
 			
 			        default:
 			            elementBuilder.Append(CurrentChar);
-			            nextChar = NextChar();
+			            nextChar = NextChar;
 			
 			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
 			            {

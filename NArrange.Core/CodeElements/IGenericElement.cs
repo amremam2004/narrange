@@ -31,7 +31,6 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Implement the IGenericElement interface
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -41,137 +40,30 @@ using System.Text;
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Delegate element
+	/// Interface for generic elements
 	/// </summary>
-	public class DelegateElement : MemberElement, IGenericElement
+	public interface IGenericElement
 	{
-		#region Fields
-
-		private string _params;		
-		private List<TypeParameter> _typeParameters;		
-		private object _typeParametersLock = new object();		
-		
-		#endregion Fields
-
-		#region Protected Properties
+		#region Properties
 
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		protected List<TypeParameter> TypeParametersBase
+		ReadOnlyCollection<TypeParameter> TypeParameters
 		{
-			get
-			{
-				if (_typeParameters == null)
-				{
-					lock (_typeParametersLock)
-					{
-						if (_typeParameters == null)
-						{
-							_typeParameters = new List<TypeParameter>();
-						}
-					}
-				}
-			
-				return _typeParameters;
-			}
+			get;
 		}
 
-		#endregion Protected Properties
+		#endregion Properties
 
-		#region Public Properties
-
-		/// <summary>
-		/// Gets the element type
-		/// </summary>
-		public override ElementType ElementType
-		{
-			get
-			{
-			    return ElementType.Delegate;
-			}
-		}
+		#region Methods
 
 		/// <summary>
-		/// Gets or sets the parameter list 
-		/// </summary>
-		public string Params
-		{
-			get
-			{
-			    return _params;
-			}
-			set
-			{
-			    _params = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets the list of type parameters
-		/// </summary>
-		public ReadOnlyCollection<TypeParameter> TypeParameters
-		{
-			get
-			{
-				return TypeParametersBase.AsReadOnly();
-			}
-		}
-
-		#endregion Public Properties
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override MemberElement DoMemberClone()
-		{
-			DelegateElement clone = new DelegateElement();
-			
-			//
-			// Copy state
-			//
-			clone._params = _params;
-			
-			foreach (TypeParameter typeParam in TypeParameters)
-			{
-				TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
-				clone.TypeParametersBase.Add(typeParamClone);
-			}
-			
-			return clone;
-		}
-
-		#endregion Protected Methods
-
-		#region Public Methods
-
-		/// <summary>
-		/// Allows an ICodeElementVisitor to process (or visit) this element.
-		/// </summary>
-		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
-		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)
-		{
-			visitor.VisitDelegateElement(this);
-		}
-
-		/// <summary>
-		/// Adds a type parameter to the type parameter list
+		/// Adds a type parameter to the element
 		/// </summary>
 		/// <param name="typeParameter"></param>
-		public void AddTypeParameter(TypeParameter typeParameter)
-		{
-			if (typeParameter == null)
-			{
-				throw new ArgumentNullException("typeParameter");
-			}
-			
-			TypeParametersBase.Add(typeParameter);
-		}
+		void AddTypeParameter(TypeParameter typeParameter);
 
-		#endregion Public Methods
+		#endregion Methods
 	}
 }
