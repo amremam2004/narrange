@@ -42,7 +42,7 @@ namespace NArrange.Core.CodeElements
 	/// Region element
 	/// </summary>
 	/// <remarks>Region elements are not parsed.</remarks>
-	public class RegionElement : CodeElement
+	public sealed class RegionElement : CodeElement
 	{
 		#region Public Properties
 

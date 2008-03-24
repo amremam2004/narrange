@@ -34,46 +34,59 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Property element
+	/// Base class for interface member elements
 	/// </summary>
-	public sealed class PropertyElement : InterfaceMemberElement
+	public abstract class InterfaceMemberElement : MemberElement
 	{
 		#region Fields
 
-		private string _indexParameter;		
+		private List<string> _implements;		
+		private object _implementsLock = new object();		
 		
 		#endregion Fields
+
+		#region Protected Properties
+
+		/// <summary>
+		/// List of interface implementations
+		/// </summary>
+		protected List<string> ImplementsBase
+		{
+			get
+			{
+				if (_implements == null)
+				{
+					lock (_implementsLock)
+					{
+						if (_implements == null)
+						{
+							_implements = new List<string>();
+						}
+					}
+				}
+			
+				return _implements;
+			}
+		}
+
+		#endregion Protected Properties
 
 		#region Public Properties
 
 		/// <summary>
-		/// Gets the element type
+		/// Gets the list of interface implementations
 		/// </summary>
-		public override ElementType ElementType
+		public ReadOnlyCollection<string> Implements
 		{
 			get
 			{
-			    return ElementType.Property;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the property index parameter
-		/// </summary>
-		public string IndexParameter
-		{
-			get
-			{
-				return _indexParameter;
-			}
-			set
-			{
-				_indexParameter = value;
+				return ImplementsBase.AsReadOnly();
 			}
 		}
 
@@ -82,14 +95,24 @@ namespace NArrange.Core.CodeElements
 		#region Protected Methods
 
 		/// <summary>
+		/// Clones this instance
+		/// </summary>
+		/// <returns></returns>
+		protected abstract InterfaceMemberElement DoInterfaceMemberClone();
+		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override InterfaceMemberElement DoInterfaceMemberClone()
+		protected override sealed MemberElement DoMemberClone()
 		{
-			PropertyElement propertyElement = new PropertyElement();
-			propertyElement._indexParameter = _indexParameter;
-			return propertyElement;
+			InterfaceMemberElement clone = DoInterfaceMemberClone();
+			
+			foreach (string implementation in Implements)
+			{
+				clone.ImplementsBase.Add(implementation);
+			}
+			
+			return clone;
 		}
 
 		#endregion Protected Methods
@@ -97,13 +120,21 @@ namespace NArrange.Core.CodeElements
 		#region Public Methods
 
 		/// <summary>
-		/// Allows an ICodeElementVisitor to process (or visit) this element.
+		/// Adds an item to the Implements collection
 		/// </summary>
-		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
-		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)
+		/// <param name="implementation"></param>
+		public void AddImplementation(string implementation)
 		{
-			visitor.VisitPropertyElement(this);
+			if (implementation == null)
+			{
+				throw new ArgumentNullException("implemantation");
+			}
+			else if (implementation.Trim().Length == 0)
+			{
+				throw new ArgumentException("implementation", "Invalid implementation member.");
+			}
+			
+			this.ImplementsBase.Add(implementation);
 		}
 
 		#endregion Public Methods

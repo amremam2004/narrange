@@ -42,7 +42,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Type parameter definition for generic types.
 	/// </summary>
-	public class TypeParameter : ICloneable
+	public sealed class TypeParameter : ICloneable
 	{
 		#region Fields
 
@@ -77,12 +77,12 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Constructors
 
-		#region Protected Properties
+		#region Private Properties
 
 		/// <summary>
 		/// Gets the list of parameter constraints
 		/// </summary>
-		protected List<string> BaseConstraints
+		private List<string> BaseConstraints
 		{
 			get
 			{
@@ -101,7 +101,7 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
-		#endregion Protected Properties
+		#endregion Private Properties
 
 		#region Public Properties
 

@@ -43,7 +43,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Delegate element
 	/// </summary>
-	public class DelegateElement : MemberElement, IGenericElement
+	public sealed class DelegateElement : MemberElement, IGenericElement
 	{
 		#region Fields
 
@@ -53,12 +53,12 @@ namespace NArrange.Core.CodeElements
 		
 		#endregion Fields
 
-		#region Protected Properties
+		#region Private Properties
 
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		protected List<TypeParameter> TypeParametersBase
+		private List<TypeParameter> TypeParametersBase
 		{
 			get
 			{
@@ -77,7 +77,7 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
-		#endregion Protected Properties
+		#endregion Private Properties
 
 		#region Public Properties
 

@@ -41,7 +41,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Constructor element
 	/// </summary>
-	public class ConstructorElement : MemberElement
+	public sealed class ConstructorElement : MemberElement
 	{
 		#region Fields
 

@@ -1,0 +1,3 @@
+For C# 3.0
+----------
+Partial methods

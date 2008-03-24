@@ -389,12 +389,18 @@ namespace NArrange.Tests.CSharp
 			RegionElement fieldsRegion = new RegionElement();
 			fieldsRegion.Name = "Fields";
 			
-			FieldElement field = new FieldElement();
-			field.Name = "_val";
-			field.Access = CodeAccess.Private;
-			field.Type = "int";
+			FieldElement field1 = new FieldElement();
+			field1.Name = "_val1";
+			field1.Access = CodeAccess.Private;
+			field1.Type = "int";
 			
-			fieldsRegion.AddChild(field);
+			FieldElement field2 = new FieldElement();
+			field2.Name = "_val2";
+			field2.Access = CodeAccess.Private;
+			field2.Type = "int";
+			
+			fieldsRegion.AddChild(field1);
+			fieldsRegion.AddChild(field2);
 			classElement.AddChild(fieldsRegion);
 			
 			RegionElement methodsRegion = new RegionElement();
@@ -421,7 +427,8 @@ namespace NArrange.Tests.CSharp
 			    "public class TestClass\r\n" + 
 			    "{\r\n" +
 			    "\t#region Fields\r\n\r\n" + 
-			    "\tprivate int _val;\r\n\r\n" + 
+			    "\tprivate int _val1;\r\n" +
+			    "\tprivate int _val2;\r\n\r\n" + 
 			    "\t#endregion Fields\r\n\r\n" + 
 			    "\t#region Methods\r\n\r\n" + 
 			    "\tpublic void DoSomething()\r\n" + 

@@ -36,74 +36,98 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NArrange.Core.CodeElements
+namespace NArrange.VisualBasic
 {
 	/// <summary>
-	/// Property element
+	/// Visual Basic character constants
 	/// </summary>
-	public sealed class PropertyElement : InterfaceMemberElement
+	public static class VBSymbol
 	{
-		#region Fields
-
-		private string _indexParameter;		
-		
-		#endregion Fields
-
-		#region Public Properties
+		#region Constants
 
 		/// <summary>
-		/// Gets the element type
+		/// Alias separator
 		/// </summary>
-		public override ElementType ElementType
-		{
-			get
-			{
-			    return ElementType.Property;
-			}
-		}
+		public const char AliasSeparator = ',';
 
 		/// <summary>
-		/// Gets or sets the property index parameter
+		/// Assignment
 		/// </summary>
-		public string IndexParameter
-		{
-			get
-			{
-				return _indexParameter;
-			}
-			set
-			{
-				_indexParameter = value;
-			}
-		}
-
-		#endregion Public Properties
-
-		#region Protected Methods
+		public const char Assignment = '=';
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Beginning of attribute
 		/// </summary>
-		/// <returns></returns>
-		protected override InterfaceMemberElement DoInterfaceMemberClone()
-		{
-			PropertyElement propertyElement = new PropertyElement();
-			propertyElement._indexParameter = _indexParameter;
-			return propertyElement;
-		}
+		public const char BeginAttribute = '<';
 
-		#endregion Protected Methods
+		/// <summary>
+		/// Beginning of comment
+		/// </summary>
+		public const char BeginComment = '\'';
+
+		/// <summary>
+		/// Beginning of parameter list
+		/// </summary>
+		public const char BeginParamList = '(';
+
+		/// <summary>
+		/// Beginning of string
+		/// </summary>
+		public const char BeginString = '"';
+
+		/// <summary>
+		/// Begin type constraint list
+		/// </summary>
+		public const char BeginTypeConstraintList = '{';
+
+		/// <summary>
+		/// End of attribute
+		/// </summary>
+		public const char EndAttribute = '>';
+
+		/// <summary>
+		/// End of block
+		/// </summary>
+		public const char EndBlock = '}';
+
+		/// <summary>
+		/// End of parameter list
+		/// </summary>
+		public const char EndParamList = ')';
+
+		/// <summary>
+		/// End type constraint list
+		/// </summary>
+		public const char EndTypeConstraintList = '}';
+
+		/// <summary>
+		/// Preprocessor
+		/// </summary>
+		public const char Preprocessor = '#';
+
+		#endregion Constants
 
 		#region Public Methods
 
 		/// <summary>
-		/// Allows an ICodeElementVisitor to process (or visit) this element.
+		/// Determines if the specified char is a Visual Basic symbol character
 		/// </summary>
-		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
-		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)
+		/// <param name="ch"></param>
+		/// <returns></returns>
+		public static bool IsVBSymbol(char ch)
 		{
-			visitor.VisitPropertyElement(this);
+			return ch == VBSymbol.AliasSeparator ||
+				ch == VBSymbol.Assignment ||
+				ch == VBSymbol.BeginAttribute ||
+				ch == VBSymbol.BeginComment ||
+				ch == VBSymbol.BeginTypeConstraintList ||
+				ch == VBSymbol.EndTypeConstraintList ||
+				ch == VBSymbol.BeginParamList ||
+				ch == VBSymbol.BeginString ||
+				ch == VBSymbol.EndAttribute ||
+				ch == VBSymbol.EndBlock ||
+				ch == VBSymbol.EndParamList ||
+				ch == VBSymbol.Preprocessor;
 		}
 
 		#endregion Public Methods

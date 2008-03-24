@@ -41,7 +41,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Comment line implementation
 	/// </summary>
-	public class CommentElement : CodeElement, ICommentElement
+	public sealed class CommentElement : CodeElement, ICommentElement
 	{
 		#region Fields
 

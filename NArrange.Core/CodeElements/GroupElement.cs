@@ -41,7 +41,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Element used to logically group other elements
 	/// </summary>
-	public class GroupElement : CodeElement
+	public sealed class GroupElement : CodeElement
 	{
 		#region Fields
 

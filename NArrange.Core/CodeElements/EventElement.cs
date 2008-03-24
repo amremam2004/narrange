@@ -41,8 +41,14 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Event element
 	/// </summary>
-	public class EventElement : MemberElement
+	public sealed class EventElement : InterfaceMemberElement
 	{
+		#region Fields
+
+		private string _params = string.Empty;		
+		
+		#endregion Fields
+
 		#region Public Properties
 
 		/// <summary>
@@ -56,6 +62,21 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the parameter list 
+		/// </summary>
+		public string Params
+		{
+			get
+			{
+			    return _params;
+			}
+			set
+			{
+			    _params = value;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Protected Methods
@@ -64,7 +85,7 @@ namespace NArrange.Core.CodeElements
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()
+		protected override InterfaceMemberElement DoInterfaceMemberClone()
 		{
 			return new EventElement();
 		}

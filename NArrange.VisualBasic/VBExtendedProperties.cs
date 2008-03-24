@@ -36,76 +36,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NArrange.Core.CodeElements
+namespace NArrange.VisualBasic
 {
 	/// <summary>
-	/// Property element
+	/// Extended property names
 	/// </summary>
-	public sealed class PropertyElement : InterfaceMemberElement
+	public static class VBExtendedProperties
 	{
-		#region Fields
-
-		private string _indexParameter;		
-		
-		#endregion Fields
-
-		#region Public Properties
+		#region Constants
 
 		/// <summary>
-		/// Gets the element type
+		/// Default
 		/// </summary>
-		public override ElementType ElementType
-		{
-			get
-			{
-			    return ElementType.Property;
-			}
-		}
+		public const string Default = VBKeyword.Default;
 
 		/// <summary>
-		/// Gets or sets the property index parameter
+		/// ModifyAccess
 		/// </summary>
-		public string IndexParameter
-		{
-			get
-			{
-				return _indexParameter;
-			}
-			set
-			{
-				_indexParameter = value;
-			}
-		}
+		public const string ModifyAccess = "ModifyAccess";
 
-		#endregion Public Properties
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override InterfaceMemberElement DoInterfaceMemberClone()
-		{
-			PropertyElement propertyElement = new PropertyElement();
-			propertyElement._indexParameter = _indexParameter;
-			return propertyElement;
-		}
-
-		#endregion Protected Methods
-
-		#region Public Methods
-
-		/// <summary>
-		/// Allows an ICodeElementVisitor to process (or visit) this element.
-		/// </summary>
-		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
-		/// <param name="visitor"></param>
-		public override void Accept(ICodeElementVisitor visitor)
-		{
-			visitor.VisitPropertyElement(this);
-		}
-
-		#endregion Public Methods
+		#endregion Constants
 	}
 }

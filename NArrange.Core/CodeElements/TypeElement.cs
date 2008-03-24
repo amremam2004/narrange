@@ -43,7 +43,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Class/struct code element
 	/// </summary>
-	public class TypeElement : AttributedElement, IGenericElement
+	public sealed class TypeElement : AttributedElement, IGenericElement
 	{
 		#region Fields
 
@@ -56,12 +56,12 @@ namespace NArrange.Core.CodeElements
 		
 		#endregion Fields
 
-		#region Protected Properties
+		#region Private Properties
 
 		/// <summary>
 		/// List of implemented interface names
 		/// </summary>
-		protected List<string> BaseInterfaces
+		private List<string> BaseInterfaces
 		{
 			get
 			{
@@ -83,7 +83,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		protected List<TypeParameter> TypeParametersBase
+		private List<TypeParameter> TypeParametersBase
 		{
 			get
 			{
@@ -102,7 +102,7 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
-		#endregion Protected Properties
+		#endregion Private Properties
 
 		#region Public Properties
 

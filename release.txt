@@ -1,10 +1,5 @@
 The following changes were made in this release:
 
-0.1.05.0
-- Fixed an extra C# line feed for namespace-nested using statements.
-- Fixed parsing of C# interface event types and non-specified access constructors.
-- Fixed parsing of C# string and character literals containing backslashes.
-- Fixed parsing of C# equal and not equal operators.
-- Fixed C# parsing issues with comments that are intermixed in member definitions or before the body text block.
-- Fixed parsing of C# verbatim string literals (e.g. @"\\Server\")
-- Fixed writing of C# redefine using statements.
+0.1.6.0
+- Fixed parsing of C# generic delegates.
+- Rough VB Parser implementation.

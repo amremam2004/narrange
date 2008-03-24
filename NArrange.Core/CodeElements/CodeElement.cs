@@ -31,6 +31,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Added an indexed property for getting and setting language 
+ *        specific information as weakly typed extended properties.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -44,10 +46,17 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public abstract class CodeElement : ICodeElement
 	{
+		#region Constants
+
+		private const int InitialExtendPropertySize = 5;
+
+		#endregion Constants
+
 		#region Fields
 
 		private List<ICodeElement> _children;		
 		private object _childrenLock = new object();		
+		private Dictionary<string, object> _extendedProperties;		
 		private string _name;		
 		private ICodeElement _parent;		
 		
@@ -64,6 +73,7 @@ namespace NArrange.Core.CodeElements
 			// Default property values
 			//
 			_name = string.Empty;
+			_extendedProperties = new Dictionary<string, object>(5);
 		}
 
 		#endregion Constructors
@@ -157,6 +167,37 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets an extended property.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public object this[string key]
+		{
+			get
+			{
+			    if (_extendedProperties.ContainsKey(key))
+			    {
+			        return _extendedProperties[key];
+			    }
+			    else
+			    {
+			        return null;
+			    }
+			}
+			set
+			{
+			    if (value == null)
+			    {
+			        _extendedProperties.Remove(key);
+			    }
+			    else
+			    {
+			        _extendedProperties[key] = value;
+			    }
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Protected Methods
@@ -225,6 +266,11 @@ namespace NArrange.Core.CodeElements
 			    ICodeElement childClone = child.Clone() as ICodeElement;
 			
 			    clone.AddChild(childClone);
+			}
+			
+			foreach (string key in _extendedProperties.Keys)
+			{
+			    clone[key] = _extendedProperties[key];
 			}
 			
 			return clone;

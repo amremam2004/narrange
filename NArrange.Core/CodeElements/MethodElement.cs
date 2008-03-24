@@ -43,7 +43,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Method element
 	/// </summary>
-	public class MethodElement : MemberElement, IGenericElement
+	public sealed class MethodElement : InterfaceMemberElement, IGenericElement
 	{
 		#region Fields
 
@@ -55,12 +55,12 @@ namespace NArrange.Core.CodeElements
 		
 		#endregion Fields
 
-		#region Protected Properties
+		#region Private Properties
 
 		/// <summary>
 		/// List of type parameters
 		/// </summary>
-		protected List<TypeParameter> TypeParametersBase
+		private List<TypeParameter> TypeParametersBase
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
-		#endregion Protected Properties
+		#endregion Private Properties
 
 		#region Public Properties
 
@@ -169,7 +169,7 @@ namespace NArrange.Core.CodeElements
 		/// Creates a clone of this instance
 		/// </summary>
 		/// <returns></returns>
-		protected override MemberElement DoMemberClone()
+		protected override InterfaceMemberElement DoInterfaceMemberClone()
 		{
 			MethodElement clone = new MethodElement();
 			

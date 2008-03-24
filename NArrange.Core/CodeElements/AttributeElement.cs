@@ -41,7 +41,7 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Attribute code element
 	/// </summary>
-	public class AttributeElement : TextCodeElement, IAttribute
+	public sealed class AttributeElement : TextCodeElement, IAttribute
 	{
 		#region Constructors
 

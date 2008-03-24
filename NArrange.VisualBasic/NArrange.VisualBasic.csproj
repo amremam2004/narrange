@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C4771371-41DD-476F-B107-DF60C4594813}</ProjectGuid>
+    <ProjectGuid>{33A733CE-7BDD-42D6-ADE6-77B82226F965}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NArrange.CSharp</RootNamespace>
-    <AssemblyName>NArrange.CSharp</AssemblyName>
+    <RootNamespace>NArrange.VisualBasic</RootNamespace>
+    <AssemblyName>NArrange.VisualBasic</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,7 +18,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\XmlDoc\NArrange.CSharp.xml</DocumentationFile>
+    <DocumentationFile>..\XmlDoc\NArrange.VisualBasic.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -27,7 +27,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\XmlDoc\NArrange.CSharp.xml</DocumentationFile>
+    <DocumentationFile>..\XmlDoc\NArrange.VisualBasic.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -35,15 +35,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="CSharpKeyword.cs" />
-    <Compile Include="CSharpParser.cs" />
-    <Compile Include="CSharpProjectParser.cs" />
-    <Compile Include="CSharpSymbol.cs" />
-    <Compile Include="CSharpWriter.cs" />
-    <Compile Include="CSharpWriteVisitor.cs" />
+    <Compile Include="VBExtendedProperties.cs" />
+    <Compile Include="VBKeyword.cs" />
+    <Compile Include="VBSymbol.cs" />
+    <Compile Include="VBParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
