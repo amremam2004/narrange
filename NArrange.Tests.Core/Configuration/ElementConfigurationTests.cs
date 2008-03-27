@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			ElementConfiguration elementConfiguration = new ElementConfiguration();
-			
+
 			//
 			// Verify default state
 			//
@@ -50,9 +50,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			ElementConfiguration elementConfiguration = new ElementConfiguration();
 			elementConfiguration.ElementType = ElementType.Method;
-			
+
 			string str = elementConfiguration.ToString();
-			
+
 			Assert.AreEqual("Type: Method", str,
 			    "Unexpected string representation.");
 		}

@@ -26,10 +26,10 @@ namespace NArrange.Tests.Core.Configuration
 			TabConfiguration tabConfiguration = new TabConfiguration();
 			tabConfiguration.Style = TabStyle.Spaces;
 			tabConfiguration.SpacesPerTab = 8;
-			
+
 			TabConfiguration clone = tabConfiguration.Clone() as TabConfiguration;
 			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
-			
+
 			Assert.AreEqual(tabConfiguration.Style, clone.Style);
 			Assert.AreEqual(tabConfiguration.SpacesPerTab, clone.SpacesPerTab);
 		}
@@ -41,7 +41,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			TabConfiguration tabConfiguration = new TabConfiguration();
-			
+
 			//
 			// Verify default state
 			//
@@ -60,9 +60,9 @@ namespace NArrange.Tests.Core.Configuration
 			TabConfiguration tabConfiguration = new TabConfiguration();
 			tabConfiguration.Style = TabStyle.Spaces;
 			tabConfiguration.SpacesPerTab = 8;
-			
+
 			string str = tabConfiguration.ToString();
-			
+
 			Assert.AreEqual("Tabs: Spaces, 8", str,
 			    "Unexpected string representation.");
 		}

@@ -45,9 +45,9 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private int _column;		
-		private int _lineNumber;		
-		
+		private int _column;
+		private int _lineNumber;
+
 		#endregion Fields
 
 		#region Constructors

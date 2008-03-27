@@ -45,9 +45,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private MemberModifier _memberModifiers;		
-		private string _type;		
-		
+		private MemberModifier _memberModifiers;
+		private string _type;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -170,13 +170,13 @@ namespace NArrange.Core.CodeElements
 		protected override sealed AttributedElement DoAttributedClone()
 		{
 			MemberElement clone = DoMemberClone();
-			
+
 			//
 			// Copy state
 			//
 			clone._memberModifiers = _memberModifiers;
 			clone._type = _type;
-			
+
 			return clone;
 		}
 

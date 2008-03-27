@@ -45,8 +45,8 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _redefine;		
-		
+		private string _redefine;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -90,7 +90,7 @@ namespace NArrange.Core.CodeElements
 		{
 			UsingElement clone = new UsingElement();
 			clone._redefine = _redefine;
-			
+
 			return clone;
 		}
 

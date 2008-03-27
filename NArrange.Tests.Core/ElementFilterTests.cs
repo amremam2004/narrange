@@ -24,28 +24,28 @@ namespace NArrange.Tests.Core
 		public void IsMatchAccessTest()
 		{
 			ElementFilter filter = new ElementFilter("$(Access) : 'Protected'");
-			
+
 			//
 			// Not a match
 			//
 			FieldElement publicField = new FieldElement();
 			publicField.Access = CodeAccess.Public;
 			Assert.IsFalse(filter.IsMatch(publicField), "IsMatch did not return the expected value.");
-			
+
 			//
 			// Match
 			//
 			FieldElement protectedField = new FieldElement();
 			protectedField.Access = CodeAccess.Protected;
 			Assert.IsTrue(filter.IsMatch(protectedField), "IsMatch did not return the expected value.");
-			
+
 			//
 			// Multi flag
 			//
 			FieldElement protectedInternalField = new FieldElement();
 			protectedInternalField.Access = CodeAccess.Protected | CodeAccess.Internal;
 			Assert.IsTrue(filter.IsMatch(protectedInternalField), "IsMatch did not return the expected value.");
-			
+
 			//
 			// Null
 			//
@@ -59,14 +59,14 @@ namespace NArrange.Tests.Core
 		public void IsMatchNameTest()
 		{
 			ElementFilter filter = new ElementFilter("$(Name) : 'Style'");
-			
+
 			//
 			// Not a match
 			//
 			FieldElement noMatch = new FieldElement();
 			noMatch.Name = "Test";
 			Assert.IsFalse(filter.IsMatch(noMatch), "IsMatch did not return the expected value.");
-			
+
 			//
 			// Match
 			//
@@ -77,7 +77,7 @@ namespace NArrange.Tests.Core
 			Assert.IsTrue(filter.IsMatch(match), "IsMatch did not return the expected value.");
 			match.Name = "StyleElement";
 			Assert.IsTrue(filter.IsMatch(match), "IsMatch did not return the expected value.");
-			
+
 			//
 			// Null
 			//

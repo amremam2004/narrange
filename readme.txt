@@ -21,8 +21,8 @@ If you don't like the default settings in DefaultConfig.xml you can copy it to a
 command line (see narrange-console help).  
 NOTE:  Modifying DefaultConfig.xml will not override settings.  DefaultConfig.xml is provided as an example.  You must specify the configuration file through the /c:configuration command argument.
 
-To automatically create a backup of source prior to arranging elements, pass the /b:backup parameter.
-To restore a prior backup, pass the /r:restore parameter.
+To automatically create a backup of source prior to arranging elements, pass the /b backup parameter.
+To restore a prior backup, pass the /r restore parameter.
 
 
  

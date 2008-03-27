@@ -50,22 +50,22 @@ namespace NArrange.Core
 		/// Not specified
 		/// </summary>
 		NotSpecified = 0,
-		
+
 		/// <summary>
 		/// Private
 		/// </summary>
 		Private = 1,
-		
+
 		/// <summary>
 		/// Protected/family
 		/// </summary>
 		Protected = 2,
-		
+
 		/// <summary>
 		/// Internal/assembly
 		/// </summary>
 		Internal = 4,
-		
+
 		/// <summary>
 		/// Public
 		/// </summary>
@@ -81,12 +81,12 @@ namespace NArrange.Core
 		/// Single line comment
 		/// </summary>
 		Line,
-		
+
 		/// <summary>
 		/// Single line XML comment
 		/// </summary>
 		XmlLine,
-		
+
 		/// <summary>
 		/// Block comment
 		/// </summary>
@@ -102,27 +102,27 @@ namespace NArrange.Core
 		/// None
 		/// </summary>
 		None,
-		
+
 		/// <summary>
 		/// Name
 		/// </summary>
 		Name,
-		
+
 		/// <summary>
 		/// Access
 		/// </summary>
 		Access,
-		
+
 		/// <summary>
 		/// Modifier
 		/// </summary>
 		Modifier,
-		
+
 		/// <summary>
 		/// Element Type
 		/// </summary>
 		ElementType,
-		
+
 		/// <summary>
 		/// Type
 		/// </summary>
@@ -138,72 +138,72 @@ namespace NArrange.Core
 		/// Not specified
 		/// </summary>
 		NotSpecified,
-		
+
 		/// <summary>
 		/// Using statement
 		/// </summary>
 		Using,
-		
+
 		/// <summary>
 		/// Namespace
 		/// </summary>
 		Namespace,
-		
+
 		/// <summary>
 		/// Type
 		/// </summary>
 		Type,
-		
+
 		/// <summary>
 		/// Enumeration
 		/// </summary>
 		Enum,
-		
+
 		/// <summary>
 		/// Delegate
 		/// </summary>
 		Delegate,
-		
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		Constructor,
-		
+
 		/// <summary>
 		/// Field
 		/// </summary>
 		Field,
-		
+
 		/// <summary>
 		/// Method
 		/// </summary>
 		Method,
-		
+
 		/// <summary>
 		/// Property
 		/// </summary>
 		Property,
-		
+
 		/// <summary>
 		/// Event
 		/// </summary>
 		Event,
-		
+
 		/// <summary>
 		/// Attribute
 		/// </summary>
 		Attribute,
-		
+
 		/// <summary>
 		/// Region
 		/// </summary>
 		Region,
-		
+
 		/// <summary>
 		/// Single line comment
 		/// </summary>
 		CommentLine,
-		
+
 		/// <summary>
 		/// Block comment
 		/// </summary>
@@ -219,17 +219,17 @@ namespace NArrange.Core
 		/// Equality
 		/// </summary>
 		Equal,
-		
+
 		/// <summary>
 		/// Contains
 		/// </summary>
 		Contains,
-		
+
 		/// <summary>
 		/// And
 		/// </summary>
 		And,
-		
+
 		/// <summary>
 		/// Or
 		/// </summary>
@@ -245,7 +245,7 @@ namespace NArrange.Core
 		/// New line
 		/// </summary>
 		NewLine,
-		
+
 		/// <summary>
 		/// Custom separator string
 		/// </summary>
@@ -261,22 +261,22 @@ namespace NArrange.Core
 		/// Error message
 		/// </summary>
 		Error,
-		
+
 		/// <summary>
 		/// Warning message
 		/// </summary>
 		Warning,
-		
+
 		/// <summary>
 		/// Informational message
 		/// </summary>
 		Info,
-		
+
 		/// <summary>
 		/// Verbose
 		/// </summary>
 		Verbose,
-		
+
 		/// <summary>
 		/// Trace
 		/// </summary>
@@ -293,52 +293,52 @@ namespace NArrange.Core
 		/// None
 		/// </summary>
 		None = 0,
-		
+
 		/// <summary>
 		/// Abstract
 		/// </summary>
 		Abstract = 1,
-		
+
 		/// <summary>
 		/// Sealed
 		/// </summary>
 		Sealed = 2,
-		
+
 		/// <summary>
 		/// Static
 		/// </summary>
 		Static = 4,
-		
+
 		/// <summary>
 		/// Unsafe
 		/// </summary>
 		Unsafe = 8,
-		
+
 		/// <summary>
 		/// Virtual
 		/// </summary>
 		Virtual = 16,
-		
+
 		/// <summary>
 		/// Override
 		/// </summary>
 		Override = 32,
-		
+
 		/// <summary>
 		/// New
 		/// </summary>
 		New = 64,
-		
+
 		/// <summary>
 		/// ReadOnly
 		/// </summary>
 		ReadOnly = 128,
-		
+
 		/// <summary>
 		/// Constant
 		/// </summary>
 		Constant = 256,
-		
+
 		/// <summary>
 		/// External
 		/// </summary>
@@ -355,12 +355,12 @@ namespace NArrange.Core
 		/// Not specified
 		/// </summary>
 		NotSpecified = 0,
-		
+
 		/// <summary>
 		/// Explicit
 		/// </summary>
 		Explicit = 1,
-		
+
 		/// <summary>
 		/// Implicit
 		/// </summary>
@@ -376,7 +376,7 @@ namespace NArrange.Core
 		/// Use tabs when writing elements
 		/// </summary>
 		Tabs,
-		
+
 		/// <summary>
 		/// Uses spaces when writing elements
 		/// </summary>
@@ -392,17 +392,17 @@ namespace NArrange.Core
 		/// Class
 		/// </summary>
 		Class,
-		
+
 		/// <summary>
 		/// Structure
 		/// </summary>
 		Structure,
-		
+
 		/// <summary>
 		/// Interface
 		/// </summary>
 		Interface,
-		
+
 		/// <summary>
 		/// Enumeration
 		/// </summary>
@@ -420,27 +420,27 @@ namespace NArrange.Core
 		/// None
 		/// </summary>
 		None = MemberModifier.None,
-		
+
 		/// <summary>
 		/// Abstract
 		/// </summary>
 		Abstract = MemberModifier.Abstract,
-		
+
 		/// <summary>
 		/// Sealed
 		/// </summary>
 		Sealed = MemberModifier.Sealed,
-		
+
 		/// <summary>
 		/// Static
 		/// </summary>
 		Static = MemberModifier.Static,
-		
+
 		/// <summary>
 		/// Unsafe
 		/// </summary>
 		Unsafe = MemberModifier.Unsafe,
-		
+
 		/// <summary>
 		/// Partial
 		/// </summary>
@@ -457,37 +457,37 @@ namespace NArrange.Core
 		/// None
 		/// </summary>
 		None = 0,
-		
+
 		/// <summary>
 		/// Spaces
 		/// </summary>
 		Space = 1,
-		
+
 		/// <summary>
 		/// Tabs
 		/// </summary>
 		Tab = 2,
-		
+
 		/// <summary>
 		/// Carriage returns
 		/// </summary>
 		CarriageReturn = 4,
-		
+
 		/// <summary>
 		/// Line feeds
 		/// </summary>
 		LineFeed = 8,
-		
+
 		/// <summary>
 		/// Spaces and tabs
 		/// </summary>
 		SpaceAndTab = Space | Tab,
-		
+
 		/// <summary>
 		/// Carriage returns and line feeds
 		/// </summary>
 		CarriageReturnAndLineFeed = CarriageReturn | LineFeed,
-		
+
 		/// <summary>
 		/// All whitespace characters
 		/// </summary>

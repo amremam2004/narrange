@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
-			
+
 			//
 			// Verify default state
 			//
@@ -44,9 +44,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
-			
+
 			string str = regionConfiguration.ToString();
-			
+
 			Assert.AreEqual("Region: Test Region", str,
 			    "Unexpected string representation.");
 		}

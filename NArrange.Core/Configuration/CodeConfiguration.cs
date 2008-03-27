@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Added configuration for closing comments
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -56,9 +57,10 @@ namespace NArrange.Core.Configuration
 
 		#region Fields
 
-		private List<HandlerConfiguration> _handlers;		
-		private TabConfiguration _tabs;		
-		
+		private ClosingCommentConfiguration _closingComments;
+		private List<HandlerConfiguration> _handlers;
+		private TabConfiguration _tabs;
+
 		#endregion Fields
 
 		#region Constructors
@@ -74,6 +76,36 @@ namespace NArrange.Core.Configuration
 		#endregion Constructors
 
 		#region Public Properties
+
+		/// <summary>
+		/// Closing comment configuration
+		/// </summary>
+		[Description("Closing comment configuration")]
+		public ClosingCommentConfiguration ClosingComments
+		{
+			get
+			{
+			    if (_closingComments == null)
+			    {
+			        lock (this)
+			        {
+			            if (_closingComments == null)
+			            {
+			                //
+			                // Default closing comment configuration
+			                //
+			                _closingComments = new ClosingCommentConfiguration();
+			            }
+			        }
+			    }
+
+			    return _closingComments;
+			}
+			set
+			{
+			    _closingComments = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets the default configuration
@@ -100,7 +132,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _default;
 			}
 		}
@@ -124,7 +156,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _handlers;
 			}
 		}
@@ -150,7 +182,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _tabs;
 			}
 			set
@@ -170,15 +202,16 @@ namespace NArrange.Core.Configuration
 		protected override ConfigurationElement DoClone()
 		{
 			CodeConfiguration clone = new CodeConfiguration();
-			
+
 			clone._tabs = Tabs.Clone() as TabConfiguration;
-			
+			clone._closingComments = ClosingComments.Clone() as ClosingCommentConfiguration;
+
 			foreach (HandlerConfiguration handler in this.Handlers)
 			{
 			    HandlerConfiguration handlerClone = handler.Clone() as HandlerConfiguration;
 			    clone.Handlers.Add(handlerClone);
 			}
-			
+
 			return clone;
 		}
 
@@ -209,7 +242,7 @@ namespace NArrange.Core.Configuration
 			XmlSerializer serializer = new XmlSerializer(typeof(CodeConfiguration));
 			CodeConfiguration configuration = 
 			    serializer.Deserialize(stream) as CodeConfiguration;
-			
+
 			return configuration;
 		}
 

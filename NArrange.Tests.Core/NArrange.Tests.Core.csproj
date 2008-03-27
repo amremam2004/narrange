@@ -70,7 +70,7 @@
     <Compile Include="Configuration\GroupByTests.cs" />
     <Compile Include="SolutionParserTests.cs" />
     <Compile Include="GroupedInserterTests.cs" />
-    <Compile Include="ElementUtilitiesTests.cs" />
+    <Compile Include="CodeElements\ElementUtilitiesTests.cs" />
     <Compile Include="RegionedInserterTests.cs" />
     <Compile Include="ElementFilterTests.cs" />
     <Compile Include="ChainElementArrangerTests.cs" />

@@ -47,11 +47,11 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IElementArranger _childrenArranger;		
-		private ElementType _elementType;		
-		private IElementFilter _filter;		
-		private IElementInserter _inserter;		
-		
+		private IElementArranger _childrenArranger;
+		private ElementType _elementType;
+		private IElementFilter _filter;
+		private IElementInserter _inserter;
+
 		#endregion Fields
 
 		#region Constructors
@@ -70,7 +70,7 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("inserter");
 			}
-			
+
 			_elementType = elementType;
 			_inserter = inserter;
 			_filter = filter;
@@ -93,7 +93,7 @@ namespace NArrange.Core
 			{
 			    List<ICodeElement> children = new List<ICodeElement>(codeElement.Children);
 			    codeElement.ClearChildren();
-			
+
 			    foreach (ICodeElement childElement in children)
 			    {
 					//
@@ -104,7 +104,7 @@ namespace NArrange.Core
 			        {
 			            List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
 			            regionElement.ClearChildren();
-			
+
 			            foreach (ICodeElement regionChildElement in regionChildren)
 			            {
 			                _childrenArranger.ArrangeElement(codeElement, regionChildElement);
@@ -116,7 +116,7 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			_inserter.InsertElement(parentElement, codeElement);
 		}
 

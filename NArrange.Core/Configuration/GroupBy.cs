@@ -49,11 +49,11 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementAttribute _by;		
-		private string _customSeparator;		
-		private string _matchCapture;		
-		private GroupSeparatorType _separatorType;		
-		
+		private ElementAttribute _by;
+		private string _customSeparator;
+		private string _matchCapture;
+		private GroupSeparatorType _separatorType;
+
 		#endregion Fields
 
 		#region Constructors
@@ -146,12 +146,12 @@ namespace NArrange.Core.Configuration
 		public object Clone()
 		{
 			GroupBy clone = new GroupBy();
-			
+
 			clone._by = _by;
 			clone._matchCapture = _matchCapture;
 			clone._customSeparator = _customSeparator;
 			clone._separatorType = _separatorType;
-			
+
 			return clone;
 		}
 

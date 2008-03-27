@@ -25,9 +25,9 @@ namespace NArrange.Tests.Core
 		public void CreateTest()
 		{
 			string assemblyName = "NArrange.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-			
+
 			SourceHandler handler = new SourceHandler(assemblyName);
-			
+
 			Assert.IsNotNull(handler.CodeParser, "Parser was not created.");
 			Assert.IsNotNull(handler.Writer, "Writer was not created.");
 			Assert.IsNotNull(handler.ProjectParser, "ProjectParser was not created.");

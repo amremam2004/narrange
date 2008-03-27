@@ -29,15 +29,15 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 			prototype.Type = "int";
 			prototype.IsVolatile = true;
-			
+
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a field.");
 			prototype.AddHeaderCommentLine("/// </summary>");
-			
+
 			prototype.InitialValue = "4";
-			
+
 			prototype.MemberModifiers = MemberModifier.Abstract; 
-			
+
 			return prototype;
 		}
 
@@ -85,7 +85,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			FieldElement fieldElement = new FieldElement();
-			
+
 			//
 			// Verify default field values
 			//

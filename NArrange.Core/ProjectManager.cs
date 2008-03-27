@@ -49,10 +49,10 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private CodeConfiguration _configuration;		
-		private Dictionary<string, SourceHandler> _projectExtensionHandlers;		
-		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;		
-		
+		private CodeConfiguration _configuration;
+		private Dictionary<string, SourceHandler> _projectExtensionHandlers;
+		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;
+
 		#endregion Fields
 
 		#region Constructors
@@ -67,9 +67,9 @@ namespace NArrange.Core
 			{
 				throw new ArgumentNullException("configuration");
 			}
-			
+
 			_configuration = configuration;
-			
+
 			this.Initialize();
 		}
 
@@ -98,12 +98,12 @@ namespace NArrange.Core
 		private ReadOnlyCollection<string> GetProjectSourceFiles(string fileName)
 		{
 			List<string> sourceFiles = new List<string>();
-			
+
 			SourceHandler handler = GetProjectHandler(fileName);
 			if (handler != null)
 			{
 				IProjectParser projectParser = handler.ProjectParser;
-			
+
 				List<string> extensions = new List<string>();
 				foreach (string key in _sourceExtensionHandlers.Keys)
 				{
@@ -113,7 +113,7 @@ namespace NArrange.Core
 						extensions.Add(key);
 					}
 				}
-			
+
 				ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
 				if (fileNames.Count > 0)
 				{
@@ -127,22 +127,22 @@ namespace NArrange.Core
 					}
 				}
 			}
-			
+
 			return sourceFiles.AsReadOnly();
 		}
 
 		private ReadOnlyCollection<string> GetSolutionSourceFiles(string fileName)
 		{
 			List<string> sourceFiles = new List<string>();
-			
+
 			SolutionParser solutionParser = new SolutionParser();
 			ReadOnlyCollection<string> projectFiles = solutionParser.Parse(fileName);
-			
+
 			foreach (string projectFile in projectFiles)
 			{
 				sourceFiles.AddRange(GetProjectSourceFiles(projectFile));
 			}
-			
+
 			return sourceFiles.AsReadOnly();
 		}
 
@@ -162,12 +162,12 @@ namespace NArrange.Core
 			foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
 			{
 				SourceHandler handler = new SourceHandler(handlerConfiguration.AssemblyName);
-			
+
 				foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
 				{
 					_projectExtensionHandlers.Add(extension.Name, handler);
 				}
-			
+
 				foreach (ExtensionConfiguration extension in handlerConfiguration.SourceExtensions)
 				{
 					_sourceExtensionHandlers.Add(extension.Name, handler);
@@ -209,7 +209,7 @@ namespace NArrange.Core
 		public ReadOnlyCollection<string> GetSourceFiles(string fileName)
 		{
 			List<string> sourceFiles = new List<string>();
-			
+
 			if (IsSolution(fileName))
 			{
 				sourceFiles.AddRange(GetSolutionSourceFiles(fileName));
@@ -222,7 +222,7 @@ namespace NArrange.Core
 			{
 				sourceFiles.Add(fileName);
 			}
-			
+
 			return sourceFiles.AsReadOnly();
 		}
 
@@ -234,7 +234,7 @@ namespace NArrange.Core
 		public SourceHandler GetSourceHandler(string fileName)
 		{
 			string extension = GetExtension(fileName);
-			
+
 			if (_sourceExtensionHandlers.ContainsKey(extension))
 			{
 				return _sourceExtensionHandlers[extension];

@@ -48,8 +48,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private string _name;		
-		
+		private string _name;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -82,9 +82,9 @@ namespace NArrange.Core.Configuration
 		protected override ConfigurationElement DoClone()
 		{
 			RegionConfiguration clone = new RegionConfiguration();
-			
+
 			clone._name = _name;
-			
+
 			return clone;
 		}
 

@@ -28,15 +28,15 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 			prototype.Type = "string";
-			
+
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a field.");
 			prototype.AddHeaderCommentLine("/// </summary>");
-			
+
 			prototype.BodyText = "get{return string.empty}";
-			
+
 			prototype.MemberModifiers = MemberModifier.Abstract; 
-			
+
 			return prototype;
 		}
 
@@ -80,7 +80,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			PropertyElement propertyElement = new PropertyElement();
-			
+
 			//
 			// Verify default property values
 			//

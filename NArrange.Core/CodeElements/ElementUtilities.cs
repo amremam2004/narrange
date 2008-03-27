@@ -31,15 +31,17 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Added a Format method for getting a formatted string representation 
+ *        of a code element
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
-using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 
-namespace NArrange.Core
+namespace NArrange.Core.CodeElements
 {
 	/// <summary>
 	/// Element utility methods
@@ -51,7 +53,7 @@ namespace NArrange.Core
 		private static string GetTypeAttribute(ICodeElement codeElement)
 		{
 			string attributeString = string.Empty;
-			
+
 			MemberElement memberElement = codeElement as MemberElement;
 			if (memberElement != null)
 			{
@@ -65,13 +67,78 @@ namespace NArrange.Core
 			        attributeString = typeElement.Type.ToString();
 			    }
 			}
-			
+
 			return attributeString;
 		}
 
 		#endregion Private Methods
 
 		#region Public Methods
+
+		/// <summary>
+		/// Gets a string representation of a code element using the specified
+		/// format.
+		/// </summary>
+		/// <param name="format"></param>
+		/// <param name="codeElement"></param>
+		/// <returns></returns>
+		public static string Format(string format, ICodeElement codeElement)
+		{
+			if (format == null)
+			{
+			    throw new ArgumentNullException("format");
+			}
+			else if (codeElement == null)
+			{
+			    throw new ArgumentNullException("codeElement");
+			}
+
+			StringBuilder formatted = new StringBuilder(format.Length * 2);
+			StringBuilder attributeBuilder = null;
+			bool inAttribute = false;
+
+			using (StringReader reader = new StringReader(format))
+			{
+			    int data = reader.Read();
+			    while (data > 0)
+			    {
+			        char ch = (char)data;
+
+			        if (ch == AttributeExpression.ExpressionPrefix &&
+			            (char)(reader.Peek()) == ConditionExpressionParser.ExpressionStart)
+			        {
+			            reader.Read();
+			            attributeBuilder = new StringBuilder();
+			            inAttribute = true;
+			        }
+			        else if (inAttribute)
+			        {
+			            if (ch == ConditionExpressionParser.ExpressionEnd)
+			            {
+			                ElementAttribute elementAttribute = (ElementAttribute)Enum.Parse(
+			                    typeof(ElementAttribute), attributeBuilder.ToString());
+
+			                string attribute = GetAttribute(elementAttribute, codeElement);
+			                formatted.Append(attribute);
+			                attributeBuilder = new StringBuilder();
+			                inAttribute = false;
+			            }
+			            else
+			            {
+			                attributeBuilder.Append(ch);
+			            }
+			        }
+			        else
+			        {
+			            formatted.Append(ch);
+			        }
+
+			        data = reader.Read();
+			    }
+			}
+
+			return formatted.ToString();
+		}
 
 		/// <summary>
 		/// Gets the string representation of a code element attribute.
@@ -84,13 +151,13 @@ namespace NArrange.Core
 			string attributeString = null;
 			MemberElement memberElement;
 			TypeElement typeElement;
-			
+
 			switch (attributeType)
 			{
 			    case ElementAttribute.Name:
 			        attributeString = codeElement.Name;
 			        break;
-			
+
 			    case ElementAttribute.Access:
 			        AttributedElement attributedElement = codeElement as AttributedElement;
 			        if (attributedElement != null)
@@ -105,15 +172,15 @@ namespace NArrange.Core
 			            }
 			        }
 			        break;
-			
+
 			    case ElementAttribute.ElementType:
 			        attributeString = codeElement.ElementType.ToString();
 			        break;
-			
+
 			    case ElementAttribute.Type:
 			        attributeString = GetTypeAttribute(codeElement);
 			        break;
-			
+
 			    case ElementAttribute.Modifier:
 			        memberElement = codeElement as MemberElement;
 			        if (memberElement != null)
@@ -129,17 +196,17 @@ namespace NArrange.Core
 			            }
 			        }
 			        break;
-			
+
 			    default:
 			        attributeString = string.Empty;
 			        break;
 			}
-			
+
 			if (attributeString == null)
 			{
 			    attributeString = string.Empty;
 			}
-			
+
 			return attributeString;
 		}
 

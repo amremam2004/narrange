@@ -52,22 +52,22 @@ namespace NArrange.Tests.Core.CodeElements
 		[Test]
 		public void CloneTest()
 		{
-            const string Key1 = "Test1";
-            const string Key2 = "Test2";
+			const string Key1 = "Test1";
+			const string Key2 = "Test2";
 
 			TCodeElement original = DoCreateClonePrototype();
-            original[Key1] = "SomeValue";
-            original[Key2] = false;
+			original[Key1] = "SomeValue";
+			original[Key2] = false;
 
 			TCodeElement clone = original.Clone() as TCodeElement;
 			Assert.IsNotNull(clone, "Clone did not create an instance of type {0}.",
 			    typeof(TCodeElement).Name);
 			Assert.AreNotSame(original, clone, "Clone should be a different instance.");
 
-            Assert.AreEqual(original[Key1], clone[Key1], 
-                "Extended properties were not cloned correctly.");
-            Assert.AreEqual(original[Key2], clone[Key2],
-                "Extended properties were not cloned correctly.");
+			Assert.AreEqual(original[Key1], clone[Key1], 
+			    "Extended properties were not cloned correctly.");
+			Assert.AreEqual(original[Key2], clone[Key2],
+			    "Extended properties were not cloned correctly.");
 
 			DoVerifyClone(original, clone);
 		}
@@ -81,24 +81,24 @@ namespace NArrange.Tests.Core.CodeElements
 			TCodeElement parentElement = new TCodeElement();
 			TCodeElement childElement = new TCodeElement();
 			Assert.IsNull(childElement.Parent, "Parent should not be set.");
-			
+
 			childElement.Parent = parentElement;
 			Assert.AreSame(parentElement, childElement.Parent,
 			    "Parent was not set correctly.");
-			
+
 			Assert.IsTrue(parentElement.Children.Contains(childElement),
 			    "Parent Children collection does not contain the child element.");
-			
+
 			childElement.Parent = null;
 			Assert.IsNull(childElement.Parent, "Parent should not be set.");
-			
+
 			Assert.IsFalse(parentElement.Children.Contains(childElement),
 			    "Parent Children collection should not contain the child element.");
-			
+
 			parentElement.AddChild(childElement);
 			Assert.AreSame(parentElement, childElement.Parent,
 			     "Parent was not set correctly.");
-			
+
 			parentElement.RemoveChild(childElement);
 			Assert.IsNull(childElement.Parent, "Parent should not be set.");
 		}

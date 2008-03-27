@@ -36,13 +36,13 @@ namespace NArrange.Tests.Core
 		{
 			ChainElementArranger chain = new ChainElementArranger();
 			FieldElement fieldElement = new FieldElement();
-			
+
 			//
 			// No arrangers in chain
 			//
 			Assert.IsFalse(chain.CanArrange(fieldElement), 
 			    "Empty chain element arranger should not be able to arrange an element.");
-			
+
 			//
 			// Add an arranger that can't arrange the element
 			//
@@ -50,7 +50,7 @@ namespace NArrange.Tests.Core
 			chain.AddArranger(disabledArranger);
 			Assert.IsFalse(chain.CanArrange(fieldElement),
 			    "Unexpected return value from CanArrange.");
-			
+
 			//
 			// Add an arranger that can arrange the element
 			//
@@ -58,7 +58,7 @@ namespace NArrange.Tests.Core
 			chain.AddArranger(enabledArranger);
 			Assert.IsTrue(chain.CanArrange(fieldElement),
 			    "Unexpected return value from CanArrange.");
-			
+
 			//
 			// Null
 			//
@@ -76,7 +76,7 @@ namespace NArrange.Tests.Core
 			GroupElement parentElement = new GroupElement();
 			ChainElementArranger chain = new ChainElementArranger();
 			FieldElement fieldElement = new FieldElement();
-			
+
 			//
 			// Add an arranger that can't arrange the element
 			//
@@ -84,7 +84,7 @@ namespace NArrange.Tests.Core
 			chain.AddArranger(disabledArranger);
 			Assert.IsFalse(chain.CanArrange(fieldElement),
 			    "Unexpected return value from CanArrange.");
-			
+
 			chain.ArrangeElement(parentElement, fieldElement);
 		}
 

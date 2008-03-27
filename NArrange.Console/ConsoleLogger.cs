@@ -56,8 +56,8 @@ namespace NArrange.ConsoleApplication
 
 		#region Fields
 
-		private bool _trace;		
-		
+		private bool _trace;
+
 		#endregion Fields
 
 		#region Constructors
@@ -106,22 +106,22 @@ namespace NArrange.ConsoleApplication
 			    case LogLevel.Error:
 			        WriteMessage(ErrorColor, message, args);
 			        break;
-			
+
 			    case LogLevel.Warning:
 			        WriteMessage(WarningColor, message, args);
 			        break;
-			
+
 			    case LogLevel.Info:
 			        WriteMessage(InfoColor, message, args);
 			        break;
-			
+
 				case LogLevel.Trace:
 					if (_trace)
 					{
 						WriteMessage(TraceColor, message, args);
 					} 
 					break;
-			
+
 			    default:
 			        WriteMessage(Console.ForegroundColor, message, args);
 			        break;
@@ -137,7 +137,7 @@ namespace NArrange.ConsoleApplication
 		public void WriteMessage(ConsoleColor color, string message, params object[] args)
 		{
 			ConsoleColor origColor = Console.ForegroundColor;
-			
+
 			try
 			{
 			    Console.ForegroundColor = color;

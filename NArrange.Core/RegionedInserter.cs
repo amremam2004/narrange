@@ -51,11 +51,11 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IElementInserter _innerInserter;		
-		private readonly ReadOnlyCollection<string> _levelRegions;		
-		private ConfigurationElement _parentConfiguration;		
-		private RegionConfiguration _regionConfiguration;		
-		
+		private IElementInserter _innerInserter;
+		private readonly ReadOnlyCollection<string> _levelRegions;
+		private ConfigurationElement _parentConfiguration;
+		private RegionConfiguration _regionConfiguration;
+
 		#endregion Fields
 
 		#region Constructors
@@ -85,16 +85,16 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("regionConfiguration");
 			}
-			
+
 			if (parentConfiguration == null)
 			{
 			    throw new ArgumentNullException("parentConfiguration");
 			}
-			
+
 			_regionConfiguration = regionConfiguration.Clone() as RegionConfiguration;
 			_parentConfiguration = parentConfiguration.Clone() as ConfigurationElement;
 			_innerInserter = innerInserter;
-			
+
 			List<string> levelRegions = new List<string>();
 			foreach (ConfigurationElement siblingConfiguration in
 			    _parentConfiguration.Elements)
@@ -105,7 +105,7 @@ namespace NArrange.Core
 			        levelRegions.Add(siblingRegionConfiguration.Name);
 			    }
 			}
-			
+
 			_levelRegions = levelRegions.AsReadOnly();
 		}
 
@@ -121,9 +121,9 @@ namespace NArrange.Core
 		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			RegionElement region = null;
-			
+
 			string regionName = _regionConfiguration.Name;
-			
+
 			foreach (ICodeElement childElement in parentElement.Children)
 			{
 			    RegionElement regionElement = childElement as RegionElement;
@@ -133,12 +133,12 @@ namespace NArrange.Core
 			        break;
 			    }
 			}
-			
+
 			if (region == null)
 			{
 			    region = new RegionElement();
 			    region.Name = regionName;
-			
+
 			    if (parentElement.Children.Count == 0)
 			    {
 			        parentElement.AddChild(region);
@@ -150,7 +150,7 @@ namespace NArrange.Core
 			        //
 			        int insertIndex = 0;
 			        int compareIndex = _levelRegions.IndexOf(region.Name);
-			
+
 			        for (int siblingIndex = 0; siblingIndex < parentElement.Children.Count;
 			            siblingIndex++)
 			        {
@@ -159,7 +159,7 @@ namespace NArrange.Core
 			            if (siblingRegion != null)
 			            {
 			                insertIndex = siblingIndex;
-			
+
 			                int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
 			                if (compareIndex <= siblingCompareIndex)
 			                {
@@ -171,11 +171,11 @@ namespace NArrange.Core
 			                }
 			            }
 			        }
-			
+
 			        parentElement.InsertChild(insertIndex, region);
 			    }
 			}
-			
+
 			if (_innerInserter != null)
 			{
 			    _innerInserter.InsertElement(region, codeElement);

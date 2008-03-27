@@ -31,15 +31,15 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Type = "bool";
 			prototype.AddTypeParameter(
 			    new TypeParameter("T", "class", "new()"));
-			
+
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a method.");
 			prototype.AddHeaderCommentLine("/// </summary>");
-			
+
 			prototype.BodyText = "{return T != null;}";
-			
+
 			prototype.MemberModifiers = MemberModifier.Abstract;
-			
+
 			return prototype;
 		}
 
@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			MethodElement methodElement = new MethodElement();
-			
+
 			//
 			// Verify default property values
 			//

@@ -27,45 +27,45 @@ namespace NArrange.Tests.Core
 			string backupRoot = BackupUtilities.GetTempFilePath();
 			string sourceFolder = BackupUtilities.GetTempFilePath();
 			string destinationFolder = BackupUtilities.GetTempFilePath();
-			
+
 			try
 			{
 			    Directory.CreateDirectory(sourceFolder);
-			
+
 			    string file1Text = "This is test file 1.";
 			    string file2Text = "This is test file 2.";
 			    string file3Text = "This is test file 3.";
-			
+
 			    string file1 = Path.Combine(sourceFolder, "File1.txt");
 			    string file2Directory = Path.Combine(sourceFolder, "a");
 			    string file2 = Path.Combine(file2Directory, "File2.txt");
 			    string file3Directory = Path.Combine(sourceFolder, "b");
 			    string file3 = Path.Combine(file3Directory, "File3.txt");
-			
+
 			    File.WriteAllText(file1, file1Text);
 			    Directory.CreateDirectory(file2Directory);
 			    File.WriteAllText(file2, file2Text);
 			    Directory.CreateDirectory(file3Directory);
 			    File.WriteAllText(file3, file3Text);
-			
+
 			    //ZipUtilities.Zip(sourceFolder, zipFile);
 				string key = BackupUtilities.CreateFileNameKey("Test");
 				string backupLocation = BackupUtilities.BackupFiles(backupRoot, key, 
 			        new string[] { file1, file2, file3 });
-			
+
 				string zipFile = Path.Combine(backupLocation, "files.zip");
 			    Assert.IsTrue(File.Exists(zipFile), "Expected zip file to exist after backup.");
 			    TestUtilities.AssertNotEmpty(zipFile);
-			
+
 				//
 				// Modify the original files
 				//
 				File.WriteAllText(file1, "Blah");
 				File.WriteAllText(file2, "Blah");
 				File.Delete(file3);
-			
+
 				BackupUtilities.RestoreFiles(backupRoot, key);
-			
+
 				Assert.IsTrue(File.Exists(file1), "Restored file was not found.");
 				Assert.AreEqual(file1Text, File.ReadAllText(file1),
 					"Unexpected file contents.");
@@ -140,19 +140,19 @@ namespace NArrange.Tests.Core
 			const string TestFileName2 = @"c:\temp\this is some folder\this is some file.cs";
 			const string TestFileName3 = @"e:\temp\this is some folder\this is some file.cs";
 			const string TestKey = "__845974298";
-			
+
 			//
 			// The same key should be returned accross multiple runs.
 			//
 			string key1 = BackupUtilities.CreateFileNameKey(TestFileName1);
 			Assert.AreEqual(TestKey, key1);
-			
+
 			//
 			// Case should be ignored
 			//
 			string key2 = BackupUtilities.CreateFileNameKey(TestFileName2);
 			Assert.AreEqual(TestKey, key2);
-			
+
 			//
 			// Different files should produce different keys
 			//

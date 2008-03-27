@@ -30,20 +30,20 @@ namespace NArrange.Tests.Core
 			   new AttributeExpression(ElementAttribute.Name), new StringExpression("Test")),
 			   new OperatorExpression(ExpressionOperator.Equal,
 			   new AttributeExpression(ElementAttribute.Access), new StringExpression("Protected")));
-			
+
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
 			element.Access = CodeAccess.Protected;
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Foo";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Test";
 			element.Access = CodeAccess.Private;
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
@@ -60,19 +60,19 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression = new OperatorExpression(
 			   ExpressionOperator.Contains, new AttributeExpression(ElementAttribute.Name),
 			   new StringExpression("Test"));
-			
+
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "OnTest1";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Foo";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
@@ -88,14 +88,14 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression = new OperatorExpression(
 			   ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
 			   new StringExpression("Test"));
-			
+
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Test1";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
@@ -113,10 +113,10 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression = new OperatorExpression(
 			    (ExpressionOperator)int.MinValue, new AttributeExpression(ElementAttribute.Name),
 			    new StringExpression("Test"));
-			
+
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 		}
@@ -131,7 +131,7 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression = new OperatorExpression(
 			    ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
 			    new StringExpression("Test"));
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, null);
 		}
@@ -159,26 +159,26 @@ namespace NArrange.Tests.Core
 			   new AttributeExpression(ElementAttribute.Name), new StringExpression("Test")),
 			   new OperatorExpression(ExpressionOperator.Equal,
 			   new AttributeExpression(ElementAttribute.Access), new StringExpression("Protected")));
-			
+
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
 			element.Access = CodeAccess.Protected;
-			
+
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Foo";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Test";
 			element.Access = CodeAccess.Private;
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-			
+
 			element.Name = "Foo";
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);

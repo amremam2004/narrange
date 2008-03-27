@@ -33,6 +33,7 @@
  *      - Initial creation
  *      - Moved logging into a ConsoleLogger class
  *		- Added a backup and restore feature
+ *      - Fixed parsing of config file name
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -79,38 +80,43 @@ namespace NArrange.ConsoleApplication
 			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
 			{
 			    string arg = argList[argIndex];
-			
+
 			    if (arg.StartsWith("/"))
 			    {
 			        string argLower = arg.ToLower();
-			        if (arg.Length == 2)
+			        if (arg.Length >= 2)
 			        {
 			            char flag = argLower[1];
-			
+
 			            switch (flag)
 			            {
 			                case 'c':
+			                    if (arg[2] != ':')
+			                    {
+			                        WriteUsage();
+			                        Environment.Exit(Fail);
+			                    }
 			                    configFile = arg.Substring(3);
 			                    break;
-			
+
 							case 'b':
 								backup = true;
 								break;
-			
+
 							case 'r':
 								restore = true;
 								break;
-			
+
 							case 't':
 								trace = true;
 								break;
-			
+
 			                default:
 			                    WriteUsage();
 			                    Environment.Exit(Fail);
 			                    break;
 			            }
-			
+
 						argList.RemoveAt(argIndex);
 						argIndex--;
 			        }
@@ -130,12 +136,12 @@ namespace NArrange.ConsoleApplication
 			        {
 			            outputFile = arg;
 			        }
-			
+
 			        argList.RemoveAt(argIndex);
 			        argIndex--;
 			    }
 			}
-			
+
 			if (argList.Count > 0)
 			{
 			    WriteUsage();
@@ -150,7 +156,7 @@ namespace NArrange.ConsoleApplication
 		{
 			Console.WriteLine("Usage:");
 			Console.WriteLine("narrange.console <input> [output] [/c:configuration]");
-			Console.WriteLine("\t[/b:backup] [/r:restore] [/t:trace]");
+			Console.WriteLine("\t[/b] [/r] [/t]");
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("input\tSpecifies the source code file, project or solution to arrange.");
@@ -185,13 +191,13 @@ namespace NArrange.ConsoleApplication
 		public static void Main(string[] args)
 		{
 			ConsoleLogger logger = new ConsoleLogger();
-			
+
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			Version version = assembly.GetName().Version;
 			Console.WriteLine();
 			logger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
 			Console.WriteLine(new string('_', 60));
-			
+
 			object[] copyrightAttributes = assembly.GetCustomAttributes(
 			    typeof(AssemblyCopyrightAttribute), false);
 			if(copyrightAttributes.Length > 0)
@@ -200,25 +206,25 @@ namespace NArrange.ConsoleApplication
 			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
 			}
 			Console.WriteLine();
-			
+
 			if (args.Length < 1 || args[0] == "?" || args[0] == "/?" || args[0] == "help")
 			{
 			    WriteUsage();
 			    Environment.Exit(Fail);
 			}
-			
+
 			string configFile = null;
 			string inputFile = null;
 			string outputFile = null;
 			bool backup = false;
 			bool restore = false;
 			bool trace = false;
-			
+
 			ParseArguments(args, ref configFile, ref inputFile,
 					ref outputFile, ref backup, ref restore, ref trace);
-			
+
 			logger.Trace = trace;
-			
+
 			if (restore)
 			{
 				logger.LogMessage(LogLevel.Verbose, "Restoring {0}...", inputFile);
@@ -240,7 +246,7 @@ namespace NArrange.ConsoleApplication
 				//
 				FileArranger fileArranger = new FileArranger(configFile, logger);
 				bool success = fileArranger.Arrange(inputFile, outputFile, backup);
-			
+
 				if (!success)
 				{
 					logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);

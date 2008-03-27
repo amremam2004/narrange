@@ -14,9 +14,9 @@ namespace NArrange.Tests.Core
 	{
 		#region Fields
 
-		private List<TestLogEvent> _events = new List<TestLogEvent>();		
-		private bool _writeToConsole = false;		
-		
+		private List<TestLogEvent> _events = new List<TestLogEvent>();
+		private bool _writeToConsole = false;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -69,7 +69,7 @@ namespace NArrange.Tests.Core
 		public bool HasMessage(LogLevel level, string message)
 		{
 			bool hasMessage = false;
-			
+
 			foreach (TestLogEvent logEvent in _events)
 			{
 			    if (logEvent.Level == level && logEvent.Message == message)
@@ -78,7 +78,7 @@ namespace NArrange.Tests.Core
 			        break;
 			    }
 			}
-			
+
 			return hasMessage;
 		}
 
@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core
 		public bool HasPartialMessage(LogLevel level, string message)
 		{
 			bool hasMessage = false;
-			
+
 			foreach (TestLogEvent logEvent in _events)
 			{
 			    if (logEvent.Level == level && logEvent.Message.Contains(message))
@@ -100,7 +100,7 @@ namespace NArrange.Tests.Core
 			        break;
 			    }
 			}
-			
+
 			return hasMessage;
 		}
 
@@ -113,14 +113,14 @@ namespace NArrange.Tests.Core
 		public void LogMessage(LogLevel level, string message, params object[] args)
 		{
 			string formatted = string.Format(message, args);
-			
+
 			if (WriteToConsole)
 			{
 				Console.WriteLine(formatted);
 			}
-			
+
 			TestLogEvent logEvent = new TestLogEvent(level, formatted);
-			
+
 			_events.Add(logEvent);
 		}
 

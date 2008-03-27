@@ -46,10 +46,10 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private List<string> _constraints;		
-		private object _constraintsLock = new object();		
-		private string _name;		
-		
+		private List<string> _constraints;
+		private object _constraintsLock = new object();
+		private string _name;
+
 		#endregion Fields
 
 		#region Constructors
@@ -96,7 +96,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _constraints;
 			}
 		}
@@ -151,7 +151,7 @@ namespace NArrange.Core.CodeElements
 		public object Clone()
 		{
 			TypeParameter clone = new TypeParameter();
-			
+
 			//
 			// Copy state
 			//
@@ -160,7 +160,7 @@ namespace NArrange.Core.CodeElements
 			{
 			    clone.AddConstraint(constraint);
 			}
-			
+
 			return clone;
 		}
 

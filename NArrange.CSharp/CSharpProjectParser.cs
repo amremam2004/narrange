@@ -61,16 +61,16 @@ namespace NArrange.CSharp
 			{
 			    throw new ArgumentNullException("projectFile");
 			}
-			
+
 			string projectPath = Path.GetDirectoryName(projectFile);
 			List<string> sourceFiles = new List<string>();
-			
+
 			XmlDocument xmlDocument = new XmlDocument();
 			xmlDocument.Load(projectFile);
-			
+
 			XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xmlDocument.NameTable);
 			namespaceManager.AddNamespace("ns", "http://schemas.microsoft.com/developer/msbuild/2003");
-			
+
 			XmlNodeList nodes = xmlDocument.SelectNodes("//ns:Compile", namespaceManager);
 			foreach (XmlNode node in nodes)
 			{
@@ -79,13 +79,13 @@ namespace NArrange.CSharp
 			        if (node.SelectSingleNode("ns:Link", namespaceManager) == null)
 			        {
 			            string fileName = node.Attributes["Include"].Value;
-			
+
 			            string sourceFilePath = Path.Combine(projectPath, fileName);
 			            sourceFiles.Add(sourceFilePath);
 			        }
 			    }
 			}
-			
+
 			return sourceFiles.AsReadOnly();
 		}
 

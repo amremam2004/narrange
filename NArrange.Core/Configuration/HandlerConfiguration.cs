@@ -48,10 +48,10 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private string _assembly;		
-		private List<ExtensionConfiguration> _projectExtensions;		
-		private List<ExtensionConfiguration> _sourceExtensions;		
-		
+		private string _assembly;
+		private List<ExtensionConfiguration> _projectExtensions;
+		private List<ExtensionConfiguration> _sourceExtensions;
+
 		#endregion Fields
 
 		#region Constructors
@@ -102,7 +102,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _projectExtensions;
 			}
 		}
@@ -126,7 +126,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _sourceExtensions;
 			}
 		}
@@ -142,21 +142,21 @@ namespace NArrange.Core.Configuration
 		public object Clone()
 		{
 			HandlerConfiguration clone = new HandlerConfiguration();
-			
+
 			clone._assembly = _assembly;
-			
+
 			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
 			{
 			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
 			    clone.ProjectExtensions.Add(extensionClone);
 			}
-			
+
 			foreach (ExtensionConfiguration extension in this.SourceExtensions)
 			{
 			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
 			    clone.SourceExtensions.Add(extensionClone);
 			}
-			
+
 			return clone;
 		}
 

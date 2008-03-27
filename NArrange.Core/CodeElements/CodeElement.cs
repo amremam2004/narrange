@@ -54,12 +54,12 @@ namespace NArrange.Core.CodeElements
 
 		#region Fields
 
-		private List<ICodeElement> _children;		
-		private object _childrenLock = new object();		
-		private Dictionary<string, object> _extendedProperties;		
-		private string _name;		
-		private ICodeElement _parent;		
-		
+		private List<ICodeElement> _children;
+		private object _childrenLock = new object();
+		private Dictionary<string, object> _extendedProperties;
+		private string _name;
+		private ICodeElement _parent;
+
 		#endregion Fields
 
 		#region Constructors
@@ -97,7 +97,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _children;
 			}
 		}
@@ -157,7 +157,7 @@ namespace NArrange.Core.CodeElements
 			        {
 			            _parent.RemoveChild(this);
 			        }
-			
+
 			        _parent = value;
 			        if (_parent != null && !_parent.Children.Contains(this))
 			        {
@@ -244,7 +244,7 @@ namespace NArrange.Core.CodeElements
 			        child.Parent = null;
 			    }
 			}
-			
+
 			BaseChildren.Clear();
 		}
 
@@ -255,7 +255,7 @@ namespace NArrange.Core.CodeElements
 		public virtual object Clone()
 		{
 			CodeElement clone = DoClone();
-			
+
 			//
 			// Copy base state
 			//
@@ -264,15 +264,15 @@ namespace NArrange.Core.CodeElements
 			{
 			    ICodeElement child = Children[childIndex];
 			    ICodeElement childClone = child.Clone() as ICodeElement;
-			
+
 			    clone.AddChild(childClone);
 			}
-			
+
 			foreach (string key in _extendedProperties.Keys)
 			{
 			    clone[key] = _extendedProperties[key];
 			}
-			
+
 			return clone;
 		}
 
@@ -306,6 +306,16 @@ namespace NArrange.Core.CodeElements
 		public override string ToString()
 		{
 			return _name;
+		}
+
+		/// <summary>
+		/// Gets a string representation of this object using the specified format string.
+		/// </summary>
+		/// <param name="format"></param>
+		/// <returns></returns>
+		public string ToString(string format)
+		{
+			return ElementUtilities.Format(format, this);
 		}
 
 		#endregion Public Methods

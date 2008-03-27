@@ -56,12 +56,12 @@ namespace NArrange.Core
 		private static IElementFilter CreateElementFilter(FilterBy filterBy)
 		{
 			IElementFilter filter = null;
-			
+
 			if (filterBy != null)
 			{
 			    filter = new ElementFilter(filterBy.Condition);
 			}
-			
+
 			return filter;
 		}
 
@@ -80,27 +80,27 @@ namespace NArrange.Core
 			RegionConfiguration parentRegion)
 		{
 			IElementInserter inserter = null;
-			
+
 			if (sortBy != null)
 			{
 			    inserter = new SortedInserter(elementType, sortBy);
 			}
-			
+
 			if (groupBy != null)
 			{
 			    inserter = new GroupedInserter(groupBy, inserter);
 			}
-			
+
 			if (parentRegion != null)
 			{
 			    inserter = new RegionedInserter(parentRegion, parentConfiguration, inserter);
 			}
-			
+
 			if (inserter == null)
 			{
 			    inserter = new DefaultElementInserter();
 			}
-			
+
 			return inserter;
 		}
 
@@ -120,14 +120,14 @@ namespace NArrange.Core
 			RegionConfiguration parentRegionConfiguration)
 		{
 			IElementArranger arranger = null;
-			
+
 			if (configuration == null)
 			{
 			    throw new ArgumentNullException("configuration");
 			}
-			
+
 			RegionConfiguration regionConfiguration = configuration as RegionConfiguration;
-			
+
 			ChainElementArranger childrenArranger = new ChainElementArranger();
 			foreach (ConfigurationElement childConfiguration in configuration.Elements)
 			{
@@ -142,36 +142,36 @@ namespace NArrange.Core
 			        childElementArranger = CreateElementArranger(childConfiguration, parentConfiguration,
 			            regionConfiguration);
 			    }
-			
+
 			    if (childElementArranger != null)
 			    {
 			        childrenArranger.AddArranger(childElementArranger);
 			    }
 			}
-			
+
 			ElementConfiguration elementConfiguration = configuration as ElementConfiguration;
 			if (elementConfiguration != null)
 			{
 			    ElementArranger elementArranger = null;
-			
+
 			    IElementInserter inserter =
 			        CreateElementInserter(elementConfiguration.ElementType,
 			        elementConfiguration.SortBy, elementConfiguration.GroupBy,
 			        parentConfiguration, parentRegionConfiguration);
-			
+
 			    IElementFilter elementFilter =
 			       CreateElementFilter(elementConfiguration.FilterBy);
-			
+
 			    elementArranger = new ElementArranger(elementConfiguration.ElementType,
 			        inserter, elementFilter, childrenArranger);
-			
+
 			    arranger = elementArranger;
 			}
 			else
 			{
 			    arranger = childrenArranger;
 			}
-			
+
 			return arranger;
 		}
 

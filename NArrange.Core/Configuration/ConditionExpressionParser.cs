@@ -37,6 +37,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using NArrange.Core.CodeElements;
+
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
@@ -44,6 +46,20 @@ namespace NArrange.Core.Configuration
 	/// </summary>
 	public sealed class ConditionExpressionParser
 	{
+		#region Constants
+
+		/// <summary>
+		/// Expression end
+		/// </summary>
+		public const char ExpressionEnd = ')';
+
+		/// <summary>
+		/// Expression start
+		/// </summary>
+		public const char ExpressionStart = '(';
+
+		#endregion Constants
+
 		#region Static Fields
 
 		private static ConditionExpressionParser _instance;
@@ -81,7 +97,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _instance;
 			}
 		}
@@ -98,7 +114,7 @@ namespace NArrange.Core.Configuration
 		public IConditionExpression Parse(string expression)
 		{
 			IConditionExpression conditionExpression = null;
-			
+
 			if (expression == null)
 			{
 			    throw new ArgumentNullException("expression");
@@ -107,21 +123,21 @@ namespace NArrange.Core.Configuration
 			{
 			    throw new ArgumentException("expression");
 			}
-			
+
 			List<IConditionExpression> nodes = new List<IConditionExpression>();
-			
+
 			StringReader reader = new StringReader(expression);
-			
+
 			StringBuilder expressionBuilder = new StringBuilder();
-			
+
 			bool inString = false;
 			bool inAttribute = false;
-			
+
 			int data = reader.Read();
 			while (data > 0)
 			{
 			    char ch = (char)data;
-			
+
 			    switch (ch)
 			    {
 			        case ' ':
@@ -130,16 +146,16 @@ namespace NArrange.Core.Configuration
 			                expressionBuilder.Append(ch);
 			            }
 			            break;
-			
-			        case '$':
+
+			        case AttributeExpression.ExpressionPrefix:
 			            char nextCh = (char)reader.Peek();
-			            if (nextCh == '(')
+			            if (nextCh == ExpressionStart)
 			            {
 			                inAttribute = true;
 			                reader.Read();
 			            }
 			            break;
-			
+
 			        case '=':
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == '=')
@@ -148,12 +164,12 @@ namespace NArrange.Core.Configuration
 			                reader.Read();
 			            }
 			            break;
-			
+
 			        case ':':
 			            nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.Contains));
 			            reader.Read();
 			            break;
-			
+
 			        case 'O':
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == 'r' && !(inString || inAttribute))
@@ -166,7 +182,7 @@ namespace NArrange.Core.Configuration
 			                expressionBuilder.Append(ch);
 			            }
 			            break;
-			
+
 			        case 'A':
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == 'n' && !(inString || inAttribute))
@@ -184,8 +200,8 @@ namespace NArrange.Core.Configuration
 			                expressionBuilder.Append(ch);
 			            }
 			            break;
-			
-			        case ')':
+
+			        case ExpressionEnd:
 			            if (inAttribute)
 			            {
 			                string attribute = expressionBuilder.ToString();
@@ -207,25 +223,25 @@ namespace NArrange.Core.Configuration
 			                inAttribute = false;
 			            }
 			            break;
-			
-			        case '(':
+
+			        case ExpressionStart:
 			            StringBuilder childExpressionBuilder = new StringBuilder();
 			            data = reader.Read();
 			            int depth = 0;
 			            while (data > 0)
 			            {
 			                ch = (char)data;
-			
+
 			                nextCh = (char)reader.Peek();
-			                if (ch == '$' && nextCh == '(')
+			                if (ch == AttributeExpression.ExpressionPrefix && nextCh == ExpressionStart)
 			                {
 			                    inAttribute = true;
 			                }
-			                else if (ch == '(' && !inAttribute)
+			                else if (ch == ExpressionStart && !inAttribute)
 			                {
 			                    depth++;
 			                }
-			                else if (ch == ')')
+			                else if (ch == ExpressionEnd)
 			                {
 			                    if (inAttribute)
 			                    {
@@ -240,7 +256,7 @@ namespace NArrange.Core.Configuration
 			                        break;
 			                    }
 			                }
-			
+
 			                childExpressionBuilder.Append(ch);
 			                data = reader.Read();
 			            }
@@ -248,7 +264,7 @@ namespace NArrange.Core.Configuration
 			                Parse(childExpressionBuilder.ToString());
 			            nodes.Add(nestedExpression);
 			            break;
-			
+
 			        case '\'':
 			            if (inString)
 			            {
@@ -263,24 +279,24 @@ namespace NArrange.Core.Configuration
 			                inString = true;
 			            }
 			            break;
-			
+
 			        default:
 			            expressionBuilder.Append(ch);
 			            break;
 			    }
-			
+
 			    data = reader.Read();
 			}
-			
+
 			List<ExpressionOperator> tempOperators = new List<ExpressionOperator>();
 			List<IConditionExpression> tempNodes = new List<IConditionExpression>();
-			
+
 			Queue<ExpressionOperator> operatorPrecedence = new Queue<ExpressionOperator>();
 			operatorPrecedence.Enqueue(ExpressionOperator.Equal);
 			operatorPrecedence.Enqueue(ExpressionOperator.Contains);
 			operatorPrecedence.Enqueue(ExpressionOperator.And);
 			operatorPrecedence.Enqueue(ExpressionOperator.Or);
-			
+
 			ExpressionOperator currentOperator = operatorPrecedence.Dequeue();
 			while (nodes.Count > 1)
 			{
@@ -288,13 +304,13 @@ namespace NArrange.Core.Configuration
 			    {
 			        OperatorExpressionPlaceholder operatorExpressionPlaceHolder =
 			            nodes[nodeIndex] as OperatorExpressionPlaceholder;
-			
+
 			        if (operatorExpressionPlaceHolder != null &&
 			            operatorExpressionPlaceHolder.Operator == currentOperator)
 			        {
 			            IConditionExpression left = nodes[nodeIndex - 1];
 			            IConditionExpression right = nodes[nodeIndex + 1];
-			
+
 			            if ((operatorExpressionPlaceHolder.Operator == ExpressionOperator.Equal ||
 			                operatorExpressionPlaceHolder.Operator == ExpressionOperator.Contains) &&
 			                !(left is LeafExpression && right is LeafExpression))
@@ -302,21 +318,21 @@ namespace NArrange.Core.Configuration
 			                throw new FormatException(
 			                    string.Format("Invalid expression {0}", expression));
 			            }
-			
+
 			            OperatorExpression operatorExpression = new OperatorExpression(
 			                operatorExpressionPlaceHolder.Operator, left, right);
-			
+
 			            nodes[nodeIndex] = operatorExpression;
 			            nodes.Remove(left);
 			            nodes.Remove(right);
-			
+
 			            //
 			            // Restart processing of this level
 			            //
 			            nodeIndex = 0;
 			        }
 			    }
-			
+
 			    if (operatorPrecedence.Count > 0)
 			    {
 			        currentOperator = operatorPrecedence.Dequeue();
@@ -326,7 +342,7 @@ namespace NArrange.Core.Configuration
 			        break;
 			    }
 			}
-			
+
 			if (nodes.Count != 1)
 			{
 			    throw new FormatException(
@@ -341,7 +357,7 @@ namespace NArrange.Core.Configuration
 			        string.Format("Invalid expression {0}", expression));
 			    }
 			}
-			
+
 			return conditionExpression;
 		}
 

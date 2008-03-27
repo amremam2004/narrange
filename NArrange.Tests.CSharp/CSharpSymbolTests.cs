@@ -38,7 +38,7 @@ namespace NArrange.Tests.CSharp
 			            "Field value should be considered a C# symbol.");
 			    }
 			}
-			
+
 			Assert.IsFalse(CSharpSymbol.IsCSharpSymbol('1'));
 			Assert.IsFalse(CSharpSymbol.IsCSharpSymbol('A'));
 			Assert.IsFalse(CSharpSymbol.IsCSharpSymbol('$'));

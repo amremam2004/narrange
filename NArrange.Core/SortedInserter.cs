@@ -49,9 +49,9 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Comparison<ICodeElement> _comparison;		
-		private ElementType _elementType;		
-		
+		private Comparison<ICodeElement> _comparison;
+		private ElementType _elementType;
+
 		#endregion Fields
 
 		#region Constructors
@@ -67,7 +67,7 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("sortBy");
 			}
-			
+
 			_elementType = elementType;
 			_comparison = CreateComparison(sortBy);
 		}
@@ -81,7 +81,7 @@ namespace NArrange.Core
 			_comparison = delegate(ICodeElement x, ICodeElement y)
 			{
 			    int compareValue = 0;
-			
+
 			    if (x == null && y != null)
 			    {
 			        compareValue = -1;
@@ -102,17 +102,17 @@ namespace NArrange.Core
 			                    compareValue = attributedX.Access.CompareTo(attributedY.Access);
 			                }
 			                break;
-			
+
 			            case ElementAttribute.Name:
 			                    compareValue = StringComparer.Ordinal.Compare(
 			                        x.Name, y.Name);
 			                    break;
-			
+
 			            default:
 			                compareValue = 0;
 			                break;
 			        }
-			
+
 			        //
 			        // Inner sort?
 			        //
@@ -125,15 +125,15 @@ namespace NArrange.Core
 			            }
 			        }
 			    }
-			
+
 			    if (sortBy.Direction == ListSortDirection.Descending)
 			    {
 			        compareValue = -compareValue;
 			    }
-			
+
 			    return compareValue;
 			};
-			
+
 			return _comparison;
 		}
 
@@ -150,15 +150,15 @@ namespace NArrange.Core
 		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			ICodeElement compareElement = null;
-			
+
 			int insertIndex = 0;
-			
+
 			if (parentElement.Children.Count > 0)
 			{
 			    for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
 			    {
 			        compareElement = parentElement.Children[elementIndex];
-			
+
 			        bool greaterOrEqual =
 			            (_elementType == ElementType.NotSpecified && 
 			            _comparison(codeElement, compareElement) >= 0) ||
@@ -175,7 +175,7 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			parentElement.InsertChild(insertIndex, codeElement);
 		}
 

@@ -46,8 +46,8 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _bodyText;		
-		
+		private string _bodyText;
+
 		#endregion Fields
 
 		#region Constructors
@@ -89,12 +89,12 @@ namespace NArrange.Core.CodeElements
 		public override object Clone()
 		{
 			TextCodeElement clone = base.Clone() as TextCodeElement;
-			
+
 			//
 			// Copy state
 			//
 			clone._bodyText = _bodyText;
-			
+
 			return clone;
 		}
 

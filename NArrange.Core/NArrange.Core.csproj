@@ -70,6 +70,7 @@
     <Compile Include="CodeElements\UsingElement.cs" />
     <Compile Include="CodeElements\CommentElement.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
+    <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
     <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
     <Compile Include="Configuration\HandlerConfiguration.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="ProjectManager.cs" />
     <Compile Include="SolutionParser.cs" />
     <Compile Include="IProjectParser.cs" />
-    <Compile Include="ElementUtilities.cs" />
+    <Compile Include="CodeElements\ElementUtilities.cs" />
     <Compile Include="SourceHandler.cs" />
     <Compile Include="ICodeWriter.cs" />
     <Compile Include="RegionedInserter.cs" />

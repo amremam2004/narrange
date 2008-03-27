@@ -19,8 +19,8 @@ namespace NArrange.Tests.CSharp
 	{
 		#region Fields
 
-		private string _testProjectFile;		
-		
+		private string _testProjectFile;
+
 		#endregion Fields
 
 		#region Public Methods
@@ -50,14 +50,14 @@ namespace NArrange.Tests.CSharp
 			    Path.Combine(Path.GetTempPath(), "Folder1\\Folder2\\Class3.cs"),
 			    Path.Combine(Path.GetTempPath(), "Properties\\AssemblyInfo.cs")
 			};
-			
+
 			CSharpProjectParser projectParser = new CSharpProjectParser();
-			
+
 			ReadOnlyCollection<string> sourceFiles = projectParser.Parse(_testProjectFile);
-			
+
 			Assert.AreEqual(testSourceFiles.Length, sourceFiles.Count, 
 			    "Unexpected number of source files.");
-			
+
 			foreach (string testSourceFile in testSourceFiles)
 			{
 			    Assert.IsTrue(sourceFiles.Contains(testSourceFile),
@@ -73,7 +73,7 @@ namespace NArrange.Tests.CSharp
 		public void TestFixtureSetup()
 		{
 			_testProjectFile = Path.GetTempFileName() + ".csproj";
-			
+
 			WriteTestProject(_testProjectFile);
 		}
 
@@ -107,10 +107,10 @@ namespace NArrange.Tests.CSharp
 			{
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");
-			
+
 			    StreamReader reader = new StreamReader(stream);
 			    string contents = reader.ReadToEnd();
-			
+
 			    File.WriteAllText(fileName, contents);
 			}
 		}

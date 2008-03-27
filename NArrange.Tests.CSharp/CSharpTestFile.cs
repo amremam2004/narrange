@@ -24,9 +24,9 @@ namespace NArrange.Tests.CSharp
 
 		#region Fields
 
-		private Assembly _assembly;		
-		private string _resourceName;		
-		
+		private Assembly _assembly;
+		private string _resourceName;
+
 		#endregion Fields
 
 		#region Constructors
@@ -69,19 +69,19 @@ namespace NArrange.Tests.CSharp
 			else
 			{
 			    Assembly assembly = null;
-			
+
 			    using (TextReader reader = GetTestFileReader(resourceName))
 			    {
 			        string source = reader.ReadToEnd();
-			
+
 			        CompilerResults results = Compile(source, resourceName);
-			
+
 			        if (results.Errors.Count > 0)
 			        {
 			            CompilerError error = null;
-			
+
 			            error = GetCompilerError(results);
-			
+
 			            if (error != null)
 			            {
 			                Assert.Fail("Test source code should not produce compiler errors. " +
@@ -89,16 +89,16 @@ namespace NArrange.Tests.CSharp
 			                    error.ErrorText, resourceName,
 			                    error.Line, error.Column);
 			            }
-			
+
 			            assembly = results.CompiledAssembly;
 			        }
 			    }
-			
+
 			    if (assembly != null)
 			    {
 			        _compiledSourceFiles.Add(resourceName, assembly);
 			    }
-			
+
 			    return assembly;
 			}
 		}
@@ -119,18 +119,18 @@ namespace NArrange.Tests.CSharp
 			// Compile the test source file
 			//
 			CodeDomProvider provider = CSharpCodeProvider.CreateProvider("CSharp");
-			
+
 			CompilerParameters parameters = new CompilerParameters();
 			parameters.GenerateInMemory = true;
 			parameters.OutputAssembly = name + ".dll";
 			parameters.CompilerOptions = "/unsafe";
-			
+
 			parameters.ReferencedAssemblies.Add("mscorlib.dll");
 			parameters.ReferencedAssemblies.Add("System.dll");
-			
-			
+
+
 			CompilerResults results = provider.CompileAssemblyFromSource(parameters, source);
-			
+
 			return results;
 		}
 
@@ -142,7 +142,7 @@ namespace NArrange.Tests.CSharp
 		public static CompilerError GetCompilerError(CompilerResults results)
 		{
 			CompilerError error = null;
-			
+
 			foreach (CompilerError compilerError in results.Errors)
 			{
 			    if (!compilerError.IsWarning)
@@ -151,7 +151,7 @@ namespace NArrange.Tests.CSharp
 			        break;
 			    }
 			}
-			
+
 			return error;
 		}
 
@@ -184,10 +184,10 @@ namespace NArrange.Tests.CSharp
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			Stream stream = assembly.GetManifestResourceStream(
 			   typeof(CSharpTestUtilities), "TestSourceFiles." + resourceName);
-			
+
 			Assert.IsNotNull(stream,
 			    "Test stream could not be retrieved.");
-			
+
 			return stream;
 		}
 

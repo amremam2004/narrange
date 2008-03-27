@@ -25,10 +25,10 @@ namespace NArrange.Tests.Core.CodeElements
 		public void AddHeaderCommentLineTest()
 		{
 			TCodeElement codeElement = new TCodeElement();
-			
+
 			codeElement.AddHeaderCommentLine("Regular comment line", false);
 			codeElement.AddHeaderCommentLine("<summary>XML comment line</summary>", true);
-			
+
 			Assert.AreEqual(2, codeElement.HeaderComments.Count,
 			    "AddHeaderCommentLine did not add a comment to the collection.");
 			Assert.AreEqual(CommentType.Line, codeElement.HeaderComments[0].Type,
@@ -52,12 +52,12 @@ namespace NArrange.Tests.Core.CodeElements
 			    new CommentElement("Test 1"));
 			codeElement.AddHeaderComment(
 			   new CommentElement("Test 2"));
-			
+
 			Assert.AreEqual(2, codeElement.HeaderComments.Count,
 			    "Unexpected number of header comment lines.");
-			
+
 			codeElement.ClearHeaderCommentLines();
-			
+
 			Assert.AreEqual(0, codeElement.HeaderComments.Count,
 			    "Header comment lines was not cleared.");
 		}

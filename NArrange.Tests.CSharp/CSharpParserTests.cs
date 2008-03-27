@@ -42,23 +42,23 @@ namespace NArrange.Tests.CSharp
 		{
 			TypeElement classElement;
 			CSharpParser parser = new CSharpParser();
-			
+
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(9, elements.Count,
 			    "Unexpected number of top-level elements.");
-			
+
 			NamespaceElement namespaceElement = elements[8] as NamespaceElement;
 			Assert.IsNotNull(namespaceElement, "Expected a namespace element.");
-			
+
 			Assert.AreEqual(2, namespaceElement.Children.Count,
 			    "Unexpected number of namespace elements.");
-			
+
 			UsingElement usingElement = namespaceElement.Children[0] as UsingElement;
 			Assert.IsNotNull(usingElement, "Expected a using element.");
 			Assert.AreEqual("System.ComponentModel", usingElement.Name,
 			    "Unexpected using element name.");
-			
+
 			classElement = namespaceElement.Children[1] as TypeElement;
 			Assert.IsNotNull(classElement, "Expected a type element.");
 			Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
@@ -66,7 +66,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected class name.");
 			Assert.AreEqual(3, classElement.HeaderComments.Count,
 				"Unexpected number of header comments.");
-			
+
 			return classElement;
 		}
 
@@ -126,44 +126,44 @@ namespace NArrange.Tests.CSharp
 		public void ParseAssemblyAttributesTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetAssemblyAttributesFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(16, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    //
 			    // Using statements
 			    //
 			    UsingElement usingElement;
-			
+
 			    usingElement = elements[0] as UsingElement;
 			    Assert.IsNotNull(usingElement,
 			        "Element is not a UsingElement.");
 			    Assert.AreEqual("System.Reflection", usingElement.Name,
 			        "Unexpected name.");
-			
+
 			    usingElement = elements[1] as UsingElement;
 			    Assert.IsNotNull(usingElement,
 			        "Element is not a UsingElement.");
 			    Assert.AreEqual("System.Runtime.CompilerServices", usingElement.Name,
 			        "Unexpected name.");
-			
+
 			    usingElement = elements[2] as UsingElement;
 			    Assert.IsNotNull(usingElement,
 			        "Element is not a UsingElement.");
 			    Assert.AreEqual("System.Runtime.InteropServices", usingElement.Name,
 			        "Unexpected name.");
-			
+
 			    //
 			    // Attributes
 			    //
 			    AttributeElement attributeElement;
-			
+
 			    attributeElement = elements[3] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -171,7 +171,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(3, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[4] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -179,7 +179,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[5] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -187,7 +187,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[6] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -195,7 +195,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[7] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -203,7 +203,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[8] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -211,7 +211,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[9] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -219,7 +219,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[10] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -227,7 +227,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[11] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -235,7 +235,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(3, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[12] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -243,7 +243,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(1, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[13] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -251,7 +251,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(9, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    attributeElement = elements[14] as AttributeElement;
 			    Assert.IsNotNull(attributeElement,
 			        "Element is not an AttributeElement.");
@@ -259,7 +259,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected attribute text.");
 			    Assert.AreEqual(0, attributeElement.HeaderComments.Count,
 			        "An unexpected number of header comment lines were parsed.");
-			
+
 			    //
 			    // Namespace
 			    //
@@ -287,7 +287,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly\")");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -300,10 +300,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly\")]");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			AttributeElement attributeElement = elements[0] as AttributeElement;
@@ -324,10 +324,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "[assembly: AssemblyDescription(\"SampleAssembly]\")]");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			AttributeElement attributeElement = elements[0] as AttributeElement;
@@ -347,41 +347,41 @@ namespace NArrange.Tests.CSharp
 		public void ParseClassDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetClassDefinitionFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(4, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    UsingElement using1 = elements[0] as UsingElement;
 			    Assert.IsNotNull(using1, "Expected a UsingElement.");
 			    Assert.AreEqual("System", using1.Name,
 			        "Unexpected using name.");
-			
+
 			    UsingElement using2 = elements[1] as UsingElement;
 			    Assert.IsNotNull(using2, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Collections.Generic", using2.Name,
 			        "Unexpected using name.");
-			
+
 			    UsingElement using3 = elements[2] as UsingElement;
 			    Assert.IsNotNull(using3, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Text", using3.Name,
 			        "Unexpected using name.");
-			
+
 			    NamespaceElement namespaceElement = elements[3] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
 			        "Unexpected namespace name.");
-			
+
 			    Assert.IsNotNull(namespaceElement.Children,
 			        "Namespace Children collection should not be null.");
 			    Assert.AreEqual(1, namespaceElement.Children.Count,
 			        "An unexpected number of namespace child elements were parsed.");
-			
+
 			    TypeElement classElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(classElement, "Expected a TypeElement.");
 			    Assert.AreEqual("SampleClass", classElement.Name,
@@ -410,7 +410,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where T : {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -426,7 +426,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where T {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -442,7 +442,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> when T : {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -458,7 +458,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where T : IDisposable, new {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -477,7 +477,7 @@ namespace NArrange.Tests.CSharp
 			    "{\r\n" + 
 			    "\t#region Fields\r\n" + 
 			    "}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -497,7 +497,7 @@ namespace NArrange.Tests.CSharp
 			    "\t#region\r\n" +
 			    "\t#endregion\r\n" + 
 			    "}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -514,7 +514,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where T : new(), IDisposable {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -527,10 +527,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "partial class Test{}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			TypeElement typeElement = elements[0] as TypeElement;
@@ -557,7 +557,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where T : IComparable<T {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -573,7 +573,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -589,7 +589,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test<T> where S : new() {}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -604,16 +604,16 @@ namespace NArrange.Tests.CSharp
 			    "/*\r\n" + 
 			    " * Block comment here\r\n" + 
 			    " */\r\n");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			CommentElement commentBlockElement = elements[0] as CommentElement;
 			Assert.AreEqual(CommentType.Block, commentBlockElement.Type,
 			    "Element is not a CommentBlockElement.");
-			
+
 			string[] lines = commentBlockElement.Text.Split(
 			    new string[] { Environment.NewLine }, StringSplitOptions.None);
 			Assert.AreEqual(3, lines.Length,
@@ -634,10 +634,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -659,10 +659,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max) : base(value){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -688,7 +688,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(int value, int max) : base");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -701,10 +701,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public TestClass(){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -729,12 +729,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    ConstructorElement constructor;
-			
+
 			    RegionElement regionElement = classElement.Children[ConstructorRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    constructor = regionElement.Children[0] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
@@ -747,7 +747,7 @@ namespace NArrange.Tests.CSharp
 			        "Constructor should not be static.");
 			    Assert.IsEmpty(constructor.Params,
 			        "Parameter string should be empty.");
-			
+
 			    constructor = regionElement.Children[1] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
@@ -760,7 +760,7 @@ namespace NArrange.Tests.CSharp
 			        "Constructor should not be static.");
 			    Assert.AreEqual("string[] arrayParam", constructor.Params,
 			        "Unexpected parameters string.");
-			
+
 			    constructor = regionElement.Children[2] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("SampleClass", constructor.Name,
@@ -773,7 +773,7 @@ namespace NArrange.Tests.CSharp
 			        "Constructor should be static.");
 			    Assert.IsEmpty(constructor.Params,
 			        "Parameter string should be empty.");
-			
+
 			    constructor = regionElement.Children[3] as ConstructorElement;
 			    Assert.IsNotNull(constructor, "Expected a constructor.");
 			    Assert.AreEqual("~SampleClass", constructor.Name,
@@ -800,12 +800,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    DelegateElement delegateElement;
-			
+
 			    RegionElement regionElement = classElement.Children[DelegateRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    delegateElement = regionElement.Children[0] as DelegateElement;
 			    Assert.IsNotNull(delegateElement, "Expected a delegate.");
 			    Assert.AreEqual("SampleEventHandler", delegateElement.Name,
@@ -832,7 +832,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual("object sender, bool boolParam", delegateElement.Params,
 			        "Unexpected parameter string.");
-			
+
 				delegateElement = regionElement.Children[1] as DelegateElement;
 				Assert.IsNotNull(delegateElement, "Expected a delegate.");
 				Assert.AreEqual("Compare", delegateElement.Name,
@@ -881,12 +881,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    EventElement eventElement;
-			
+
 			    RegionElement regionElement = classElement.Children[EventRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    eventElement = regionElement.Children[0] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("SimpleEvent", eventElement.Name,
@@ -913,7 +913,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.IsNull(eventElement.BodyText,
 			        "Unexpected body text.");
-			
+
 			    eventElement = regionElement.Children[1] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("GenericEvent", eventElement.Name,
@@ -940,7 +940,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.IsNull(eventElement.BodyText,
 			        "Unexpected body text.");
-			
+
 			    eventElement = regionElement.Children[2] as EventElement;
 			    Assert.IsNotNull(eventElement, "Expected an event.");
 			    Assert.AreEqual("ExplicitEvent", eventElement.Name,
@@ -980,10 +980,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private static Dictionary<string, int> _dictionary = new Dictionary<string, int>();");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -1010,10 +1010,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private char val = 'X';");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -1037,10 +1037,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private int val = 17;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -1065,10 +1065,10 @@ namespace NArrange.Tests.CSharp
 		{
 			string fieldText = "private char val = '\\'';";
 			StringReader reader = new StringReader(fieldText);
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -1082,13 +1082,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.AreEqual("'\\''", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-			
+
 			fieldText = "private char val = '\\\\';";
 			reader = new StringReader(fieldText);
-			
+
 			parser = new CSharpParser();
 			elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 				"An unexpected number of elements were parsed.");
 			fieldElement = elements[0] as FieldElement;
@@ -1102,13 +1102,13 @@ namespace NArrange.Tests.CSharp
 				"Unexpected member type.");
 			Assert.AreEqual("'\\\\'", fieldElement.InitialValue,
 				"Unexpected initial value.");
-			
+
 			fieldText = "private string val = \"\\\\\\\\Server\\\\share\\\\\";";
 			reader = new StringReader(fieldText);
-			
+
 			parser = new CSharpParser();
 			elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 				"An unexpected number of elements were parsed.");
 			fieldElement = elements[0] as FieldElement;
@@ -1122,13 +1122,13 @@ namespace NArrange.Tests.CSharp
 				"Unexpected member type.");
 			Assert.AreEqual("\"\\\\\\\\Server\\\\share\\\\\"", fieldElement.InitialValue,
 				"Unexpected initial value.");
-			
+
 			fieldText = "private string val = @\"\\\\Server\\share\\\";";
 			reader = new StringReader(fieldText);
-			
+
 			parser = new CSharpParser();
 			elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 				"An unexpected number of elements were parsed.");
 			fieldElement = elements[0] as FieldElement;
@@ -1155,12 +1155,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    FieldElement field;
-			
+
 			    RegionElement regionElement = classElement.Children[FieldRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    field = regionElement.Children[0] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_simpleField", field.Name,
@@ -1179,7 +1179,7 @@ namespace NArrange.Tests.CSharp
 			        "Field should not be readonly.");
 			    Assert.IsFalse(field.IsConstant,
 			       "Field should not be a constant.");
-			
+
 			    field = regionElement.Children[1] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_fieldWithInitialVal", field.Name,
@@ -1194,7 +1194,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
-			
+
 			    field = regionElement.Children[2] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("StaticStr", field.Name,
@@ -1211,7 +1211,7 @@ namespace NArrange.Tests.CSharp
 			        "Field should be static.");
 			    Assert.IsTrue(field.IsReadOnly,
 			        "Field should be readonly.");
-			
+
 			    field = regionElement.Children[3] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_genericField", field.Name,
@@ -1226,7 +1226,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
-			
+
 			    field = regionElement.Children[4] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_arrayField", field.Name,
@@ -1241,7 +1241,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
-			
+
 			    field = regionElement.Children[5] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("@internal", field.Name,
@@ -1256,7 +1256,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
-			
+
 			    field = regionElement.Children[6] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_globalNamespaceTypeField", field.Name,
@@ -1271,7 +1271,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(field.IsStatic,
 			        "Field should not be static.");
-			
+
 			    field = regionElement.Children[7] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_attributedField", field.Name,
@@ -1288,7 +1288,7 @@ namespace NArrange.Tests.CSharp
 			        "Field should be static.");
 			    Assert.AreEqual(1, field.Attributes.Count,
 			        "Unexpected number of attributes.");
-			
+
 			    field = regionElement.Children[8] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("ConstantStr", field.Name,
@@ -1309,7 +1309,7 @@ namespace NArrange.Tests.CSharp
 			       "Field should be a constant.");
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be readonly.");
-			
+
 			    field = regionElement.Children[9] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_volatileField", field.Name,
@@ -1332,7 +1332,7 @@ namespace NArrange.Tests.CSharp
 			       "Field should not be a constant.");
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
-			
+
 			    field = regionElement.Children[10] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val1, _val2", field.Name,
@@ -1355,7 +1355,7 @@ namespace NArrange.Tests.CSharp
 			       "Field should not be a constant.");
 			    Assert.IsFalse(field.IsReadOnly,
 			       "Field should not be a readonly.");
-			
+
 			    field = regionElement.Children[11] as FieldElement;
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val3, _val4, _val5, _val6", field.Name,
@@ -1389,10 +1389,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "/*Comment1\r\nComment2*/</summary>\r\npublic TestClass(){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -1419,10 +1419,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "//Comment1\r\n//Comment2\r\npublic TestClass(){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -1450,10 +1450,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "///<summary>Comment1\r\n///Comment2</summary>\r\npublic TestClass(){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			ConstructorElement constructorElement = elements[0] as ConstructorElement;
@@ -1481,31 +1481,31 @@ namespace NArrange.Tests.CSharp
 		public void ParseInterfaceDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetInterfaceDefinitionFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(2, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    UsingElement using1 = elements[0] as UsingElement;
 			    Assert.IsNotNull(using1, "Expected a UsingElement.");
 			    Assert.AreEqual("System", using1.Name,
 			        "Unexpected using name.");
-			
+
 			    NamespaceElement namespaceElement = elements[1] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
 			        "Unexpected namespace name.");
-			
+
 			    Assert.IsNotNull(namespaceElement.Children,
 			        "Namespace Children collection should not be null.");
 			    Assert.AreEqual(1, namespaceElement.Children.Count,
 			        "An unexpected number of namespace child elements were parsed.");
-			
+
 			    TypeElement interfaceElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(interfaceElement, "Expected a TypeElement.");
 			    Assert.AreEqual(TypeElementType.Interface, interfaceElement.Type,
@@ -1537,10 +1537,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 				"public interface ISettings{\r\nevent SettingsEventHandler Changed;\r\n}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 				"An unexpected number of elements were parsed.");
 			TypeElement typeElement = elements[0] as TypeElement;
@@ -1552,7 +1552,7 @@ namespace NArrange.Tests.CSharp
 				"Unexpected type name.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 				"Unexpected type access.");
-			
+
 			Assert.AreEqual(1, typeElement.Children.Count,
 				"An unexpected number of child elements were parsed.");
 			EventElement eventElement = typeElement.Children[0] as EventElement;
@@ -1574,7 +1574,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class struct Test{}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -1590,7 +1590,7 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    Assert.AreEqual(
 			        NestedTypeRegionIndex + 1, 
 			        classElement.Children.Count,
@@ -1609,7 +1609,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -1622,10 +1622,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			MethodElement methodElement = elements[0] as MethodElement;
@@ -1648,10 +1648,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){/*Test }*/}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			MethodElement methodElement = elements[0] as MethodElement;
@@ -1676,10 +1676,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){\r\n//Test }\r\n}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			MethodElement methodElement = elements[0] as MethodElement;
@@ -1703,10 +1703,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private void DoSomething(){Console.WriteLine(\"}\";Console.WriteLine();}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			MethodElement methodElement = elements[0] as MethodElement;
@@ -1733,12 +1733,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    MethodElement method;
-			
+
 			    RegionElement regionElement = classElement.Children[MethodRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    method = regionElement.Children[0] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("DoSomething", method.Name,
@@ -1765,7 +1765,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual(string.Empty, method.Params,
 			        "Unexpected parameter string.");
-			
+
 			    method = regionElement.Children[1] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("ToString", method.Name,
@@ -1796,7 +1796,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual(string.Empty, method.Params,
 			        "Unexpected parameter string.");
-			
+
 			    method = regionElement.Children[2] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetBoolValue", method.Name,
@@ -1825,7 +1825,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected parameter string.");
 			    Assert.IsTrue(method.BodyText.Contains("return true;"),
 			        "Unexpected body text.");
-			
+
 			    method = regionElement.Children[3] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetWithParamAttributes", method.Name,
@@ -1858,7 +1858,7 @@ namespace NArrange.Tests.CSharp
 			        method.Params.Contains(
 			        "[Description(\"String parameter\")] string stringParam"),
 			        "Unexpected params string.");
-			
+
 			    method = regionElement.Children[4] as MethodElement;
 			    Assert.IsNotNull(method, "Expected a method.");
 			    Assert.AreEqual("GetWithTypeParameters", method.Name,
@@ -1896,7 +1896,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type parameter name.");
 			    Assert.AreEqual(2, method.TypeParameters[1].Constraints.Count,
 			        "Unexpected type parameter constraints.");
-			
+
 			    //
 			    // External method
 			    //
@@ -1931,7 +1931,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected params string.");
 			    Assert.AreEqual(0, method.TypeParameters.Count,
 			        "Unexpected number of type parameters.");
-			
+
 			    //
 			    // Unsafe method
 			    //
@@ -1979,46 +1979,46 @@ namespace NArrange.Tests.CSharp
 		public void ParseMultiClassDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetMultiClassDefinitionFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(5, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    UsingElement using1 = elements[0] as UsingElement;
 			    Assert.IsNotNull(using1, "Expected a UsingElement.");
 			    Assert.AreEqual("System", using1.Name,
 			        "Unexpected using name.");
-			
+
 			    UsingElement using2 = elements[1] as UsingElement;
 			    Assert.IsNotNull(using2, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Collections.Generic", using2.Name,
 			        "Unexpected using name.");
-			
+
 			    UsingElement using3 = elements[2] as UsingElement;
 			    Assert.IsNotNull(using3, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Text", using3.Name,
 			        "Unexpected using name.");
-			
+
 			    UsingElement using4 = elements[3] as UsingElement;
 			    Assert.IsNotNull(using4, "Expected a UsingElement.");
 			    Assert.AreEqual("System.ComponentModel", using4.Name,
 			        "Unexpected using name.");
-			
+
 			    NamespaceElement namespaceElement = elements[4] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
 			        "Unexpected namespace name.");
-			
+
 			    Assert.IsNotNull(namespaceElement.Children,
 			        "Namespace Children collection should not be null.");
 			    Assert.AreEqual(8, namespaceElement.Children.Count,
 			        "An unexpected number of namespace child elements were parsed.");
-			
+
 			    //
 			    // Sample class 1
 			    //
@@ -2032,7 +2032,7 @@ namespace NArrange.Tests.CSharp
 			        "Class should not be static.");
 			    Assert.IsFalse(classElement1.IsSealed,
 			       "Class should not be sealed.");
-			
+
 			    //
 			    // Sample class 2
 			    //
@@ -2050,7 +2050,7 @@ namespace NArrange.Tests.CSharp
 			        "Class should not be static.");
 			    Assert.IsFalse(classElement2.IsSealed,
 			       "Class should not be sealed.");
-			
+
 			    //
 			    // Sample class 3
 			    //
@@ -2072,7 +2072,7 @@ namespace NArrange.Tests.CSharp
 			        "Class should not be static.");
 			    Assert.IsFalse(classElement3.IsSealed,
 			       "Class should not be sealed.");
-			
+
 			    //
 			    // Sample class 4
 			    //
@@ -2092,10 +2092,10 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected interface name.");
 			    Assert.AreEqual("IDisposable", classElement4.Interfaces[1],
 			        "Unexpected interface name.");
-			
+
 			    Assert.AreEqual(2, classElement4.TypeParameters.Count,
 			        "Unexpected number of type parameters.");
-			
+
 			    TypeParameter parameter1 = classElement4.TypeParameters[0];
 			    Assert.AreEqual("T1", parameter1.Name,
 			        "Unexpected type parameter name.");
@@ -2108,7 +2108,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type parameter contraint.");
 			    Assert.AreEqual("new()", parameter1.Constraints[2],
 			        "Unexpected type parameter contraint.");
-			
+
 			    TypeParameter parameter2 = classElement4.TypeParameters[1];
 			    Assert.AreEqual("T2", parameter2.Name,
 			        "Unexpected type parameter name.");
@@ -2123,7 +2123,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected type parameter contraint.");
 			    Assert.AreEqual("new()", parameter2.Constraints[3],
 			        "Unexpected type parameter contraint.");
-			
+
 			    //
 			    // Sample class 5
 			    //
@@ -2137,7 +2137,7 @@ namespace NArrange.Tests.CSharp
 			        "Class should be static.");
 			    Assert.IsFalse(classElement5.IsSealed,
 			       "Class should not be sealed.");
-			
+
 			    //
 			    // Sample class 6
 			    //
@@ -2151,7 +2151,7 @@ namespace NArrange.Tests.CSharp
 			        "Class should be static.");
 			    Assert.IsFalse(classElement6.IsSealed,
 			       "Class should not be sealed.");
-			
+
 			    //
 			    // Sample class 7
 			    //
@@ -2171,7 +2171,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected interface name.");
 			    Assert.AreEqual("IComparable<int>", classElement7.Interfaces[1],
 			        "Unexpected interface name.");
-			
+
 			    //
 			    // Sample class 8
 			    //
@@ -2198,10 +2198,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private int val1, val2 = 1;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -2229,14 +2229,14 @@ namespace NArrange.Tests.CSharp
 			    "private int val1 , val2;",
 			    "private int val1 ,val2;"
 			};
-			
+
 			foreach (string fieldDefinition in fieldDefinitions)
 			{
 			    StringReader reader = new StringReader(fieldDefinition);
-			
+
 			    CSharpParser parser = new CSharpParser();
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.AreEqual(1, elements.Count,
 			        "An unexpected number of elements were parsed. Field definition: {0}", 
 			        fieldDefinition);
@@ -2261,21 +2261,21 @@ namespace NArrange.Tests.CSharp
 		public void ParseMultipleNamespaceTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetMultipleNamespaceFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(2, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    NamespaceElement namespaceElement1 = elements[0] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement1, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace1", namespaceElement1.Name,
 			        "Unexpected namespace name.");
-			
+
 			    NamespaceElement namespaceElement2 = elements[1] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement2, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace2", namespaceElement2.Name,
@@ -2295,7 +2295,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "namespace TestNamespace{");
-			
+
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
 		}
@@ -2312,7 +2312,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "namespace TestNamespace");
-			
+
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
 		}
@@ -2328,12 +2328,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    TypeElement type;
-			
+
 			    RegionElement regionElement = classElement.Children[NestedTypeRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    type = regionElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Enum, type.Type,
@@ -2352,7 +2352,7 @@ namespace NArrange.Tests.CSharp
 			        "Type should not be sealed.");
 			    Assert.AreEqual(1, type.Attributes.Count,
 			        "Unexpected number of attributes.");
-			
+
 			    type = regionElement.Children[1] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Structure, type.Type,
@@ -2373,7 +2373,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual(2, type.Children.Count,
 			        "Unexpected number of child elements.");
-			
+
 			    type = regionElement.Children[2] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Class, type.Type,
@@ -2394,7 +2394,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual(1, type.Children.Count,
 			        "Unexpected number of child elements.");
-			
+
 			    type = regionElement.Children[3] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
 			    Assert.AreEqual(TypeElementType.Class, type.Type,
@@ -2434,7 +2434,7 @@ namespace NArrange.Tests.CSharp
 			    "\tprivate bool _test = false;\r\n" +
 			    "#endif\r\n" + 
 			    "}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -2461,16 +2461,16 @@ namespace NArrange.Tests.CSharp
 			{
 			    CSharpParser parser = new CSharpParser();
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.AreEqual(2, elements.Count,
 			        "Unexpected number of top-level elements.");
-			
+
 			    NamespaceElement namespaceElement = elements[1] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a namespace element.");
-			
+
 			    Assert.AreEqual(1, namespaceElement.Children.Count,
 			        "Unexpected number of namespace elements.");
-			
+
 			    TypeElement classElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(classElement, "Expected a type element.");
 			    Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
@@ -2491,21 +2491,21 @@ namespace NArrange.Tests.CSharp
 			    
 			    Assert.AreEqual(8, classElement.Children.Count,
 			        "Unexpected number of child elements.");
-			
+
 			    FieldElement fieldElement = classElement.Children[0] as FieldElement;
 			    Assert.IsNotNull(fieldElement, "Expected a field element.");
 			    Assert.AreEqual("num, den", fieldElement.Name,
 			        "Unexpected field name.");
 			    Assert.AreEqual("int", fieldElement.Type,
 			        "Unexpected field type.");
-			
+
 			    ConstructorElement constructorElement = classElement.Children[1] as ConstructorElement;
 			    Assert.IsNotNull(constructorElement, "Expected a constructor element.");
 			    Assert.AreEqual("Fraction", constructorElement.Name,
 			        "Unexpected constructor name.");
 			    Assert.AreEqual("int num, int den", constructorElement.Params,
 			        "Unexpected constructor parameters.");
-			
+
 			    MethodElement operatorElement = classElement.Children[2] as MethodElement;
 			    Assert.IsNotNull(operatorElement, "Expected a method element.");
 			    Assert.IsTrue(operatorElement.IsOperator,
@@ -2524,7 +2524,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator parameters.");
 			    Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 			        "Unexpected operator body text.");
-			
+
 			    operatorElement = classElement.Children[3] as MethodElement;
 			    Assert.IsNotNull(operatorElement, "Expected a method element.");
 			    Assert.IsTrue(operatorElement.IsOperator,
@@ -2543,7 +2543,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator parameters.");
 			    Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 			        "Unexpected operator body text.");
-			
+
 				operatorElement = classElement.Children[4] as MethodElement;
 				Assert.IsNotNull(operatorElement, "Expected a method element.");
 				Assert.IsTrue(operatorElement.IsOperator,
@@ -2562,7 +2562,7 @@ namespace NArrange.Tests.CSharp
 					"Unexpected operator parameters.");
 				Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 					"Unexpected operator body text.");
-			
+
 				operatorElement = classElement.Children[5] as MethodElement;
 				Assert.IsNotNull(operatorElement, "Expected a method element.");
 				Assert.IsTrue(operatorElement.IsOperator,
@@ -2581,7 +2581,7 @@ namespace NArrange.Tests.CSharp
 					"Unexpected operator parameters.");
 				Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 					"Unexpected operator body text.");
-			
+
 			    operatorElement = classElement.Children[6] as MethodElement;
 			    Assert.IsNotNull(operatorElement, "Expected a method element.");
 			    Assert.IsTrue(operatorElement.IsOperator,
@@ -2600,7 +2600,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator parameters.");
 			    Assert.IsTrue(operatorElement.BodyText.Contains("return"),
 			        "Unexpected operator body text.");
-			
+
 			    operatorElement = classElement.Children[7] as MethodElement;
 			    Assert.IsNotNull(operatorElement, "Expected a method element.");
 			    Assert.IsTrue(operatorElement.IsOperator,
@@ -2633,12 +2633,12 @@ namespace NArrange.Tests.CSharp
 			using (TextReader reader = testFile.GetReader())
 			{
 			    TypeElement classElement = GetMembersTestClass(reader);
-			
+
 			    PropertyElement property;
-			
+
 			    RegionElement regionElement = classElement.Children[PropertyRegionIndex] as RegionElement;
 			    Assert.IsNotNull(regionElement, "Expected a region element.");
-			
+
 			    property = regionElement.Children[0] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("SimpleProperty", property.Name,
@@ -2663,7 +2663,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("get"), "Unexpected body text.");
 			    Assert.IsTrue(
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
-			
+
 			    property = regionElement.Children[1] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("ProtectedProperty", property.Name,
@@ -2688,7 +2688,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("get"), "Unexpected body text.");
 			    Assert.IsFalse(
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
-			
+
 			    property = regionElement.Children[2] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("StaticProperty", property.Name,
@@ -2715,7 +2715,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			    Assert.AreEqual(0, property.Attributes.Count,
 			        "Unexpected number of attributes.");
-			
+
 			    property = regionElement.Children[3] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("AttributedProperty", property.Name,
@@ -2742,7 +2742,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			    Assert.AreEqual(2, property.Attributes.Count,
 			        "Unexpected number of attributes.");
-			
+
 			    property = regionElement.Children[4] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("GenericProperty", property.Name,
@@ -2773,7 +2773,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of attributes.");
 			    Assert.AreEqual("Obsolete", property.Attributes[0].BodyText,
 			        "Unexpected attribute text.");
-			
+
 			    property = regionElement.Children[5] as PropertyElement;
 			    Assert.IsNotNull(property, "Expected a property.");
 			    Assert.AreEqual("ArrayProperty", property.Name,
@@ -2802,7 +2802,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			    Assert.AreEqual(0, property.Attributes.Count,
 			        "Unexpected number of attributes.");
-			
+
 			    //
 			    // Indexer property
 			    //
@@ -2854,29 +2854,29 @@ namespace NArrange.Tests.CSharp
 			    "\t#endregion\r\n" +
 			    "\t#endregion\r\n" +
 			    "}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			Assert.AreEqual(1, elements[0].Children.Count,
 			    "An unexpected number of child elements were parsed.");
-			
+
 			RegionElement regionElement = elements[0].Children[0] as RegionElement;
 			Assert.IsNotNull(regionElement, "Expected a region element.");
 			Assert.AreEqual("Fields", regionElement.Name,
 			    "Unexpected region name.");
 			Assert.AreEqual(1, regionElement.Children.Count,
 			    "Unexpected number of region child elements.");
-			
+
 			RegionElement childRegionElement = regionElement.Children[0] as RegionElement;
 			Assert.IsNotNull(childRegionElement, "Expected a region element.");
 			Assert.AreEqual("Private", childRegionElement.Name,
 			    "Unexpected region name.");
 			Assert.AreEqual(1, childRegionElement.Children.Count,
 			    "Unexpected number of region child elements.");
-			
+
 			FieldElement fieldElement = childRegionElement.Children[0] as FieldElement;
 			Assert.IsNotNull(fieldElement, "Expected a field element.");
 		}
@@ -2894,22 +2894,22 @@ namespace NArrange.Tests.CSharp
 			    "\tprivate bool _test = false;\r\n" +
 			    "\t#endregion\r\n" +
 			    "}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count, 
 			    "An unexpected number of elements were parsed.");
 			Assert.AreEqual(1, elements[0].Children.Count,
 			    "An unexpected number of child elements were parsed.");
-			
+
 			RegionElement regionElement = elements[0].Children[0] as RegionElement;
 			Assert.IsNotNull(regionElement, "Expected a region element.");
 			Assert.AreEqual("Fields", regionElement.Name,
 			    "Unexpected region name.");
 			Assert.AreEqual(1, regionElement.Children.Count,
 			    "Unexpected number of region child elements.");
-			
+
 			FieldElement fieldElement = regionElement.Children[0] as FieldElement;
 			Assert.IsNotNull(fieldElement, "Expected a field element.");
 		}
@@ -2922,10 +2922,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "public class Test{}");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			TypeElement typeElement = elements[0] as TypeElement;
@@ -2937,13 +2937,13 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
-			
+
 			reader = new StringReader(
 				"public class Test\r\n{\r\n}\r\n");
-			
+
 			parser = new CSharpParser();
 			elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 				"An unexpected number of elements were parsed.");
 			typeElement = elements[0] as TypeElement;
@@ -2965,10 +2965,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "private int val;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			FieldElement fieldElement = elements[0] as FieldElement;
@@ -2991,16 +2991,16 @@ namespace NArrange.Tests.CSharp
 		public void ParseSingleNamespaceTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetSingleNamespaceFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(1, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    NamespaceElement namespaceElement = elements[0] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
@@ -3020,31 +3020,31 @@ namespace NArrange.Tests.CSharp
 		public void ParseStructDefinitionTest()
 		{
 			CSharpParser parser = new CSharpParser();
-			
+
 			CSharpTestFile testFile = CSharpTestUtilities.GetStructDefinitionFile();
 			using (TextReader reader = testFile.GetReader())
 			{
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
 			    Assert.AreEqual(2, elements.Count,
 			        "An unexpected number of elements were parsed.");
-			
+
 			    UsingElement using1 = elements[0] as UsingElement;
 			    Assert.IsNotNull(using1, "Expected a UsingElement.");
 			    Assert.AreEqual("System", using1.Name,
 			        "Unexpected using name.");
-			
+
 			    NamespaceElement namespaceElement = elements[1] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
 			        "Unexpected namespace name.");
-			
+
 			    Assert.IsNotNull(namespaceElement.Children,
 			        "Namespace Children collection should not be null.");
 			    Assert.AreEqual(1, namespaceElement.Children.Count,
 			        "An unexpected number of namespace child elements were parsed.");
-			
+
 			    TypeElement structElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(structElement, "Expected a TypeElement.");
 			    Assert.AreEqual(TypeElementType.Structure, structElement.Type,
@@ -3078,7 +3078,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "using ;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -3094,7 +3094,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "using Test = ;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
@@ -3111,7 +3111,7 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "using System.Text");
-			
+
 			CSharpParser parser = new CSharpParser();
 			parser.Parse(reader);
 		}
@@ -3126,7 +3126,7 @@ namespace NArrange.Tests.CSharp
 			    "using Redefined = System.Text.Encoder;");
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			UsingElement usingElement = elements[0] as UsingElement;
@@ -3145,10 +3145,10 @@ namespace NArrange.Tests.CSharp
 		{
 			StringReader reader = new StringReader(
 			    "using System.Text;");
-			
+
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-			
+
 			Assert.AreEqual(1, elements.Count,
 			    "An unexpected number of elements were parsed.");
 			UsingElement usingElement = elements[0] as UsingElement;
@@ -3156,21 +3156,6 @@ namespace NArrange.Tests.CSharp
 			    "Element is not a UsingElement.");
 			Assert.AreEqual("System.Text", usingElement.Name,
 			    "Unexpected name.");
-		}
-
-		/// <summary>
-		/// Tests that when the end of file is not expected, the appropriate
-		/// error is thrown.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ParseException), ExpectedMessage = "Unexpected end of file: Line 3, Column 11")]
-		public void UnexpectedEndOfFileTest()
-		{
-			using (TextReader reader = CSharpTestFile.GetTestFileReader("UnexpectedEndOfFile.cs"))
-			{
-			    CSharpParser parser = new CSharpParser();
-			    parser.Parse(reader);
-			}
 		}
 
 		#endregion Public Methods

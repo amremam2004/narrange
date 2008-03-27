@@ -47,10 +47,10 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _params;		
-		private List<TypeParameter> _typeParameters;		
-		private object _typeParametersLock = new object();		
-		
+		private string _params;
+		private List<TypeParameter> _typeParameters;
+		private object _typeParametersLock = new object();
+
 		#endregion Fields
 
 		#region Private Properties
@@ -72,7 +72,7 @@ namespace NArrange.Core.CodeElements
 						}
 					}
 				}
-			
+
 				return _typeParameters;
 			}
 		}
@@ -129,18 +129,18 @@ namespace NArrange.Core.CodeElements
 		protected override MemberElement DoMemberClone()
 		{
 			DelegateElement clone = new DelegateElement();
-			
+
 			//
 			// Copy state
 			//
 			clone._params = _params;
-			
+
 			foreach (TypeParameter typeParam in TypeParameters)
 			{
 				TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
 				clone.TypeParametersBase.Add(typeParamClone);
 			}
-			
+
 			return clone;
 		}
 
@@ -168,7 +168,7 @@ namespace NArrange.Core.CodeElements
 			{
 				throw new ArgumentNullException("typeParameter");
 			}
-			
+
 			TypeParametersBase.Add(typeParameter);
 		}
 

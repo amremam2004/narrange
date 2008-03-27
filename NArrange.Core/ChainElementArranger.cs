@@ -49,8 +49,8 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private List<IElementArranger> _arrangers;		
-		
+		private List<IElementArranger> _arrangers;
+
 		#endregion Fields
 
 		#region Constructors
@@ -77,7 +77,7 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("arranger");
 			}
-			
+
 			_arrangers.Add(arranger);
 		}
 
@@ -91,7 +91,7 @@ namespace NArrange.Core
 		public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			bool arranged = false;
-			
+
 			//
 			// Region elements are ignored.  Only process their children.
 			//
@@ -100,7 +100,7 @@ namespace NArrange.Core
 			{
 				List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
 				regionElement.ClearChildren();
-			
+
 				foreach (ICodeElement regionChildElement in regionChildren)
 				{
 					ArrangeElement(parentElement, regionChildElement);
@@ -117,7 +117,7 @@ namespace NArrange.Core
 						break;
 					}
 				}
-			
+
 				if (!arranged)
 				{
 					throw new InvalidOperationException(
@@ -137,7 +137,7 @@ namespace NArrange.Core
 		public bool CanArrange(ICodeElement codeElement)
 		{
 			bool canArrange = false;
-			
+
 			if (codeElement != null)
 			{
 			    foreach (IElementArranger arranger in _arrangers)
@@ -149,7 +149,7 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			return canArrange;
 		}
 

@@ -48,12 +48,12 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Assembly _assembly;		
-		private string _assemblyName;		
-		private ICodeParser _codeParser;		
-		private IProjectParser _projectParser;		
-		private ICodeWriter _writer;		
-		
+		private Assembly _assembly;
+		private string _assemblyName;
+		private ICodeParser _codeParser;
+		private IProjectParser _projectParser;
+		private ICodeWriter _writer;
+
 		#endregion Fields
 
 		#region Constructors
@@ -65,7 +65,7 @@ namespace NArrange.Core
 		public SourceHandler(string assemblyName)
 		{
 			_assemblyName = assemblyName;
-			
+
 			Initialize();
 		}
 
@@ -116,7 +116,7 @@ namespace NArrange.Core
 		private void Initialize()
 		{
 			_assembly = Assembly.Load(_assemblyName);
-			
+
 			Type[] types = _assembly.GetTypes();
 			foreach (Type type in types)
 			{

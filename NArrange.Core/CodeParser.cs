@@ -33,13 +33,13 @@ namespace NArrange.Core
 
 		#region Fields
 
-		private char[] _charBuffer = new char[1];		
-		private char _currCh = '\0';		
-		private int _lineNumber = 1;		
-		private int _position = 1;		
-		private char _prevCh = '\0';		
-		private TextReader _reader;		
-		
+		private char[] _charBuffer = new char[1];
+		private char _currCh = '\0';
+		private int _lineNumber = 1;
+		private int _position = 1;
+		private char _prevCh = '\0';
+		private TextReader _reader;
+
 		#endregion Fields
 
 		#region Protected Properties
@@ -135,14 +135,14 @@ namespace NArrange.Core
 					commentedElement.AddHeaderComment(comment);
 				}
 			}
-			
+
 			AttributedElement attributedElement = codeElement as AttributedElement;
 			if (attributedElement != null)
 			{
 				foreach (AttributeElement attribute in attributes)
 				{
 					attributedElement.AddAttribute(attribute);
-			
+
 					//
 					// Treat attribute comments as header comments
 					//
@@ -152,7 +152,7 @@ namespace NArrange.Core
 						{
 							attributedElement.AddHeaderComment(comment);
 						}
-			
+
 						attribute.ClearHeaderCommentLines();
 					}
 				}
@@ -196,7 +196,7 @@ namespace NArrange.Core
 			while (data > 0)
 			{
 				char ch = (char)data;
-			
+
 				if ((((whitespaceType & Whitespace.Space) == Whitespace.Space) && ch == ' ') ||
 					(((whitespaceType & Whitespace.Tab) == Whitespace.Tab) && ch == '\t') ||
 					(((whitespaceType & Whitespace.CarriageReturn) == Whitespace.CarriageReturn) && ch == '\r') ||
@@ -208,12 +208,8 @@ namespace NArrange.Core
 				{
 					return;
 				}
-			
+
 				data = Reader.Peek();
-				if (data <= 0)
-				{
-					UnexpectedEndOfFile();
-				}
 			}
 		}
 
@@ -245,7 +241,7 @@ namespace NArrange.Core
 		{
 			string commentText = Reader.ReadLine();
 			_lineNumber++;
-			
+
 			return commentText;
 		}
 
@@ -263,7 +259,7 @@ namespace NArrange.Core
 				TryReadChar();
 				return true;
 			}
-			
+
 			return false;
 		}
 
@@ -277,7 +273,7 @@ namespace NArrange.Core
 			{
 				_prevCh = _currCh;
 				_currCh = _charBuffer[0];
-			
+
 				if (_prevCh == '\r' && _currCh == '\n')
 				{
 					_lineNumber++;
@@ -287,10 +283,10 @@ namespace NArrange.Core
 				{
 					_position++;
 				}
-			
+
 				return true;
 			}
-			
+
 			return false;
 		}
 
@@ -317,14 +313,14 @@ namespace NArrange.Core
 			{
 				throw new ArgumentNullException("reader");
 			}
-			
+
 			List<ICodeElement> codeElements = new List<ICodeElement>();
-			
+
 			Reset();
 			_reader = reader;
-			
+
 			codeElements = DoParseElements();
-			
+
 			return codeElements.AsReadOnly();
 		}
 

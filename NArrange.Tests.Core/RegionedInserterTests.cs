@@ -27,10 +27,10 @@ namespace NArrange.Tests.Core
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
-			
+
 			ElementConfiguration elementConfiguration = new ElementConfiguration();
 			elementConfiguration.ElementType = ElementType.Type;
-			
+
 			RegionedInserter regionedInserter = new RegionedInserter(regionConfiguration, elementConfiguration);
 		}
 
@@ -62,25 +62,25 @@ namespace NArrange.Tests.Core
 		{
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
-			
+
 			ElementConfiguration typeConfiguration = new ElementConfiguration();
 			typeConfiguration.ElementType = ElementType.Type;
-			
+
 			RegionedInserter regionedInserter = new RegionedInserter(
 			    regionConfiguration, typeConfiguration);
-			
+
 			//
 			// Create a parent element
 			//
 			GroupElement groupElement = new GroupElement();
 			Assert.AreEqual(0, groupElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// With no criteria specified, elements should just be inserted 
 			// at the end of the collection.
 			//
-			
+
 			FieldElement field1 = new FieldElement();
 			field1.Name = "zooField";
 			regionedInserter.InsertElement(groupElement, field1);
@@ -94,7 +94,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, groupElement.Children[0].Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			FieldElement field2 = new FieldElement();
 			field2.Name = "newField";
 			regionedInserter.InsertElement(groupElement, field2);
@@ -110,7 +110,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, groupElement.Children[0].Children.IndexOf(field2),
 			    "Element is not at the correct index.");
-			
+
 			FieldElement field3 = new FieldElement();
 			field3.Name = "booField";
 			regionedInserter.InsertElement(groupElement, field3);

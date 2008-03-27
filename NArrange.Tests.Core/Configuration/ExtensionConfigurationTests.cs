@@ -25,10 +25,10 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
 			extensionConfiguration.Name = "cs";
-			
+
 			ExtensionConfiguration clone = extensionConfiguration.Clone() as ExtensionConfiguration;
 			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
-			
+
 			Assert.AreEqual(extensionConfiguration.Name, clone.Name);
 		}
 
@@ -39,7 +39,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
-			
+
 			//
 			// Verify default state
 			//
@@ -55,9 +55,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
 			extensionConfiguration.Name = "cs";
-			
+
 			string str = extensionConfiguration.ToString();
-			
+
 			Assert.AreEqual("Extension: cs", str,
 			    "Unexpected string representation.");
 		}

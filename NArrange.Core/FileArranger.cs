@@ -53,15 +53,15 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Dictionary<string, ArrangeResult> _arrangeResults;		
-		private CodeArranger _codeArranger;		
-		private string _configFile;		
-		private CodeConfiguration _configuration;		
-		private int _filesParsed;		
-		private int _filesWritten;		
-		private ILogger _logger;		
-		private ProjectManager _projectManager;		
-		
+		private Dictionary<string, ArrangeResult> _arrangeResults;
+		private CodeArranger _codeArranger;
+		private string _configFile;
+		private CodeConfiguration _configuration;
+		private int _filesParsed;
+		private int _filesWritten;
+		private ILogger _logger;
+		private ProjectManager _projectManager;
+
 		#endregion Fields
 
 		#region Constructors
@@ -92,9 +92,9 @@ namespace NArrange.Core
 			{
 				_codeArranger = new CodeArranger(_configuration);
 			}
-			
+
 			elements = _codeArranger.Arrange(elements);
-			
+
 			return elements;
 		}
 
@@ -108,7 +108,7 @@ namespace NArrange.Core
 		{
 			ReadOnlyCollection<ICodeElement> elements = null;
 			string inputFileText = null;
-			
+
 			try
 			{
 				FileAttributes fileAttributes = File.GetAttributes(inputFile);
@@ -148,7 +148,7 @@ namespace NArrange.Core
 				LogMessage(LogLevel.Warning, "Unable to parse file {0}: {1}",
 					inputFile, parseEx.Message);
 			}
-			
+
 			if (elements != null)
 			{
 				try
@@ -162,13 +162,13 @@ namespace NArrange.Core
 					elements = null;
 				}
 			}
-			
+
 			string outputFileText = null;
 			if (elements != null)
 			{
 				ICodeWriter codeWriter = _projectManager.GetSourceHandler(outputFile).Writer;
 				codeWriter.Configuration = _configuration;
-			
+
 				StringWriter writer = new StringWriter();
 				try
 				{
@@ -179,10 +179,10 @@ namespace NArrange.Core
 					LogMessage(LogLevel.Error, ex.ToString());
 					throw;
 				}
-			
+
 				outputFileText = writer.ToString();
 			}
-			
+
 			if (outputFileText != null)
 			{
 				//
@@ -196,11 +196,11 @@ namespace NArrange.Core
 		private bool Initialize()
 		{
 			bool success = true;
-			
+
 			_filesParsed = 0;
 			_filesWritten = 0;
 			_arrangeResults = new Dictionary<string, ArrangeResult>();
-			
+
 			try
 			{
 			    LoadConfiguration(_configFile);
@@ -229,7 +229,7 @@ namespace NArrange.Core
 			        _configFile, invEx.Message);
 			    success = false;
 			}
-			
+
 			return success;
 		}
 
@@ -250,7 +250,7 @@ namespace NArrange.Core
 			    {
 			        _configuration = CodeConfiguration.Default;
 			    }
-			
+
 				_projectManager = new ProjectManager(_configuration);
 			}
 		}
@@ -290,14 +290,14 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			return elements;
 		}
 
 		private bool WriteFile(ArrangeResult arrangeResult)
 		{
 			bool success = true;
-			
+
 			try
 			{
 				File.WriteAllText(arrangeResult.OutputFile, arrangeResult.OutputFileText,
@@ -316,23 +316,23 @@ namespace NArrange.Core
 					arrangeResult.OutputFile, ioEx.Message);
 				success = false;
 			}
-			
+
 			if (success)
 			{
 				_filesWritten++;
 			}
-			
+
 			return success;
 		}
 
 		private bool WriteFiles(string inputFile, bool backup)
 		{
 			bool success = true;
-			
+
 			List<string> filesToModify = new List<string>();
 			_filesParsed = _arrangeResults.Count;
 			LogMessage(LogLevel.Verbose, "{0} files parsed.", _filesParsed);
-			
+
 			Dictionary<string, ArrangeResult>.Enumerator enumerator = _arrangeResults.GetEnumerator();
 			while(enumerator.MoveNext())
 			{
@@ -347,7 +347,7 @@ namespace NArrange.Core
 						fileResult.OutputFile);
 				}
 			}
-			
+
 			if (backup && filesToModify.Count > 0)
 			{
 				try
@@ -366,7 +366,7 @@ namespace NArrange.Core
 					_filesParsed = 0;
 				}
 			}
-			
+
 			if (success)
 			{
 				LogMessage(LogLevel.Verbose, "Writing files...");
@@ -375,7 +375,7 @@ namespace NArrange.Core
 					WriteFile(_arrangeResults[fileToModify]);
 				}
 			}
-			
+
 			return success;
 		}
 
@@ -404,21 +404,21 @@ namespace NArrange.Core
 		public bool Arrange(string inputFile, string outputFile, bool backup)
 		{
 			bool success = true;
-			
+
 			success = Initialize();
-			
+
 			if (success)
 			{
 				bool isProject = _projectManager.IsProject(inputFile);
 				bool isSolution = !isProject && _projectManager.IsSolution(inputFile);
-			
+
 				if (!(isProject || isSolution))
 				{
 					if (outputFile == null)
 					{
 						outputFile = new FileInfo(inputFile).FullName;
 					}
-			
+
 					bool canParse = _projectManager.CanParse(inputFile);
 					if (!canParse)
 					{
@@ -428,7 +428,7 @@ namespace NArrange.Core
 						success = false;
 					}
 				}
-			
+
 				if (success)
 				{
 					ReadOnlyCollection<string> sourceFiles = _projectManager.GetSourceFiles(inputFile);
@@ -441,10 +441,10 @@ namespace NArrange.Core
 							{
 								outputFile = sourceFile;
 							}
-			
+
 							ArrangeSourceFile(sourceFile, sourceFile);
 						}
-			
+
 						if (success && _arrangeResults.Count > 0)
 						{
 							success = WriteFiles(inputFile, backup);
@@ -463,16 +463,16 @@ namespace NArrange.Core
 							   inputFile);
 						}
 					}
-			
+
 					if (_filesParsed == 0 && (sourceFiles.Count <= 1 && !(isProject || isSolution)))
 					{
 						success = false;
 					}
 				}
 			}
-			
+
 			LogMessage(LogLevel.Verbose, "{0} files written.", _filesWritten);
-			
+
 			return success;
 		}
 

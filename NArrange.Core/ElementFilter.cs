@@ -49,8 +49,8 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IConditionExpression _conditionExpression;		
-		
+		private IConditionExpression _conditionExpression;
+
 		#endregion Fields
 
 		#region Constructors
@@ -77,12 +77,12 @@ namespace NArrange.Core
 		public bool IsMatch(ICodeElement codeElement)
 		{
 			bool isMatch = false;
-			
+
 			if (codeElement != null)
 			{
 			    isMatch = ConditionExpressionEvaluator.Instance.Evaluate(_conditionExpression, codeElement);
 			}
-			
+
 			return isMatch;
 		}
 

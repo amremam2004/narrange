@@ -48,8 +48,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private string _name;		
-		
+		private string _name;
+
 		#endregion Fields
 
 		#region Constructors
@@ -92,9 +92,9 @@ namespace NArrange.Core.Configuration
 		public object Clone()
 		{
 			ExtensionConfiguration clone = new ExtensionConfiguration();
-			
+
 			clone._name = _name;
-			
+
 			return clone;
 		}
 

@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.Configuration
 			StringExpression stringExpression = new StringExpression("Test");
 			OperatorExpression operatorExpression = new OperatorExpression((ExpressionOperator)int.MinValue,
 			    attributeExpression, stringExpression);
-			
+
 			string str = operatorExpression.ToString();
 		}
 
@@ -41,7 +41,7 @@ namespace NArrange.Tests.Core.Configuration
 			StringExpression stringExpression = new StringExpression("Test");
 			OperatorExpression operatorExpression = new OperatorExpression(ExpressionOperator.Equal,
 			    attributeExpression, stringExpression);
-			
+
 			Assert.AreEqual("$(Name) == 'Test'", operatorExpression.ToString());
 		}
 

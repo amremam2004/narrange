@@ -45,8 +45,8 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _indexParameter;		
-		
+		private string _indexParameter;
+
 		#endregion Fields
 
 		#region Public Properties

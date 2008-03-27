@@ -23,13 +23,13 @@ namespace NArrange.Tests.Core
 	{
 		#region Fields
 
-		private string _testInvalidExtensionFile;		
-		private string _testInvalidSourceFile;		
-		private string _testProjectFile;		
-		private string _testSolutionFile;		
-		private string _testValidSourceFile1;		
-		private string _testValidSourceFile2;		
-		
+		private string _testInvalidExtensionFile;
+		private string _testInvalidSourceFile;
+		private string _testProjectFile;
+		private string _testSolutionFile;
+		private string _testValidSourceFile1;
+		private string _testValidSourceFile2;
+
 		#endregion Fields
 
 		#region Private Methods
@@ -37,16 +37,16 @@ namespace NArrange.Tests.Core
 		private static string GetTestFileContents(string fileName)
 		{
 			string contents = null;
-			
+
 			using (Stream stream = CSharpTestFile.GetTestFileStream(fileName))
 			{
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");
-			
+
 			    StreamReader reader = new StreamReader(stream);
 			    contents = reader.ReadToEnd();
 			}
-			
+
 			return contents;
 		}
 
@@ -62,15 +62,15 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			string emptyProjectFile = Path.Combine(Path.GetTempPath(), 
 			    Guid.NewGuid().ToString().Replace('-','_') + ".csproj");
 			File.WriteAllText(emptyProjectFile, "<Project></Project>");
-			
+
 			try
 			{
 			    bool success = fileArranger.Arrange(emptyProjectFile, null);
-			
+
 			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, 
 			        "does not contain any supported source files"));
@@ -95,14 +95,14 @@ namespace NArrange.Tests.Core
 		{
 			string testConfiguration = Path.GetTempFileName();
 			File.WriteAllText(testConfiguration, "<xml");
-			
+
 			try
 			{
 			    TestLogger logger = new TestLogger();
 			    FileArranger fileArranger = new FileArranger(testConfiguration, logger);
-			
+
 			    bool success = fileArranger.Arrange(_testValidSourceFile1, null);
-			
+
 			    Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Error, "Unable to load configuration file"));
 			}
@@ -138,14 +138,14 @@ namespace NArrange.Tests.Core
 			            </SourceHandler>
 			        </Handlers>
 			    </CodeConfiguration>");
-			
+
 			try
 			{
 			    TestLogger logger = new TestLogger();
 			    FileArranger fileArranger = new FileArranger(testConfiguration, logger);
-			
+
 			    bool success = fileArranger.Arrange(_testValidSourceFile1, null);
-			
+
 			    Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Error, "Unable to load configuration file"));
 			}
@@ -169,9 +169,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			bool success = fileArranger.Arrange(_testInvalidExtensionFile, null);
-			
+
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, "No assembly is registered to handle file"));
 		}
@@ -184,9 +184,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			bool success = fileArranger.Arrange(_testInvalidSourceFile, null);
-			
+
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."));
 		}
@@ -199,9 +199,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger("blahblahblahblah.xml", logger);
-			
+
 			bool success = fileArranger.Arrange(_testValidSourceFile1, null);
-			
+
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasPartialMessage(LogLevel.Error, "Unable to load configuration file"));
 		}
@@ -214,9 +214,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			bool success = fileArranger.Arrange(_testProjectFile, null);
-			
+
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
 		}
@@ -229,13 +229,13 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			File.SetAttributes(_testValidSourceFile1, FileAttributes.ReadOnly);
-			
+
 			try
 			{
 			    bool success = fileArranger.Arrange(_testValidSourceFile1, null);
-			
+
 			    Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			    Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."));
 			}
@@ -253,9 +253,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			bool success = fileArranger.Arrange(_testValidSourceFile1, null);
-			
+
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files written."));
 		}
@@ -268,9 +268,9 @@ namespace NArrange.Tests.Core
 		{
 			TestLogger logger = new TestLogger();
 			FileArranger fileArranger = new FileArranger(null, logger);
-			
+
 			bool success = fileArranger.Arrange(_testSolutionFile, null);
-			
+
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
 			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
 		}
@@ -282,29 +282,29 @@ namespace NArrange.Tests.Core
 		public void TestSetup()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
-			
+
 			string contents = GetTestFileContents("ClassMembers.cs");
 			_testValidSourceFile1 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile1, contents);
-			
+
 			contents = GetTestFileContents("ClassMembers.cs");
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
-			
+
 			_testProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.csproj");
 			CSharpProjectParserTests.WriteTestProject(_testProjectFile);
-			
+
 			_testSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
 			SolutionParserTests.WriteTestSolution(_testSolutionFile);
-			
+
 			contents = GetTestFileContents("ClassDefinition.cs");
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassDefinition.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
-			
+
 			contents = GetTestFileContents("ExpectedBlockClose.cs");
 			_testInvalidSourceFile = Path.GetTempFileName() + ".cs";
 			File.WriteAllText(_testInvalidSourceFile, contents);
-			
+
 			contents = GetTestFileContents("ClassMembers.cs");
 			_testInvalidExtensionFile = Path.GetTempFileName() + ".zzz";
 			File.WriteAllText(_testInvalidExtensionFile, contents);

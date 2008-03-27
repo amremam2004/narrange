@@ -25,7 +25,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			SortBy sortBy = new SortBy();
-			
+
 			//
 			// Verify default state
 			//
@@ -45,9 +45,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
-			
+
 			string str = sortBy.ToString();
-			
+
 			Assert.AreEqual("Sort by: Name", str,
 			    "Unexpected string representation.");
 		}

@@ -267,11 +267,11 @@ namespace NArrange.VisualBasic
 		public static bool IsVBKeyword(string trimmedWord)
 		{
 			bool isKeyword = false;
-			
+
 			if (!string.IsNullOrEmpty(trimmedWord))
 			{
 				string normalized = Normalize(trimmedWord.Trim());
-			
+
 				isKeyword =
 					normalized == VBKeyword.As ||
 					normalized == VBKeyword.Begin ||
@@ -316,7 +316,7 @@ namespace NArrange.VisualBasic
 					normalized == VBKeyword.Widening ||
 			        normalized == VBKeyword.WriteOnly;
 			}
-			
+
 			return isKeyword;
 		}
 
@@ -328,7 +328,7 @@ namespace NArrange.VisualBasic
 		public static string Normalize(string keyWord)
 		{
 			string normalized = null;
-			
+
 			if (keyWord != null)
 			{
 				normalized = keyWord;
@@ -372,7 +372,7 @@ namespace NArrange.VisualBasic
 					}
 				}
 			}
-			
+
 			return normalized;
 		}
 

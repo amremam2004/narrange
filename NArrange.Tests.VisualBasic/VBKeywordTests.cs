@@ -38,7 +38,7 @@ namespace NArrange.Tests.VisualBasic
 						"Field value should be considered a VB keyword.");
 				}
 			}
-			
+
 			Assert.IsFalse(VBKeyword.IsVBKeyword("Test"));
 			Assert.IsFalse(VBKeyword.IsVBKeyword("unknown"));
 			Assert.IsFalse(VBKeyword.IsVBKeyword("Find"));
@@ -62,10 +62,10 @@ namespace NArrange.Tests.VisualBasic
 			    if (keyword.FieldType == typeof(string))
 			    {
 			        string fieldValue = (string)keyword.GetValue(null);
-			
+
 					string lower = fieldValue.ToLower();
 					string normalized = VBKeyword.Normalize(lower);
-			
+
 					Assert.AreEqual(fieldValue, normalized,
 						"Normalize did not correct casing for {0}", fieldValue);
 			    }

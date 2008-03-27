@@ -46,9 +46,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private List<string> _implements;		
-		private object _implementsLock = new object();		
-		
+		private List<string> _implements;
+		private object _implementsLock = new object();
+
 		#endregion Fields
 
 		#region Protected Properties
@@ -70,7 +70,7 @@ namespace NArrange.Core.CodeElements
 						}
 					}
 				}
-			
+
 				return _implements;
 			}
 		}
@@ -106,12 +106,12 @@ namespace NArrange.Core.CodeElements
 		protected override sealed MemberElement DoMemberClone()
 		{
 			InterfaceMemberElement clone = DoInterfaceMemberClone();
-			
+
 			foreach (string implementation in Implements)
 			{
 				clone.ImplementsBase.Add(implementation);
 			}
-			
+
 			return clone;
 		}
 
@@ -133,7 +133,7 @@ namespace NArrange.Core.CodeElements
 			{
 				throw new ArgumentException("implementation", "Invalid implementation member.");
 			}
-			
+
 			this.ImplementsBase.Add(implementation);
 		}
 

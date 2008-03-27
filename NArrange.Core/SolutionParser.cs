@@ -62,11 +62,11 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("solutionFile");
 			}
-			
+
 			string solutionPath = Path.GetDirectoryName(solutionFile);
-			
+
 			List<string> projectFiles = new List<string>();
-			
+
 			using (StreamReader reader = new StreamReader(solutionFile, Encoding.Default))
 			{
 			    while (!reader.EndOfStream)
@@ -74,7 +74,7 @@ namespace NArrange.Core
 			        //
 			        // Find lines like the following:
 			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
-			
+
 			        string line = reader.ReadLine().TrimStart();
 			        if (line.StartsWith("Project("))
 			        {
@@ -85,7 +85,7 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			return projectFiles.AsReadOnly();
 		}
 

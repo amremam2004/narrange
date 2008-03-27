@@ -29,15 +29,15 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 			prototype.Params = "int val";
 			prototype.Type = "SomeClass";
-			
+
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a constructor.");
 			prototype.AddHeaderCommentLine("/// </summary>");
-			
+
 			prototype.BodyText = "{_val = val;}";
-			
+
 			prototype.MemberModifiers = MemberModifier.Abstract;
-			
+
 			return prototype;
 		}
 
@@ -83,7 +83,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			ConstructorElement constructorElement = new ConstructorElement();
-			
+
 			//
 			// Verify default property values
 			//

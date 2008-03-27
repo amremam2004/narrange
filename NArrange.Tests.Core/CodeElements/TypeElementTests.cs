@@ -28,23 +28,23 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Type = TypeElementType.Structure;
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			
+
 			ConstructorElement constructor = new ConstructorElement();
 			constructor.Name = "SomeType";
 			constructor.Access = CodeAccess.Public;
 			prototype.AddChild(constructor);
-			
+
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a structure.");
 			prototype.AddHeaderCommentLine("/// </summary>");
-			
+
 			prototype.AddInterface("IDisposable");
-			
+
 			prototype.BodyText = "test";
-			
+
 			prototype.TypeModifiers = TypeModifier.Abstract;
 			prototype.AddTypeParameter(new TypeParameter("T", "new()"));
-			
+
 			return prototype;
 		}
 
@@ -92,7 +92,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			TypeElement typeElement = new TypeElement();
-			
+
 			//
 			// Verify default property values
 			//

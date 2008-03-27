@@ -92,9 +92,6 @@
     <EmbeddedResource Include="TestSourceFiles\StructDefinition.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestSourceFiles\UnexpectedEndOfFile.vb" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TestSourceFiles\InterfaceImplementation.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

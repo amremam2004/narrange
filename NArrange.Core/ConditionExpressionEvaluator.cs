@@ -84,7 +84,7 @@ namespace NArrange.Core
 			            }
 			        }
 			    }
-			
+
 			    return _instance;
 			}
 		}
@@ -96,7 +96,7 @@ namespace NArrange.Core
 		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)
 		{
 			string value = string.Empty;
-			
+
 			if (expression != null && element != null)
 			{
 			    StringExpression stringExpression = expression as StringExpression;
@@ -114,7 +114,7 @@ namespace NArrange.Core
 			        }
 			    }
 			}
-			
+
 			return value;
 		}
 
@@ -131,7 +131,7 @@ namespace NArrange.Core
 		public bool Evaluate(IConditionExpression conditionExpression, ICodeElement element)
 		{
 			bool result = false;
-			
+
 			if (conditionExpression == null)
 			{
 			    throw new ArgumentNullException("conditionExpression");
@@ -140,13 +140,13 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("element");
 			}
-			
+
 			OperatorExpression operatorExpression = conditionExpression as OperatorExpression;
 			if (operatorExpression != null)
 			{
 			    string leftStr, rightStr;
 			    bool leftResult, rightResult;
-			
+
 			    switch (operatorExpression.Operator)
 			    {
 			        case ExpressionOperator.Equal:
@@ -154,32 +154,32 @@ namespace NArrange.Core
 			            rightStr = GetExpressionValue(operatorExpression.Right, element);
 			            result = leftStr == rightStr;
 			            break;
-			
+
 			        case ExpressionOperator.Contains:
 			            leftStr = GetExpressionValue(operatorExpression.Left, element);
 			            rightStr = GetExpressionValue(operatorExpression.Right, element);
 			            result = leftStr.Contains(rightStr);
 			            break;
-			
+
 			        case ExpressionOperator.And:
 			            leftResult = Evaluate(operatorExpression.Left, element);
 			            rightResult = Evaluate(operatorExpression.Right, element);
 			            result = leftResult && rightResult;
 			            break;
-			
+
 			        case ExpressionOperator.Or:
 			            leftResult = Evaluate(operatorExpression.Left, element);
 			            rightResult = Evaluate(operatorExpression.Right, element);
 			            result = leftResult || rightResult;
 			            break;
-			
+
 			        default:
 			            throw new ArgumentOutOfRangeException(
 			                string.Format(
 			                "Unsupported operator type {0}", operatorExpression.Operator));
 			    }
 			}
-			
+
 			return result;
 		}
 

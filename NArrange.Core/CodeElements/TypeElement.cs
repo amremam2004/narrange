@@ -47,13 +47,13 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private object _interacesLock = new object();		
-		private List<string> _interfaces;		
-		private TypeElementType _type;		
-		private TypeModifier _typeModifiers;		
-		private List<TypeParameter> _typeParameters;		
-		private object _typeParametersLock = new object();		
-		
+		private object _interacesLock = new object();
+		private List<string> _interfaces;
+		private TypeElementType _type;
+		private TypeModifier _typeModifiers;
+		private List<TypeParameter> _typeParameters;
+		private object _typeParametersLock = new object();
+
 		#endregion Fields
 
 		#region Private Properties
@@ -75,7 +75,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _interfaces;
 			}
 		}
@@ -97,7 +97,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _typeParameters;
 			}
 		}
@@ -236,7 +236,7 @@ namespace NArrange.Core.CodeElements
 		protected override AttributedElement DoAttributedClone()
 		{
 			TypeElement clone = new TypeElement();
-			
+
 			//
 			// Copy state
 			//
@@ -251,7 +251,7 @@ namespace NArrange.Core.CodeElements
 			    TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
 			    clone.TypeParametersBase.Add(typeParamClone);
 			}
-			
+
 			return clone;
 		}
 
@@ -288,7 +288,7 @@ namespace NArrange.Core.CodeElements
 			{
 				throw new ArgumentNullException("typeParameter");
 			}
-			
+
 			TypeParametersBase.Add(typeParameter);
 		}
 

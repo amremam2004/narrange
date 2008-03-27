@@ -48,8 +48,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private string _conditionExpression;		
-		
+		private string _conditionExpression;
+
 		#endregion Fields
 
 		#region Constructors
@@ -92,9 +92,9 @@ namespace NArrange.Core.Configuration
 		public object Clone()
 		{
 			FilterBy clone = new FilterBy();
-			
+
 			clone._conditionExpression = _conditionExpression;
-			
+
 			return clone;
 		}
 

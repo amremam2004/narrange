@@ -48,10 +48,10 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementAttribute _by;		
-		private ListSortDirection _direction;		
-		private SortBy _innerSortBy;		
-		
+		private ElementAttribute _by;
+		private ListSortDirection _direction;
+		private SortBy _innerSortBy;
+
 		#endregion Fields
 
 		#region Constructors
@@ -127,15 +127,15 @@ namespace NArrange.Core.Configuration
 		public object Clone()
 		{
 			SortBy clone = new SortBy();
-			
+
 			clone._by = _by;
 			clone._direction = _direction;
-			
+
 			if(_innerSortBy != null)
 			{
 			    clone._innerSortBy = _innerSortBy.Clone() as SortBy;
 			}
-			
+
 			return clone;
 		}
 

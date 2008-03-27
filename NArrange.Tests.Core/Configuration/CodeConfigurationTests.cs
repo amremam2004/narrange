@@ -27,16 +27,16 @@ namespace NArrange.Tests.Core.Configuration
 			CodeConfiguration defaultConfig = CodeConfiguration.Default;
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
-			
+
 			Assert.AreEqual(3, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
-			
+
 			CodeConfiguration clonedConfig = defaultConfig.Clone() as CodeConfiguration;
 			Assert.IsNotNull(clonedConfig, "Clone should return an instance.");
-			
+
 			Assert.AreNotSame(defaultConfig, clonedConfig,
 			    "Clone should be a different instance.");
-			
+
 			Assert.AreEqual(defaultConfig.Elements.Count, clonedConfig.Elements.Count,
 			    "Child element state was not copied correctly.");
 			Assert.AreEqual(defaultConfig.Handlers.Count, clonedConfig.Handlers.Count,
@@ -52,12 +52,12 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			CodeConfiguration configuration = new CodeConfiguration();
-			
+
 			Assert.IsNotNull(configuration.Elements,
 			    "Elements collection should not be null.");
 			Assert.AreEqual(0, configuration.Elements.Count,
 			    "Elements collection should be empty.");
-			
+
 			//
 			// Test the default tab configuration
 			//
@@ -77,10 +77,10 @@ namespace NArrange.Tests.Core.Configuration
 			CodeConfiguration defaultConfig = CodeConfiguration.Default;
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
-			
+
 			Assert.AreEqual(3, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
-			
+
 			//
 			// Handlers
 			//
@@ -89,14 +89,14 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.AreEqual(1, defaultConfig.Handlers.Count,
 			    "Unexpected number of default handlers.");
 			Assert.IsTrue(defaultConfig.Handlers[0].AssemblyName.Contains("NArrange.CSharp"));
-			
+
 			Assert.IsNotNull(defaultConfig.Tabs,
 			    "Tab configuration should not be null.");
 			Assert.AreEqual(TabStyle.Tabs, defaultConfig.Tabs.Style, 
 			    "Unexpected tab style.");
 			Assert.AreEqual(4, defaultConfig.Tabs.SpacesPerTab, 
 			    "Unexpected number of spaces per tab.");
-			
+
 			//
 			// Using elements
 			//
@@ -110,7 +110,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(usingElement.SortBy, "Expected a sort to be specified.");
 			Assert.AreEqual(ElementAttribute.Name, usingElement.SortBy.By,
 			    "Expected name sorting.");
-			
+
 			//
 			// Assembly attributes
 			//
@@ -121,7 +121,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(attributeElement.SortBy, "Expected a sort to be specified.");
 			Assert.AreEqual(ElementAttribute.Name, attributeElement.SortBy.By,
 			    "Expected name sorting.");
-			
+
 			//
 			// Namespace elements
 			//
@@ -129,7 +129,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(namespaceElement, "Expected an ElementConfiguration.");
 			Assert.AreEqual(ElementType.Namespace, namespaceElement.ElementType,
 			    "Unexpected element type.");
-			
+
 			// TODO: Verify entire heirarchy
 		}
 
@@ -140,19 +140,19 @@ namespace NArrange.Tests.Core.Configuration
 		public void SerializeAndDeserializeTest()
 		{
 			CodeConfiguration origConfig = new CodeConfiguration();
-			
+
 			ElementConfiguration elementConfiguration1 = new ElementConfiguration();
 			elementConfiguration1.ElementType = ElementType.Using;
 			origConfig.Elements.Add(elementConfiguration1);
-			
+
 			ElementConfiguration elementConfiguration2 = new ElementConfiguration();
 			elementConfiguration2.ElementType = ElementType.Namespace;
 			origConfig.Elements.Add(elementConfiguration2);
-			
+
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
 			origConfig.Elements.Add(regionConfiguration);
-			
+
 			string tempFile = Path.GetTempFileName();
 			try
 			{
@@ -160,17 +160,17 @@ namespace NArrange.Tests.Core.Configuration
 			    // Save the configuration to an XML file
 			    //
 			    origConfig.Save(tempFile);
-			
+
 			    //
 			    // Load the configuration from the XML file
 			    //
 			    CodeConfiguration loadedConfig = CodeConfiguration.Load(tempFile);
 			    Assert.IsNotNull(loadedConfig,
 			        "Loaded configuration should not be null.");
-			
+
 			    Assert.AreEqual(origConfig.Elements.Count, loadedConfig.Elements.Count,
 			        "An unexpected number of config elements were deserialized.");
-			
+
 			    for (int index = 0; index < origConfig.Elements.Count; index++)
 			    {
 			        if (origConfig.Elements[index] is ElementConfiguration)
@@ -179,7 +179,7 @@ namespace NArrange.Tests.Core.Configuration
 			                origConfig.Elements[index] as ElementConfiguration;
 			            ElementConfiguration loadedElement =
 			                loadedConfig.Elements[index] as ElementConfiguration;
-			
+
 			            Assert.AreEqual(origElement.ElementType, loadedElement.ElementType,
 			                "Unexpected element type.");
 			        }
@@ -189,7 +189,7 @@ namespace NArrange.Tests.Core.Configuration
 			                origConfig.Elements[index] as RegionConfiguration;
 			            RegionConfiguration loadedRegion =
 			                loadedConfig.Elements[index] as RegionConfiguration;
-			
+
 			            Assert.AreEqual(origRegion.Name, loadedRegion.Name,
 			                "Unexpected region name.");
 			        }

@@ -45,9 +45,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private readonly CommentType _commentType;		
-		private readonly string _text;		
-		
+		private readonly CommentType _commentType;
+		private readonly string _text;
+
 		#endregion Fields
 
 		#region Constructors
@@ -120,7 +120,7 @@ namespace NArrange.Core.CodeElements
 		protected override CodeElement DoClone()
 		{
 			CommentElement clone = new CommentElement(_text, _commentType);
-			
+
 			return clone;
 		}
 

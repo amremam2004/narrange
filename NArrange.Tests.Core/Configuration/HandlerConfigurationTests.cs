@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			HandlerConfiguration handlerConfiguration = new HandlerConfiguration();
 			handlerConfiguration.AssemblyName = "TestAssembly";
-			
+
 			string str = handlerConfiguration.ToString();
 			Assert.AreEqual("Handler: TestAssembly", str,
 			    "Unexpected string representation.");

@@ -51,8 +51,8 @@ namespace NArrange.CSharp
 	{
 		#region Fields
 
-		private CodeConfiguration _configuration;		
-		
+		private CodeConfiguration _configuration;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -68,7 +68,7 @@ namespace NArrange.CSharp
 			    {
 			        _configuration = CodeConfiguration.Default;
 			    }
-			
+
 			    return _configuration;
 			}
 			set
@@ -92,7 +92,7 @@ namespace NArrange.CSharp
 			{
 			    throw new ArgumentNullException("codeElements");
 			}
-			
+
 			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer, Configuration);
 			foreach (ICodeElement codeElement in codeElements)
 			{

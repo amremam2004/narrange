@@ -26,7 +26,7 @@ namespace NArrange.Tests.Core
 		public void CreateTest()
 		{
 			SortBy sortBy = new SortBy();
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, sortBy);
 		}
 
@@ -49,22 +49,22 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Access;
 			sortBy.Direction = ListSortDirection.Ascending;
-			
+
 			SortBy innerSortBy = new SortBy();
 			innerSortBy.By = ElementAttribute.Name;
 			innerSortBy.Direction = ListSortDirection.Ascending;
-			
+
 			sortBy.InnerSortBy = innerSortBy;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// Insert elements with middle access.
 			//
@@ -76,7 +76,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			FieldElement field2 = new FieldElement();
 			field2.Access = CodeAccess.Protected | CodeAccess.Internal;
 			field2.Name = "gooField";
@@ -87,7 +87,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the end
 			//
@@ -103,7 +103,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted at the correct index.");
 			Assert.AreEqual(2, regionElement.Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-			
+
 			FieldElement field4 = new FieldElement();
 			field4.Access = CodeAccess.Public;
 			field4.Name = "tooField";
@@ -118,7 +118,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(3, regionElement.Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the beginning
 			//
@@ -138,7 +138,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(4, regionElement.Children.IndexOf(field3),
 			    "Element is not at the correct index.");
-			
+
 			FieldElement field6 = new FieldElement();
 			field6.Access = CodeAccess.Private;
 			field6.Name = "fooField";
@@ -168,16 +168,16 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Access;
 			sortBy.Direction = ListSortDirection.Ascending;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// Insert an element with a middle access.
 			//
@@ -188,7 +188,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the end
 			//
@@ -201,7 +201,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field2),
 			    "Element is not at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the beginning
 			//
@@ -227,16 +227,16 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
 			sortBy.Direction = ListSortDirection.Descending;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// Insert an element with a mid alphabet name.
 			//
@@ -247,7 +247,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the beginning
 			//
@@ -260,7 +260,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
 			    "Element is not at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the end
 			//
@@ -286,16 +286,16 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
 			sortBy.Direction = ListSortDirection.Ascending;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// Insert an element with a mid alphabet name.
 			//
@@ -306,7 +306,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the end
 			//
@@ -319,7 +319,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field2),
 			    "Element is not at the correct index.");
-			
+
 			//
 			// Insert an element that should be sorted toward the beginning
 			//
@@ -345,21 +345,21 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.None;
 			sortBy.Direction = ListSortDirection.Ascending;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// With no criteria specified, elements should just be inserted 
 			// at the end of the collection.
 			//
-			
+
 			FieldElement field1 = new FieldElement();
 			field1.Name = "zooField";
 			sortedInserter.InsertElement(regionElement, field1);
@@ -367,7 +367,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			FieldElement field2 = new FieldElement();
 			field1.Name = "newField";
 			sortedInserter.InsertElement(regionElement, field2);
@@ -377,7 +377,7 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field2),
 			    "Element is not at the correct index.");
-			
+
 			FieldElement field3 = new FieldElement();
 			field1.Name = "booField";
 			sortedInserter.InsertElement(regionElement, field3);
@@ -400,16 +400,16 @@ namespace NArrange.Tests.Core
 			SortBy sortBy = new SortBy();
 			sortBy.By = ElementAttribute.Name;
 			sortBy.Direction = ListSortDirection.Ascending;
-			
+
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
-			
+
 			//
 			// Create a parent element
 			//
 			RegionElement regionElement = new RegionElement();
 			Assert.AreEqual(0, regionElement.Children.Count,
 			    "Parent element should not have any children.");
-			
+
 			//
 			// Insert a non-null element
 			//
@@ -420,7 +420,7 @@ namespace NArrange.Tests.Core
 			    "Element was not inserted into the parent.");
 			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element was not inserted at the correct index.");
-			
+
 			//
 			// Insert a null element
 			//
@@ -432,8 +432,8 @@ namespace NArrange.Tests.Core
 			    "Element is not at the correct index.");
 			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
 			    "Element is not at the correct index.");
-			
-			
+
+
 			//
 			// Inser the null element first
 			//

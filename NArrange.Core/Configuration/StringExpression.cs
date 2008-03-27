@@ -45,8 +45,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private string _text;		
-		
+		private string _text;
+
 		#endregion Fields
 
 		#region Constructors

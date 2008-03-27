@@ -47,11 +47,11 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementType _elementType;		
-		private FilterBy _filterBy;		
-		private GroupBy _groupBy;		
-		private SortBy _sortBy;		
-		
+		private ElementType _elementType;
+		private FilterBy _filterBy;
+		private GroupBy _groupBy;
+		private SortBy _sortBy;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -131,24 +131,24 @@ namespace NArrange.Core.Configuration
 		protected override ConfigurationElement DoClone()
 		{
 			ElementConfiguration clone = new ElementConfiguration();
-			
+
 			clone._elementType = _elementType;
-			
+
 			if (_filterBy != null)
 			{
 			    clone._filterBy = _filterBy.Clone() as FilterBy;
 			}
-			
+
 			if (_groupBy != null)
 			{
 			    clone._groupBy = _groupBy.Clone() as GroupBy;
 			}
-			
+
 			if (_sortBy != null)
 			{
 			    clone._sortBy = _sortBy.Clone() as SortBy;
 			}
-			
+
 			return clone;
 		}
 

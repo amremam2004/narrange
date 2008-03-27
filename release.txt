@@ -2,4 +2,12 @@ The following changes were made in this release:
 
 0.1.6.0
 - Fixed parsing of C# generic delegates.
-- Rough VB Parser implementation.
+- Fixed parsing of the config file name in command line arguments.
+- Allow closing comments to automatically be appended to members.  For example:
+  public void MyMethod
+  {
+     ... Lots of code here
+  } // End Method MyMethod  <-- Closing comment
+
+- Fixed extra tabs being written after C# field declaration statements.
+- Rough VB Parser implementation (not fully functional).

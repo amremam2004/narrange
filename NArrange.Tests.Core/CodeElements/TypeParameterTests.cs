@@ -26,11 +26,11 @@ namespace NArrange.Tests.Core.CodeElements
 			typeParameter.Name = "T";
 			typeParameter.AddConstraint("IDisposable");
 			typeParameter.AddConstraint("new()");
-			
+
 			TypeParameter clone = typeParameter.Clone() as TypeParameter;
 			Assert.IsNotNull(clone,
 			    "Clone should return a TypeParameter instance.");
-			
+
 			Assert.AreEqual(typeParameter.Name, clone.Name,
 			    "Name property was not copied correctly.");
 			Assert.AreEqual(typeParameter.Constraints.Count, clone.Constraints.Count,
@@ -48,7 +48,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			TypeParameter typeParameter = new TypeParameter();
-			
+
 			//
 			// Verify default values.
 			//

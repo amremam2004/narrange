@@ -26,7 +26,7 @@ namespace NArrange.Tests.Core.CodeElements
 			UsingElement prototype = new UsingElement();
 			prototype.Name = "SampleNamespace";
 			prototype.Redefine = "MySampleNamespace";
-			
+
 			return prototype;
 		}
 
@@ -52,7 +52,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			UsingElement element = new UsingElement();
-			
+
 			//
 			// Verify default values
 			//
@@ -60,7 +60,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for Name.");
 			Assert.IsNull(element.Redefine,
 			    "Unexpected defaulf value for Redefine.");
-			
+
 			Assert.IsNotNull(element.Children,
 			    "Children collection should not be null.");
 			Assert.AreEqual(0, element.Children.Count,

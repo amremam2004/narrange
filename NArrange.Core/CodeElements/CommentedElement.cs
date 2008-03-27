@@ -46,9 +46,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private object _commentLinesLock = new object();		
-		private List<ICommentElement> _comments;		
-		
+		private object _commentLinesLock = new object();
+		private List<ICommentElement> _comments;
+
 		#endregion Fields
 
 		#region Protected Properties
@@ -70,7 +70,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _comments;
 			}
 		}
@@ -144,13 +144,13 @@ namespace NArrange.Core.CodeElements
 		public override object Clone()
 		{
 			CommentedElement clone = base.Clone() as CommentedElement;
-			
+
 			foreach (ICommentElement comment in HeaderComments)
 			{
 			    ICommentElement commentClone = comment.Clone() as ICommentElement;
 			    clone.AddHeaderComment(commentClone);
 			}
-			
+
 			return clone;
 		}
 

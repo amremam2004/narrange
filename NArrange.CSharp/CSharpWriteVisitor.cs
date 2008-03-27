@@ -33,6 +33,8 @@
  *      - Initial creation
  *		- Fixed an extra line feed for namespace-nested using statements
  *		- Fixed writing of C# redefine using statements
+ *      - Provided support for closing comments
+ *      - Fixed extra tabs being written after field declaration statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -54,10 +56,10 @@ namespace NArrange.CSharp
 	{
 		#region Fields
 
-		private CodeConfiguration _configuration;		
-		private int _tabCount;		
-		private TextWriter _writer;		
-		
+		private CodeConfiguration _configuration;
+		private int _tabCount;
+		private TextWriter _writer;
+
 		#endregion Fields
 
 		#region Constructors
@@ -73,9 +75,9 @@ namespace NArrange.CSharp
 			{
 			    throw new ArgumentNullException("writer");
 			}
-			
+
 			Debug.Assert(configuration != null, "Configuration should not be null.");
-			
+
 			_writer = writer;
 			_configuration = configuration;
 		}
@@ -91,7 +93,7 @@ namespace NArrange.CSharp
 			{
 			    accessString = codeAccess.ToString().ToLower().Replace(",", string.Empty) + " ";
 			}
-			
+
 			WriteIndented(accessString);
 		}
 
@@ -120,6 +122,7 @@ namespace NArrange.CSharp
 			{
 			    WriteTextBlock(element.BodyText);
 			    WriteEndBlock();
+			    WriteClosingComment(element);
 			}
 			else
 			{
@@ -136,7 +139,7 @@ namespace NArrange.CSharp
 			for(int childIndex = 0; childIndex < element.Children.Count; childIndex++)
 			{
 			    ICodeElement childElement = element.Children[childIndex];
-			
+
 				TextCodeElement textCodeElement = childElement as TextCodeElement;
 				if (childIndex > 0 && textCodeElement != null && 
 					textCodeElement.BodyText == null && textCodeElement.Children.Count == 0 &&
@@ -144,9 +147,9 @@ namespace NArrange.CSharp
 			    {
 			        _writer.WriteLine();
 			    }
-			
+
 			    childElement.Accept(this);
-			
+
 			    if (childIndex < element.Children.Count - 1)
 			    {
 			        if (!(childElement is GroupElement))
@@ -158,6 +161,19 @@ namespace NArrange.CSharp
 			            }
 			            _writer.WriteLine();
 			        }
+			    }
+			}
+		}
+
+		private void WriteClosingComment(TextCodeElement element)
+		{
+			if (_configuration.ClosingComments.Enabled)
+			{
+			    string format = _configuration.ClosingComments.Format;
+			    if (!string.IsNullOrEmpty(format))
+			    {
+			        string formatted = element.ToString(format);
+			        _writer.Write(string.Format(" {0}{0} {1}", CSharpSymbol.BeginComment, formatted));
 			    }
 			}
 		}
@@ -207,13 +223,16 @@ namespace NArrange.CSharp
 			            "Unknown tab style {0}.", _configuration.Tabs.Style.ToString());
 			    }
 			}
-			
+
 			_writer.Write(text);
 		}
 
 		private void WriteIndentedLine(string text)
 		{
-			WriteIndented(text);
+			if (!string.IsNullOrEmpty(text))
+			{
+			    WriteIndented(text);
+			}
 			_writer.WriteLine();
 		}
 
@@ -229,55 +248,55 @@ namespace NArrange.CSharp
 			    _writer.Write(CSharpKeyword.Unsafe);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Constant) == MemberModifier.Constant)
 			{
 			    _writer.Write(CSharpKeyword.Constant);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Static) == MemberModifier.Static)
 			{
 			    _writer.Write(CSharpKeyword.Static);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Abstract) == MemberModifier.Abstract)
 			{
 			    _writer.Write(CSharpKeyword.Abstract);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.External) == MemberModifier.External)
 			{
 			    _writer.Write(CSharpKeyword.External);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.New) == MemberModifier.New)
 			{
 			    _writer.Write(CSharpKeyword.New);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Override) == MemberModifier.Override)
 			{
 			    _writer.Write(CSharpKeyword.Override);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.ReadOnly) == MemberModifier.ReadOnly)
 			{
 			    _writer.Write(CSharpKeyword.ReadOnly);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Sealed) == MemberModifier.Sealed)
 			{
 			    _writer.Write(CSharpKeyword.Sealed);
 			    _writer.Write(' ');
 			}
-			
+
 			if ((memberAttributes & MemberModifier.Virtual) == MemberModifier.Virtual)
 			{
 			    _writer.Write(CSharpKeyword.Virtual);
@@ -288,7 +307,7 @@ namespace NArrange.CSharp
 		private void WriteParameterList(string paramList)
 		{
 			_writer.Write(CSharpSymbol.BeginParamList);
-			
+
 			_tabCount++;
 			string[] paramLines = paramList.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			for (int paramLineIndex = 0; paramLineIndex < paramLines.Length; paramLineIndex++)
@@ -314,13 +333,13 @@ namespace NArrange.CSharp
 			{
 			    string[] lines = text.Split(new string[] { Environment.NewLine },
 			        StringSplitOptions.None);
-			
+
 			    for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
 			    {
 			        string line = lines[lineIndex];
-			
+
 			        StringBuilder lineBuilder = new StringBuilder(line);
-			
+
 			        if (lineBuilder.Length > 0)
 			        {
 			            for (int tabIndex = 0; tabIndex < _tabCount; tabIndex++)
@@ -352,7 +371,7 @@ namespace NArrange.CSharp
 			                }
 			            }
 			        }
-			
+
 			        if (lineIndex < lines.Length - 1)
 			        {
 			            WriteIndentedLine(lineBuilder.ToString());
@@ -373,7 +392,7 @@ namespace NArrange.CSharp
 			    {
 			        _writer.WriteLine();
 			        WriteIndented("\t");
-			
+
 			        _writer.Write(CSharpKeyword.Where);
 			        _writer.Write(' ');
 			        _writer.Write(typeParameter.Name);
@@ -385,7 +404,7 @@ namespace NArrange.CSharp
 			        {
 			            string constraint = typeParameter.Constraints[constraintIndex];
 			            _writer.Write(constraint);
-			
+
 			            if (constraintIndex < typeParameter.Constraints.Count - 1)
 			            {
 			                _writer.Write(CSharpSymbol.AliasSeparator);
@@ -401,7 +420,7 @@ namespace NArrange.CSharp
 			if (genericElement.TypeParameters.Count > 0)
 			{
 			    _writer.Write(CSharpSymbol.BeginGeneric);
-			
+
 			    for (int parameterIndex = 0; parameterIndex < genericElement.TypeParameters.Count; parameterIndex++)
 			    {
 			        TypeParameter typeParameter = genericElement.TypeParameters[parameterIndex];
@@ -411,7 +430,7 @@ namespace NArrange.CSharp
 			            _writer.Write(CSharpSymbol.AliasSeparator);
 			        }
 			    }
-			
+
 			    _writer.Write(CSharpSymbol.EndGeneric);
 			}
 		}
@@ -427,12 +446,12 @@ namespace NArrange.CSharp
 		public void VisitAttributeElement(AttributeElement element)
 		{
 			this.WriteHeaderComments(element.HeaderComments);
-			
+
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpSymbol.BeginAttribute);
 			builder.Append(element.BodyText);
 			builder.Append(CSharpSymbol.EndAttribute);
-			
+
 			WriteIndentedLine(builder.ToString());
 		}
 
@@ -443,7 +462,7 @@ namespace NArrange.CSharp
 		public void VisitCommentElement(CommentElement comment)
 		{
 			StringBuilder builder = new StringBuilder();
-			
+
 			if (comment.Type == CommentType.Block)
 			{
 			    builder.Append("/*");
@@ -460,11 +479,11 @@ namespace NArrange.CSharp
 			    {
 			        builder.Append("//");
 			    }
-			
+
 			    builder.Append(comment.Text);
-			
+
 			}
-			
+
 			WriteIndentedLine(builder.ToString());
 		}
 
@@ -476,16 +495,16 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			_writer.Write(element.Name);
-			
+
 			WriteParameterList(element.Params);
 			_writer.WriteLine();
-			
+
 			if (element.Reference != null)
 			{
 			    _tabCount++;
@@ -493,7 +512,7 @@ namespace NArrange.CSharp
 			        CSharpSymbol.TypeImplements, element.Reference));
 			    _tabCount--;
 			}
-			
+
 			WriteBody(element);
 		}
 
@@ -505,19 +524,19 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			_writer.Write(CSharpKeyword.Delegate);
 			_writer.Write(' ');
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			_writer.Write(element.Type);
 			_writer.Write(' ');
-			
+
 			_writer.Write(element.Name);
-			
+
 			WriteTypeParameters(element);			
 			WriteParameterList(element.Params);
 			WriteTypeParameterConstraints(element);
@@ -532,19 +551,19 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			_writer.Write(CSharpKeyword.Event);
 			_writer.Write(' ');
-			
+
 			_writer.Write(element.Type);
 			_writer.Write(' ');
-			
+
 			_writer.Write(element.Name);
-			
+
 			if (element.BodyText != null && element.BodyText.Length > 0)
 			{
 			    _writer.WriteLine();
@@ -564,16 +583,16 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			_writer.Write(element.Type);
 			_writer.Write(' ');
-			
+
 			_writer.Write(element.Name);
-			
+
 			if (!string.IsNullOrEmpty(element.InitialValue))
 			{
 			    _writer.Write(' ');
@@ -581,7 +600,7 @@ namespace NArrange.CSharp
 			    _writer.Write(' ');
 			    _writer.Write(element.InitialValue);
 			}
-			
+
 			_writer.Write(CSharpSymbol.EndOfStatement);
 		}
 
@@ -597,16 +616,16 @@ namespace NArrange.CSharp
 			for (int childIndex = 0; childIndex < element.Children.Count; childIndex++)
 			{
 			    ICodeElement childElement = element.Children[childIndex];
-			
+
 			    FieldElement childFieldElement = childElement as FieldElement;
 			    if (childIndex > 0 && childFieldElement != null &&
 			        childFieldElement.HeaderComments.Count > 0)
 			    {
 			        WriteIndentedLine();
 			    }
-			
+
 			    childElement.Accept(this);
-			
+
 			    if (childIndex < element.Children.Count - 1 &&
 			        element.SeparatorType == GroupSeparatorType.Custom)
 			    {
@@ -617,7 +636,7 @@ namespace NArrange.CSharp
 			        WriteIndentedLine();
 			    }
 			}
-			
+
 			WriteIndentedLine();
 		}
 
@@ -629,22 +648,22 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			if (element.OperatorType == OperatorType.NotSpecified)
 			{
 			    _writer.Write(element.Type);
 			    _writer.Write(' ');
-			
+
 			    if (element.IsOperator)
 			    {
 			        _writer.Write(CSharpKeyword.Operator);
 			        _writer.Write(' ');
 			    }
-			
+
 			    _writer.Write(element.Name);
 			}
 			else if(element.IsOperator)
@@ -658,16 +677,16 @@ namespace NArrange.CSharp
 			        _writer.Write(CSharpKeyword.Implicit);
 			    }
 			    _writer.Write(' ');
-			
+
 			    _writer.Write(CSharpKeyword.Operator);
 			    _writer.Write(' ');
 			    _writer.Write(element.Type);
 			}
-			
+
 			WriteTypeParameters(element);
 			WriteParameterList(element.Params);
 			WriteTypeParameterConstraints(element);
-			
+
 			if (element.BodyText == null)
 			{
 			    _writer.Write(CSharpSymbol.EndOfStatement);
@@ -686,20 +705,20 @@ namespace NArrange.CSharp
 		public void VisitNamespaceElement(NamespaceElement element)
 		{
 			this.WriteHeaderComments(element.HeaderComments);
-			
+
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpKeyword.Namespace);
 			builder.Append(' ');
 			builder.Append(element.Name);
-			
+
 			WriteIndentedLine(builder.ToString());
 			WriteBeginBlock();
-			
+
 			//
 			// Process all children
 			//
 			WriteChildren(element);
-			
+
 			WriteEndBlock();
 		}
 
@@ -711,14 +730,14 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			WriteAccess(element.Access);
-			
+
 			WriteMemberAttributes(element.MemberModifiers);
-			
+
 			_writer.Write(element.Type);
 			_writer.Write(' ');
-			
+
 			_writer.Write(element.Name);
 			if (element.IndexParameter != null)
 			{
@@ -726,9 +745,9 @@ namespace NArrange.CSharp
 				_writer.Write(element.IndexParameter);
 				_writer.Write(CSharpSymbol.EndAttribute);
 			}
-			
+
 			_writer.WriteLine();
-			
+
 			WriteBody(element);
 		}
 
@@ -743,25 +762,25 @@ namespace NArrange.CSharp
 			builder.Append(CSharpKeyword.Region);
 			builder.Append(' ');
 			builder.Append(element.Name);
-			
+
 			WriteIndentedLine(builder.ToString());
 			_writer.WriteLine();
-			
+
 			WriteChildren(element);
-			
+
 			builder = new StringBuilder();
 			builder.Append(CSharpSymbol.Preprocessor);
 			builder.Append(CSharpKeyword.EndRegion);
 			builder.Append(' ');
 			builder.Append(element.Name);
-			
+
 			if (element.Children.Count > 0 &&
 			    !(element.Children.Count == 1 && element.Children[0] is GroupElement))
 			{
 			    _writer.WriteLine();
 			    _writer.WriteLine();
 			}
-			
+
 			WriteIndented(builder.ToString());
 		}
 
@@ -773,7 +792,7 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
-			
+
 			if (element.Access != CodeAccess.NotSpecified)
 			{
 			    WriteAccess(element.Access);
@@ -782,96 +801,96 @@ namespace NArrange.CSharp
 			{
 			    WriteIndented(string.Empty);
 			}
-			
+
 			if (element.IsUnsafe)
 			{
 			    _writer.Write(CSharpKeyword.Unsafe);
 			    _writer.Write(' ');
 			}
-			
+
 			if (element.IsStatic)
 			{
 			    _writer.Write(CSharpKeyword.Static);
 			    _writer.Write(' ');
 			}
-			
+
 			if (element.IsSealed)
 			{
 			    _writer.Write(CSharpKeyword.Sealed);
 			    _writer.Write(' ');
 			}
-			
+
 			if (element.IsAbstract)
 			{
 			    _writer.Write(CSharpKeyword.Abstract);
 			    _writer.Write(' ');
 			}
-			
+
 			if (element.IsPartial)
 			{
 			    _writer.Write(CSharpKeyword.Partial);
 			    _writer.Write(' ');
 			}
-			
+
 			StringBuilder builder = new StringBuilder();
-			
+
 			switch (element.Type)
 			{
 			    case TypeElementType.Class:
 			        builder.Append(CSharpKeyword.Class);
 			        break;
-			
+
 			    case TypeElementType.Enum:
 			        builder.Append(CSharpKeyword.Enumeration);
 			        break;
-			
+
 			    case TypeElementType.Interface:
 			        builder.Append(CSharpKeyword.Interface);
 			        break;
-			
+
 			    case TypeElementType.Structure:
 			        builder.Append(CSharpKeyword.Structure);
 			        break;
-			
+
 			    default:
 			        throw new ArgumentOutOfRangeException(
 			            string.Format(
 			            "Unrecognized type element type {0}", element.Type));
 			}
-			
+
 			builder.Append(' ');
 			builder.Append(element.Name);
-			
+
 			_writer.Write(builder.ToString());
-			
+
 			WriteTypeParameters(element);
-			
+
 			if (element.Interfaces.Count > 0)
 			{
 			    builder = new StringBuilder();
 			    builder.Append(' ');
 			    builder.Append(CSharpSymbol.TypeImplements);
 			    builder.Append(' ');
-			
+
 			    for (int interfaceIndex = 0; interfaceIndex < element.Interfaces.Count; interfaceIndex++)
 			    {
 			        string interfaceName = element.Interfaces[interfaceIndex];
 			        builder.Append(interfaceName);
-			
+
 			        if (interfaceIndex < element.Interfaces.Count - 1)
 			        {
 			            builder.Append(CSharpSymbol.AliasSeparator);
 			            builder.Append(' ');
 			        }
 			    }
-			
+
 			    _writer.Write(builder.ToString());
 			}
-			
-			
+
+
 			WriteTypeParameterConstraints(element);
 			_writer.WriteLine();
-			
+
 			if (element.Type == TypeElementType.Enum)
 			{
 			    WriteBody(element);
@@ -879,17 +898,19 @@ namespace NArrange.CSharp
 			else
 			{
 			    WriteBeginBlock();
-			
+
 			    if (element.Children.Count > 0)
 			    {
 			        WriteChildren(element);
-			
+
 			        WriteEndBlock();
 			    }
 			    else
 			    {
 			        _writer.Write(CSharpSymbol.EndBlock);
 			    }
+
+			    WriteClosingComment(element);
 			}
 		}
 
@@ -900,7 +921,7 @@ namespace NArrange.CSharp
 		public void VisitUsingElement(UsingElement element)
 		{
 			this.WriteHeaderComments(element.HeaderComments);
-			
+
 			StringBuilder builder = new StringBuilder();
 			builder.Append(CSharpKeyword.Using);
 			builder.Append(' ');
@@ -911,7 +932,7 @@ namespace NArrange.CSharp
 			}
 			builder.Append(element.Name);
 			builder.Append(CSharpSymbol.EndOfStatement);
-			
+
 			WriteIndented(builder.ToString());
 		}
 

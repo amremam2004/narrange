@@ -25,7 +25,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			NamespaceElement prototype = new NamespaceElement();
 			prototype.Name = "SampleNamespace";
-			
+
 			return prototype;
 		}
 
@@ -36,7 +36,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			NamespaceElement element = new NamespaceElement();
 			element.Name = "Test";
-			
+
 			string str = element.ToString();
 			Assert.AreEqual("Test", str,
 			    "Unexpected value returned for ToString.");
@@ -63,7 +63,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTest()
 		{
 			NamespaceElement element = new NamespaceElement();
-			
+
 			//
 			// Verify default values
 			//

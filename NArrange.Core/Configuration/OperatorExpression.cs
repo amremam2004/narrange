@@ -45,10 +45,10 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private IConditionExpression _left;		
-		private ExpressionOperator _operatorType;		
-		private IConditionExpression _right;		
-		
+		private IConditionExpression _left;
+		private ExpressionOperator _operatorType;
+		private IConditionExpression _right;
+
 		#endregion Fields
 
 		#region Constructors
@@ -120,25 +120,25 @@ namespace NArrange.Core.Configuration
 			    case ExpressionOperator.Equal :
 			        operatorString = "==";
 			        break;
-			
+
 			    case ExpressionOperator.Contains:
 			        operatorString = ":";
 			        break;
-			
+
 			    case ExpressionOperator.And:
 			        operatorString = "And";
 			        break;
-			
+
 			    case ExpressionOperator.Or:
 			        operatorString = "Or";
 			        break;
-			
+
 			    default:
 			        throw new ArgumentOutOfRangeException(
 			            string.Format(
 			            "Unsupported operator type {0}", _operatorType));
 			}
-			
+
 			return string.Format("({0} {1} {2})", 
 			    Left, operatorString, Right);
 		}

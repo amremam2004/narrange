@@ -54,7 +54,7 @@ namespace NArrange.Tests.Core.CodeElements
 			Assert.IsNotNull(clone, "Clone did not create an instance of type {0}.",
 			    typeof(CommentElement).Name);
 			Assert.AreNotSame(original, clone, "Clone should be a different instance.");
-			
+
 			DoVerifyClone(original, clone);
 		}
 
@@ -65,7 +65,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTextAndXmlTest()
 		{
 			CommentElement commentLine = new CommentElement("Comment here", CommentType.XmlLine);
-			
+
 			//
 			// Verify default property values
 			//
@@ -82,7 +82,7 @@ namespace NArrange.Tests.Core.CodeElements
 		public void CreateTextTest()
 		{
 			CommentElement commentLine = new CommentElement("Comment here");
-			
+
 			//
 			// Verify default property values
 			//

@@ -46,10 +46,10 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private CodeAccess _access;		
-		private List<IAttribute> _attributes;		
-		private object _attributesLock = new object();		
-		
+		private CodeAccess _access;
+		private List<IAttribute> _attributes;
+		private object _attributesLock = new object();
+
 		#endregion Fields
 
 		#region Constructors
@@ -83,7 +83,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _attributes;
 			}
 		}
@@ -133,7 +133,7 @@ namespace NArrange.Core.CodeElements
 		protected override sealed CodeElement DoClone()
 		{
 			AttributedElement clone = DoAttributedClone();
-			
+
 			//
 			// Copy state
 			//
@@ -142,7 +142,7 @@ namespace NArrange.Core.CodeElements
 			{
 			    clone.AddAttribute(attribute);
 			}
-			
+
 			return clone;
 		}
 

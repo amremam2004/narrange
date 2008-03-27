@@ -49,10 +49,10 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Regex _captureRegex;		
-		private GroupBy _groupBy;		
-		private IElementInserter _innerInserter;		
-		
+		private Regex _captureRegex;
+		private GroupBy _groupBy;
+		private IElementInserter _innerInserter;
+
 		#endregion Fields
 
 		#region Constructors
@@ -78,10 +78,10 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("groupBy");
 			}
-			
+
 			_groupBy = groupBy.Clone() as GroupBy;
 			_innerInserter = innerInserter;
-			
+
 			if (!string.IsNullOrEmpty(groupBy.AttributeCapture))
 			{
 			    _captureRegex = new Regex(_groupBy.AttributeCapture);
@@ -103,9 +103,9 @@ namespace NArrange.Core
 			ICodeElement codeElement)
 		{
 			string groupName = string.Empty;
-			
+
 			string attribute = ElementUtilities.GetAttribute(elementFilterType, codeElement);
-			
+
 			if (_captureRegex != null)
 			{
 			    Match match = _captureRegex.Match(attribute);
@@ -118,7 +118,7 @@ namespace NArrange.Core
 			{
 			    groupName = attribute;
 			}
-			
+
 			return groupName;
 		}
 
@@ -134,9 +134,9 @@ namespace NArrange.Core
 		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			GroupElement group = null;
-			
+
 			string groupName = GetGroupName(_groupBy.By, _groupBy.AttributeCapture, codeElement);
-			
+
 			foreach (ICodeElement childElement in parentElement.Children)
 			{
 			    GroupElement groupElement = childElement as GroupElement;
@@ -146,7 +146,7 @@ namespace NArrange.Core
 			        break;
 			    }
 			}
-			
+
 			if (group == null)
 			{
 			    group = new GroupElement();
@@ -155,7 +155,7 @@ namespace NArrange.Core
 			    group.CustomSeparator = _groupBy.CustomSeparator;
 			    parentElement.AddChild(group);
 			}
-			
+
 			if (_innerInserter != null)
 			{
 			    _innerInserter.InsertElement(group, codeElement);

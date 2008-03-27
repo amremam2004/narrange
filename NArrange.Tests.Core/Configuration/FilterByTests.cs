@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			FilterBy filterBy = new FilterBy();
-			
+
 			//
 			// Verify default state
 			//
@@ -40,9 +40,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			FilterBy filterBy = new FilterBy();
 			filterBy.Condition = "$(Access) == 'Protected'";
-			
+
 			string str = filterBy.ToString();
-			
+
 			Assert.AreEqual("Filter by: $(Access) == 'Protected'", str,
 			    "Unexpected string representation.");
 		}

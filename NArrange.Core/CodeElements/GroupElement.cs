@@ -45,9 +45,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _customSeparator;		
-		private GroupSeparatorType _separatorType;		
-		
+		private string _customSeparator;
+		private GroupSeparatorType _separatorType;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -106,7 +106,7 @@ namespace NArrange.Core.CodeElements
 			GroupElement clone = new GroupElement();
 			clone._customSeparator = _customSeparator;
 			clone._separatorType = _separatorType;
-			
+
 			return clone;
 		}
 

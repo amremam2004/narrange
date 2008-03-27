@@ -49,7 +49,6 @@
     <Compile Include="CSharpWriterTests.cs" />
     <Compile Include="ExtensionHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="TestSourceFiles\UnexpectedEndOfFile.cs" />
     <EmbeddedResource Include="TestSourceFiles\StructDefinition.cs" />
     <EmbeddedResource Include="TestSourceFiles\SingleNamespace.cs" />
     <EmbeddedResource Include="TestSourceFiles\Operators.cs" />

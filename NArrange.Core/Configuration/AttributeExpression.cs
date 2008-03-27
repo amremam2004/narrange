@@ -43,10 +43,19 @@ namespace NArrange.Core.Configuration
 	/// </summary>
 	public class AttributeExpression : LeafExpression
 	{
+		#region Constants
+
+		/// <summary>
+		/// Character that marks the start of an attribute expression
+		/// </summary>
+		public const char ExpressionPrefix = '$';
+
+		#endregion Constants
+
 		#region Fields
 
-		private ElementAttribute _elementAttribute;		
-		
+		private ElementAttribute _elementAttribute;
+
 		#endregion Fields
 
 		#region Constructors

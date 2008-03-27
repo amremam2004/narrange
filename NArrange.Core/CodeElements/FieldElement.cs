@@ -45,9 +45,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _initialValue;		
-		private bool _isVolatile;		
-		
+		private string _initialValue;
+		private bool _isVolatile;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -126,13 +126,13 @@ namespace NArrange.Core.CodeElements
 		protected override MemberElement DoMemberClone()
 		{
 			FieldElement fieldElement = new FieldElement();
-			
+
 			//
 			// Copy state
 			//
 			fieldElement._initialValue = _initialValue;
 			fieldElement._isVolatile = _isVolatile;
-			
+
 			return fieldElement;
 		}
 

@@ -47,12 +47,12 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private bool _isOperator;		
-		private OperatorType _operatorType;		
-		private string _params = string.Empty;		
-		private List<TypeParameter> _typeParameters;		
-		private object _typeParametersLock = new object();		
-		
+		private bool _isOperator;
+		private OperatorType _operatorType;
+		private string _params = string.Empty;
+		private List<TypeParameter> _typeParameters;
+		private object _typeParametersLock = new object();
+
 		#endregion Fields
 
 		#region Private Properties
@@ -74,7 +74,7 @@ namespace NArrange.Core.CodeElements
 			            }
 			        }
 			    }
-			
+
 			    return _typeParameters;
 			}
 		}
@@ -172,20 +172,20 @@ namespace NArrange.Core.CodeElements
 		protected override InterfaceMemberElement DoInterfaceMemberClone()
 		{
 			MethodElement clone = new MethodElement();
-			
+
 			//
 			// Copy state
 			//
 			clone._params = _params;
 			clone._isOperator = _isOperator;
 			clone._operatorType = _operatorType;
-			
+
 			foreach (TypeParameter typeParam in TypeParameters)
 			{
 			    TypeParameter typeParamClone = typeParam.Clone() as TypeParameter;
 			    clone.TypeParametersBase.Add(typeParamClone);
 			}
-			
+
 			return clone;
 		}
 
@@ -213,7 +213,7 @@ namespace NArrange.Core.CodeElements
 			{
 				throw new ArgumentNullException("typeParameter");
 			}
-			
+
 			TypeParametersBase.Add(typeParameter);
 		}
 

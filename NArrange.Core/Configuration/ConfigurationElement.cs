@@ -13,8 +13,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private List<ConfigurationElement> _elements;		
-		
+		private List<ConfigurationElement> _elements;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -39,7 +39,7 @@ namespace NArrange.Core.Configuration
 			            }
 			        }
 			    }
-			
+
 			    return _elements;
 			}
 		}
@@ -55,13 +55,13 @@ namespace NArrange.Core.Configuration
 		protected ConfigurationElement BaseClone()
 		{
 			ConfigurationElement clone = DoClone();
-			
+
 			foreach (ConfigurationElement child in this.Elements)
 			{
 			    ConfigurationElement childClone = child.Clone() as ConfigurationElement;
 			    clone.Elements.Add(childClone);
 			}
-			
+
 			return clone;
 		}
 
@@ -83,7 +83,7 @@ namespace NArrange.Core.Configuration
 		public virtual object Clone()
 		{
 			ConfigurationElement configurationElement = this.BaseClone();
-			
+
 			return configurationElement;
 		}
 

@@ -41,27 +41,25 @@ using System.Xml.Serialization;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies tab style configuration
+	/// Specifies closing comments configuration
 	/// </summary>
-	[XmlType("Tabs")]
-	public class TabConfiguration : ICloneable
+	[XmlType("ClosingComments")]
+	public class ClosingCommentConfiguration : ICloneable
 	{
 		#region Fields
 
-		private int _spacesPerTab;
-		private TabStyle _style;
+		private bool _enabled;
+		private string _format;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new TabConfiguration instance
+		/// Creates a new ClosingCommentConfiguration instance
 		/// </summary>
-		public TabConfiguration()
+		public ClosingCommentConfiguration()
 		{
-			_style = TabStyle.Tabs;
-			_spacesPerTab = 4;
 		}
 
 		#endregion Constructors
@@ -69,34 +67,34 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the number of spaces per tab
+		/// Gets or sets whether closing comments are enabled.
 		/// </summary>
-		[XmlAttribute("SpacesPerTab")]
-		public int SpacesPerTab
+		[XmlAttribute("Enabled")]
+		public bool Enabled
 		{
 			get
 			{
-			    return _spacesPerTab;
+			    return _enabled;
 			}
 			set
 			{
-			    _spacesPerTab = value;
+			    _enabled = value;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the tab style
+		/// Gets or sets the format string
 		/// </summary>
-		[XmlAttribute("Style")]
-		public TabStyle Style
+		[XmlAttribute("Format")]
+		public string Format
 		{
 			get
 			{
-			    return _style;
+			    return _format;
 			}
 			set
 			{
-			    _style = value;
+			    _format = value;
 			}
 		}
 
@@ -110,10 +108,10 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public object Clone()
 		{
-			TabConfiguration clone = new TabConfiguration();
+			ClosingCommentConfiguration clone = new ClosingCommentConfiguration();
 
-			clone._style = _style;
-			clone._spacesPerTab = _spacesPerTab;
+			clone._enabled = _enabled;
+			clone._format = _format;
 
 			return clone;
 		}
@@ -124,7 +122,7 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Tabs: {0}, {1}", this.Style, this.SpacesPerTab);
+			return string.Format("Closing comment: {0}, {1}", this.Enabled, this.Format);
 		}
 
 		#endregion Public Methods

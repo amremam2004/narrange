@@ -84,15 +84,15 @@ namespace NArrange.Core
 			{
 				throw new ArgumentException("Invalid backup key", "key");
 			}
-			
-			
-			
-			
+
+
+
+
 			if(!Directory.Exists(backupRoot))
 			{
 				Directory.CreateDirectory(backupRoot);
 			}
-			
+
 			DateTime backupDate = DateTime.Now;
 			string dateDirectory = backupDate.ToFileTime().ToString();
 			string keyRoot = Path.Combine(backupRoot, key);
@@ -102,9 +102,9 @@ namespace NArrange.Core
 			}
 			string backupLocation = Path.Combine(keyRoot, dateDirectory);
 			Directory.CreateDirectory(backupLocation);
-			
+
 			string zipFile = Path.Combine(backupLocation, ZipFileName);
-			
+
 			//
 			// Copy all files to a temporary working directory
 			//
@@ -122,14 +122,14 @@ namespace NArrange.Core
 							string fileKey = CreateFileNameKey(fileName);
 							string fileBackupName = fileKey + "." + ProjectManager.GetExtension(fileName);
 							writer.WriteLine(fileBackupName + IndexSeparator + fileName);
-			
+
 							string fileBackupPath =
 								Path.Combine(workingDirectory, fileBackupName);
 							File.Copy(fileName, fileBackupPath);
 						}
 					}
 				}
-			
+
 				//
 				// Zip up all files to backup
 				//
@@ -145,7 +145,7 @@ namespace NArrange.Core
 				{
 				}
 			}
-			
+
 			return backupLocation;
 		}
 
@@ -164,7 +164,7 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentException("Invalid fileName", "fileName");
 			}
-			
+
 			return fileName.ToLower().GetHashCode().ToString().Replace('-', '_').PadLeft(MaxIntLength, '_');
 		}
 
@@ -187,7 +187,7 @@ namespace NArrange.Core
 		public static bool RestoreFiles(string backupRoot, string key)
 		{
 			bool success = false;
-			
+
 			if (backupRoot == null || backupRoot.Trim().Length == 0)
 			{
 				throw new ArgumentException("Invalid backup location", "backupRoot");
@@ -196,9 +196,9 @@ namespace NArrange.Core
 			{
 				throw new ArgumentException("Invalid backup key", "key");
 			}
-			
+
 			string keyRoot = Path.Combine(backupRoot, key);
-			
+
 			//
 			// Find the most recent timestamped folder
 			//
@@ -210,14 +210,14 @@ namespace NArrange.Core
 			{
 				timestampedDirectories.Add(childDirectory.Name, childDirectory);
 			}
-			
+
 			if (timestampedDirectories.Count > 0)
 			{
 				string dateDirectory = timestampedDirectories.Values[timestampedDirectories.Count - 1].Name;
-			
+
 				string backupLocation = Path.Combine(keyRoot, dateDirectory);
 				string zipFile = Path.Combine(backupLocation, ZipFileName);
-			
+
 				//
 				// Extract all files to a temporary working directory
 				//
@@ -229,7 +229,7 @@ namespace NArrange.Core
 					// Unzip and copy all files to restore
 					//
 					ZipUtilities.Unzip(zipFile, workingDirectory);
-			
+
 					string indexFile = Path.Combine(backupLocation, IndexFileName);
 					using (FileStream fs = new FileStream(indexFile, FileMode.Open))
 					{
@@ -242,11 +242,11 @@ namespace NArrange.Core
 								string fileBackupName = line.Substring(0, separatorIndex);
 								string fileBackupPath =
 										Path.Combine(workingDirectory, fileBackupName);
-			
+
 								string restorePath = line.Substring(separatorIndex + 1);
-			
+
 								FileAttributes origAttributes = File.GetAttributes(fileBackupPath);
-			
+
 								string backupText = File.ReadAllText(fileBackupPath);
 								string restoreText = null;
 								if (File.Exists(restorePath))
@@ -254,7 +254,7 @@ namespace NArrange.Core
 									restoreText = File.ReadAllText(restorePath);
 									File.SetAttributes(restorePath, FileAttributes.Normal);
 								}
-			
+
 								if (backupText != restoreText)
 								{
 									File.Copy(fileBackupPath, restorePath, true);
@@ -262,13 +262,13 @@ namespace NArrange.Core
 							}
 						}
 					}
-			
+
 					//
 					// Remove the restored backup so that a consecutive restore
 					// will process the next in the history
 					//
 					Directory.Delete(backupLocation, true);
-			
+
 					success = true;
 				}
 				finally
@@ -282,7 +282,7 @@ namespace NArrange.Core
 					}
 				}
 			}
-			
+
 			return success;
 		}
 

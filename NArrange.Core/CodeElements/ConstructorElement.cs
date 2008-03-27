@@ -45,9 +45,9 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _params = string.Empty;		
-		private string _reference;		
-		
+		private string _params = string.Empty;
+		private string _reference;
+
 		#endregion Fields
 
 		#region Public Properties
@@ -104,13 +104,13 @@ namespace NArrange.Core.CodeElements
 		protected override MemberElement DoMemberClone()
 		{
 			ConstructorElement clone = new ConstructorElement();
-			
+
 			//
 			// Copy state
 			//
 			clone._params = _params;
 			clone._reference = _reference;
-			
+
 			return clone;
 		}
 

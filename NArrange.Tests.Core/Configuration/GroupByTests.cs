@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void CreateTest()
 		{
 			GroupBy groupBy = new GroupBy();
-			
+
 			//
 			// Verify default state
 			//
@@ -47,7 +47,7 @@ namespace NArrange.Tests.Core.Configuration
 			GroupBy groupBy = new GroupBy();
 			Assert.IsNull(groupBy.CustomSeparator,
 			    "Unexpected default value for CustomSeparator.");
-			
+
 			groupBy.CustomSeparator = "// This is a group\r\n";
 			Assert.AreEqual("// This is a group\r\n", groupBy.CustomSeparator,
 			    "CustomSeparator was not set correctly.");
@@ -62,7 +62,7 @@ namespace NArrange.Tests.Core.Configuration
 			GroupBy groupBy = new GroupBy();
 			Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType,
 			    "Unexpected default value for SeparateType.");
-			
+
 			groupBy.SeparatorType = GroupSeparatorType.Custom;
 			Assert.AreEqual(GroupSeparatorType.Custom, groupBy.SeparatorType,
 			    "SeparateType was not set correctly.");
@@ -76,9 +76,9 @@ namespace NArrange.Tests.Core.Configuration
 		{
 			GroupBy groupBy = new GroupBy();
 			groupBy.By = ElementAttribute.Access;
-			
+
 			string str = groupBy.ToString();
-			
+
 			Assert.AreEqual("Group by: Access", str,
 			    "Unexpected string representation.");
 		}

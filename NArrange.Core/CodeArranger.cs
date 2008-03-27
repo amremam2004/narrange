@@ -49,10 +49,10 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private object _codeArrangeChainLock = new object();		
-		private readonly CodeConfiguration _configuration;		
-		private ChainElementArranger _elementArrangerChain;		
-		
+		private object _codeArrangeChainLock = new object();
+		private readonly CodeConfiguration _configuration;
+		private ChainElementArranger _elementArrangerChain;
+
 		#endregion Fields
 
 		#region Constructors
@@ -67,7 +67,7 @@ namespace NArrange.Core
 			{
 			    throw new ArgumentNullException("configuration");
 			}
-			
+
 			//
 			// Clone the configuration information so we don't have to worry about it
 			// changing during processing.
@@ -99,7 +99,7 @@ namespace NArrange.Core
 			            }
 			        }
 			    }
-			
+
 			    return _elementArrangerChain;
 			}
 		}
@@ -117,7 +117,7 @@ namespace NArrange.Core
 		public ReadOnlyCollection<ICodeElement> Arrange(ReadOnlyCollection<ICodeElement> originalElements)
 		{
 			GroupElement rootElement = new GroupElement();
-			
+
 			List<ICodeElement> elements = new List<ICodeElement>();
 			if (originalElements != null)
 			{
@@ -127,7 +127,7 @@ namespace NArrange.Core
 			        ArrangerChain.ArrangeElement(rootElement, elementClone);
 			    }
 			}
-			
+
 			return rootElement.Children;
 		}
 

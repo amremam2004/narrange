@@ -38,7 +38,7 @@ namespace NArrange.Tests.VisualBasic
 			            "Field value should be considered a VB symbol.");
 			    }
 			}
-			
+
 			Assert.IsFalse(VBSymbol.IsVBSymbol('1'));
 			Assert.IsFalse(VBSymbol.IsVBSymbol('A'));
 			Assert.IsFalse(VBSymbol.IsVBSymbol('$'));
