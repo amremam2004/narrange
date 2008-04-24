@@ -47,11 +47,11 @@ namespace NArrange.Tests.Core
 		public void InsertByAccessAndNameTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Access;
+			sortBy.By = ElementAttributeType.Access;
 			sortBy.Direction = ListSortDirection.Ascending;
 
 			SortBy innerSortBy = new SortBy();
-			innerSortBy.By = ElementAttribute.Name;
+			innerSortBy.By = ElementAttributeType.Name;
 			innerSortBy.Direction = ListSortDirection.Ascending;
 
 			sortBy.InnerSortBy = innerSortBy;
@@ -166,7 +166,7 @@ namespace NArrange.Tests.Core
 		public void InsertByAccessTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Access;
+			sortBy.By = ElementAttributeType.Access;
 			sortBy.Direction = ListSortDirection.Ascending;
 
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
@@ -225,7 +225,7 @@ namespace NArrange.Tests.Core
 		public void InsertByNameDescendingTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Name;
+			sortBy.By = ElementAttributeType.Name;
 			sortBy.Direction = ListSortDirection.Descending;
 
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
@@ -284,7 +284,7 @@ namespace NArrange.Tests.Core
 		public void InsertByNameTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Name;
+			sortBy.By = ElementAttributeType.Name;
 			sortBy.Direction = ListSortDirection.Ascending;
 
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
@@ -343,7 +343,7 @@ namespace NArrange.Tests.Core
 		public void InsertByNoneTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.None;
+			sortBy.By = ElementAttributeType.None;
 			sortBy.Direction = ListSortDirection.Ascending;
 
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
@@ -398,7 +398,7 @@ namespace NArrange.Tests.Core
 		public void InsertNullTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Name;
+			sortBy.By = ElementAttributeType.Name;
 			sortBy.Direction = ListSortDirection.Ascending;
 
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Field, sortBy);
@@ -426,25 +426,9 @@ namespace NArrange.Tests.Core
 			//
 			FieldElement field2 = null;
 			sortedInserter.InsertElement(regionElement, field2);
-			Assert.AreEqual(2, regionElement.Children.Count,
-			    "Element was not inserted into the parent.");
-			Assert.AreEqual(0, regionElement.Children.IndexOf(field2),
-			    "Element is not at the correct index.");
-			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
-			    "Element is not at the correct index.");
-
-
-			//
-			// Inser the null element first
-			//
-			regionElement.ClearChildren();
-			sortedInserter.InsertElement(regionElement, field2);
-			sortedInserter.InsertElement(regionElement, field1);
-			Assert.AreEqual(2, regionElement.Children.Count,
-			    "Element was not inserted into the parent.");
-			Assert.AreEqual(0, regionElement.Children.IndexOf(field2),
-			    "Element is not at the correct index.");
-			Assert.AreEqual(1, regionElement.Children.IndexOf(field1),
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Element should not have been inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(field1),
 			    "Element is not at the correct index.");
 		}
 

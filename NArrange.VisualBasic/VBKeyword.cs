@@ -46,9 +46,24 @@ namespace NArrange.VisualBasic
 		#region Constants
 
 		/// <summary>
+		/// Alias
+		/// </summary>
+		public const string Alias = "Alias";
+
+		/// <summary>
+		/// Ansi
+		/// </summary>
+		public const string Ansi = "Ansi";
+
+		/// <summary>
 		/// As
 		/// </summary>
 		public const string As = "As";
+
+		/// <summary>
+		/// Auto
+		/// </summary>
+		public const string Auto = "Auto";
 
 		/// <summary>
 		/// Begin
@@ -71,6 +86,11 @@ namespace NArrange.VisualBasic
 		public const string Custom = "Custom";
 
 		/// <summary>
+		/// Declare
+		/// </summary>
+		public const string Declare = "Declare";
+
+		/// <summary>
 		/// Default
 		/// </summary>
 		public const string Default = "Default";
@@ -79,6 +99,11 @@ namespace NArrange.VisualBasic
 		/// Delegate
 		/// </summary>
 		public const string Delegate = "Delegate";
+
+		/// <summary>
+		/// Dim
+		/// </summary>
+		public const string Dim = "Dim";
 
 		/// <summary>
 		/// End
@@ -106,6 +131,11 @@ namespace NArrange.VisualBasic
 		public const string Function = "Function";
 
 		/// <summary>
+		/// Handles
+		/// </summary>
+		public const string Handles = "Handles";
+
+		/// <summary>
 		/// Implements
 		/// </summary>
 		public const string Implements = "Implements";
@@ -124,6 +154,16 @@ namespace NArrange.VisualBasic
 		/// Interface
 		/// </summary>
 		public const string Interface = "Interface";
+
+		/// <summary>
+		/// Lib
+		/// </summary>
+		public const string Lib = "Lib";
+
+		/// <summary>
+		/// Module
+		/// </summary>
+		public const string Module = "Module";
 
 		/// <summary>
 		/// MustInherit
@@ -169,6 +209,11 @@ namespace NArrange.VisualBasic
 		/// Operator
 		/// </summary>
 		public const string Operator = "Operator";
+
+		/// <summary>
+		/// Option
+		/// </summary>
+		public const string Option = "Option";
 
 		/// <summary>
 		/// Overloads
@@ -226,6 +271,11 @@ namespace NArrange.VisualBasic
 		public const string Region = "Region";
 
 		/// <summary>
+		/// REM (line comment)
+		/// </summary>
+		public const string Rem = "REM";
+
+		/// <summary>
 		/// Shadows
 		/// </summary>
 		public const string Shadows = "Shadows";
@@ -246,9 +296,19 @@ namespace NArrange.VisualBasic
 		public const string Sub = "Sub";
 
 		/// <summary>
+		/// Unicode
+		/// </summary>
+		public const string Unicode = "Unicode";
+
+		/// <summary>
 		/// Widening
 		/// </summary>
 		public const string Widening = "Widening";
+
+		/// <summary>
+		/// WithEvents
+		/// </summary>
+		public const string WithEvents = "WithEvents";
 
 		/// <summary>
 		/// WriteOnly
@@ -256,6 +316,38 @@ namespace NArrange.VisualBasic
 		public const string WriteOnly = "WriteOnly";
 
 		#endregion Constants
+
+		#region Static Fields
+
+		private static Dictionary<string, string> _specialNormalizedKeywords = 
+            CreateNormalizedKeywordDictionary();
+
+		#endregion Static Fields
+
+		#region Private Methods
+
+		/// <summary>
+		/// Creates a dictionary of special cases when normalizing keywords.
+		/// </summary>
+		/// <returns></returns>
+		private static Dictionary<string, string> CreateNormalizedKeywordDictionary()
+		{
+			Dictionary<string, string> _specialNormalizedKeywords;
+			_specialNormalizedKeywords = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+			_specialNormalizedKeywords[VBKeyword.ReadOnly] = VBKeyword.ReadOnly;
+			_specialNormalizedKeywords[VBKeyword.ReadWrite] = VBKeyword.ReadWrite;
+			_specialNormalizedKeywords[VBKeyword.WriteOnly] = VBKeyword.WriteOnly;
+			_specialNormalizedKeywords[VBKeyword.MustOverride] = VBKeyword.MustOverride;
+			_specialNormalizedKeywords[VBKeyword.MustInherit] = VBKeyword.MustInherit;
+			_specialNormalizedKeywords[VBKeyword.NotInheritable] = VBKeyword.NotInheritable;
+			_specialNormalizedKeywords[VBKeyword.NotOverridable] = VBKeyword.NotOverridable;
+			_specialNormalizedKeywords[VBKeyword.WithEvents] = VBKeyword.WithEvents;
+			_specialNormalizedKeywords[VBKeyword.Rem] = VBKeyword.Rem.ToUpper();
+			return _specialNormalizedKeywords;
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 
@@ -273,6 +365,9 @@ namespace NArrange.VisualBasic
 				string normalized = Normalize(trimmedWord.Trim());
 
 				isKeyword =
+			        normalized == VBKeyword.Alias ||
+			        normalized == VBKeyword.Ansi ||
+			        normalized == VBKeyword.Auto ||
 					normalized == VBKeyword.As ||
 					normalized == VBKeyword.Begin ||
 					normalized == VBKeyword.Class ||
@@ -280,15 +375,19 @@ namespace NArrange.VisualBasic
 					normalized == VBKeyword.Custom ||
 					normalized == VBKeyword.Default ||
 					normalized == VBKeyword.Delegate ||
+			        normalized == VBKeyword.Dim ||
 					normalized == VBKeyword.End ||
 					normalized == VBKeyword.Enumeration ||
 					normalized == VBKeyword.Event ||
 					normalized == VBKeyword.Friend ||
 					normalized == VBKeyword.Function ||
+			        normalized == VBKeyword.Handles ||
 					normalized == VBKeyword.Imports ||
 					normalized == VBKeyword.Implements ||
 					normalized == VBKeyword.Inherits ||
 					normalized == VBKeyword.Interface ||
+			        normalized == VBKeyword.Lib ||
+			        normalized == VBKeyword.Module ||
 					normalized == VBKeyword.MustInherit ||
 					normalized == VBKeyword.MustOverride ||
 					normalized == VBKeyword.Namespace ||
@@ -298,6 +397,7 @@ namespace NArrange.VisualBasic
 					normalized == VBKeyword.NotOverridable ||
 					normalized == VBKeyword.Of ||
 					normalized == VBKeyword.Operator ||
+			        normalized == VBKeyword.Option ||
 					normalized == VBKeyword.Overloads ||
 					normalized == VBKeyword.Overridable ||
 					normalized == VBKeyword.Overrides ||
@@ -309,11 +409,14 @@ namespace NArrange.VisualBasic
 					normalized == VBKeyword.ReadOnly ||
 			        normalized == VBKeyword.ReadWrite ||
 					normalized == VBKeyword.Region ||
+			        normalized == VBKeyword.Rem ||
 					normalized == VBKeyword.Shadows ||
 					normalized == VBKeyword.Shared ||
 					normalized == VBKeyword.Structure ||
 					normalized == VBKeyword.Sub ||
+			        normalized == VBKeyword.Unicode ||
 					normalized == VBKeyword.Widening ||
+			        normalized == VBKeyword.WithEvents ||
 			        normalized == VBKeyword.WriteOnly;
 			}
 
@@ -323,53 +426,24 @@ namespace NArrange.VisualBasic
 		/// <summary>
 		/// Normalizes a keyword for standard casing
 		/// </summary>
-		/// <param name="keyWord"></param>
+		/// <param name="keyword"></param>
 		/// <returns></returns>
-		public static string Normalize(string keyWord)
+		public static string Normalize(string keyword)
 		{
 			string normalized = null;
 
-			if (keyWord != null)
+			if (keyword != null)
 			{
-				normalized = keyWord;
-				if (keyWord.Length > 0)
+				if (keyword.Length > 0)
 				{
-					if (keyWord.ToLower() == VBKeyword.ReadOnly.ToLower())
+					if (!(_specialNormalizedKeywords.TryGetValue(keyword, out normalized)))
 					{
-						normalized = VBKeyword.ReadOnly;
-					}
-			        else if (keyWord.ToLower() == VBKeyword.ReadWrite.ToLower())
-			        {
-			            normalized = VBKeyword.ReadWrite;
+			            normalized = char.ToUpper(keyword[0]).ToString();
+			            if (keyword.Length > 1)
+			            {
+			                normalized += keyword.Substring(1);
+			            }
 			        }
-			        else if (keyWord.ToLower() == VBKeyword.WriteOnly.ToLower())
-			        {
-			            normalized = VBKeyword.WriteOnly;
-			        }
-					else if (keyWord.ToLower() == VBKeyword.MustOverride.ToLower())
-					{
-						normalized = VBKeyword.MustOverride;
-					}
-					else if (keyWord.ToLower() == VBKeyword.MustInherit.ToLower())
-					{
-						normalized = VBKeyword.MustInherit;
-					}
-					else if (keyWord.ToLower() == VBKeyword.NotInheritable.ToLower())
-					{
-						normalized = VBKeyword.NotInheritable;
-					}
-					else if (keyWord.ToLower() == VBKeyword.NotOverridable.ToLower())
-					{
-						normalized = VBKeyword.NotOverridable;
-					}
-					else
-					{
-						normalized = char.ToUpper(normalized[0]).ToString();
-						if (keyWord.Length > 1)
-						{
-							normalized += keyWord.Substring(1);
-						}
-					}
 				}
 			}
 

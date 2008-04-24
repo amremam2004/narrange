@@ -64,7 +64,7 @@ namespace NArrange.Tests.Core.CodeElements
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Access, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Access, fieldElement);
 			Assert.AreEqual("Protected", attribute, "Unexpected attribute.");
 		}
 
@@ -78,7 +78,7 @@ namespace NArrange.Tests.Core.CodeElements
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.ElementType, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.ElementType, fieldElement);
 			Assert.AreEqual("Field", attribute, "Unexpected attribute.");
 		}
 
@@ -91,22 +91,22 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
-			fieldElement.Type = "int";
-			fieldElement.MemberModifiers = MemberModifier.Static;
+			fieldElement.ReturnType = "int";
+			fieldElement.MemberModifiers = MemberModifiers.Static;
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Modifier, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Modifier, fieldElement);
 			Assert.AreEqual("Static", attribute, "Unexpected attribute.");
 
 			TypeElement typeElement = new TypeElement();
-			typeElement.TypeModifiers = TypeModifier.Sealed;
+			typeElement.TypeModifiers = TypeModifiers.Sealed;
 
-			attribute = ElementUtilities.GetAttribute(ElementAttribute.Modifier, typeElement);
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Modifier, typeElement);
 			Assert.AreEqual("Sealed", attribute, "Unexpected attribute.");
 
 			UsingElement usingElement = new UsingElement();
 			usingElement.Name = "System";
 
-			attribute = ElementUtilities.GetAttribute(ElementAttribute.Modifier, usingElement);
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Modifier, usingElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
 		}
 
@@ -119,7 +119,7 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Name, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Name, fieldElement);
 			Assert.AreEqual("TestField", attribute, "Unexpected attribute.");
 		}
 
@@ -132,7 +132,7 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.None, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.None, fieldElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
 		}
 
@@ -145,21 +145,21 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
-			fieldElement.Type = "int";
+			fieldElement.ReturnType = "int";
 
-			string attribute = ElementUtilities.GetAttribute(ElementAttribute.Type, fieldElement);
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, fieldElement);
 			Assert.AreEqual("int", attribute, "Unexpected attribute.");
 
 			TypeElement typeElement = new TypeElement();
-			typeElement.Type = TypeElementType.Interface;
+			typeElement.TypeElementType = TypeElementType.Interface;
 
-			attribute = ElementUtilities.GetAttribute(ElementAttribute.Type, typeElement);
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, typeElement);
 			Assert.AreEqual("Interface", attribute, "Unexpected attribute.");
 
 			UsingElement usingElement = new UsingElement();
 			usingElement.Name = "System";
 
-			attribute = ElementUtilities.GetAttribute(ElementAttribute.Type, usingElement);
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, usingElement);
 			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
 		}
 

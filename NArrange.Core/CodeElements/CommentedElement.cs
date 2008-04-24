@@ -46,8 +46,8 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private object _commentLinesLock = new object();
 		private List<ICommentElement> _comments;
+		private object _commentsLock = new object();
 
 		#endregion Fields
 
@@ -62,7 +62,7 @@ namespace NArrange.Core.CodeElements
 			{
 			    if (_comments == null)
 			    {
-			        lock (_commentLinesLock)
+			        lock (_commentsLock)
 			        {
 			            if (_comments == null)
 			            {

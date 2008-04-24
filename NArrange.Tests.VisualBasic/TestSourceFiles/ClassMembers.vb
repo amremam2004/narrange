@@ -1,4 +1,3 @@
-' Using statement within the namespace definition
 Imports System.Text
 Imports System
 Imports System.Runtime
@@ -22,6 +21,7 @@ Namespace SampleNamespace
 		'This field has a regular comment
 		Private _simpleField As Boolean
 		Private _fieldWithInitialVal As Integer = 1
+		Private Dim _dimField As Boolean
 
 		''' <summary>
 		''' This is a static readonly string
@@ -42,6 +42,7 @@ Namespace SampleNamespace
 
 		Private _val1, _val2 As Integer
 		Private Shared _val3 , _val4 ,_val5, _val6 As Integer
+		Private _val7 As Integer : Private _val8 As Integer
 
 		#End Region
 
@@ -61,8 +62,11 @@ Namespace SampleNamespace
 		End Sub
 
 		' Static constructor
+		REM Another comment
+		'' Not an XML comment
+		''' XML comment
 		Shared Sub New()
-		End Sub
+		End Sub		' New
 
 		#End Region
 
@@ -156,13 +160,14 @@ Namespace SampleNamespace
 
 		#Region "Methods"
 		
+		''' <summary>
+		''' Finalizer
+		''' </summary>
+		''' <remarks></remarks>
 		Protected Overrides Sub Finalize()
 			Try
 
-				''' <summary>
-				''' Finalizer
-				''' </summary>
-				''' <remarks></remarks>
+				
 			Finally
 				MyBase.Finalize()
 			End Try
@@ -265,6 +270,11 @@ Namespace SampleNamespace
 		''' Generic event
 		''' </summary>
 		Public Event GenericEvent As EventHandler(Of EventArgs)
+		
+		''' <summary>
+		''' Another event
+		''' </summary>
+		Public Event AnotherEvent(ByVal args As EventArgs)
 		
 		''' <summary>
 		''' Explicit event

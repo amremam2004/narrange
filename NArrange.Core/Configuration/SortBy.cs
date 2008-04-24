@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -48,7 +49,7 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementAttribute _by;
+		private ElementAttributeType _by;
 		private ListSortDirection _direction;
 		private SortBy _innerSortBy;
 
@@ -71,7 +72,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the attribute elements should be sorted by
 		/// </summary>
 		[XmlAttribute("By")]
-		public ElementAttribute By
+		public ElementAttributeType By
 		{
 			get
 			{
@@ -145,7 +146,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Sort by: {0}", this._by);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Sort by: {0}", this._by);
 		}
 
 		#endregion Public Methods

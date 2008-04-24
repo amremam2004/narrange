@@ -68,6 +68,15 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Module definition test file
+		/// </summary>
+		/// <returns></returns>
+		public static VBTestFile GetModuleDefinitionFile()
+		{
+			return new VBTestFile("ModuleDefinition.vb");
+		}
+
+		/// <summary>
 		/// Multiple class definition test file
 		/// </summary>
 		/// <returns></returns>

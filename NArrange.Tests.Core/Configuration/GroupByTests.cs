@@ -30,7 +30,7 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			Assert.IsNull(groupBy.AttributeCapture,
 			    "Unexpected default value AttributeCapture.");
-			Assert.AreEqual(ElementAttribute.None, groupBy.By,
+			Assert.AreEqual(ElementAttributeType.None, groupBy.By,
 			    "Unexpected default value for By.");
 			Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType,
 			    "Unexpected default value for SeparateType.");
@@ -75,7 +75,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void ToStringTest()
 		{
 			GroupBy groupBy = new GroupBy();
-			groupBy.By = ElementAttribute.Access;
+			groupBy.By = ElementAttributeType.Access;
 
 			string str = groupBy.ToString();
 

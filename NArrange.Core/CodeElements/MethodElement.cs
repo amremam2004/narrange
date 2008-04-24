@@ -32,6 +32,7 @@
  *      James Nies
  *      - Initial creation
  *		- Implement the IGenericElement interface
+ *      - Added an IsPartial property for partial method support
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace NArrange.Core.CodeElements
 
 		private bool _isOperator;
 		private OperatorType _operatorType;
-		private string _params = string.Empty;
+		private string _params;
 		private List<TypeParameter> _typeParameters;
 		private object _typeParametersLock = new object();
 
@@ -101,7 +102,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (MemberModifiers & MemberModifier.External) == MemberModifier.External;
+			    return (MemberModifiers & MemberModifiers.External) == MemberModifiers.External;
 			}
 		}
 
@@ -117,6 +118,17 @@ namespace NArrange.Core.CodeElements
 			set
 			{
 			    _isOperator = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets whether or not the method is a partial method.
+		/// </summary>
+		public bool IsPartial
+		{
+			get
+			{
+			    return (MemberModifiers & MemberModifiers.Partial) == MemberModifiers.Partial;
 			}
 		}
 
@@ -138,7 +150,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the parameter list 
 		/// </summary>
-		public string Params
+		public string Parameters
 		{
 			get
 			{

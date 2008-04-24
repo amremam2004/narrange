@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
@@ -93,7 +94,7 @@ namespace NArrange.Core
 
 		#region Private Methods
 
-		private string GetExpressionValue(IConditionExpression expression, ICodeElement element)
+		private static string GetExpressionValue(IConditionExpression expression, ICodeElement element)
 		{
 			string value = string.Empty;
 
@@ -176,6 +177,7 @@ namespace NArrange.Core
 			        default:
 			            throw new ArgumentOutOfRangeException(
 			                string.Format(
+			                Thread.CurrentThread.CurrentCulture,
 			                "Unsupported operator type {0}", operatorExpression.Operator));
 			    }
 			}

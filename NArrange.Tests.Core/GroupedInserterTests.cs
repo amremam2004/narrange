@@ -47,11 +47,11 @@ namespace NArrange.Tests.Core
 		public void InsertSortedTest()
 		{
 			GroupBy groupBy = new GroupBy();
-			groupBy.By = ElementAttribute.Name;
+			groupBy.By = ElementAttributeType.Name;
 			groupBy.AttributeCapture = "^(.*?)(\\.|$)";
 
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Name;
+			sortBy.By = ElementAttributeType.Name;
 			SortedInserter sortedInserter = new SortedInserter(ElementType.Using, sortBy);
 
 			GroupedInserter groupedInserter = new GroupedInserter(groupBy, sortedInserter);
@@ -118,7 +118,7 @@ namespace NArrange.Tests.Core
 		public void InsertTest()
 		{
 			GroupBy groupBy = new GroupBy();
-			groupBy.By = ElementAttribute.Name;
+			groupBy.By = ElementAttributeType.Name;
 			groupBy.AttributeCapture = "^(.*?)(\\.|$)";
 
 			GroupedInserter groupedInserter = new GroupedInserter(groupBy);

@@ -32,10 +32,13 @@
  *      James Nies
  *      - Initial creation
  *		- Added a backup and restore feature
+ *      - Fixed a bug where the output file override was not being 
+ *        acknowledged
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -112,14 +115,15 @@ namespace NArrange.Core
 			try
 			{
 				FileAttributes fileAttributes = File.GetAttributes(inputFile);
-				if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				if (inputFile == outputFile &&
+			        ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly))
 				{
-					LogMessage(LogLevel.Trace, "File {0} is read-only", inputFile);
+					LogMessage(LogLevel.Warning, "File {0} is read-only", inputFile);
 				}
 				else
 				{
 					inputFileText = File.ReadAllText(inputFile, Encoding.Default);
-					elements = ParseElements(inputFile, inputFileText);
+					elements = _projectManager.ParseElements(inputFile, inputFileText);
 					LogMessage(LogLevel.Trace, "Parsed {0}", inputFile);
 				}
 			}
@@ -166,10 +170,10 @@ namespace NArrange.Core
 			string outputFileText = null;
 			if (elements != null)
 			{
-				ICodeWriter codeWriter = _projectManager.GetSourceHandler(outputFile).Writer;
+				ICodeElementWriter codeWriter = _projectManager.GetSourceHandler(inputFile).Writer;
 				codeWriter.Configuration = _configuration;
 
-				StringWriter writer = new StringWriter();
+				StringWriter writer = new StringWriter(CultureInfo.InvariantCulture);
 				try
 				{
 					codeWriter.Write(elements, writer);
@@ -267,31 +271,6 @@ namespace NArrange.Core
 			{
 			    _logger.LogMessage(level, message, args);
 			}
-		}
-
-		/// <summary>
-		/// Parses code elements from the input file
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <param name="text"></param>
-		/// <returns></returns>
-		private ReadOnlyCollection<ICodeElement> ParseElements(string inputFile, string text)
-		{
-			ReadOnlyCollection<ICodeElement> elements = null;
-			SourceHandler sourceHandler = _projectManager.GetSourceHandler(inputFile);
-			if (sourceHandler != null)
-			{
-			    ICodeParser parser = sourceHandler.CodeParser;
-			    if (parser != null)
-			    {
-					using (StringReader reader = new StringReader(text))
-			        {
-			            elements = parser.Parse(reader);
-			        }
-			    }
-			}
-
-			return elements;
 		}
 
 		private bool WriteFile(ArrangeResult arrangeResult)
@@ -410,7 +389,7 @@ namespace NArrange.Core
 			if (success)
 			{
 				bool isProject = _projectManager.IsProject(inputFile);
-				bool isSolution = !isProject && _projectManager.IsSolution(inputFile);
+				bool isSolution = !isProject && ProjectManager.IsSolution(inputFile);
 
 				if (!(isProject || isSolution))
 				{
@@ -435,14 +414,17 @@ namespace NArrange.Core
 					if (sourceFiles.Count > 0)
 					{
 						LogMessage(LogLevel.Verbose, "Parsing files...");
+
 						foreach (string sourceFile in sourceFiles)
 						{
-							if (outputFile == null)
-							{
-								outputFile = sourceFile;
-							}
-
-							ArrangeSourceFile(sourceFile, sourceFile);
+			                if (string.IsNullOrEmpty(outputFile))
+			                {
+			                    ArrangeSourceFile(sourceFile, sourceFile);
+			                }
+			                else
+			                {
+			                    ArrangeSourceFile(sourceFile, outputFile);
+			                }
 						}
 
 						if (success && _arrangeResults.Count > 0)
@@ -487,7 +469,6 @@ namespace NArrange.Core
 		{
 			private readonly string _inputFile;
 			private readonly string _outputFile;
-			private readonly string _inputFileText;
 			private readonly string _outputFileText;
 			private readonly bool _modified;
 			/// <summary>
@@ -501,19 +482,10 @@ namespace NArrange.Core
 				string outputFile, string outputFileText)
 			{
 				_inputFile = inputFile;
-				_inputFileText = inputFileText;
 				_outputFile = outputFile;
 				_outputFileText = outputFileText;
-				_modified = _inputFile == _outputFile &&
+				_modified = _inputFile != _outputFile ||
 					inputFileText != outputFileText;
-			}
-
-			public string InputFile
-			{
-				get
-				{
-					return _inputFile;
-				}
 			}
 
 			public string OutputFile
@@ -521,14 +493,6 @@ namespace NArrange.Core
 				get
 				{
 					return _outputFile;
-				}
-			}
-
-			public string InputFileText
-			{
-				get
-				{
-					return InputFileText;
 				}
 			}
 

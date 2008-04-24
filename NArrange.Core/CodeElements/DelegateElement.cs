@@ -95,7 +95,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the parameter list 
 		/// </summary>
-		public string Params
+		public string Parameters
 		{
 			get
 			{

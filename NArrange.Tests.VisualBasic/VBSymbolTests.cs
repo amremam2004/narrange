@@ -42,7 +42,7 @@ namespace NArrange.Tests.VisualBasic
 			Assert.IsFalse(VBSymbol.IsVBSymbol('1'));
 			Assert.IsFalse(VBSymbol.IsVBSymbol('A'));
 			Assert.IsFalse(VBSymbol.IsVBSymbol('$'));
-			Assert.IsFalse(VBSymbol.IsVBSymbol('_'));
+			Assert.IsFalse(VBSymbol.IsVBSymbol('*'));
 		}
 
 		#endregion Public Methods

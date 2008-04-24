@@ -23,9 +23,9 @@ namespace NArrange.Tests.Core
 		[Test]
 		public void ZipAndUnzipTest()
 		{
-			string sourceFolder = BackupUtilities.GetTempFilePath();
-			string destinationFolder = BackupUtilities.GetTempFilePath();
-			string zipFile = BackupUtilities.GetTempFilePath() + ".zip";
+			string sourceFolder = BackupUtilities.CreateTempFilePath();
+			string destinationFolder = BackupUtilities.CreateTempFilePath();
+			string zipFile = BackupUtilities.CreateTempFilePath() + ".zip";
 
 			try
 			{

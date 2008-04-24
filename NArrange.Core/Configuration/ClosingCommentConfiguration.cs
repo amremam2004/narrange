@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -122,7 +123,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Closing comment: {0}, {1}", this.Enabled, this.Format);
+			return string.Format(Thread.CurrentThread.CurrentCulture, 
+			    "Closing comment: {0}, {1}", this.Enabled, this.Format);
 		}
 
 		#endregion Public Methods

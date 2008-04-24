@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NArrange")]
-[assembly: AssemblyCopyright("Copyright © 2007-2008 James Nies and NArrange contributors")]
+[assembly: AssemblyCopyright("Copyright © 2007-2008 James Nies and NArrange contributors.")]
 
 // Version information for an assembly consists of the following four values:
 //

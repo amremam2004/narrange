@@ -47,7 +47,7 @@ namespace NArrange.Tests.Core
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 
 			TypeElement classElement = new TypeElement();
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 			classElement.Name = "TestClass";
 
@@ -56,19 +56,19 @@ namespace NArrange.Tests.Core
 			namesspaceElement.AddChild(classElement);
 
 			MethodElement methodElement = new MethodElement();
-			methodElement.Type = "void";
+			methodElement.ReturnType = "void";
 			methodElement.Access = CodeAccess.Public;
 			methodElement.Name = "DoSomething";
 			classElement.AddChild(methodElement);
 
 			FieldElement fieldElement = new FieldElement();
-			fieldElement.Type = "bool";
+			fieldElement.ReturnType = "bool";
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.Name = "_val";
 			classElement.AddChild(fieldElement);
 
 			PropertyElement propertyElement = new PropertyElement();
-			propertyElement.Type = "bool";
+			propertyElement.ReturnType = "bool";
 			propertyElement.Access = CodeAccess.Public;
 			propertyElement.Name = "Value";
 			propertyElement.BodyText = "return _val";
@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core
 			TypeElement typeElement = namespaceElementTest.Children[0] as TypeElement;
 			Assert.IsNotNull(typeElement, "Expected a type element.");
 
-			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+			Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
 			    "Unexpected type element type.");
 			Assert.AreEqual(classElement.Name, typeElement.Name,
 			    "Unexpected type element name.");

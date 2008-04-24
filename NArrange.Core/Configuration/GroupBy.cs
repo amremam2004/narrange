@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -49,7 +50,7 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementAttribute _by;
+		private ElementAttributeType _by;
 		private string _customSeparator;
 		private string _matchCapture;
 		private GroupSeparatorType _separatorType;
@@ -90,7 +91,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the attribute elements should be grouped by
 		/// </summary>
 		[XmlAttribute("By")]
-		public ElementAttribute By
+		public ElementAttributeType By
 		{
 			get
 			{
@@ -161,7 +162,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Group by: {0}", this._by);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Group by: {0}", this._by);
 		}
 
 		#endregion Public Methods

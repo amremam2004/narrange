@@ -29,7 +29,7 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			// Verify default state
 			//
-			Assert.AreEqual(ElementAttribute.None, sortBy.By,
+			Assert.AreEqual(ElementAttributeType.None, sortBy.By,
 			    "Unexpected default value for By.");
 			Assert.AreEqual(ListSortDirection.Ascending, sortBy.Direction,
 			    "Unexpected default value for Direction.");
@@ -44,7 +44,7 @@ namespace NArrange.Tests.Core.Configuration
 		public void ToStringTest()
 		{
 			SortBy sortBy = new SortBy();
-			sortBy.By = ElementAttribute.Name;
+			sortBy.By = ElementAttributeType.Name;
 
 			string str = sortBy.ToString();
 

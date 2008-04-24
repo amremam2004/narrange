@@ -45,7 +45,7 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private string _params = string.Empty;
+		private string _params;
 
 		#endregion Fields
 
@@ -65,7 +65,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the parameter list 
 		/// </summary>
-		public string Params
+		public string Parameters
 		{
 			get
 			{
@@ -87,7 +87,10 @@ namespace NArrange.Core.CodeElements
 		/// <returns></returns>
 		protected override InterfaceMemberElement DoInterfaceMemberClone()
 		{
-			return new EventElement();
+			EventElement clone = new EventElement();
+			clone._params = _params;
+
+			return clone;
 		}
 
 		#endregion Protected Methods

@@ -34,126 +34,58 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
+using System.Xml;
 
-using NArrange.Core;
-
-namespace NArrange.ConsoleApplication
+namespace NArrange.Core
 {
 	/// <summary>
-	/// Console logger
+	/// Parses an individual MSBuild project (e.g. .csproj, .vbproj) for 
+	/// individual source file names.
 	/// </summary>
-	public class ConsoleLogger : ILogger
+	public class MSBuildProjectParser : IProjectParser
 	{
-		#region Constants
-
-		private const ConsoleColor ErrorColor = ConsoleColor.Red;
-		private const ConsoleColor InfoColor = ConsoleColor.Cyan;
-		private const ConsoleColor TraceColor = ConsoleColor.Gray;
-		private const ConsoleColor WarningColor = ConsoleColor.Yellow;
-
-		#endregion Constants
-
-		#region Fields
-
-		private bool _trace;
-
-		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new ConsoleLogger
-		/// </summary>
-		public ConsoleLogger()
-		{
-		}
-
-		#endregion Constructors
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets a value for whether or not trace messages should be 
-		/// written.
-		/// </summary>
-		public bool Trace
-		{
-			get
-			{
-				return _trace;
-			}
-			set
-			{
-				_trace = value;
-			}
-		}
-
-		#endregion Public Properties
-
 		#region Public Methods
 
 		/// <summary>
-		/// Logs a message to the console
+		/// Parses source file names from a project file.
 		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		public void LogMessage(LogLevel level, string message, params object[] args)
+		/// <param name="projectFile"></param>
+		/// <returns>A list of source code filenames</returns>
+		public virtual ReadOnlyCollection<string> Parse(string projectFile)
 		{
-			switch (level)
+			if (projectFile == null)
 			{
-			    case LogLevel.Error:
-			        WriteMessage(ErrorColor, message, args);
-			        break;
-
-			    case LogLevel.Warning:
-			        WriteMessage(WarningColor, message, args);
-			        break;
-
-			    case LogLevel.Info:
-			        WriteMessage(InfoColor, message, args);
-			        break;
-
-				case LogLevel.Trace:
-					if (_trace)
-					{
-						WriteMessage(TraceColor, message, args);
-					} 
-					break;
-
-			    default:
-			        WriteMessage(Console.ForegroundColor, message, args);
-			        break;
+			    throw new ArgumentNullException("projectFile");
 			}
-		}
 
-		/// <summary>
-		/// Writes a message to the console using the specified color.
-		/// </summary>
-		/// <param name="color"></param>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		public void WriteMessage(ConsoleColor color, string message, params object[] args)
-		{
-			ConsoleColor origColor = Console.ForegroundColor;
+			string projectPath = Path.GetDirectoryName(projectFile);
+			List<string> sourceFiles = new List<string>();
 
-			try
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.Load(projectFile);
+
+			XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xmlDocument.NameTable);
+			namespaceManager.AddNamespace("ns", "http://schemas.microsoft.com/developer/msbuild/2003");
+
+			XmlNodeList nodes = xmlDocument.SelectNodes("//ns:Compile", namespaceManager);
+			foreach (XmlNode node in nodes)
 			{
-			    Console.ForegroundColor = color;
-			    if (args != null && args.Length > 0)
+			    if (node.Attributes["Include"] != null)
 			    {
-			        Console.WriteLine(message, args);
-			    }
-			    else
-			    {
-			        Console.WriteLine(message);
+			        if (node.SelectSingleNode("ns:Link", namespaceManager) == null)
+			        {
+			            string fileName = node.Attributes["Include"].Value;
+
+			            string sourceFilePath = Path.Combine(projectPath, fileName);
+			            sourceFiles.Add(sourceFilePath);
+			        }
 			    }
 			}
-			finally
-			{
-			    Console.ForegroundColor = origColor;
-			}
+
+			return sourceFiles.AsReadOnly();
 		}
 
 		#endregion Public Methods

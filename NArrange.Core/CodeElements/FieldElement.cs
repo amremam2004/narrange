@@ -85,7 +85,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (MemberModifiers & MemberModifier.Constant) == MemberModifier.Constant;
+			    return (MemberModifiers & MemberModifiers.Constant) == MemberModifiers.Constant;
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (MemberModifiers & MemberModifier.ReadOnly) == MemberModifier.ReadOnly;
+			    return (MemberModifiers & MemberModifiers.ReadOnly) == MemberModifiers.ReadOnly;
 			}
 		}
 

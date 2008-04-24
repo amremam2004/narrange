@@ -27,9 +27,9 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression =
 			   new OperatorExpression(ExpressionOperator.And,
 			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttribute.Name), new StringExpression("Test")),
+			   new AttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
 			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttribute.Access), new StringExpression("Protected")));
+			   new AttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
 
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
@@ -58,7 +58,7 @@ namespace NArrange.Tests.Core
 		public void EvaluateContainsTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
-			   ExpressionOperator.Contains, new AttributeExpression(ElementAttribute.Name),
+			   ExpressionOperator.Contains, new AttributeExpression(ElementAttributeType.Name),
 			   new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -86,7 +86,7 @@ namespace NArrange.Tests.Core
 		public void EvaluateEqualTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
-			   ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
+			   ExpressionOperator.Equal, new AttributeExpression(ElementAttributeType.Name),
 			   new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -111,7 +111,7 @@ namespace NArrange.Tests.Core
 		public void EvaluateInvalidOperatorTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
-			    (ExpressionOperator)int.MinValue, new AttributeExpression(ElementAttribute.Name),
+			    (ExpressionOperator)int.MinValue, new AttributeExpression(ElementAttributeType.Name),
 			    new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -129,7 +129,7 @@ namespace NArrange.Tests.Core
 		public void EvaluateNullElementTest()
 		{
 			IConditionExpression expression = new OperatorExpression(
-			    ExpressionOperator.Equal, new AttributeExpression(ElementAttribute.Name),
+			    ExpressionOperator.Equal, new AttributeExpression(ElementAttributeType.Name),
 			    new StringExpression("Test"));
 
 			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
@@ -156,9 +156,9 @@ namespace NArrange.Tests.Core
 			IConditionExpression expression =
 			   new OperatorExpression(ExpressionOperator.Or,
 			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttribute.Name), new StringExpression("Test")),
+			   new AttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
 			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttribute.Access), new StringExpression("Protected")));
+			   new AttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
 
 			FieldElement element = new FieldElement();
 			element.Name = "Test";

@@ -46,14 +46,59 @@ namespace NArrange.VisualBasic
 		#region Constants
 
 		/// <summary>
+		/// AccessModifier 
+		/// </summary>
+		public const string AccessModifier = "AccessModifier";
+
+		/// <summary>
 		/// Default
 		/// </summary>
 		public const string Default = VBKeyword.Default;
 
 		/// <summary>
-		/// ModifyAccess
+		/// Dim
 		/// </summary>
-		public const string ModifyAccess = "ModifyAccess";
+		public const string Dim = "Dim";
+
+		/// <summary>
+		/// External
+		/// </summary>
+		public const string External = "External";
+
+		/// <summary>
+		/// ExternalAlias 
+		/// </summary>
+		public const string ExternalAlias = "ExternalAlias";
+
+		/// <summary>
+		/// ExternalLibrary 
+		/// </summary>
+		public const string ExternalLibrary = "ExternalLibrary";
+
+		/// <summary>
+		/// ExternalModifier 
+		/// </summary>
+		public const string ExternalModifier = "ExternalModifier";
+
+		/// <summary>
+		/// Handles
+		/// </summary>
+		public const string Handles = VBKeyword.Handles;
+
+		/// <summary>
+		/// Option
+		/// </summary>
+		public const string Option = "Option";
+
+		/// <summary>
+		/// Overloads
+		/// </summary>
+		public const string Overloads = VBKeyword.Overloads;
+
+		/// <summary>
+		/// WithEvents
+		/// </summary>
+		public const string WithEvents = VBKeyword.WithEvents;
 
 		#endregion Constants
 	}

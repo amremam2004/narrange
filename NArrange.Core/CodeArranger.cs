@@ -118,7 +118,6 @@ namespace NArrange.Core
 		{
 			GroupElement rootElement = new GroupElement();
 
-			List<ICodeElement> elements = new List<ICodeElement>();
 			if (originalElements != null)
 			{
 			    foreach (ICodeElement element in originalElements)

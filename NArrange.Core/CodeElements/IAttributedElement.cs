@@ -49,7 +49,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets the collection of attributes associated with this element.
 		/// </summary>
-		ReadOnlyCollection<IAttribute> Attributes
+		ReadOnlyCollection<IAttributeElement> Attributes
 		{
 			get;
 		}

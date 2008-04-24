@@ -34,7 +34,9 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 
 namespace NArrange.Core.Configuration
 {
@@ -134,12 +136,12 @@ namespace NArrange.Core.Configuration
 			        break;
 
 			    default:
-			        throw new ArgumentOutOfRangeException(
-			            string.Format(
-			            "Unsupported operator type {0}", _operatorType));
+			        operatorString = EnumUtilities.ToString(_operatorType);
+			        break;
 			}
 
-			return string.Format("({0} {1} {2})", 
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "({0} {1} {2})", 
 			    Left, operatorString, Right);
 		}
 

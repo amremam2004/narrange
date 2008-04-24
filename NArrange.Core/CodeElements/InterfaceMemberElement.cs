@@ -46,7 +46,7 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private List<string> _implements;
+		private List<InterfaceReference> _implements;
 		private object _implementsLock = new object();
 
 		#endregion Fields
@@ -56,7 +56,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// List of interface implementations
 		/// </summary>
-		protected List<string> ImplementsBase
+		protected List<InterfaceReference> ImplementsBase
 		{
 			get
 			{
@@ -66,7 +66,7 @@ namespace NArrange.Core.CodeElements
 					{
 						if (_implements == null)
 						{
-							_implements = new List<string>();
+			                _implements = new List<InterfaceReference>();
 						}
 					}
 				}
@@ -82,7 +82,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets the list of interface implementations
 		/// </summary>
-		public ReadOnlyCollection<string> Implements
+		public ReadOnlyCollection<InterfaceReference> Implements
 		{
 			get
 			{
@@ -99,6 +99,7 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		/// <returns></returns>
 		protected abstract InterfaceMemberElement DoInterfaceMemberClone();
+
 		/// <summary>
 		/// Creates a clone of this instance
 		/// </summary>
@@ -107,8 +108,9 @@ namespace NArrange.Core.CodeElements
 		{
 			InterfaceMemberElement clone = DoInterfaceMemberClone();
 
-			foreach (string implementation in Implements)
+			foreach (InterfaceReference implementation in Implements)
 			{
+			    InterfaceReference implementationClone = implementation.Clone() as InterfaceReference;
 				clone.ImplementsBase.Add(implementation);
 			}
 
@@ -123,18 +125,12 @@ namespace NArrange.Core.CodeElements
 		/// Adds an item to the Implements collection
 		/// </summary>
 		/// <param name="implementation"></param>
-		public void AddImplementation(string implementation)
+		public void AddImplementation(InterfaceReference implementation)
 		{
-			if (implementation == null)
+			if (implementation != null)
 			{
-				throw new ArgumentNullException("implemantation");
+			    this.ImplementsBase.Add(implementation);
 			}
-			else if (implementation.Trim().Length == 0)
-			{
-				throw new ArgumentException("implementation", "Invalid implementation member.");
-			}
-
-			this.ImplementsBase.Add(implementation);
 		}
 
 		#endregion Public Methods

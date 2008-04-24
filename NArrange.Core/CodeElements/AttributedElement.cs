@@ -47,7 +47,7 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private CodeAccess _access;
-		private List<IAttribute> _attributes;
+		private List<IAttributeElement> _attributes;
 		private object _attributesLock = new object();
 
 		#endregion Fields
@@ -69,7 +69,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets the writable collection of attributes
 		/// </summary>
-		protected List<IAttribute> BaseAttributes
+		protected List<IAttributeElement> BaseAttributes
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace NArrange.Core.CodeElements
 			        {
 			            if (_attributes == null)
 			            {
-			                _attributes = new List<IAttribute>();
+			                _attributes = new List<IAttributeElement>();
 			            }
 			        }
 			    }
@@ -110,7 +110,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets the read-only collection of attributes.
 		/// </summary>
-		public ReadOnlyCollection<IAttribute> Attributes
+		public ReadOnlyCollection<IAttributeElement> Attributes
 		{
 			get
 			{
@@ -127,6 +127,7 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		/// <returns></returns>
 		protected abstract AttributedElement DoAttributedClone();
+
 		/// <summary>
 		/// Creates a clone of the instance and copies any state
 		/// </summary>
@@ -138,9 +139,15 @@ namespace NArrange.Core.CodeElements
 			// Copy state
 			//
 			clone._access = _access;
-			foreach (IAttribute attribute in Attributes)
+			lock (_attributesLock)
 			{
-			    clone.AddAttribute(attribute);
+			    for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
+			    {
+			        IAttributeElement attribute = Attributes[attributeIndex];
+			        IAttributeElement attributeClone = attribute.Clone() as IAttributeElement;
+
+			        clone.AddAttribute(attributeClone);
+			    }
 			}
 
 			return clone;
@@ -153,10 +160,60 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Adds an attribute to this code element.
 		/// </summary>
-		/// <param name="attribute"></param>
-		public void AddAttribute(IAttribute attribute)
+		/// <param name="attributeElement"></param>
+		public void AddAttribute(IAttributeElement attributeElement)
 		{
-			BaseAttributes.Add(attribute);
+			if (attributeElement != null && !BaseAttributes.Contains(attributeElement))
+			{
+			    lock (_attributesLock)
+			    {
+			        if (attributeElement != null && !BaseAttributes.Contains(attributeElement))
+			        {
+			            BaseAttributes.Add(attributeElement);
+			            attributeElement.Parent = this;
+			        }
+			    }
+			}
+		}
+
+		/// <summary>
+		/// Removes all attributes elements.
+		/// </summary>
+		public void ClearAttributes()
+		{
+			lock (_attributesLock)
+			{
+			    for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
+			    {
+			        IAttributeElement attribute = Attributes[attributeIndex];
+			        if (attribute != null && attribute.Parent != null)
+			        {
+			            attribute.Parent = null;
+			            attributeIndex--;
+			        }
+			    }
+
+			    BaseAttributes.Clear();
+			}
+		}
+
+		/// <summary>
+		/// Removes an attribute from this element.
+		/// </summary>
+		/// <param name="attributeElement"></param>
+		public void RemoveAttribute(IAttributeElement attributeElement)
+		{
+			if (attributeElement != null && BaseAttributes.Contains(attributeElement))
+			{
+			    lock (_attributesLock)
+			    {
+			        if (attributeElement != null && BaseAttributes.Contains(attributeElement))
+			        {
+			            BaseAttributes.Remove(attributeElement);
+			            attributeElement.Parent = null;
+			        }
+			    }
+			}
 		}
 
 		#endregion Public Methods

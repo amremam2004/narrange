@@ -35,6 +35,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VBProjectParser.cs" />
+    <Compile Include="VBWriteVisitor.cs" />
+    <Compile Include="VBWriter.cs" />
     <Compile Include="VBExtendedProperties.cs" />
     <Compile Include="VBKeyword.cs" />
     <Compile Include="VBSymbol.cs" />

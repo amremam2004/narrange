@@ -70,6 +70,11 @@ namespace NArrange.Tests.VisualBasic
 						"Normalize did not correct casing for {0}", fieldValue);
 			    }
 			}
+
+			//
+			// Normalize a non-VB keyword
+			// 
+			Assert.AreEqual("Testit", VBKeyword.Normalize("testit"));
 		}
 
 		#endregion Public Methods

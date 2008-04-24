@@ -91,8 +91,8 @@ namespace NArrange.Core
 			    throw new ArgumentNullException("parentConfiguration");
 			}
 
-			_regionConfiguration = regionConfiguration.Clone() as RegionConfiguration;
-			_parentConfiguration = parentConfiguration.Clone() as ConfigurationElement;
+			_regionConfiguration = regionConfiguration;
+			_parentConfiguration = parentConfiguration;
 			_innerInserter = innerInserter;
 
 			List<string> levelRegions = new List<string>();
@@ -120,69 +120,72 @@ namespace NArrange.Core
 		/// <param name="codeElement"></param>
 		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
-			RegionElement region = null;
-
-			string regionName = _regionConfiguration.Name;
-
-			foreach (ICodeElement childElement in parentElement.Children)
+			if (codeElement != null)
 			{
-			    RegionElement regionElement = childElement as RegionElement;
-			    if (regionElement != null && regionElement.Name == regionName)
+			    RegionElement region = null;
+
+			    string regionName = _regionConfiguration.Name;
+
+			    foreach (ICodeElement childElement in parentElement.Children)
 			    {
-			        region = regionElement;
-			        break;
+			        RegionElement regionElement = childElement as RegionElement;
+			        if (regionElement != null && regionElement.Name == regionName)
+			        {
+			            region = regionElement;
+			            break;
+			        }
 			    }
-			}
 
-			if (region == null)
-			{
-			    region = new RegionElement();
-			    region.Name = regionName;
-
-			    if (parentElement.Children.Count == 0)
+			    if (region == null)
 			    {
-			        parentElement.AddChild(region);
+			        region = new RegionElement();
+			        region.Name = regionName;
+
+			        if (parentElement.Children.Count == 0)
+			        {
+			            parentElement.AddChild(region);
+			        }
+			        else
+			        {
+			            //
+			            // Determine where to insert the new region
+			            //
+			            int insertIndex = 0;
+			            int compareIndex = _levelRegions.IndexOf(region.Name);
+
+			            for (int siblingIndex = 0; siblingIndex < parentElement.Children.Count;
+			                siblingIndex++)
+			            {
+			                RegionElement siblingRegion = parentElement.Children[siblingIndex]
+			                    as RegionElement;
+			                if (siblingRegion != null)
+			                {
+			                    insertIndex = siblingIndex;
+
+			                    int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
+			                    if (compareIndex <= siblingCompareIndex)
+			                    {
+			                        break;
+			                    }
+			                    else
+			                    {
+			                        insertIndex++;
+			                    }
+			                }
+			            }
+
+			            parentElement.InsertChild(insertIndex, region);
+			        }
+			    }
+
+			    if (_innerInserter != null)
+			    {
+			        _innerInserter.InsertElement(region, codeElement);
 			    }
 			    else
 			    {
-			        //
-			        // Determine where to insert the new region
-			        //
-			        int insertIndex = 0;
-			        int compareIndex = _levelRegions.IndexOf(region.Name);
-
-			        for (int siblingIndex = 0; siblingIndex < parentElement.Children.Count;
-			            siblingIndex++)
-			        {
-			            RegionElement siblingRegion = parentElement.Children[siblingIndex] 
-			                as RegionElement;
-			            if (siblingRegion != null)
-			            {
-			                insertIndex = siblingIndex;
-
-			                int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
-			                if (compareIndex <= siblingCompareIndex)
-			                {
-			                    break;
-			                }
-			                else
-			                {
-			                    insertIndex++;
-			                }
-			            }
-			        }
-
-			        parentElement.InsertChild(insertIndex, region);
+			        region.AddChild(codeElement);
 			    }
-			}
-
-			if (_innerInserter != null)
-			{
-			    _innerInserter.InsertElement(region, codeElement);
-			}
-			else
-			{
-			    region.AddChild(codeElement);
 			}
 		}
 

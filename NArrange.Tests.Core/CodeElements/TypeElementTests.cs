@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the TypeElement class.
 	/// </summary>
 	[TestFixture]
-	public class TypeElementTests : CommentedElementTests<TypeElement>
+	public class TypeElementTests : AttributedElementTests<TypeElement>
 	{
 		#region Protected Methods
 
@@ -25,7 +25,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			TypeElement prototype = new TypeElement();
 			prototype.Name = "SomeType";
-			prototype.Type = TypeElementType.Structure;
+			prototype.TypeElementType = TypeElementType.Structure;
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 
@@ -38,11 +38,12 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.AddHeaderCommentLine("/// This is a structure.");
 			prototype.AddHeaderCommentLine("/// </summary>");
 
-			prototype.AddInterface("IDisposable");
+			prototype.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			prototype.BodyText = "test";
 
-			prototype.TypeModifiers = TypeModifier.Abstract;
+			prototype.TypeModifiers = TypeModifiers.Abstract;
 			prototype.AddTypeParameter(new TypeParameter("T", "new()"));
 
 			return prototype;
@@ -75,7 +76,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.Type, clone.Type,
+			Assert.AreEqual(original.TypeElementType, clone.TypeElementType,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.TypeParameters.Count, clone.TypeParameters.Count,
 			    "TypeParameters were not copied correctly.");
@@ -96,7 +97,7 @@ namespace NArrange.Tests.Core.CodeElements
 			//
 			// Verify default property values
 			//
-			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+			Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
 			    "Unexpected default value for Type.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			    "Unexpected default value for Access.");

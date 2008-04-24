@@ -68,7 +68,7 @@ namespace NArrange.VisualBasic
 		/// <summary>
 		/// Beginning of parameter list
 		/// </summary>
-		public const char BeginParamList = '(';
+		public const char BeginParameterList = '(';
 
 		/// <summary>
 		/// Beginning of string
@@ -86,19 +86,24 @@ namespace NArrange.VisualBasic
 		public const char EndAttribute = '>';
 
 		/// <summary>
-		/// End of block
-		/// </summary>
-		public const char EndBlock = '}';
-
-		/// <summary>
 		/// End of parameter list
 		/// </summary>
-		public const char EndParamList = ')';
+		public const char EndParameterList = ')';
 
 		/// <summary>
 		/// End type constraint list
 		/// </summary>
 		public const char EndTypeConstraintList = '}';
+
+		/// <summary>
+		/// Line continuation.
+		/// </summary>
+		public const char LineContinuation = '_';
+
+		/// <summary>
+		/// Line delimiter.
+		/// </summary>
+		public const char LineDelimiter = ':';
 
 		/// <summary>
 		/// Preprocessor
@@ -110,24 +115,25 @@ namespace NArrange.VisualBasic
 		#region Public Methods
 
 		/// <summary>
-		/// Determines if the specified char is a Visual Basic symbol character
+		/// Determines if the specified char is a Visual Basic symbol character.
 		/// </summary>
-		/// <param name="ch"></param>
+		/// <param name="character"></param>
 		/// <returns></returns>
-		public static bool IsVBSymbol(char ch)
+		public static bool IsVBSymbol(char character)
 		{
-			return ch == VBSymbol.AliasSeparator ||
-				ch == VBSymbol.Assignment ||
-				ch == VBSymbol.BeginAttribute ||
-				ch == VBSymbol.BeginComment ||
-				ch == VBSymbol.BeginTypeConstraintList ||
-				ch == VBSymbol.EndTypeConstraintList ||
-				ch == VBSymbol.BeginParamList ||
-				ch == VBSymbol.BeginString ||
-				ch == VBSymbol.EndAttribute ||
-				ch == VBSymbol.EndBlock ||
-				ch == VBSymbol.EndParamList ||
-				ch == VBSymbol.Preprocessor;
+			return character == VBSymbol.AliasSeparator ||
+			    character == VBSymbol.Assignment ||
+			    character == VBSymbol.BeginAttribute ||
+			    character == VBSymbol.BeginComment ||
+			    character == VBSymbol.BeginTypeConstraintList ||
+			    character == VBSymbol.EndTypeConstraintList ||
+			    character == VBSymbol.BeginParameterList ||
+			    character == VBSymbol.BeginString ||
+			    character == VBSymbol.EndAttribute ||
+			    character == VBSymbol.EndParameterList ||
+			    character == VBSymbol.Preprocessor ||
+			    character == VBSymbol.LineContinuation ||
+			    character == VBSymbol.LineDelimiter;
 		}
 
 		#endregion Public Methods

@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace NArrange.Core.Configuration
 {
@@ -54,7 +55,7 @@ namespace NArrange.Core.Configuration
 
 		#region Fields
 
-		private ElementAttribute _elementAttribute;
+		private ElementAttributeType _elementAttribute;
 
 		#endregion Fields
 
@@ -64,7 +65,7 @@ namespace NArrange.Core.Configuration
 		/// Creates a new attribute expression
 		/// </summary>
 		/// <param name="elementAttribute"></param>
-		public AttributeExpression(ElementAttribute elementAttribute)
+		public AttributeExpression(ElementAttributeType elementAttribute)
 		{
 			_elementAttribute = elementAttribute;
 		}
@@ -76,7 +77,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Gets the element attribute specified by the expression
 		/// </summary>
-		public ElementAttribute ElementAttribute
+		public ElementAttributeType ElementAttribute
 		{
 			get
 			{
@@ -94,7 +95,7 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("$({0})", _elementAttribute);
+			return string.Format(Thread.CurrentThread.CurrentCulture, "$({0})", _elementAttribute);
 		}
 
 		#endregion Public Methods

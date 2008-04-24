@@ -46,6 +46,11 @@ namespace NArrange.CSharp
 		#region Constants
 
 		/// <summary>
+		/// Alias qualifier
+		/// </summary>
+		public const char AliasQualifier = '.';
+
+		/// <summary>
 		/// Alias separator
 		/// </summary>
 		public const char AliasSeparator = ',';
@@ -88,7 +93,7 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// Beginning of parameter list
 		/// </summary>
-		public const char BeginParamList = '(';
+		public const char BeginParameterList = '(';
 
 		/// <summary>
 		/// Beginning of string
@@ -128,7 +133,7 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// End of parameter list
 		/// </summary>
-		public const char EndParamList = ')';
+		public const char EndParameterList = ')';
 
 		/// <summary>
 		/// Negate
@@ -152,30 +157,32 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// Determines if the specified char is a Csharp symbol character
 		/// </summary>
-		/// <param name="ch"></param>
+		/// <param name="character"></param>
 		/// <returns></returns>
-		public static bool IsCSharpSymbol(char ch)
+		public static bool IsCSharpSymbol(char character)
 		{
-			return ch == CSharpSymbol.AliasSeparator ||
-			    ch == CSharpSymbol.Assignment ||
-			    ch == CSharpSymbol.BeginAttribute ||
-			    ch == CSharpSymbol.BeginBlock ||
-			    ch == CSharpSymbol.BeginCharLiteral ||
-			    ch == CSharpSymbol.BeginComment ||
-			    ch == CSharpSymbol.BeginFinalizer ||
-			    ch == CSharpSymbol.BeginGeneric ||
-			    ch == CSharpSymbol.BeginParamList ||
-			    ch == CSharpSymbol.BeginString ||
-			    ch == CSharpSymbol.BlockCommentModifier ||
-			    ch == CSharpSymbol.EndAttribute ||
-			    ch == CSharpSymbol.EndBlock ||
-			    ch == CSharpSymbol.EndGeneric ||
-			    ch == CSharpSymbol.EndOfStatement ||
-			    ch == CSharpSymbol.EndParamList ||
-			    ch == CSharpSymbol.Preprocessor ||
-			    ch == CSharpSymbol.TypeImplements ||
-				ch == CSharpSymbol.Negate ||
-				ch == CSharpSymbol.BeginVerbatimString;
+			return
+			    character == CSharpSymbol.AliasQualifier ||
+			    character == CSharpSymbol.AliasSeparator ||
+			    character == CSharpSymbol.Assignment ||
+			    character == CSharpSymbol.BeginAttribute ||
+			    character == CSharpSymbol.BeginBlock ||
+			    character == CSharpSymbol.BeginCharLiteral ||
+			    character == CSharpSymbol.BeginComment ||
+			    character == CSharpSymbol.BeginFinalizer ||
+			    character == CSharpSymbol.BeginGeneric ||
+			    character == CSharpSymbol.BeginParameterList ||
+			    character == CSharpSymbol.BeginString ||
+			    character == CSharpSymbol.BlockCommentModifier ||
+			    character == CSharpSymbol.EndAttribute ||
+			    character == CSharpSymbol.EndBlock ||
+			    character == CSharpSymbol.EndGeneric ||
+			    character == CSharpSymbol.EndOfStatement ||
+			    character == CSharpSymbol.EndParameterList ||
+			    character == CSharpSymbol.Preprocessor ||
+			    character == CSharpSymbol.TypeImplements ||
+				character == CSharpSymbol.Negate ||
+				character == CSharpSymbol.BeginVerbatimString;
 		}
 
 		#endregion Public Methods

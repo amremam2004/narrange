@@ -24,6 +24,11 @@ Namespace SampleNamespace
 		Public Shared Operator *(ByVal a As Fraction, ByVal b As Fraction) As Fraction
 			Return New Fraction(a.num * b.num, a.den * b.den)
 		End Operator
+		
+		' overload operator /
+		Public Shared Operator /(ByVal a As Fraction, ByVal b As Fraction) As Fraction
+			Return New Fraction(a.num * b.den, a.den * b.num)
+		End Operator
 
 		' overload operator =
 		Public Shared Operator =(ByVal a As Fraction, ByVal b As Fraction) As Boolean
@@ -34,6 +39,17 @@ Namespace SampleNamespace
 		Public Shared Operator <>(ByVal a As Fraction, ByVal b As Fraction) As Boolean
 			Return Not (a = b)
 		End Operator
+		
+		' overload operator <
+		Public Shared Operator <=(ByVal a As Fraction, ByVal b As Fraction) As Boolean
+			Throw New NotImplementedException
+		End Operator
+		
+		' overload operator >
+		Public Shared Operator >=(ByVal a As Fraction, ByVal b As Fraction) As Boolean
+			Throw New NotImplementedException
+		End Operator
+
 
 		' define operator double
 		Public Shared Widening Operator CType(ByVal f As Fraction) As Double

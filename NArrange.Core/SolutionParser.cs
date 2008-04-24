@@ -47,7 +47,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Parses a solution for individual project file names
 	/// </summary>
-	public class SolutionParser
+	public static class SolutionParser
 	{
 		#region Public Methods
 
@@ -56,7 +56,7 @@ namespace NArrange.Core
 		/// </summary>
 		/// <param name="solutionFile"></param>
 		/// <returns>A list of project file names</returns>
-		public ReadOnlyCollection<string> Parse(string solutionFile)
+		public static ReadOnlyCollection<string> Parse(string solutionFile)
 		{
 			if (solutionFile == null)
 			{
@@ -76,12 +76,15 @@ namespace NArrange.Core
 			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
 
 			        string line = reader.ReadLine().TrimStart();
-			        if (line.StartsWith("Project("))
+			        if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
 			        {
 			            string[] projectData = line.Split(',');
 			            string projectFile = projectData[1].Trim().Trim('"');
 			            string projectPath = Path.Combine(solutionPath, projectFile);
-			            projectFiles.Add(projectPath);
+			            if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
+			            {
+			                projectFiles.Add(projectPath);
+			            }
 			        }
 			    }
 			}

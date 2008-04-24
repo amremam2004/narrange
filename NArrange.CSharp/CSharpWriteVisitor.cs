@@ -35,13 +35,18 @@
  *		- Fixed writing of C# redefine using statements
  *      - Provided support for closing comments
  *      - Fixed extra tabs being written after field declaration statements
+ *      - Handle writing of partial methods
+ *      - Only write type parameter constraints when they are present.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 using NArrange.Core;
 using NArrange.Core.CodeElements;
@@ -52,8 +57,14 @@ namespace NArrange.CSharp
 	/// <summary>
 	/// Visits a tree of code elements for writing C# code 
 	/// </summary>
-	internal class CSharpWriteVisitor : ICodeElementVisitor
+	internal sealed class CSharpWriteVisitor : ICodeElementVisitor
 	{
+		#region Constants
+
+		private const int DefaultBlockLength = 256;
+
+		#endregion Constants
+
 		#region Fields
 
 		private CodeConfiguration _configuration;
@@ -86,12 +97,13 @@ namespace NArrange.CSharp
 
 		#region Private Methods
 
+		[SuppressMessage("Microsoft.Globalization", "CA1308")]
 		private void WriteAccess(CodeAccess codeAccess)
 		{
 			string accessString = string.Empty;
-			if (codeAccess != CodeAccess.NotSpecified)
+			if (codeAccess != CodeAccess.None)
 			{
-			    accessString = codeAccess.ToString().ToLower().Replace(",", string.Empty) + " ";
+			    accessString = EnumUtilities.ToString(codeAccess).ToLowerInvariant().Replace(",", string.Empty) + " ";
 			}
 
 			WriteIndented(accessString);
@@ -103,7 +115,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		private void WriteAttributes(AttributedElement element)
 		{
-			foreach (IAttribute attribute in element.Attributes)
+			foreach (IAttributeElement attribute in element.Attributes)
 			{
 			    attribute.Accept(this);
 			}
@@ -143,7 +155,8 @@ namespace NArrange.CSharp
 				TextCodeElement textCodeElement = childElement as TextCodeElement;
 				if (childIndex > 0 && textCodeElement != null && 
 					textCodeElement.BodyText == null && textCodeElement.Children.Count == 0 &&
-			        textCodeElement.HeaderComments.Count > 0)
+			        textCodeElement.HeaderComments.Count > 0 && 
+			        !(textCodeElement is MethodElement || textCodeElement is DelegateElement))
 			    {
 			        _writer.WriteLine();
 			    }
@@ -155,7 +168,9 @@ namespace NArrange.CSharp
 			        if (!(childElement is GroupElement))
 			        {
 						textCodeElement = childElement as TextCodeElement;
-			            if (textCodeElement == null || textCodeElement.BodyText != null || textCodeElement.Children.Count > 0)
+			            if (textCodeElement == null || textCodeElement.BodyText != null || 
+			                textCodeElement.Children.Count > 0 ||
+			                textCodeElement is MethodElement || textCodeElement is DelegateElement)
 			            {
 			                _writer.WriteLine();
 			            }
@@ -173,22 +188,15 @@ namespace NArrange.CSharp
 			    if (!string.IsNullOrEmpty(format))
 			    {
 			        string formatted = element.ToString(format);
-			        _writer.Write(string.Format(" {0}{0} {1}", CSharpSymbol.BeginComment, formatted));
+			        _writer.Write(string.Format(CultureInfo.InvariantCulture,
+			            " {0}{0} {1}", CSharpSymbol.BeginComment, formatted));
 			    }
 			}
 		}
 
 		private void WriteEndBlock()
 		{
-			WriteEndBlock(true);
-		}
-
-		private void WriteEndBlock(bool newLine)
-		{
-			if (newLine)
-			{
-			    _writer.WriteLine();
-			}
+			_writer.WriteLine();
 			_tabCount--;
 			WriteIndented(CSharpSymbol.EndBlock.ToString());
 		}
@@ -219,8 +227,9 @@ namespace NArrange.CSharp
 			    }
 			    else
 			    {
-			        throw new ArgumentOutOfRangeException(
-			            "Unknown tab style {0}.", _configuration.Tabs.Style.ToString());
+			        throw new InvalidOperationException(
+			            string.Format(Thread.CurrentThread.CurrentCulture,
+			            "Unknown tab style {0}.", _configuration.Tabs.Style.ToString()));
 			    }
 			}
 
@@ -241,63 +250,63 @@ namespace NArrange.CSharp
 			WriteIndentedLine(string.Empty);
 		}
 
-		private void WriteMemberAttributes(MemberModifier memberAttributes)
+		private void WriteMemberAttributes(MemberModifiers memberAttributes)
 		{
-			if ((memberAttributes & MemberModifier.Unsafe) == MemberModifier.Unsafe)
+			if ((memberAttributes & MemberModifiers.Unsafe) == MemberModifiers.Unsafe)
 			{
 			    _writer.Write(CSharpKeyword.Unsafe);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Constant) == MemberModifier.Constant)
+			if ((memberAttributes & MemberModifiers.Constant) == MemberModifiers.Constant)
 			{
 			    _writer.Write(CSharpKeyword.Constant);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Static) == MemberModifier.Static)
+			if ((memberAttributes & MemberModifiers.Static) == MemberModifiers.Static)
 			{
 			    _writer.Write(CSharpKeyword.Static);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Abstract) == MemberModifier.Abstract)
+			if ((memberAttributes & MemberModifiers.Abstract) == MemberModifiers.Abstract)
 			{
 			    _writer.Write(CSharpKeyword.Abstract);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.External) == MemberModifier.External)
+			if ((memberAttributes & MemberModifiers.External) == MemberModifiers.External)
 			{
 			    _writer.Write(CSharpKeyword.External);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.New) == MemberModifier.New)
+			if ((memberAttributes & MemberModifiers.New) == MemberModifiers.New)
 			{
 			    _writer.Write(CSharpKeyword.New);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Override) == MemberModifier.Override)
+			if ((memberAttributes & MemberModifiers.Override) == MemberModifiers.Override)
 			{
 			    _writer.Write(CSharpKeyword.Override);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.ReadOnly) == MemberModifier.ReadOnly)
+			if ((memberAttributes & MemberModifiers.ReadOnly) == MemberModifiers.ReadOnly)
 			{
 			    _writer.Write(CSharpKeyword.ReadOnly);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Sealed) == MemberModifier.Sealed)
+			if ((memberAttributes & MemberModifiers.Sealed) == MemberModifiers.Sealed)
 			{
 			    _writer.Write(CSharpKeyword.Sealed);
 			    _writer.Write(' ');
 			}
 
-			if ((memberAttributes & MemberModifier.Virtual) == MemberModifier.Virtual)
+			if ((memberAttributes & MemberModifiers.Virtual) == MemberModifiers.Virtual)
 			{
 			    _writer.Write(CSharpKeyword.Virtual);
 			    _writer.Write(' ');
@@ -306,24 +315,27 @@ namespace NArrange.CSharp
 
 		private void WriteParameterList(string paramList)
 		{
-			_writer.Write(CSharpSymbol.BeginParamList);
-
+			_writer.Write(CSharpSymbol.BeginParameterList);
 			_tabCount++;
-			string[] paramLines = paramList.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-			for (int paramLineIndex = 0; paramLineIndex < paramLines.Length; paramLineIndex++)
+
+			if (paramList != null)
 			{
-			    string paramLine = paramLines[paramLineIndex];
-			    if (paramLineIndex > 0)
+			    string[] paramLines = paramList.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+			    for (int paramLineIndex = 0; paramLineIndex < paramLines.Length; paramLineIndex++)
 			    {
-			        _writer.WriteLine();
-			        WriteIndented(paramLine.Trim());
-			    }
-			    else
-			    {
-			        _writer.Write(paramLine);
+			        string paramLine = paramLines[paramLineIndex];
+			        if (paramLineIndex > 0)
+			        {
+			            _writer.WriteLine();
+			            WriteIndented(paramLine.Trim());
+			        }
+			        else
+			        {
+			            _writer.Write(paramLine);
+			        }
 			    }
 			}
-			_writer.Write(CSharpSymbol.EndParamList);
+			_writer.Write(CSharpSymbol.EndParameterList);
 			_tabCount--;
 		}
 
@@ -390,25 +402,28 @@ namespace NArrange.CSharp
 			{
 			    foreach (TypeParameter typeParameter in genericElement.TypeParameters)
 			    {
-			        _writer.WriteLine();
-			        WriteIndented("\t");
-
-			        _writer.Write(CSharpKeyword.Where);
-			        _writer.Write(' ');
-			        _writer.Write(typeParameter.Name);
-			        _writer.Write(' ');
-			        _writer.Write(CSharpSymbol.TypeImplements);
-			        _writer.Write(' ');
-			        for (int constraintIndex = 0; constraintIndex < typeParameter.Constraints.Count;
-			            constraintIndex++)
+			        if (typeParameter.Constraints.Count > 0)
 			        {
-			            string constraint = typeParameter.Constraints[constraintIndex];
-			            _writer.Write(constraint);
+			            _writer.WriteLine();
+			            WriteIndented("\t");
 
-			            if (constraintIndex < typeParameter.Constraints.Count - 1)
+			            _writer.Write(CSharpKeyword.Where);
+			            _writer.Write(' ');
+			            _writer.Write(typeParameter.Name);
+			            _writer.Write(' ');
+			            _writer.Write(CSharpSymbol.TypeImplements);
+			            _writer.Write(' ');
+			            for (int constraintIndex = 0; constraintIndex < typeParameter.Constraints.Count;
+			                constraintIndex++)
 			            {
-			                _writer.Write(CSharpSymbol.AliasSeparator);
-			                _writer.Write(' ');
+			                string constraint = typeParameter.Constraints[constraintIndex];
+			                _writer.Write(constraint);
+
+			                if (constraintIndex < typeParameter.Constraints.Count - 1)
+			                {
+			                    _writer.Write(CSharpSymbol.AliasSeparator);
+			                    _writer.Write(' ');
+			                }
 			            }
 			        }
 			    }
@@ -447,7 +462,7 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpSymbol.BeginAttribute);
 			builder.Append(element.BodyText);
 			builder.Append(CSharpSymbol.EndAttribute);
@@ -461,7 +476,7 @@ namespace NArrange.CSharp
 		/// <param name="comment"></param>
 		public void VisitCommentElement(CommentElement comment)
 		{
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
 			if (comment.Type == CommentType.Block)
 			{
@@ -481,7 +496,6 @@ namespace NArrange.CSharp
 			    }
 
 			    builder.Append(comment.Text);
-
 			}
 
 			WriteIndentedLine(builder.ToString());
@@ -502,13 +516,14 @@ namespace NArrange.CSharp
 
 			_writer.Write(element.Name);
 
-			WriteParameterList(element.Params);
+			WriteParameterList(element.Parameters);
 			_writer.WriteLine();
 
 			if (element.Reference != null)
 			{
 			    _tabCount++;
-			    WriteIndentedLine(string.Format("{0} {1}",
+			    WriteIndentedLine(string.Format(CultureInfo.InvariantCulture,
+			        "{0} {1}",
 			        CSharpSymbol.TypeImplements, element.Reference));
 			    _tabCount--;
 			}
@@ -527,18 +542,18 @@ namespace NArrange.CSharp
 
 			WriteAccess(element.Access);
 
+			WriteMemberAttributes(element.MemberModifiers);
+
 			_writer.Write(CSharpKeyword.Delegate);
 			_writer.Write(' ');
 
-			WriteMemberAttributes(element.MemberModifiers);
-
-			_writer.Write(element.Type);
+			_writer.Write(element.ReturnType);
 			_writer.Write(' ');
 
 			_writer.Write(element.Name);
 
 			WriteTypeParameters(element);			
-			WriteParameterList(element.Params);
+			WriteParameterList(element.Parameters);
 			WriteTypeParameterConstraints(element);
 			_writer.Write(CSharpSymbol.EndOfStatement);
 		}
@@ -559,7 +574,7 @@ namespace NArrange.CSharp
 			_writer.Write(CSharpKeyword.Event);
 			_writer.Write(' ');
 
-			_writer.Write(element.Type);
+			_writer.Write(element.ReturnType);
 			_writer.Write(' ');
 
 			_writer.Write(element.Name);
@@ -588,7 +603,7 @@ namespace NArrange.CSharp
 
 			WriteMemberAttributes(element.MemberModifiers);
 
-			_writer.Write(element.Type);
+			_writer.Write(element.ReturnType);
 			_writer.Write(' ');
 
 			_writer.Write(element.Name);
@@ -649,13 +664,19 @@ namespace NArrange.CSharp
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
+			if (element.IsPartial)
+			{
+			    _writer.Write(CSharpKeyword.Partial);
+			    _writer.Write(' ');
+			}
+
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers);
 
-			if (element.OperatorType == OperatorType.NotSpecified)
+			if (element.OperatorType == OperatorType.None)
 			{
-			    _writer.Write(element.Type);
+			    _writer.Write(element.ReturnType);
 			    _writer.Write(' ');
 
 			    if (element.IsOperator)
@@ -680,11 +701,11 @@ namespace NArrange.CSharp
 
 			    _writer.Write(CSharpKeyword.Operator);
 			    _writer.Write(' ');
-			    _writer.Write(element.Type);
+			    _writer.Write(element.ReturnType);
 			}
 
 			WriteTypeParameters(element);
-			WriteParameterList(element.Params);
+			WriteParameterList(element.Parameters);
 			WriteTypeParameterConstraints(element);
 
 			if (element.BodyText == null)
@@ -706,7 +727,7 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpKeyword.Namespace);
 			builder.Append(' ');
 			builder.Append(element.Name);
@@ -735,7 +756,7 @@ namespace NArrange.CSharp
 
 			WriteMemberAttributes(element.MemberModifiers);
 
-			_writer.Write(element.Type);
+			_writer.Write(element.ReturnType);
 			_writer.Write(' ');
 
 			_writer.Write(element.Name);
@@ -757,7 +778,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public void VisitRegionElement(RegionElement element)
 		{
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpSymbol.Preprocessor);
 			builder.Append(CSharpKeyword.Region);
 			builder.Append(' ');
@@ -768,18 +789,18 @@ namespace NArrange.CSharp
 
 			WriteChildren(element);
 
-			builder = new StringBuilder();
-			builder.Append(CSharpSymbol.Preprocessor);
-			builder.Append(CSharpKeyword.EndRegion);
-			builder.Append(' ');
-			builder.Append(element.Name);
-
 			if (element.Children.Count > 0 &&
 			    !(element.Children.Count == 1 && element.Children[0] is GroupElement))
 			{
 			    _writer.WriteLine();
 			    _writer.WriteLine();
 			}
+
+			builder = new StringBuilder(DefaultBlockLength);
+			builder.Append(CSharpSymbol.Preprocessor);
+			builder.Append(CSharpKeyword.EndRegion);
+			builder.Append(' ');
+			builder.Append(element.Name);
 
 			WriteIndented(builder.ToString());
 		}
@@ -793,7 +814,7 @@ namespace NArrange.CSharp
 			this.WriteHeaderComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
-			if (element.Access != CodeAccess.NotSpecified)
+			if (element.Access != CodeAccess.None)
 			{
 			    WriteAccess(element.Access);
 			}
@@ -832,9 +853,9 @@ namespace NArrange.CSharp
 			    _writer.Write(' ');
 			}
 
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
-			switch (element.Type)
+			switch (element.TypeElementType)
 			{
 			    case TypeElementType.Class:
 			        builder.Append(CSharpKeyword.Class);
@@ -854,8 +875,8 @@ namespace NArrange.CSharp
 
 			    default:
 			        throw new ArgumentOutOfRangeException(
-			            string.Format(
-			            "Unrecognized type element type {0}", element.Type));
+			            string.Format(Thread.CurrentThread.CurrentCulture,
+			            "Unhandled type element type {0}", element.TypeElementType));
 			}
 
 			builder.Append(' ');
@@ -867,15 +888,15 @@ namespace NArrange.CSharp
 
 			if (element.Interfaces.Count > 0)
 			{
-			    builder = new StringBuilder();
+			    builder = new StringBuilder(DefaultBlockLength);
 			    builder.Append(' ');
 			    builder.Append(CSharpSymbol.TypeImplements);
 			    builder.Append(' ');
 
 			    for (int interfaceIndex = 0; interfaceIndex < element.Interfaces.Count; interfaceIndex++)
 			    {
-			        string interfaceName = element.Interfaces[interfaceIndex];
-			        builder.Append(interfaceName);
+			        InterfaceReference interfaceReference = element.Interfaces[interfaceIndex];
+			        builder.Append(interfaceReference.Name);
 
 			        if (interfaceIndex < element.Interfaces.Count - 1)
 			        {
@@ -891,7 +912,7 @@ namespace NArrange.CSharp
 			WriteTypeParameterConstraints(element);
 			_writer.WriteLine();
 
-			if (element.Type == TypeElementType.Enum)
+			if (element.TypeElementType == TypeElementType.Enum)
 			{
 			    WriteBody(element);
 			}
@@ -922,7 +943,7 @@ namespace NArrange.CSharp
 		{
 			this.WriteHeaderComments(element.HeaderComments);
 
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpKeyword.Using);
 			builder.Append(' ');
 			if (!string.IsNullOrEmpty(element.Redefine))

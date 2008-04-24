@@ -44,7 +44,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression leftAttributeExpression = leftExpression.Left as AttributeExpression;
 			    Assert.IsNotNull(leftAttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, leftAttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, leftAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(leftAttributeExpression.Left);
 			    Assert.IsNull(leftAttributeExpression.Right);
@@ -66,7 +66,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression rightAttributeExpression = rightExpression.Left as AttributeExpression;
 			    Assert.IsNotNull(rightAttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, rightAttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, rightAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(rightAttributeExpression.Left);
 			    Assert.IsNull(rightAttributeExpression.Right);
@@ -114,7 +114,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test3AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test3AttributeExpression.Left);
 			    Assert.IsNull(test3AttributeExpression.Right);
@@ -144,7 +144,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test1AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test1AttributeExpression.Left);
 			    Assert.IsNull(test1AttributeExpression.Right);
@@ -166,7 +166,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test2AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test2AttributeExpression.Left);
 			    Assert.IsNull(test2AttributeExpression.Right);
@@ -239,7 +239,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			AttributeExpression attributeExpression = operatorExpression.Left as AttributeExpression;
 			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
-			Assert.AreEqual(ElementAttribute.Name, attributeExpression.ElementAttribute,
+			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
 			    "Attribute expression was not parsed correctly.");
 			Assert.IsNull(attributeExpression.Left);
 			Assert.IsNull(attributeExpression.Right);
@@ -350,7 +350,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test1AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test1AttributeExpression.Left);
 			    Assert.IsNull(test1AttributeExpression.Right);
@@ -372,7 +372,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test2AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test2AttributeExpression.Left);
 			    Assert.IsNull(test2AttributeExpression.Right);
@@ -394,7 +394,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test3AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test3AttributeExpression.Left);
 			    Assert.IsNull(test3AttributeExpression.Right);
@@ -442,7 +442,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test1AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test1AttributeExpression.Left);
 			    Assert.IsNull(test1AttributeExpression.Right);
@@ -472,7 +472,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test2AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test2AttributeExpression.Left);
 			    Assert.IsNull(test2AttributeExpression.Right);
@@ -494,7 +494,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, test3AttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(test3AttributeExpression.Left);
 			    Assert.IsNull(test3AttributeExpression.Right);
@@ -542,7 +542,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression leftAttributeExpression = leftExpression.Left as AttributeExpression;
 			    Assert.IsNotNull(leftAttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, leftAttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, leftAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(leftAttributeExpression.Left);
 			    Assert.IsNull(leftAttributeExpression.Right);
@@ -564,7 +564,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			    AttributeExpression rightAttributeExpression = rightExpression.Left as AttributeExpression;
 			    Assert.IsNotNull(rightAttributeExpression, "Unexpected left node type.");
-			    Assert.AreEqual(ElementAttribute.Name, rightAttributeExpression.ElementAttribute,
+			    Assert.AreEqual(ElementAttributeType.Name, rightAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
 			    Assert.IsNull(rightAttributeExpression.Left);
 			    Assert.IsNull(rightAttributeExpression.Right);

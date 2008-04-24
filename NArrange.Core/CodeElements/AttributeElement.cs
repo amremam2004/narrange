@@ -41,8 +41,14 @@ namespace NArrange.Core.CodeElements
 	/// <summary>
 	/// Attribute code element
 	/// </summary>
-	public sealed class AttributeElement : TextCodeElement, IAttribute
+	public sealed class AttributeElement : TextCodeElement, IAttributeElement
 	{
+		#region Fields
+
+		private ICodeElement _parent;
+
+		#endregion Fields
+
 		#region Constructors
 
 		/// <summary>
@@ -73,6 +79,52 @@ namespace NArrange.Core.CodeElements
 			get
 			{
 			    return ElementType.Attribute;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the parent element
+		/// </summary>
+		public override ICodeElement Parent
+		{
+			get
+			{
+			    return _parent;
+			}
+			set
+			{
+			    if (value != _parent)
+			    {
+			        if (_parent != null)
+			        {
+			            AttributedElement attributedElement = _parent as AttributedElement;
+			            if (attributedElement != null)
+			            {
+			                attributedElement.RemoveAttribute(this);
+			            }
+			            else
+			            {
+			                _parent.RemoveChild(this);
+			            }
+			        }
+
+			        _parent = value;
+			        if (_parent != null)
+			        {
+			            AttributedElement attributedElement = _parent as AttributedElement;
+			            if (attributedElement != null)
+			            {
+			                if (!attributedElement.Attributes.Contains(this))
+			                {
+			                    attributedElement.AddAttribute(this);
+			                }
+			            }
+			            else if (!_parent.Children.Contains(this))
+			            {
+			                _parent.AddChild(this);
+			            }
+			        }
+			    }
 			}
 		}
 

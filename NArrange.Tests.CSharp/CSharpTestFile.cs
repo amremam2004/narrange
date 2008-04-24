@@ -9,12 +9,14 @@ using Microsoft.CSharp;
 
 using NUnit.Framework;
 
+using NArrange.Tests.Core;
+
 namespace NArrange.Tests.CSharp
 {
 	/// <summary>
 	/// C# test file information
 	/// </summary>
-	public class CSharpTestFile
+	public class CSharpTestFile : ISourceCodeTestFile
 	{
 		#region Static Fields
 
@@ -56,20 +58,26 @@ namespace NArrange.Tests.CSharp
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the test file.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+			    return _resourceName;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Private Methods
 
 		private static Assembly GetAssembly(string resourceName)
 		{
-			if (_compiledSourceFiles.ContainsKey(resourceName))
+			Assembly assembly = null;
+			if (!_compiledSourceFiles.TryGetValue(resourceName, out assembly))
 			{
-			    return _compiledSourceFiles[resourceName];
-			}
-			else
-			{
-			    Assembly assembly = null;
-
 			    using (TextReader reader = GetTestFileReader(resourceName))
 			    {
 			        string source = reader.ReadToEnd();
@@ -80,7 +88,7 @@ namespace NArrange.Tests.CSharp
 			        {
 			            CompilerError error = null;
 
-			            error = GetCompilerError(results);
+			            error = TestUtilities.GetCompilerError(results);
 
 			            if (error != null)
 			            {
@@ -98,9 +106,9 @@ namespace NArrange.Tests.CSharp
 			    {
 			        _compiledSourceFiles.Add(resourceName, assembly);
 			    }
-
-			    return assembly;
 			}
+
+			return assembly;
 		}
 
 		#endregion Private Methods
@@ -122,37 +130,17 @@ namespace NArrange.Tests.CSharp
 
 			CompilerParameters parameters = new CompilerParameters();
 			parameters.GenerateInMemory = true;
-			parameters.OutputAssembly = name + ".dll";
+			parameters.GenerateExecutable = false;
 			parameters.CompilerOptions = "/unsafe";
 
 			parameters.ReferencedAssemblies.Add("mscorlib.dll");
 			parameters.ReferencedAssemblies.Add("System.dll");
-
+			parameters.ReferencedAssemblies.Add("System.Data.dll");
+			parameters.ReferencedAssemblies.Add("System.Xml.dll");
 
 			CompilerResults results = provider.CompileAssemblyFromSource(parameters, source);
 
 			return results;
-		}
-
-		/// <summary>
-		/// Retrieves a compiler error from a compiler result
-		/// </summary>
-		/// <param name="results"></param>
-		/// <returns></returns>
-		public static CompilerError GetCompilerError(CompilerResults results)
-		{
-			CompilerError error = null;
-
-			foreach (CompilerError compilerError in results.Errors)
-			{
-			    if (!compilerError.IsWarning)
-			    {
-			        error = compilerError;
-			        break;
-			    }
-			}
-
-			return error;
 		}
 
 		/// <summary>

@@ -50,9 +50,9 @@ namespace NArrange.Core
 
 		private Assembly _assembly;
 		private string _assemblyName;
-		private ICodeParser _codeParser;
+		private ICodeElementParser _codeParser;
 		private IProjectParser _projectParser;
-		private ICodeWriter _writer;
+		private ICodeElementWriter _writer;
 
 		#endregion Fields
 
@@ -76,7 +76,7 @@ namespace NArrange.Core
 		/// <summary>
 		/// Gets the code parser associated with the extension
 		/// </summary>
-		public ICodeParser CodeParser
+		public ICodeElementParser CodeParser
 		{
 			get
 			{
@@ -98,7 +98,7 @@ namespace NArrange.Core
 		/// <summary>
 		/// Gets the code writer associated with the extension
 		/// </summary>
-		public ICodeWriter Writer
+		public ICodeElementWriter Writer
 		{
 			get
 			{
@@ -120,13 +120,13 @@ namespace NArrange.Core
 			Type[] types = _assembly.GetTypes();
 			foreach (Type type in types)
 			{
-			    if (_codeParser == null && type.GetInterface(typeof(ICodeParser).ToString()) != null)
+			    if (_codeParser == null && type.GetInterface(typeof(ICodeElementParser).ToString()) != null)
 			    {
-			        _codeParser = Activator.CreateInstance(type) as ICodeParser;
+			        _codeParser = Activator.CreateInstance(type) as ICodeElementParser;
 			    }
-			    else if (_writer == null && type.GetInterface(typeof(ICodeWriter).ToString()) != null)
+			    else if (_writer == null && type.GetInterface(typeof(ICodeElementWriter).ToString()) != null)
 			    {
-			        _writer = Activator.CreateInstance(type) as ICodeWriter;
+			        _writer = Activator.CreateInstance(type) as ICodeElementWriter;
 			    }
 			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
 			    {

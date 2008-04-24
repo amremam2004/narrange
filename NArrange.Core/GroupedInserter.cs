@@ -96,11 +96,9 @@ namespace NArrange.Core
 		/// Gets the name of the group the element falls into
 		/// </summary>
 		/// <param name="elementFilterType"></param>
-		/// <param name="captureExpression"></param>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		private string GetGroupName(ElementAttribute elementFilterType, string captureExpression, 
-			ICodeElement codeElement)
+		private string GetGroupName(ElementAttributeType elementFilterType, ICodeElement codeElement)
 		{
 			string groupName = string.Empty;
 
@@ -135,7 +133,7 @@ namespace NArrange.Core
 		{
 			GroupElement group = null;
 
-			string groupName = GetGroupName(_groupBy.By, _groupBy.AttributeCapture, codeElement);
+			string groupName = GetGroupName(_groupBy.By, codeElement);
 
 			foreach (ICodeElement childElement in parentElement.Children)
 			{

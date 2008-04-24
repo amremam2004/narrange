@@ -48,7 +48,30 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public static class ElementUtilities
 	{
+		#region Static Fields
+
+		private static Dictionary<Enum, string> _enumStrings = 
+            new Dictionary<Enum,string>();
+
+		#endregion Static Fields
+
 		#region Private Methods
+
+		private static string EnumToString(Enum enumValue)
+		{
+			string enumString = null;
+
+			if (!(_enumStrings.TryGetValue(enumValue, out enumString)))
+			{
+			    //
+			    // Cache the string representation of the enumeration
+			    //
+			    enumString = enumValue.ToString();
+			    _enumStrings[enumValue] = enumString;
+			}
+
+			return enumString;
+		}
 
 		private static string GetTypeAttribute(ICodeElement codeElement)
 		{
@@ -57,14 +80,14 @@ namespace NArrange.Core.CodeElements
 			MemberElement memberElement = codeElement as MemberElement;
 			if (memberElement != null)
 			{
-			    attributeString = memberElement.Type;
+			    attributeString = memberElement.ReturnType;
 			}
 			else
 			{
 			    TypeElement typeElement = codeElement as TypeElement;
 			    if (typeElement != null)
 			    {
-			        attributeString = typeElement.Type.ToString();
+			        attributeString = EnumUtilities.ToString(typeElement.TypeElementType);
 			    }
 			}
 
@@ -108,19 +131,19 @@ namespace NArrange.Core.CodeElements
 			            (char)(reader.Peek()) == ConditionExpressionParser.ExpressionStart)
 			        {
 			            reader.Read();
-			            attributeBuilder = new StringBuilder();
+			            attributeBuilder = new StringBuilder(16);
 			            inAttribute = true;
 			        }
 			        else if (inAttribute)
 			        {
 			            if (ch == ConditionExpressionParser.ExpressionEnd)
 			            {
-			                ElementAttribute elementAttribute = (ElementAttribute)Enum.Parse(
-			                    typeof(ElementAttribute), attributeBuilder.ToString());
+			                ElementAttributeType elementAttribute = (ElementAttributeType)Enum.Parse(
+			                    typeof(ElementAttributeType), attributeBuilder.ToString());
 
 			                string attribute = GetAttribute(elementAttribute, codeElement);
 			                formatted.Append(attribute);
-			                attributeBuilder = new StringBuilder();
+			                attributeBuilder = new StringBuilder(16);
 			                inAttribute = false;
 			            }
 			            else
@@ -146,7 +169,7 @@ namespace NArrange.Core.CodeElements
 		/// <param name="attributeType"></param>
 		/// <param name="codeElement"></param>
 		/// <returns></returns>
-		public static string GetAttribute(ElementAttribute attributeType, ICodeElement codeElement)
+		public static string GetAttribute(ElementAttributeType attributeType, ICodeElement codeElement)
 		{
 			string attributeString = null;
 			MemberElement memberElement;
@@ -154,45 +177,45 @@ namespace NArrange.Core.CodeElements
 
 			switch (attributeType)
 			{
-			    case ElementAttribute.Name:
+			    case ElementAttributeType.Name:
 			        attributeString = codeElement.Name;
 			        break;
 
-			    case ElementAttribute.Access:
+			    case ElementAttributeType.Access:
 			        AttributedElement attributedElement = codeElement as AttributedElement;
 			        if (attributedElement != null)
 			        {
-			            if (attributedElement.Access == CodeAccess.NotSpecified)
+			            if (attributedElement.Access == CodeAccess.None)
 			            {
-			                attributeString = CodeAccess.Internal.ToString();
+			                attributeString = EnumToString(CodeAccess.Internal);
 			            }
 			            else
 			            {
-			                attributeString = attributedElement.Access.ToString();
+			                attributeString = EnumToString(attributedElement.Access);
 			            }
 			        }
 			        break;
 
-			    case ElementAttribute.ElementType:
-			        attributeString = codeElement.ElementType.ToString();
+			    case ElementAttributeType.ElementType:
+			        attributeString = EnumToString(codeElement.ElementType);
 			        break;
 
-			    case ElementAttribute.Type:
+			    case ElementAttributeType.Type:
 			        attributeString = GetTypeAttribute(codeElement);
 			        break;
 
-			    case ElementAttribute.Modifier:
+			    case ElementAttributeType.Modifier:
 			        memberElement = codeElement as MemberElement;
 			        if (memberElement != null)
 			        {
-			            attributeString = memberElement.MemberModifiers.ToString();
+			            attributeString = EnumToString(memberElement.MemberModifiers);
 			        }
 			        else
 			        {
 			            typeElement = codeElement as TypeElement;
 			            if (typeElement != null)
 			            {
-			                attributeString = typeElement.TypeModifiers.ToString();
+			                attributeString = EnumToString(typeElement.TypeModifiers);
 			            }
 			        }
 			        break;

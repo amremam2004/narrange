@@ -94,7 +94,7 @@ namespace NArrange.Core
 			    {
 			        switch (sortBy.By)
 			        {
-			            case ElementAttribute.Access:
+			            case ElementAttributeType.Access:
 			                AttributedElement attributedX = x as AttributedElement;
 			                AttributedElement attributedY = y as AttributedElement;
 			                if (attributedX != null && attributedY != null)
@@ -103,7 +103,7 @@ namespace NArrange.Core
 			                }
 			                break;
 
-			            case ElementAttribute.Name:
+			            case ElementAttributeType.Name:
 			                    compareValue = StringComparer.Ordinal.Compare(
 			                        x.Name, y.Name);
 			                    break;
@@ -149,34 +149,37 @@ namespace NArrange.Core
 		/// <param name="codeElement"></param>
 		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
 		{
-			ICodeElement compareElement = null;
-
-			int insertIndex = 0;
-
-			if (parentElement.Children.Count > 0)
+			if (codeElement != null)
 			{
-			    for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
-			    {
-			        compareElement = parentElement.Children[elementIndex];
+			    ICodeElement compareElement = null;
 
-			        bool greaterOrEqual =
-			            (_elementType == ElementType.NotSpecified && 
-			            _comparison(codeElement, compareElement) >= 0) ||
-			            (_elementType != ElementType.NotSpecified &&
-			            ((compareElement != null && compareElement.ElementType != _elementType) || 
-			            _comparison(codeElement, compareElement) >= 0));
-			        if (greaterOrEqual)
+			    int insertIndex = 0;
+
+			    if (parentElement.Children.Count > 0)
+			    {
+			        for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
 			        {
-			            insertIndex++;
-			        }
-			        else
-			        {
-			            break;
+			            compareElement = parentElement.Children[elementIndex];
+
+			            bool greaterOrEqual =
+			                (_elementType == ElementType.NotSpecified &&
+			                _comparison(codeElement, compareElement) >= 0) ||
+			                (_elementType != ElementType.NotSpecified &&
+			                ((compareElement != null && compareElement.ElementType != _elementType) ||
+			                _comparison(codeElement, compareElement) >= 0));
+			            if (greaterOrEqual)
+			            {
+			                insertIndex++;
+			            }
+			            else
+			            {
+			                break;
+			            }
 			        }
 			    }
-			}
 
-			parentElement.InsertChild(insertIndex, codeElement);
+			    parentElement.InsertChild(insertIndex, codeElement);
+			}
 		}
 
 		#endregion Public Methods

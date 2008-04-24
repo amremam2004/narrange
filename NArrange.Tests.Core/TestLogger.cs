@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text;
 
 using NArrange.Core;
@@ -112,7 +113,8 @@ namespace NArrange.Tests.Core
 		/// <param name="args"></param>
 		public void LogMessage(LogLevel level, string message, params object[] args)
 		{
-			string formatted = string.Format(message, args);
+			string formatted = string.Format(CultureInfo.InvariantCulture,
+			    message, args);
 
 			if (WriteToConsole)
 			{

@@ -63,4 +63,7 @@ Namespace SampleNamespace
 
 	Public MustInherit Class SampleClass8
 	End Class
+	
+	Friend NotInheritable Class SampleClass9(Of T1, T2)
+	End Class
 End Namespace

@@ -41,13 +41,14 @@
     </Compile>
     <Compile Include="CodeArrangerTests.cs" />
     <Compile Include="CSharpSymbolTests.cs" />
+    <Compile Include="CSharpWriteArrangedTests.cs" />
     <Compile Include="FileArrangerTests.cs" />
     <Compile Include="CSharpParserTests.cs" />
-    <Compile Include="CSharpProjectParserTests.cs" />
     <Compile Include="CSharpTestFile.cs" />
     <Compile Include="CSharpTestUtilities.cs" />
     <Compile Include="CSharpWriterTests.cs" />
     <Compile Include="ExtensionHandlerTests.cs" />
+    <Compile Include="CSharpProjectParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="TestSourceFiles\StructDefinition.cs" />
     <EmbeddedResource Include="TestSourceFiles\SingleNamespace.cs" />

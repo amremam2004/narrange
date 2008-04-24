@@ -42,6 +42,10 @@
  *		  backslashes
  *		- Fixed parsing of equal and not equal operators
  *		- Fixed parsing of verbatim string literals (e.g. @"\\Server\")
+ *      - Added parsing support for partial methods
+ *      - Fixed parsing of array return types with intermixed spaces
+ *      - Fixed a parsing error where type parameters were always expected
+ *        when parsing generic types.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -50,6 +54,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 using NArrange.Core;
 using NArrange.Core.CodeElements;
@@ -62,20 +67,14 @@ namespace NArrange.CSharp
 	/// </summary>
 	public sealed class CSharpParser : CodeParser
 	{
-		#region Private Properties
+		#region Constants
 
 		/// <summary>
 		/// Escape character
 		/// </summary>
-		private char EscapeChar
-		{
-			get
-			{
-				return '\\';
-			}
-		}
+		private const char EscapeChar = '\\';
 
-		#endregion Private Properties
+		#endregion Constants
 
 		#region Private Methods
 
@@ -85,7 +84,21 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private string CaptureTypeName()
 		{
-			return CaptureWord(true);
+			string typeName = CaptureWord(true);
+			EatWhiteSpace();
+
+			//
+			// Array with space in between?
+			//
+			if (CurrentChar == CSharpSymbol.BeginAttribute)
+			{
+			    EatWhiteSpace();
+			    EatChar(CSharpSymbol.EndAttribute);
+
+			    typeName += CSharpSymbol.BeginAttribute.ToString() + CSharpSymbol.EndAttribute.ToString();
+			}
+
+			return typeName;
 		}
 
 		/// <summary>
@@ -103,14 +116,14 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private string CaptureWord(bool captureGeneric)
 		{
-			EatWhitespace();
+			EatWhiteSpace();
 
-			StringBuilder word = new StringBuilder();
+			StringBuilder word = new StringBuilder(DefaultWordLength);
 
 			char nextChar = NextChar;
 			while (nextChar != EmptyChar)
 			{
-				if (IsWhitespace(nextChar) ||
+				if (IsWhiteSpace(nextChar) ||
 					(IsAliasBreak(nextChar) &&
 					!(nextChar == CSharpSymbol.TypeImplements && (word.ToString() == CSharpKeyword.Global || word.ToString() == CSharpKeyword.Global + CSharpSymbol.TypeImplements.ToString()))) ||
 			        (!captureGeneric &&
@@ -130,31 +143,18 @@ namespace NArrange.CSharp
 			return word.ToString();
 		}
 
-		/// <summary>
-		/// Creates a field with the specified information
-		/// </summary>
-		/// <param name="fieldName"></param>
-		/// <param name="type"></param>
-		/// <param name="access"></param>
-		/// <param name="memberAttributes"></param>
-		/// <param name="isVolatile"></param>
-		/// <returns></returns>
-		private FieldElement CreateField(string fieldName, string type,
-			CodeAccess access, MemberModifier memberAttributes, bool isVolatile)
+		private void EatTrailingEndOfStatement()
 		{
-			FieldElement field = new FieldElement();
-			field.Name = fieldName;
-			field.Type = type;
-			field.Access = access;
-			field.MemberModifiers = memberAttributes;
-			field.IsVolatile = isVolatile;
-
-			return field;
+			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+			if (NextChar == CSharpSymbol.EndOfStatement)
+			{
+			    EatChar(CSharpSymbol.EndOfStatement);
+			}
 		}
 
 		private static CodeAccess GetAccess(StringCollection wordList)
 		{
-			CodeAccess access = CodeAccess.NotSpecified;
+			CodeAccess access = CodeAccess.None;
 
 			if (wordList.Contains(CSharpKeyword.Public))
 			{
@@ -227,69 +227,75 @@ namespace NArrange.CSharp
 			}
 		}
 
-		private static MemberModifier GetMemberAttributes(StringCollection wordList)
+		private static MemberModifiers GetMemberAttributes(StringCollection wordList)
 		{
-			MemberModifier memberAttributes;
-			memberAttributes = MemberModifier.None;
+			MemberModifiers memberAttributes;
+			memberAttributes = MemberModifiers.None;
 
 			bool isSealed = wordList.Contains(CSharpKeyword.Sealed);
 			if (isSealed)
 			{
-			    memberAttributes |= MemberModifier.Sealed;
+			    memberAttributes |= MemberModifiers.Sealed;
 			}
 
 			bool isAbstract = wordList.Contains(CSharpKeyword.Abstract);
 			if (isAbstract)
 			{
-			    memberAttributes |= MemberModifier.Abstract;
+			    memberAttributes |= MemberModifiers.Abstract;
 			}
 
 			bool isStatic = wordList.Contains(CSharpKeyword.Static);
 			if (isStatic)
 			{
-			    memberAttributes |= MemberModifier.Static;
+			    memberAttributes |= MemberModifiers.Static;
 			}
 
 			bool isUnsafe = wordList.Contains(CSharpKeyword.Unsafe);
 			if (isUnsafe)
 			{
-			    memberAttributes |= MemberModifier.Unsafe;
+			    memberAttributes |= MemberModifiers.Unsafe;
 			}
 
 			bool isVirtual = wordList.Contains(CSharpKeyword.Virtual);
 			if (isVirtual)
 			{
-			    memberAttributes |= MemberModifier.Virtual;
+			    memberAttributes |= MemberModifiers.Virtual;
 			}
 
 			bool isOverride = wordList.Contains(CSharpKeyword.Override);
 			if (isOverride)
 			{
-			    memberAttributes |= MemberModifier.Override;
+			    memberAttributes |= MemberModifiers.Override;
 			}
 
 			bool isNew = wordList.Contains(CSharpKeyword.New);
 			if (isNew)
 			{
-			    memberAttributes |= MemberModifier.New;
+			    memberAttributes |= MemberModifiers.New;
 			}
 
 			bool isConstant = wordList.Contains(CSharpKeyword.Constant);
 			if (isConstant)
 			{
-			    memberAttributes |= MemberModifier.Constant;
+			    memberAttributes |= MemberModifiers.Constant;
 			}
 
 			bool isReadOnly = wordList.Contains(CSharpKeyword.ReadOnly);
 			if (isReadOnly)
 			{
-			    memberAttributes |= MemberModifier.ReadOnly;
+			    memberAttributes |= MemberModifiers.ReadOnly;
 			}
 
 			bool isExternal = wordList.Contains(CSharpKeyword.External);
 			if (isExternal)
 			{
-			    memberAttributes |= MemberModifier.External;
+			    memberAttributes |= MemberModifiers.External;
+			}
+
+			bool isPartial = wordList.Contains(CSharpKeyword.Partial);
+			if (isPartial)
+			{
+			    memberAttributes |= MemberModifiers.Partial;
 			}
 
 			return memberAttributes;
@@ -302,18 +308,23 @@ namespace NArrange.CSharp
 		/// <param name="name"></param>
 		/// <param name="returnType"></param>
 		/// <returns></returns>
-		private void GetMemberNameAndType(string[] words,
+		private static void GetMemberNameAndType(StringCollection words,
 			out string name, out string returnType)
 		{
 			name = null;
 			returnType = null;
-			   
-			List<string> wordList = new List<string>(words);
+
+			List<string> wordList = new List<string>();
+			foreach (string word in words)
+			{
+			    wordList.Add(word);
+			}
+
 			for (int wordIndex = 0; wordIndex < wordList.Count; wordIndex++)
 			{
 			    string wordGroup = wordList[wordIndex];
 			    int separatorIndex = wordGroup.IndexOf(CSharpSymbol.AliasSeparator);
-			    if (separatorIndex >= 0)
+			    if (separatorIndex >= 0 && wordGroup[wordGroup.Length - 1] != CSharpSymbol.EndAttribute)
 			    {
 			        if (separatorIndex < wordGroup.Length - 1)
 			        {
@@ -382,13 +393,31 @@ namespace NArrange.CSharp
 			        typeCandidate = wordList[typeIndex];
 			    }
 
-			    if (name.EndsWith(CSharpSymbol.EndAttribute.ToString()) && wordList.Count > 2)
+			    if (name[name.Length - 1] == CSharpSymbol.EndAttribute && wordList.Count > 2)
 			    {
 			        //
 			        // Property indexer
 			        //
-			        name = wordList[wordList.Count - 2] + " " + name;
-			        typeCandidate = wordList[wordList.Count - 3];
+			        name = typeCandidate + " " + name;
+			        typeIndex--;
+			        typeCandidate = wordList[typeIndex];
+
+			        if (name[0] == CSharpSymbol.BeginAttribute)
+			        {
+			            name = typeCandidate + name;
+			            typeIndex--;
+			            typeCandidate = wordList[typeIndex];
+			        }
+			    }
+
+			    //
+			    // Array return type with spaces?
+			    //
+			    while (typeCandidate[typeCandidate.Length - 1] == CSharpSymbol.EndAttribute &&
+			        typeCandidate[0] == CSharpSymbol.BeginAttribute)
+			    {
+			        typeIndex--;
+			        typeCandidate = wordList[typeIndex] + typeCandidate;
 			    }
 
 			    if (typeCandidate != CSharpKeyword.Abstract &&
@@ -413,9 +442,9 @@ namespace NArrange.CSharp
 			}
 		}
 
-		private OperatorType GetOperatorType(StringCollection wordList)
+		private static OperatorType GetOperatorType(StringCollection wordList)
 		{
-			OperatorType operatorType = OperatorType.NotSpecified;
+			OperatorType operatorType = OperatorType.None;
 			if (wordList.Contains(CSharpKeyword.Explicit))
 			{
 			    operatorType = OperatorType.Explicit;
@@ -434,22 +463,24 @@ namespace NArrange.CSharp
 		/// </summary>
 		/// <param name="ch"></param>
 		/// <returns></returns>
-		private bool IsAliasBreak(char ch)
+		private static bool IsAliasBreak(char ch)
 		{
-			return  ch == CSharpSymbol.BeginParamList ||
-			        ch == CSharpSymbol.EndParamList ||
+			return ch == CSharpSymbol.BeginParameterList ||
+			        ch == CSharpSymbol.EndParameterList ||
 			        ch == CSharpSymbol.EndOfStatement ||
 			        ch == CSharpSymbol.AliasSeparator ||
 			        ch == CSharpSymbol.TypeImplements ||
 			        ch == CSharpSymbol.BeginBlock ||
-			        ch == CSharpSymbol.EndBlock;
+			        ch == CSharpSymbol.EndBlock ||
+			        ch == CSharpSymbol.Negate ||
+			        ch == CSharpSymbol.Assignment;
 		}
 
 		private string[] ParseAliasList()
 		{
 			List<string> aliases = new List<string>();
 
-			EatWhitespace();
+			EatWhiteSpace();
 
 			char nextChar = NextChar;
 			if (nextChar == CSharpSymbol.BeginBlock)
@@ -462,26 +493,21 @@ namespace NArrange.CSharp
 			    {
 			        string alias = CaptureWord(false);
 
+			        EatWhiteSpace();
+
 			        nextChar = NextChar;
 			        if (nextChar == CSharpSymbol.BeginGeneric)
 			        {
-			            while (CurrentChar != CSharpSymbol.EndGeneric)
-			            {
-			                TryReadChar();
-							if (CurrentChar == CSharpSymbol.BeginBlock)
-			                {
-			                    this.OnParseError("Expected " + CSharpSymbol.EndGeneric);
-			                }
-
-							alias += CurrentChar;
-			            }
+			            alias += CSharpSymbol.BeginGeneric.ToString() +
+			                ParseNestedText(CSharpSymbol.BeginGeneric, CSharpSymbol.EndGeneric, true, true) +
+			                CSharpSymbol.EndGeneric.ToString();
 			        }
 
 			        if (alias == CSharpKeyword.New)
 			        {
 			            // new(), for type parameter constraint lists
-			            if (TryReadChar(CSharpSymbol.BeginParamList) &&
-			                TryReadChar(CSharpSymbol.EndParamList))
+			            if (TryReadChar(CSharpSymbol.BeginParameterList) &&
+			                TryReadChar(CSharpSymbol.EndParameterList))
 			            {
 			                alias = CSharpKeyword.NewConstraint;
 			            }
@@ -493,7 +519,7 @@ namespace NArrange.CSharp
 
 			        aliases.Add(alias);
 
-			        EatWhitespace();
+			        EatWhiteSpace();
 
 			        nextChar = NextChar;
 			        if (nextChar != CSharpSymbol.AliasSeparator)
@@ -534,12 +560,22 @@ namespace NArrange.CSharp
 			return attributeElement;
 		}
 
-		private string ParseBlock(bool beginExpected)
+		private string ParseBlock(bool beginExpected, CommentedElement parentElement)
 		{
+			List<ICommentElement> extraComments = new List<ICommentElement>();
+
 			if (beginExpected)
 			{
 				// TODO: Assign any parsed comments to the parent element
-				ParseComments();
+				extraComments.AddRange(ParseComments());
+
+			    if (parentElement != null)
+			    {
+			        foreach (ICommentElement comment in extraComments)
+			        {
+			            parentElement.AddHeaderComment(comment);
+			        }
+			    }
 			}
 
 			return ParseNestedText(CSharpSymbol.BeginBlock, CSharpSymbol.EndBlock, beginExpected, true);
@@ -555,7 +591,7 @@ namespace NArrange.CSharp
 			TryReadChar();
 			TryReadChar();
 
-			StringBuilder blockComment = new StringBuilder();
+			StringBuilder blockComment = new StringBuilder(DefaultBlockLength);
 
 			while (!(PreviousChar == CSharpSymbol.BlockCommentModifier &&
 			    CurrentChar == CSharpSymbol.BeginComment))
@@ -590,10 +626,12 @@ namespace NArrange.CSharp
 
 		private ReadOnlyCollection<ICommentElement> ParseComments()
 		{
+			EatWhiteSpace();
+
 			List<ICommentElement> comments = new List<ICommentElement>();
 
 			char nextChar = NextChar;
-			if (nextChar == CSharpSymbol.BeginComment)
+			while (nextChar == CSharpSymbol.BeginComment)
 			{
 				TryReadChar();
 
@@ -611,9 +649,16 @@ namespace NArrange.CSharp
 				else
 				{
 					this.OnParseError(
-						string.Format("Invalid character '{0}'", CSharpSymbol.BeginComment));
+						string.Format(Thread.CurrentThread.CurrentCulture,
+			            "Invalid character '{0}'", CSharpSymbol.BeginComment));
 				}
+
+			    EatWhiteSpace();
+
+			    nextChar = NextChar;
 			}
+
+			EatWhiteSpace();
 
 			return comments.AsReadOnly();
 		}
@@ -625,42 +670,50 @@ namespace NArrange.CSharp
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private ConstructorElement ParseConstructor(string memberName, CodeAccess access, MemberModifier memberAttributes)
+		private ConstructorElement ParseConstructor(string memberName, CodeAccess access, MemberModifiers memberAttributes)
 		{
 			ConstructorElement constructor = new ConstructorElement();
 			constructor.Name = memberName;
 			constructor.Access = access;
 			constructor.MemberModifiers = memberAttributes;
 
-			constructor.Params = this.ParseParams();
+			constructor.Parameters = this.ParseParams();
 
-			EatWhitespace();
+			EatWhiteSpace();
+
+			List<ICommentElement> extraComments = new List<ICommentElement>();
+			extraComments.AddRange(ParseComments());
+
+			EatWhiteSpace();
+
 			bool hasReference = TryReadChar(CSharpSymbol.TypeImplements);
 			if (hasReference)
 			{
-			    EatWhitespace();
+			    EatWhiteSpace();
 
-			    StringBuilder referenceBuilder = new StringBuilder();
-			    char nextChar = NextChar;
-			    while (nextChar != CSharpSymbol.BeginBlock)
-			    {
-			        if (nextChar == EmptyChar)
-			        {
-			            this.UnexpectedEndOfFile();
-			        }
-			        else
-			        {
-			            TryReadChar();
-			            referenceBuilder.Append(CurrentChar);
-			        }
+			    extraComments.AddRange(ParseComments());
 
-			        nextChar = NextChar;
-			    }
+			    StringBuilder referenceBuilder = new StringBuilder(DefaultWordLength);
 
-			    constructor.Reference = referenceBuilder.ToString().Trim();
+			    EatWhiteSpace();
+			    referenceBuilder.Append(CaptureWord());
+
+			    EatWhiteSpace();
+			    string referenceParams =
+			        ParseNestedText(CSharpSymbol.BeginParameterList, CSharpSymbol.EndParameterList, true, true);
+			    referenceBuilder.Append(CSharpSymbol.BeginParameterList);
+			    referenceBuilder.Append(referenceParams);
+			    referenceBuilder.Append(CSharpSymbol.EndParameterList);
+
+			    constructor.Reference = referenceBuilder.ToString();
 			}
 
-			constructor.BodyText = this.ParseBlock(true);
+			constructor.BodyText = this.ParseBlock(true, constructor);
+
+			foreach (ICommentElement comment in extraComments)
+			{
+			    constructor.AddHeaderComment(comment);
+			}
 
 			return constructor;
 		}
@@ -673,13 +726,13 @@ namespace NArrange.CSharp
 		/// <param name="memberAttributes">Member attributes</param>
 		/// <param name="returnType">Return type</param>
 		/// <returns></returns>
-		private DelegateElement ParseDelegate(string memberName, CodeAccess access, MemberModifier memberAttributes,
+		private DelegateElement ParseDelegate(string memberName, CodeAccess access, MemberModifiers memberAttributes,
 			string returnType)
 		{
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Name = memberName;
 			delegateElement.Access = access;
-			delegateElement.Type = returnType;
+			delegateElement.ReturnType = returnType;
 			delegateElement.MemberModifiers = memberAttributes;
 
 			int genericIndex = memberName.IndexOf(CSharpSymbol.BeginGeneric);
@@ -700,7 +753,7 @@ namespace NArrange.CSharp
 				}
 			}
 
-			delegateElement.Params = this.ParseParams();
+			delegateElement.Parameters = this.ParseParams();
 
 			if (isGeneric)
 			{
@@ -718,15 +771,15 @@ namespace NArrange.CSharp
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private EventElement ParseEvent(CodeAccess access, MemberModifier memberAttributes)
+		private EventElement ParseEvent(CodeAccess access, MemberModifiers memberAttributes)
 		{
 			EventElement eventElement = new EventElement();
-			eventElement.Type = CaptureTypeName();
+			eventElement.ReturnType = CaptureTypeName();
 			eventElement.Name = CaptureWord();
 			eventElement.Access = access;
 			eventElement.MemberModifiers = memberAttributes;
 
-			EatWhitespace();
+			EatWhiteSpace();
 
 			char nextChar = NextChar;
 			if (nextChar == CSharpSymbol.EndOfStatement)
@@ -735,15 +788,47 @@ namespace NArrange.CSharp
 			}
 			else
 			{
-			    eventElement.BodyText = this.ParseBlock(true);
+			    eventElement.BodyText = this.ParseBlock(true, eventElement);
 			}
 
 			return eventElement;
 		}
 
+		private FieldElement ParseField(bool isAssignment, CodeAccess access,
+			MemberModifiers memberAttributes, string memberName,
+			string returnType, bool isVolatile)
+		{
+			FieldElement field = new FieldElement();
+			field.Name = memberName;
+			field.ReturnType = returnType;
+			field.Access = access;
+			field.MemberModifiers = memberAttributes;
+			field.IsVolatile = isVolatile;
+
+			if (isAssignment)
+			{
+			    string initialValue = ParseInitialValue();
+			    field.InitialValue = initialValue;
+			}
+
+			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+			if (NextChar == CSharpSymbol.BeginComment)
+			{
+			    EatChar(CSharpSymbol.BeginComment);
+			    if (NextChar == CSharpSymbol.BeginComment)
+			    {
+			        EatChar(CSharpSymbol.BeginComment);
+			        string commentText = ReadLine().Trim();
+			        CommentElement comment = new CommentElement(commentText);
+			        field.AddHeaderComment(comment);
+			    }
+			}
+			return field;
+		}
+
 		private string ParseInitialValue()
 		{
-			EatWhitespace(Whitespace.Space);
+			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 
 			string initialValue = ParseNestedText(EmptyChar, CSharpSymbol.EndOfStatement, false, false);
 
@@ -765,25 +850,28 @@ namespace NArrange.CSharp
 		/// <param name="isOperator"></param>
 		/// <param name="operatorType"></param>
 		/// <returns></returns>
-		private MethodElement ParseMethod(string memberName, CodeAccess access, MemberModifier memberAttributes,
+		private MethodElement ParseMethod(string memberName, CodeAccess access, MemberModifiers memberAttributes,
 			string returnType, bool isOperator, OperatorType operatorType)
 		{
 			MethodElement method = new MethodElement();
 			method.Name = memberName;
 			method.Access = access;
-			method.Type = returnType;
+			method.ReturnType = returnType;
 			method.MemberModifiers = memberAttributes;
 			method.IsOperator = isOperator;
 			method.OperatorType = operatorType;
 			if (isOperator &&
 			    (returnType == CSharpKeyword.Implicit || returnType == CSharpKeyword.Explicit))
 			{
-			    method.Type = memberName;
+			    method.ReturnType = memberName;
 			    method.Name = null;
 			}
 
-			int genericIndex = memberName.IndexOf(CSharpSymbol.BeginGeneric);
-			bool isGeneric = genericIndex >= 0 && genericIndex < memberName.Length - 1;
+			int genericIndex = memberName.LastIndexOf(CSharpSymbol.BeginGeneric);
+			int lastQualifierIndex = memberName.LastIndexOf(CSharpSymbol.AliasQualifier);
+			bool isGeneric = !isOperator &&
+			    (genericIndex >= 0 && genericIndex < memberName.Length - 1 &&
+			    (lastQualifierIndex < 0 || lastQualifierIndex < genericIndex));
 			if (isGeneric)
 			{
 			    method.Name = memberName.Substring(0, genericIndex);
@@ -800,14 +888,14 @@ namespace NArrange.CSharp
 			    }
 			}
 
-			method.Params = this.ParseParams();
+			method.Parameters = this.ParseParams();
 
 			if (isGeneric)
 			{
 			    ParseTypeParameterConstraints(method);
 			}
 
-			EatWhitespace();
+			EatWhiteSpace();
 			bool endOfStatement = NextChar == CSharpSymbol.EndOfStatement;
 			if (endOfStatement)
 			{
@@ -816,7 +904,7 @@ namespace NArrange.CSharp
 			}
 			else
 			{
-			    method.BodyText = this.ParseBlock(true);
+			    method.BodyText = this.ParseBlock(true, method);
 			}
 
 			return method;
@@ -834,7 +922,7 @@ namespace NArrange.CSharp
 
 			EatChar(CSharpSymbol.BeginBlock);
 
-			EatWhitespace();
+			EatWhiteSpace();
 
 			if (NextChar != CSharpSymbol.EndBlock)
 			{
@@ -850,6 +938,11 @@ namespace NArrange.CSharp
 
 			EatChar(CSharpSymbol.EndBlock);
 
+			//
+			// Namespaces allow a trailing semi-colon
+			//
+			EatTrailingEndOfStatement();
+
 			return namespaceElement;
 		}
 
@@ -857,11 +950,11 @@ namespace NArrange.CSharp
 		{
 			if (beginChar != EmptyChar && beginExpected)
 			{
-			    EatWhitespace();
+			    EatWhiteSpace();
 			    EatChar(beginChar);
 			}
 
-			StringBuilder blockText = new StringBuilder();
+			StringBuilder blockText = new StringBuilder(DefaultBlockLength);
 
 			int depth = 1;
 
@@ -877,7 +970,7 @@ namespace NArrange.CSharp
 			else
 			{
 			    bool inString = false;
-			    bool inCharLiteral = false;
+			    bool inCharLiteral = false; 
 			    bool inLineComment = false;
 			    bool inBlockComment = false;
 				bool inVerbatimString = false;
@@ -921,7 +1014,9 @@ namespace NArrange.CSharp
 			            {
 			                inLineComment = true;
 			            }
-						else if (inLineComment && CurrentChar == '\r' && nextChar == '\n')
+						else if (inLineComment && ((CurrentChar == Environment.NewLine[0] && 
+			                (Environment.NewLine.Length == 1 || nextChar == Environment.NewLine[1])) ||
+			                CurrentChar == '\n'))
 			            {
 			                inLineComment = false;
 			            }
@@ -978,7 +1073,7 @@ namespace NArrange.CSharp
 
 		private string ParseParams()
 		{
-			return ParseNestedText(CSharpSymbol.BeginParamList, CSharpSymbol.EndParamList, false, false);
+			return ParseNestedText(CSharpSymbol.BeginParameterList, CSharpSymbol.EndParameterList, false, false);
 		}
 
 		/// <summary>
@@ -989,7 +1084,7 @@ namespace NArrange.CSharp
 		/// <param name="access"></param>
 		/// <param name="memberAttributes"></param>
 		/// <returns></returns>
-		private PropertyElement ParseProperty(string memberName, string returnType, CodeAccess access, MemberModifier memberAttributes)
+		private PropertyElement ParseProperty(string memberName, string returnType, CodeAccess access, MemberModifiers memberAttributes)
 		{
 			PropertyElement property = new PropertyElement();
 
@@ -1004,10 +1099,10 @@ namespace NArrange.CSharp
 
 			property.Name = memberName;
 			property.Access = access;
-			property.Type = returnType;
+			property.ReturnType = returnType;
 			property.MemberModifiers = memberAttributes;
 
-			property.BodyText = this.ParseBlock(false);
+			property.BodyText = this.ParseBlock(false, property);
 
 			return property;
 		}
@@ -1022,10 +1117,7 @@ namespace NArrange.CSharp
 			RegionElement regionElement;
 			string regionName = line.Substring(CSharpKeyword.Region.Length).Trim();
 
-			if (string.IsNullOrEmpty(regionName))
-			{
-			    this.OnParseError("Expected region name");
-			}
+			// A region name is not required, so allow empty string
 
 			regionElement = new RegionElement();
 			regionElement.Name = regionName;
@@ -1037,30 +1129,41 @@ namespace NArrange.CSharp
 		/// </summary>
 		/// <returns></returns>
 		private TypeElement ParseType(
-			CodeAccess access, TypeModifier typeAttributes,
+			CodeAccess access, TypeModifiers typeAttributes,
 			TypeElementType elementType)
 		{
 			TypeElement typeElement = new TypeElement();
 
-			EatWhitespace();
+			EatWhiteSpace();
 			string className = CaptureWord();
 			typeElement.Name = className;
 
-			if (access == CodeAccess.NotSpecified && 
-			    ((typeAttributes & TypeModifier.Partial) != TypeModifier.Partial))
+			if (access == CodeAccess.None && 
+			    ((typeAttributes & TypeModifiers.Partial) != TypeModifiers.Partial))
 			{
 			    access = CodeAccess.Internal;
 			}
 
 			typeElement.Access = access;
-			typeElement.Type = elementType;
+			typeElement.TypeElementType = elementType;
 			typeElement.TypeModifiers = typeAttributes;
 
-			EatWhitespace();
+			EatWhiteSpace();
 
 			if (elementType == TypeElementType.Enum)
 			{
-			    string enumText = ParseBlock(true);
+			    EatWhiteSpace();
+
+			    if (NextChar == CSharpSymbol.TypeImplements)
+			    {
+			        TryReadChar();
+			        string interfaceName = CaptureTypeName();
+			        InterfaceReference interfaceReference = 
+			            new InterfaceReference(interfaceName, InterfaceReferenceType.None);
+			        typeElement.AddInterface(interfaceReference);
+			    }
+
+			    string enumText = ParseBlock(true, typeElement);
 
 			    // TODO: Parse enum values as fields
 			    typeElement.BodyText = enumText;
@@ -1078,7 +1181,7 @@ namespace NArrange.CSharp
 						typeElement.AddTypeParameter(typeParameter);
 			        }
 
-			        EatWhitespace();
+			        EatWhiteSpace();
 
 			        if (!TryReadChar(CSharpSymbol.EndGeneric))
 			        {
@@ -1086,7 +1189,7 @@ namespace NArrange.CSharp
 			        }
 			    }
 
-			    EatWhitespace();
+			    EatWhiteSpace();
 
 			    bool implements = TryReadChar(CSharpSymbol.TypeImplements);
 
@@ -1095,20 +1198,26 @@ namespace NArrange.CSharp
 			        string[] typeList = ParseAliasList();
 			        foreach (string type in typeList)
 			        {
-			            typeElement.AddInterface(type);
+			            InterfaceReference interfaceReference = 
+			                new InterfaceReference(type, InterfaceReferenceType.None);
+			            typeElement.AddInterface(interfaceReference);
 			        }
 			    }
 
-			    EatWhitespace();
+			    EatWhiteSpace();
 
 			    ParseTypeParameterConstraints(typeElement);
 
-				// TODO: Associate any additional comments in the type definition with the type.
-				ReadOnlyCollection<ICommentElement> additionalComments = ParseComments();
+				// Associate any additional comments in the type definition with the type.
+				ReadOnlyCollection<ICommentElement> extraComments = ParseComments();
+			    foreach (ICommentElement comment in extraComments)
+			    {
+			        typeElement.AddHeaderComment(comment);
+			    }
 
 			    EatChar(CSharpSymbol.BeginBlock);
 
-				EatWhitespace();
+				EatWhiteSpace();
 
 				if (NextChar != CSharpSymbol.EndBlock)
 				{
@@ -1125,74 +1234,90 @@ namespace NArrange.CSharp
 			    EatChar(CSharpSymbol.EndBlock);
 			}
 
+			//
+			// Types allow a trailing semi-colon
+			//
+			EatTrailingEndOfStatement();
+
 			return typeElement;
 		}
 
 		private void ParseTypeParameterConstraints(IGenericElement genericElement)
 		{
-			char nextChar = EmptyChar;
-			while (genericElement.TypeParameters.Count > 0 && 
-				nextChar != CSharpSymbol.BeginBlock &&
-				nextChar != CSharpSymbol.EndOfStatement)
+			EatWhiteSpace();
+
+			if (NextChar == CSharpKeyword.Where[0])
 			{
-			    // 
-			    // Parse type parameter constraints
-			    //
-			    string keyWord = CaptureWord();
-			    if (keyWord == CSharpKeyword.Where)
+			    List<ICommentElement> extraComments = new List<ICommentElement>();
+
+			    while (genericElement.TypeParameters.Count > 0 &&
+			        NextChar != CSharpSymbol.BeginBlock &&
+			        NextChar != CSharpSymbol.EndOfStatement)
 			    {
-			        EatWhitespace();
-					ParseComments();
 
-			        string parameterName = CaptureWord();
-
-			        TypeParameter parameter = null;
-			        foreach (TypeParameter typeParameter in genericElement.TypeParameters)
+			        // 
+			        // Parse type parameter constraints
+			        //
+			        string keyWord = CaptureWord();
+			        if (keyWord == CSharpKeyword.Where)
 			        {
-			            if (typeParameter.Name == parameterName)
+			            extraComments.AddRange(ParseComments());
+
+			            string parameterName = CaptureWord();
+
+			            TypeParameter parameter = null;
+			            foreach (TypeParameter typeParameter in genericElement.TypeParameters)
 			            {
-			                parameter = typeParameter;
-			                break;
+			                if (typeParameter.Name == parameterName)
+			                {
+			                    parameter = typeParameter;
+			                    break;
+			                }
+			            }
+
+			            if (parameter == null)
+			            {
+			                this.OnParseError("Unknown type parameter '" + parameterName + "'");
+			            }
+
+			            extraComments.AddRange(ParseComments());
+
+			            bool separatorFound = TryReadChar(CSharpSymbol.TypeImplements);
+			            if (!separatorFound)
+			            {
+			                this.OnParseError("Expected " + CSharpSymbol.TypeImplements);
+			            }
+
+			            string[] typeList = ParseAliasList();
+			            foreach (string type in typeList)
+			            {
+			                parameter.AddConstraint(type);
+			            }
+
+			            int newIndex = parameter.Constraints.IndexOf(
+			                CSharpKeyword.NewConstraint);
+			            if (newIndex >= 0 && newIndex + 1 != parameter.Constraints.Count)
+			            {
+			                this.OnParseError("The " + CSharpKeyword.NewConstraint +
+			                    " must be the last declared type parameter constraint");
 			            }
 			        }
-
-			        if (parameter == null)
+			        else
 			        {
-			            this.OnParseError("Unknown type parameter '" + parameterName + "'");
+			            this.OnParseError("Expected type parameter constraint");
 			        }
 
-			        EatWhitespace();
-					ParseComments();
-
-			        bool separatorFound = TryReadChar(CSharpSymbol.TypeImplements);
-			        if (!separatorFound)
-			        {
-			            this.OnParseError("Expected " + CSharpSymbol.TypeImplements);
-			        }
-
-			        string[] typeList = ParseAliasList();
-			        foreach (string type in typeList)
-			        {
-			            parameter.AddConstraint(type);
-			        }
-
-			        int newIndex = parameter.Constraints.IndexOf(
-			            CSharpKeyword.NewConstraint);
-			        if (newIndex >= 0 && newIndex + 1 != parameter.Constraints.Count)
-			        {
-			            this.OnParseError("The " + CSharpKeyword.NewConstraint +
-			                " must be the last declared type parameter constraint");
-			        }
-
-			        nextChar = NextChar;
+			        extraComments.AddRange(ParseComments());
 			    }
-			    else
+
+			    CommentedElement commentedElement = genericElement as CommentedElement;
+			    if (commentedElement != null)
 			    {
-			        this.OnParseError("Expected type parameter constraint");
+			        foreach (ICommentElement comment in extraComments)
+			        {
+			            commentedElement.AddHeaderComment(comment);
+			        }
 			    }
-
-			    EatWhitespace();
-				ParseComments();
 			}
 		}
 
@@ -1205,7 +1330,7 @@ namespace NArrange.CSharp
 			    this.OnParseError("Expected a namepace name");
 			}
 
-			EatWhitespace();
+			EatWhiteSpace();
 
 			bool endOfStatement = TryReadChar(CSharpSymbol.EndOfStatement);
 			if (endOfStatement)
@@ -1218,7 +1343,8 @@ namespace NArrange.CSharp
 			    if (!assign)
 			    {
 			        this.OnParseError(
-			            string.Format("Expected {0} or {1}.",
+			            string.Format(Thread.CurrentThread.CurrentCulture,
+			            "Expected {0} or {1}.",
 			            CSharpSymbol.Assignment, CSharpSymbol.EndOfStatement));
 			    }
 			    else
@@ -1269,17 +1395,23 @@ namespace NArrange.CSharp
 
 			if (codeElement == null)
 			{
-			    string[] words = processedElementText.TrimEnd(
+			    string tempElementText = processedElementText;
+			    bool isOperator = processedElementText.Contains(' ' + CSharpKeyword.Operator);
+			    if (!isOperator)
+			    {
+			        tempElementText = processedElementText.TrimEnd(CSharpSymbol.Assignment);
+			    }
+
+			    string[] words = tempElementText.TrimEnd(
 			        CSharpSymbol.EndOfStatement,
-			        CSharpSymbol.Assignment,
-			        CSharpSymbol.BeginParamList,
+			        CSharpSymbol.BeginParameterList,
 			        CSharpSymbol.BeginBlock).Split(
-			        WhitespaceChars,
+			        WhiteSpaceCharacters,
 			        StringSplitOptions.RemoveEmptyEntries);
 
 				char lastChar = processedElementText[processedElementText.Length - 1];
 				bool isStatement = lastChar == CSharpSymbol.EndOfStatement;
-				bool hasParams = lastChar == CSharpSymbol.BeginParamList;
+				bool hasParams = lastChar == CSharpSymbol.BeginParameterList;
 				bool isProperty = lastChar == CSharpSymbol.BeginBlock;
 
 			    if (words.Length > 0 &&
@@ -1292,13 +1424,28 @@ namespace NArrange.CSharp
 			        words[0][0] == CSharpSymbol.BeginFinalizer ||
 					isStatement || hasParams || isProperty))
 			    {
-					bool isAssignment = lastChar == CSharpSymbol.Assignment && 
+					bool isAssignment = !isOperator &&
+			            lastChar == CSharpSymbol.Assignment && 
 						NextChar != CSharpSymbol.Assignment &&
 						PreviousChar != CSharpSymbol.Assignment &&
 						PreviousChar != CSharpSymbol.Negate;
 
 			        StringCollection wordList = new StringCollection();
-			        wordList.AddRange(words);
+			        int operatorLength = CSharpKeyword.Operator.Length;
+			        foreach (string word in words)
+			        {
+			            if (word.Length > operatorLength &&
+			                word.StartsWith(CSharpKeyword.Operator, StringComparison.Ordinal) &&
+			                !char.IsLetterOrDigit(word[operatorLength]))
+			            {
+			                wordList.Add(CSharpKeyword.Operator);
+			                wordList.Add(word.Substring(operatorLength));
+			            }
+			            else
+			            {
+			                wordList.Add(word);
+			            }
+			        }
 
 					ElementType elementType;
 					TypeElementType? typeElementType = null;
@@ -1311,8 +1458,8 @@ namespace NArrange.CSharp
 						GetElementType(wordList, out elementType, out typeElementType);
 					}
 
-			        CodeAccess access = CodeAccess.NotSpecified;
-			        MemberModifier memberAttributes = MemberModifier.None;
+			        CodeAccess access = CodeAccess.None;
+			        MemberModifiers memberAttributes = MemberModifiers.None;
 
 			        if (isStatement || isAssignment || hasParams ||
 						elementType == ElementType.Property ||
@@ -1329,10 +1476,10 @@ namespace NArrange.CSharp
 			        //
 					if (elementType == ElementType.Type)
 			        {
-			            TypeModifier typeAttributes = (TypeModifier)memberAttributes;
+			            TypeModifiers typeAttributes = (TypeModifiers)memberAttributes;
 			            if (wordList.Contains(CSharpKeyword.Partial))
 			            {
-			                typeAttributes |= TypeModifier.Partial;
+			                typeAttributes |= TypeModifiers.Partial;
 			            }
 
 			            //
@@ -1352,7 +1499,7 @@ namespace NArrange.CSharp
 
 			            if (isStatement || isAssignment || hasParams || isProperty)
 			            {
-			                GetMemberNameAndType(words, out memberName, out returnType);
+			                GetMemberNameAndType(wordList, out memberName, out returnType);
 			            }
 
 			            if (hasParams)
@@ -1372,8 +1519,8 @@ namespace NArrange.CSharp
 			                    }
 			                    else
 			                    {
-			                        bool isOperator = wordList.Contains(CSharpKeyword.Operator);
-			                        OperatorType operatorType = OperatorType.NotSpecified;
+			                        //bool isOperator = wordList.Contains(CSharpKeyword.Operator);
+			                        OperatorType operatorType = OperatorType.None;
 			                        if (isOperator)
 			                        {
 			                            operatorType = GetOperatorType(wordList);
@@ -1382,17 +1529,17 @@ namespace NArrange.CSharp
 										// HACK: Need to somehow not remove '=' from 
 										// the word list for operators
 										//
-										if (elementBuilder[elementBuilder.Length - 2] == CSharpSymbol.Assignment)
-										{
-											if (memberName == CSharpKeyword.Operator)
-											{
-												memberName = "==";
-											}
-											else if (memberName == CSharpSymbol.Negate.ToString())
-											{
-												memberName = "!=";
-											}
-										}
+			                            //if (elementBuilder[elementBuilder.Length - 2] == CSharpSymbol.Assignment)
+			                            //{
+			                            //    if (memberName == CSharpKeyword.Operator)
+			                            //    {
+			                            //        memberName = "==";
+			                            //    }
+			                            //    else if (memberName == CSharpSymbol.Negate.ToString())
+			                            //    {
+			                            //        memberName = "!=";
+			                            //    }
+			                            //}
 			                        }
 
 			                        //
@@ -1409,14 +1556,8 @@ namespace NArrange.CSharp
 			                // Field
 			                //
 			                bool isVolatile = wordList.Contains(CSharpKeyword.Volatile);
-			                FieldElement field = CreateField(
-			                    memberName, returnType, access, memberAttributes, isVolatile);
-
-			                if (isAssignment)
-			                {
-			                    string initialValue = ParseInitialValue();
-			                    field.InitialValue = initialValue;
-			                }
+			                FieldElement field = ParseField(isAssignment, access, memberAttributes, 
+			                    memberName, returnType, isVolatile);
 
 			                codeElement = field;
 			            }
@@ -1429,18 +1570,18 @@ namespace NArrange.CSharp
 			}
 
 			if (codeElement is InterfaceMemberElement || codeElement is TypeElement ||
-			    codeElement is ConstructorElement)
+			    codeElement is ConstructorElement || codeElement is NamespaceElement)
 			{
 			    //
 			    // Eat closing comments
 			    //
 			    if (NextChar != EmptyChar)
 			    {
-			        EatWhitespace(Whitespace.SpaceAndTab);
+			        EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 			        if (NextChar == CSharpSymbol.BeginComment)
 			        {
 			            EatChar(CSharpSymbol.BeginComment);
-			            Reader.ReadLine();
+			            ReadLine();
 			        }
 			    }
 			}
@@ -1468,7 +1609,7 @@ namespace NArrange.CSharp
 			List<AttributeElement> attributes = new List<AttributeElement>();
 			Stack<RegionElement> regionStack = new Stack<RegionElement>();
 
-			StringBuilder elementBuilder = new StringBuilder();
+			StringBuilder elementBuilder = new StringBuilder(DefaultBlockLength);
 
 			char nextChar;
 
@@ -1491,6 +1632,10 @@ namespace NArrange.CSharp
 			                CommentElement commentBlock = ParseCommentBlock();
 			                comments.Add(commentBlock);
 			            }
+			            else
+			            {
+			                elementBuilder.Append(CurrentChar);
+			            }
 			            break;
 
 			        //
@@ -1502,12 +1647,13 @@ namespace NArrange.CSharp
 			            // member preprocessor information is preserved.
 			            //
 			            string line = ReadLine().Trim();
-			            if (line.StartsWith(CSharpKeyword.Region))
+			            if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
 			            {
 			                RegionElement regionElement = ParseRegion(line);
 			                regionStack.Push(regionElement);
 			            }
-			            else if (line.StartsWith(CSharpKeyword.EndRegion) && regionStack.Count > 0)
+			            else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal) 
+			                && regionStack.Count > 0)
 			            {
 			                RegionElement regionElement = regionStack.Pop();
 
@@ -1539,6 +1685,9 @@ namespace NArrange.CSharp
 			            //
 			            if (elementBuilder.Length > 0)
 			            {
+			                EatWhiteSpace();
+			                nextChar = NextChar;
+
 			                if (nextChar == CSharpSymbol.EndAttribute)
 			                {
 			                    // Array type
@@ -1546,10 +1695,19 @@ namespace NArrange.CSharp
 
 			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
 			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
+			                    elementBuilder.Append(' ');
 			                }
 			                else
 			                {
+			                    string nestedText = ParseNestedText(
+			                        CSharpSymbol.BeginAttribute,
+			                        CSharpSymbol.EndAttribute,
+			                        false,
+			                        true);
+
 			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
+			                    elementBuilder.Append(nestedText);
+			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
 			                }
 			            }
 			            else
@@ -1562,6 +1720,30 @@ namespace NArrange.CSharp
 			                attributes.Add(attributeElement);
 			                codeElements.Add(attributeElement);
 			                comments.Clear();
+			            }
+			            break;
+
+			        //
+			        // Trim generics
+			        //
+			        case CSharpSymbol.BeginGeneric:
+			            string elementText = elementBuilder.ToString();
+			            if (elementBuilder.Length > 0 &&
+			                !(elementText.Trim().EndsWith(CSharpKeyword.Operator, StringComparison.Ordinal)))
+			            {
+			                string nestedText = ParseNestedText(
+			                    CSharpSymbol.BeginGeneric,
+			                    CSharpSymbol.EndGeneric,
+			                    false,
+			                    true);
+
+			                elementBuilder.Append(CSharpSymbol.BeginGeneric);
+			                elementBuilder.Append(nestedText);
+			                elementBuilder.Append(CSharpSymbol.EndGeneric);
+			            }
+			            else
+			            {
+			                elementBuilder.Append(CurrentChar);
 			            }
 			            break;
 
@@ -1598,7 +1780,7 @@ namespace NArrange.CSharp
 			                    {
 			                        codeElements.Add(element);
 			                    }
-			                    elementBuilder = new StringBuilder();
+			                    elementBuilder = new StringBuilder(DefaultBlockLength);
 			                    comments.Clear();
 			                    if (element is IAttributedElement)
 			                    {
@@ -1615,8 +1797,7 @@ namespace NArrange.CSharp
 			            break;
 			    }
 
-			    int data = Reader.Peek();
-			    char nextCh = (char)data;
+			    char nextCh = NextChar;
 
 			    //
 			    // Elements should capture closing block characters
@@ -1641,6 +1822,13 @@ namespace NArrange.CSharp
 			if (regionStack.Count > 0)
 			{
 			    this.OnParseError("Expected #endregion");
+			}
+
+			if (elementBuilder.Length > 0)
+			{
+			    this.OnParseError(
+			        string.Format(Thread.CurrentThread.CurrentCulture,
+			        "Unhandled element text '{0}'", elementBuilder));
 			}
 
 			return codeElements;

@@ -36,6 +36,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VBWriteArrangedTests.cs" />
+    <Compile Include="VBWriterTests.cs" />
     <Compile Include="VBKeywordTests.cs" />
     <Compile Include="VBParserTests.cs" />
     <Compile Include="VBSymbolTests.cs" />
@@ -93,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestSourceFiles\InterfaceImplementation.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestSourceFiles\ModuleDefinition.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

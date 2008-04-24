@@ -86,9 +86,10 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			Assert.IsNotNull(defaultConfig.Handlers,
 			    "Handlers collection should not be null.");
-			Assert.AreEqual(1, defaultConfig.Handlers.Count,
+			Assert.AreEqual(2, defaultConfig.Handlers.Count,
 			    "Unexpected number of default handlers.");
 			Assert.IsTrue(defaultConfig.Handlers[0].AssemblyName.Contains("NArrange.CSharp"));
+			Assert.IsTrue(defaultConfig.Handlers[1].AssemblyName.Contains("NArrange.VisualBasic"));
 
 			Assert.IsNotNull(defaultConfig.Tabs,
 			    "Tab configuration should not be null.");
@@ -105,10 +106,10 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.AreEqual(ElementType.Using, usingElement.ElementType,
 			    "Unexpected element type.");
 			Assert.IsNotNull(usingElement.GroupBy, "Expected grouping to be specified.");
-			Assert.AreEqual(ElementAttribute.Name, usingElement.GroupBy.By, 
+			Assert.AreEqual(ElementAttributeType.Name, usingElement.GroupBy.By, 
 			    "Expected name grouping.");
 			Assert.IsNotNull(usingElement.SortBy, "Expected a sort to be specified.");
-			Assert.AreEqual(ElementAttribute.Name, usingElement.SortBy.By,
+			Assert.AreEqual(ElementAttributeType.Name, usingElement.SortBy.By,
 			    "Expected name sorting.");
 
 			//
@@ -119,7 +120,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.AreEqual(ElementType.Attribute, attributeElement.ElementType,
 			    "Unexpected element type.");
 			Assert.IsNotNull(attributeElement.SortBy, "Expected a sort to be specified.");
-			Assert.AreEqual(ElementAttribute.Name, attributeElement.SortBy.By,
+			Assert.AreEqual(ElementAttributeType.Name, attributeElement.SortBy.By,
 			    "Expected name sorting.");
 
 			//

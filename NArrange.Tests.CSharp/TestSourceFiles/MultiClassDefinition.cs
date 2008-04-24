@@ -82,4 +82,8 @@ namespace SampleNamespace
     public abstract class SampleClass8
     {
     }
+
+    internal sealed class SampleClass9<T1, T2>
+    {
+    }
 }

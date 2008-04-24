@@ -24,9 +24,9 @@ namespace NArrange.Tests.Core
 		[Test]
 		public void BackupAndRestoreTest()
 		{
-			string backupRoot = BackupUtilities.GetTempFilePath();
-			string sourceFolder = BackupUtilities.GetTempFilePath();
-			string destinationFolder = BackupUtilities.GetTempFilePath();
+			string backupRoot = BackupUtilities.CreateTempFilePath();
+			string sourceFolder = BackupUtilities.CreateTempFilePath();
+			string destinationFolder = BackupUtilities.CreateTempFilePath();
 
 			try
 			{
@@ -139,7 +139,7 @@ namespace NArrange.Tests.Core
 			const string TestFileName1 = @"c:\temp\This Is Some Folder\This Is Some File.cs";
 			const string TestFileName2 = @"c:\temp\this is some folder\this is some file.cs";
 			const string TestFileName3 = @"e:\temp\this is some folder\this is some file.cs";
-			const string TestKey = "__845974298";
+			const string TestKey = "_1132715649";
 
 			//
 			// The same key should be returned accross multiple runs.

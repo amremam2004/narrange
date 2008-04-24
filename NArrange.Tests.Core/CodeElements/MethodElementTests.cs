@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the MethodElement class.
 	/// </summary>
 	[TestFixture]
-	public class MethodElementTests : CommentedElementTests<MethodElement>
+	public class MethodElementTests : AttributedElementTests<MethodElement>
 	{
 		#region Protected Methods
 
@@ -27,10 +27,15 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeMethod";
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.Params = "T val";
-			prototype.Type = "bool";
+			prototype.Parameters = "T val";
+			prototype.ReturnType = "bool";
 			prototype.AddTypeParameter(
 			    new TypeParameter("T", "class", "new()"));
+			prototype.MemberModifiers = MemberModifiers.Abstract;
+			prototype.AddImplementation(
+			    new InterfaceReference("ISomeInterface.SomeMethod", InterfaceReferenceType.Interface));
+			prototype.AddImplementation(
+			    new InterfaceReference("IAnotherInterface.SomeMethod", InterfaceReferenceType.Interface));
 
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a method.");
@@ -38,7 +43,6 @@ namespace NArrange.Tests.Core.CodeElements
 
 			prototype.BodyText = "{return T != null;}";
 
-			prototype.MemberModifiers = MemberModifier.Abstract;
 
 			return prototype;
 		}
@@ -52,7 +56,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
-			Assert.AreEqual(original.Params, clone.Params,
+			Assert.AreEqual(original.Parameters, clone.Parameters,
 			    "Params was not copied correctly.");
 			Assert.AreEqual(original.Access, clone.Access,
 			    "Access was not copied correctly.");
@@ -72,12 +76,26 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.Type, clone.Type,
+			Assert.AreEqual(original.ReturnType, clone.ReturnType,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.IsOperator, clone.IsOperator,
 			    "IsOperator was not copied correctly.");
 			Assert.AreEqual(original.OperatorType, clone.OperatorType,
 			    "OperatorType was not copied correctly.");
+
+			Assert.AreEqual(original.Implements.Count, clone.Implements.Count,
+			    "Interface implementations were not copied correctly.");
+			for(int implementsIndex = 0; implementsIndex < original.Implements.Count;
+			    implementsIndex++)
+			{
+			    InterfaceReference originalImplements = original.Implements[implementsIndex];
+			    InterfaceReference clonedImplements = clone.Implements[implementsIndex];
+
+			    Assert.AreEqual(originalImplements.Name, clonedImplements.Name,
+			         "Interface implementations were not copied correctly.");
+			    Assert.AreEqual(originalImplements.ReferenceType, clonedImplements.ReferenceType,
+			         "Interface implementations were not copied correctly.");
+			}
 		}
 
 		#endregion Protected Methods
@@ -99,8 +117,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected element type.");
 			Assert.AreEqual(CodeAccess.Public, methodElement.Access,
 			    "Unexpected default value for Access.");
-			Assert.AreEqual(string.Empty, methodElement.Params,
-			    "Unexpected default value for Params.");
+			Assert.IsNull(methodElement.Parameters,
+			   "Unexpected default value for Params.");
 			Assert.IsNotNull(methodElement.Attributes,
 			    "Attributes collection should be instantiated.");
 			Assert.AreEqual(0, methodElement.Attributes.Count,

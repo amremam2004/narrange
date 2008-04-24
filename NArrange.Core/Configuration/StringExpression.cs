@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace NArrange.Core.Configuration
 {
@@ -85,7 +86,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("'{0}'", _text);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "'{0}'", _text);
 		}
 
 		#endregion Public Methods

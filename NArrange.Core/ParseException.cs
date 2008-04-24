@@ -35,13 +35,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace NArrange.Core
 {
 	/// <summary>
 	/// Exception thrown by parsers
 	/// </summary>
-	public class ParseException : Exception
+	public sealed class ParseException : Exception
 	{
 		#region Fields
 
@@ -98,7 +99,8 @@ namespace NArrange.Core
 		{
 			get
 			{
-			    return string.Format("{0}: Line {1}, Column {2}",
+			    return string.Format(Thread.CurrentThread.CurrentCulture,
+			        "{0}: Line {1}, Column {2}",
 			        base.Message, LineNumber, Column);
 			}
 		}

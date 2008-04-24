@@ -11,9 +11,19 @@ namespace NArrange.Core
 	/// <summary>
 	/// Base code parser implementation.
 	/// </summary>
-	public abstract class CodeParser : ICodeParser
+	public abstract class CodeParser : ICodeElementParser
 	{
 		#region Constants
+
+		/// <summary>
+		/// Default block length (for instantiating string builders)
+		/// </summary>
+		protected const int DefaultBlockLength = 256;
+
+		/// <summary>
+		/// Default word length (for instantiating string builders)
+		/// </summary>
+		protected const int DefaultWordLength = 16;
 
 		/// <summary>
 		/// Empty character
@@ -27,17 +37,17 @@ namespace NArrange.Core
 		/// <summary>
 		/// Whitepace characters
 		/// </summary>
-		protected static readonly char[] WhitespaceChars = { ' ', '\t', '\r', '\n' };
+		protected static readonly char[] WhiteSpaceCharacters = { ' ', '\t', '\r', '\n' };
 
 		#endregion Static Fields
 
 		#region Fields
 
 		private char[] _charBuffer = new char[1];
-		private char _currCh = '\0';
+		private char _currCh;
 		private int _lineNumber = 1;
 		private int _position = 1;
-		private char _prevCh = '\0';
+		private char _prevCh;
 		private TextReader _reader;
 
 		#endregion Fields
@@ -63,7 +73,7 @@ namespace NArrange.Core
 		{
 			get
 			{
-				int data = Reader.Peek();
+				int data = _reader.Peek();
 				if (data > 0)
 				{
 					char ch = (char)data;
@@ -84,17 +94,6 @@ namespace NArrange.Core
 			get
 			{
 				return _prevCh;
-			}
-		}
-
-		/// <summary>
-		/// Gets the text reader
-		/// </summary>
-		protected TextReader Reader
-		{
-			get
-			{
-				return _reader;
 			}
 		}
 
@@ -159,48 +158,48 @@ namespace NArrange.Core
 			}
 		}
 
-
 		/// <summary>
 		/// Parses elements from the current point in the stream
 		/// </summary>
 		/// <returns></returns>
 		protected abstract List<ICodeElement> DoParseElements();
+
 		/// <summary>
 		/// Eats the specified character
 		/// </summary>
-		/// <param name="ch">Character to eat</param>
-		protected void EatChar(char ch)
+		/// <param name="character">Character to eat</param>
+		protected void EatChar(char character)
 		{
-			EatWhitespace();
+			EatWhiteSpace();
 			TryReadChar();
-			if (CurrentChar != ch)
+			if (CurrentChar != character)
 			{
-				this.OnParseError("Expected " + ch);
+				this.OnParseError("Expected " + character);
 			}
 		}
 
 		/// <summary>
 		/// Reads until the next non-whitespace character is reached.
 		/// </summary>
-		protected void EatWhitespace()
+		protected void EatWhiteSpace()
 		{
-			EatWhitespace(Whitespace.All);
+			EatWhiteSpace(WhiteSpaceTypes.All);
 		}
 
 		/// <summary>
 		/// Reads until the next non-whitespace character is reached.
 		/// </summary>
-		protected void EatWhitespace(Whitespace whitespaceType)
+		protected void EatWhiteSpace(WhiteSpaceTypes whiteSpaceType)
 		{
-			int data = Reader.Peek();
+			int data = _reader.Peek();
 			while (data > 0)
 			{
 				char ch = (char)data;
 
-				if ((((whitespaceType & Whitespace.Space) == Whitespace.Space) && ch == ' ') ||
-					(((whitespaceType & Whitespace.Tab) == Whitespace.Tab) && ch == '\t') ||
-					(((whitespaceType & Whitespace.CarriageReturn) == Whitespace.CarriageReturn) && ch == '\r') ||
-					(((whitespaceType & Whitespace.LineFeed) == Whitespace.LineFeed) && ch == '\n'))
+				if ((((whiteSpaceType & WhiteSpaceTypes.Space) == WhiteSpaceTypes.Space) && ch == ' ') ||
+					(((whiteSpaceType & WhiteSpaceTypes.Tab) == WhiteSpaceTypes.Tab) && ch == '\t') ||
+					(((whiteSpaceType & WhiteSpaceTypes.CarriageReturn) == WhiteSpaceTypes.CarriageReturn) && ch == '\r') ||
+					(((whiteSpaceType & WhiteSpaceTypes.Linefeed) == WhiteSpaceTypes.Linefeed) && ch == '\n'))
 				{
 					TryReadChar();
 				}
@@ -209,19 +208,19 @@ namespace NArrange.Core
 					return;
 				}
 
-				data = Reader.Peek();
+				data = _reader.Peek();
 			}
 		}
 
 		/// <summary>
 		/// Determines whether or not the specified character is whitespace.
 		/// </summary>
-		/// <param name="ch"></param>
+		/// <param name="character"></param>
 		/// <returns></returns>
-		protected static bool IsWhitespace(char ch)
+		protected static bool IsWhiteSpace(char character)
 		{
-			return ch == ' ' || ch == '\t' ||
-				ch == '\n' || ch == '\r';
+			return character == ' ' || character == '\t' ||
+				character == '\n' || character == '\r';
 		}
 
 		/// <summary>
@@ -239,22 +238,23 @@ namespace NArrange.Core
 		/// <returns></returns>
 		protected string ReadLine()
 		{
-			string commentText = Reader.ReadLine();
+			string line = _reader.ReadLine();
 			_lineNumber++;
 
-			return commentText;
+			return line;
 		}
 
 		/// <summary>
-		/// Tries to read the specified character from the stream.
+		/// Tries to read the specified character from the stream and update
+		/// the CurrentChar property.
 		/// </summary>
-		/// <param name="ch"></param>
-		/// <returns></returns>
-		protected bool TryReadChar(char ch)
+		/// <param name="character">Character to read.</param>
+		/// <returns>True if the character was read, otherwise false.</returns>
+		protected bool TryReadChar(char character)
 		{
 			int data = _reader.Peek();
 			char nextCh = (char)data;
-			if (nextCh == ch)
+			if (nextCh == character)
 			{
 				TryReadChar();
 				return true;
@@ -274,7 +274,7 @@ namespace NArrange.Core
 				_prevCh = _currCh;
 				_currCh = _charBuffer[0];
 
-				if (_prevCh == '\r' && _currCh == '\n')
+				if (_currCh == '\n')
 				{
 					_lineNumber++;
 					_position = 1;
@@ -288,14 +288,6 @@ namespace NArrange.Core
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Throws an unexpected end of file error.
-		/// </summary>
-		protected void UnexpectedEndOfFile()
-		{
-			throw new ParseException("Unexpected end of file", _lineNumber, _position);
 		}
 
 		#endregion Protected Methods

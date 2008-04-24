@@ -35,7 +35,9 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 
 using NArrange.Core.CodeElements;
 
@@ -120,10 +122,18 @@ namespace NArrange.Core
 
 				if (!arranged)
 				{
-					throw new InvalidOperationException(
-						string.Format(
-						"Cannot arrange element of type {0} with name '{1}'.",
-						codeElement.GetType().Name, codeElement.Name));
+			        if (parentElement != null)
+			        {
+			            parentElement.AddChild(codeElement);
+			        }
+			        else
+			        {
+			            throw new InvalidOperationException(
+			                string.Format(
+			        		Thread.CurrentThread.CurrentCulture,
+			                "Cannot arrange element of type {0} with name '{1}'.",
+			                codeElement.GetType().Name, codeElement.Name));
+			        }
 				}
 			}
 		}

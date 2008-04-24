@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+
+using NArrange.Core;
+using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
+
+using NUnit.Framework;
+
+namespace NArrange.Tests.Core
+{
+	/// <summary>
+	/// Base tests for ICodeWriter impelementations
+	/// </summary>
+	public abstract class CodeWriterTests<TCodeWriter>
+		where TCodeWriter : ICodeElementWriter, new()
+	{
+		#region Public Methods
+
+		/// <summary>
+		/// Tests writing an element with an unknown tab style.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public virtual void TabStyleUnknownTest()
+		{
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "TestClass";
+			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Access = CodeAccess.Public;
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Name = "DoSomething";
+			methodElement.Access = CodeAccess.Public;
+			methodElement.ReturnType = "Object";
+
+			classElement.AddChild(methodElement);
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(classElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			TCodeWriter codeWriter = new TCodeWriter();
+			codeWriter.Configuration = configuration;
+
+			//
+			// Unknown tab style
+			//
+			configuration.Tabs.SpacesPerTab = 4;
+			configuration.Tabs.Style = (TabStyle)int.MinValue;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+		}
+
+		/// <summary>
+		/// Tests calling Write with a null element collection.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void WriteNullElementsTest()
+		{
+			TCodeWriter codeWriter = new TCodeWriter();
+			codeWriter.Write(null, new StringWriter());
+		}
+
+		/// <summary>
+		/// Tests calling Write with a null writer.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void WriteNullWriterTest()
+		{
+			TCodeWriter codeWriter = new TCodeWriter();
+			codeWriter.Write(new List<ICodeElement>().AsReadOnly(), null);
+		}
+
+		/// <summary>
+		/// Tests writing an ungrecognized Type element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void WriteUnrecognizedTypeTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			TypeElement classElement = new TypeElement();
+			classElement.Access = CodeAccess.Public;
+			classElement.TypeElementType = (TypeElementType)int.MinValue;
+			classElement.Name = "TestType";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(classElement);
+
+			TCodeWriter codeWriter = new TCodeWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+		}
+
+		#endregion Public Methods
+	}
+}

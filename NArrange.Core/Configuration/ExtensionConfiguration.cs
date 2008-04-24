@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -104,7 +105,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Extension: {0}", this._name);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Extension: {0}", this._name);
 		}
 
 		#endregion Public Methods

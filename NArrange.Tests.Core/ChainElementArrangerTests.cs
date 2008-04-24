@@ -71,7 +71,27 @@ namespace NArrange.Tests.Core
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(InvalidOperationException))]
-		public void UnsupportedArrangeTest()
+		public void UnsupportedArrangeNoParentTest()
+		{
+			ChainElementArranger chain = new ChainElementArranger();
+			FieldElement fieldElement = new FieldElement();
+
+			//
+			// Add an arranger that can't arrange the element
+			//
+			TestElementArranger disabledArranger = new TestElementArranger(false);
+			chain.AddArranger(disabledArranger);
+			Assert.IsFalse(chain.CanArrange(fieldElement),
+			    "Unexpected return value from CanArrange.");
+
+			chain.ArrangeElement(null, fieldElement);
+		}
+
+		/// <summary>
+		/// Tests the Arrange method with an element that cannot be handled.
+		/// </summary>
+		[Test]
+		public void UnsupportedArrangeWithParentTest()
 		{
 			GroupElement parentElement = new GroupElement();
 			ChainElementArranger chain = new ChainElementArranger();
@@ -86,6 +106,7 @@ namespace NArrange.Tests.Core
 			    "Unexpected return value from CanArrange.");
 
 			chain.ArrangeElement(parentElement, fieldElement);
+			Assert.IsTrue(parentElement.Children.Contains(fieldElement));
 		}
 
 		#endregion Public Methods

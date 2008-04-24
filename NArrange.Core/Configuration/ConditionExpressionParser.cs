@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 using NArrange.Core.CodeElements;
 
@@ -113,6 +114,7 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public IConditionExpression Parse(string expression)
 		{
+			const int DefaultExpressionLength = 128;
 			IConditionExpression conditionExpression = null;
 
 			if (expression == null)
@@ -128,7 +130,7 @@ namespace NArrange.Core.Configuration
 
 			StringReader reader = new StringReader(expression);
 
-			StringBuilder expressionBuilder = new StringBuilder();
+			StringBuilder expressionBuilder = new StringBuilder(DefaultExpressionLength);
 
 			bool inString = false;
 			bool inAttribute = false;
@@ -205,17 +207,18 @@ namespace NArrange.Core.Configuration
 			            if (inAttribute)
 			            {
 			                string attribute = expressionBuilder.ToString();
-			                expressionBuilder = new StringBuilder();
-			                ElementAttribute elementAttribute;
+			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
+			                ElementAttributeType elementAttribute;
 			                try
 			                {
-			                    elementAttribute = (ElementAttribute)
-			                        Enum.Parse(typeof(ElementAttribute), attribute);
+			                    elementAttribute = (ElementAttributeType)
+			                        Enum.Parse(typeof(ElementAttributeType), attribute);
 			                }
 			                catch (ArgumentException ex)
 			                {
 			                    throw new FormatException(
-			                        string.Format("Unknown attribute: {0}", ex.Message));
+			                        string.Format(Thread.CurrentThread.CurrentCulture,
+			                        "Unknown attribute: {0}", ex.Message));
 			                }
 			                AttributeExpression attributeExpresion = new AttributeExpression(
 			                    elementAttribute);
@@ -225,7 +228,7 @@ namespace NArrange.Core.Configuration
 			            break;
 
 			        case ExpressionStart:
-			            StringBuilder childExpressionBuilder = new StringBuilder();
+			            StringBuilder childExpressionBuilder = new StringBuilder(DefaultExpressionLength);
 			            data = reader.Read();
 			            int depth = 0;
 			            while (data > 0)
@@ -269,7 +272,7 @@ namespace NArrange.Core.Configuration
 			            if (inString)
 			            {
 			                string str = expressionBuilder.ToString();
-			                expressionBuilder = new StringBuilder();
+			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
 			                StringExpression stringExpression = new StringExpression(str);
 			                nodes.Add(stringExpression);
 			                inString = false;
@@ -287,9 +290,6 @@ namespace NArrange.Core.Configuration
 
 			    data = reader.Read();
 			}
-
-			List<ExpressionOperator> tempOperators = new List<ExpressionOperator>();
-			List<IConditionExpression> tempNodes = new List<IConditionExpression>();
 
 			Queue<ExpressionOperator> operatorPrecedence = new Queue<ExpressionOperator>();
 			operatorPrecedence.Enqueue(ExpressionOperator.Equal);
@@ -316,7 +316,8 @@ namespace NArrange.Core.Configuration
 			                !(left is LeafExpression && right is LeafExpression))
 			            {
 			                throw new FormatException(
-			                    string.Format("Invalid expression {0}", expression));
+			                    string.Format(Thread.CurrentThread.CurrentCulture,
+			                    "Invalid expression {0}", expression));
 			            }
 
 			            OperatorExpression operatorExpression = new OperatorExpression(
@@ -346,7 +347,8 @@ namespace NArrange.Core.Configuration
 			if (nodes.Count != 1)
 			{
 			    throw new FormatException(
-			        string.Format("Invalid expression {0}", expression));
+			        string.Format(Thread.CurrentThread.CurrentCulture,
+			        "Invalid expression {0}", expression));
 			}
 			else
 			{
@@ -354,7 +356,8 @@ namespace NArrange.Core.Configuration
 			    if (conditionExpression == null)
 			    {
 			        throw new FormatException(
-			        string.Format("Invalid expression {0}", expression));
+			        string.Format(Thread.CurrentThread.CurrentCulture,
+			        "Invalid expression {0}", expression));
 			    }
 			}
 

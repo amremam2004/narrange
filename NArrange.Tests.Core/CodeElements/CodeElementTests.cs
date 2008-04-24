@@ -22,6 +22,7 @@ namespace NArrange.Tests.Core.CodeElements
 		/// </summary>
 		/// <returns></returns>
 		protected abstract TCodeElement DoCreateClonePrototype();
+
 		/// <summary>
 		/// Performs the ToString test
 		/// </summary>
@@ -34,7 +35,6 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected string representation.");
 		}
 
-
 		/// <summary>
 		/// Verifies that a clone has the same state as the original
 		/// </summary>
@@ -45,6 +45,61 @@ namespace NArrange.Tests.Core.CodeElements
 		#endregion Protected Methods
 
 		#region Public Methods
+
+		/// <summary>
+		/// Tests the AddChild method.
+		/// </summary>
+		[Test]
+		public void AddChildTest()
+		{
+			TCodeElement codeElement = new TCodeElement();
+
+			GroupElement child1 = new GroupElement("Test");
+			GroupElement child2 = new GroupElement("Ignore");
+			codeElement.AddChild(child1);
+			codeElement.AddChild(child2);
+
+			Assert.AreEqual(2, codeElement.Children.Count,
+			    "Children were not added correctly.");
+
+			Assert.AreSame(codeElement, child1.Parent,
+			    "Attribute parent was not set correctly.");
+			Assert.AreSame(codeElement, child2.Parent,
+			    "Attribute parent was not set correctly.");
+
+			codeElement.AddChild(child2);
+
+			Assert.AreEqual(2, codeElement.Children.Count,
+			    "Attribute should not have been added again.");
+
+			Assert.IsTrue(codeElement.Children.Contains(child1));
+			Assert.IsTrue(codeElement.Children.Contains(child2));
+		}
+
+		/// <summary>
+		/// Tests the ClearChildren method.
+		/// </summary>
+		[Test]
+		public void ClearChildrenTest()
+		{
+			TCodeElement codeElement = new TCodeElement();
+
+			GroupElement child1 = new GroupElement("Test");
+			GroupElement child2 = new GroupElement("Ignore");
+			codeElement.AddChild(child1);
+			codeElement.AddChild(child2);
+
+			Assert.AreEqual(2, codeElement.Children.Count,
+			    "Children were not added correctly.");
+
+			codeElement.ClearChildren();
+
+			Assert.AreEqual(0, codeElement.Children.Count,
+			    "Children were not cleared correctly.");
+
+			Assert.IsNull(child1.Parent, "Attribute parent should have been cleared.");
+			Assert.IsNull(child2.Parent, "Attribute parent should have been cleared.");
+		}
 
 		/// <summary>
 		/// Tests the clone method
@@ -70,6 +125,39 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Extended properties were not cloned correctly.");
 
 			DoVerifyClone(original, clone);
+		}
+
+		/// <summary>
+		/// Tests the InsertChild method.
+		/// </summary>
+		[Test]
+		public void InsertChildTest()
+		{
+			TCodeElement codeElement = new TCodeElement();
+
+			GroupElement child1 = new GroupElement("Test");
+			GroupElement child2 = new GroupElement("Ignore");
+			codeElement.AddChild(child1);
+			codeElement.InsertChild(0, child2);
+
+			Assert.AreEqual(2, codeElement.Children.Count,
+			    "Children were not added correctly.");
+
+			Assert.AreEqual(0, codeElement.Children.IndexOf(child2));
+			Assert.AreEqual(1, codeElement.Children.IndexOf(child1));
+
+			Assert.AreSame(codeElement, child1.Parent,
+			    "Attribute parent was not set correctly.");
+			Assert.AreSame(codeElement, child2.Parent,
+			    "Attribute parent was not set correctly.");
+
+			codeElement.InsertChild(1, child2);
+
+			Assert.AreEqual(2, codeElement.Children.Count,
+			    "Attribute should not have been added again.");
+
+			Assert.AreEqual(0, codeElement.Children.IndexOf(child1));
+			Assert.AreEqual(1, codeElement.Children.IndexOf(child2));
 		}
 
 		/// <summary>
@@ -101,6 +189,48 @@ namespace NArrange.Tests.Core.CodeElements
 
 			parentElement.RemoveChild(childElement);
 			Assert.IsNull(childElement.Parent, "Parent should not be set.");
+		}
+
+		/// <summary>
+		/// Tests the RemoveChild method.
+		/// </summary>
+		[Test]
+		public void RemoveChildTest()
+		{
+			TCodeElement codeElement1 = new TCodeElement();
+
+			GroupElement child1 = new GroupElement("Test");
+			GroupElement child2 = new GroupElement("Ignore");
+			codeElement1.AddChild(child1);
+			codeElement1.AddChild(child2);
+
+			Assert.AreEqual(2, codeElement1.Children.Count,
+			    "Children were not added correctly.");
+
+			//
+			// Remove the attribute using the method
+			//
+			codeElement1.RemoveChild(child2);
+
+			Assert.AreEqual(1, codeElement1.Children.Count,
+			    "Attribute should have been removed.");
+
+			Assert.IsTrue(codeElement1.Children.Contains(child1));
+			Assert.IsFalse(codeElement1.Children.Contains(child2));
+
+			//
+			// Remove the attribute by assigning a different parent
+			//
+			TCodeElement codeElement2 = new TCodeElement();
+			child1.Parent = codeElement2;
+
+			Assert.AreEqual(0, codeElement1.Children.Count,
+			    "Attribute should have been removed from the original element.");
+			Assert.AreEqual(1, codeElement2.Children.Count,
+			    "Attribute should have been added to the new element.");
+
+			Assert.IsFalse(codeElement1.Children.Contains(child1));
+			Assert.IsTrue(codeElement2.Children.Contains(child1));
 		}
 
 		/// <summary>

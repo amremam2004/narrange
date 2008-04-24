@@ -39,7 +39,7 @@ using System.Text;
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Element used to logically group other elements
+	/// Element used to logically group other elements.
 	/// </summary>
 	public sealed class GroupElement : CodeElement
 	{
@@ -50,10 +50,30 @@ namespace NArrange.Core.CodeElements
 
 		#endregion Fields
 
+		#region Constructors
+
+		/// <summary>
+		/// Creates a group element.
+		/// </summary>
+		public GroupElement()
+		{
+		}
+
+		/// <summary>
+		/// Creates a group element with the specified name.
+		/// </summary>
+		/// <param name="name"></param>
+		public GroupElement(string name)
+		{
+			this.Name = name;
+		}
+
+		#endregion Constructors
+
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the custom separator string
+		/// Gets or sets the custom separator string.
 		/// </summary>
 		public string CustomSeparator
 		{
@@ -68,7 +88,7 @@ namespace NArrange.Core.CodeElements
 		}
 
 		/// <summary>
-		/// Gets the element type
+		/// Gets the element type.
 		/// </summary>
 		public override ElementType ElementType
 		{
@@ -98,7 +118,7 @@ namespace NArrange.Core.CodeElements
 		#region Protected Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
 		protected override CodeElement DoClone()

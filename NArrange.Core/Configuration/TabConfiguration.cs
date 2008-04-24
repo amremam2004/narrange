@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -124,7 +125,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Tabs: {0}, {1}", this.Style, this.SpacesPerTab);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Tabs: {0}, {1}", this.Style, this.SpacesPerTab);
 		}
 
 		#endregion Public Methods

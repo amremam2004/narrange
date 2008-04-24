@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the EventElement class.
 	/// </summary>
 	[TestFixture]
-	public class EventElementTests : CommentedElementTests<EventElement>
+	public class EventElementTests : AttributedElementTests<EventElement>
 	{
 		#region Protected Methods
 
@@ -27,15 +27,16 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeEvent";
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.Type = "EventHandler";
+			prototype.ReturnType = "EventHandler";
 
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is an event.");
 			prototype.AddHeaderCommentLine("/// </summary>");
 
+			prototype.Parameters = "ByVal ars As EventArgs";
 			prototype.BodyText = "add{}remove{}";
 
-			prototype.MemberModifiers = MemberModifier.Abstract;
+			prototype.MemberModifiers = MemberModifiers.Abstract;
 
 			return prototype;
 		}
@@ -65,8 +66,10 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.Type, clone.Type,
+			Assert.AreEqual(original.ReturnType, clone.ReturnType,
 			    "Type was not copied correctly.");
+			Assert.AreEqual(original.Parameters, clone.Parameters,
+			    "Parameters was not copied correctly.");
 		}
 
 		#endregion Protected Methods
@@ -88,6 +91,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected element type.");
 			Assert.AreEqual(CodeAccess.Public, eventElement.Access,
 			    "Unexpected default value for Access.");
+			Assert.IsNull(eventElement.Parameters,
+			   "Unexpected default value for Params.");
 			Assert.IsNotNull(eventElement.Attributes,
 			    "Attributes collection should be instantiated.");
 			Assert.AreEqual(0, eventElement.Attributes.Count,

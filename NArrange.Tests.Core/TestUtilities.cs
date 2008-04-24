@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -24,6 +25,27 @@ namespace NArrange.Tests.Core
 			{
 			    Assert.IsTrue(fs.Length > 0, "File {0} should not be empty.", fileName);
 			}
+		}
+
+		/// <summary>
+		/// Retrieves a compiler error from a compiler result
+		/// </summary>
+		/// <param name="results"></param>
+		/// <returns></returns>
+		public static CompilerError GetCompilerError(CompilerResults results)
+		{
+			CompilerError error = null;
+
+			foreach (CompilerError compilerError in results.Errors)
+			{
+			    if (!compilerError.IsWarning)
+			    {
+			        error = compilerError;
+			        break;
+			    }
+			}
+
+			return error;
 		}
 
 		#endregion Public Methods

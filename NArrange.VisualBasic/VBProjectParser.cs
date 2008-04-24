@@ -34,27 +34,19 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
+using System.Xml;
 
-using NArrange.Core.CodeElements;
+using NArrange.Core;
 
-namespace NArrange.Core.CodeElements
+namespace NArrange.VisualBasic
 {
 	/// <summary>
-	/// Interface for attribute code elements.
+	/// Parses a Visual Basic project for individual source file names.
 	/// </summary>
-	public interface IAttribute : ICodeElement
+	public sealed class VBProjectParser : MSBuildProjectParser
 	{
-		#region Properties
-
-		/// <summary>
-		/// Gets the body text.
-		/// </summary>
-		string BodyText
-		{
-			get;
-		}
-
-		#endregion Properties
-	}
 }
+	}

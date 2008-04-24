@@ -48,9 +48,9 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private object _interacesLock = new object();
-		private List<string> _interfaces;
+		private List<InterfaceReference> _interfaces;
 		private TypeElementType _type;
-		private TypeModifier _typeModifiers;
+		private TypeModifiers _typeModifiers;
 		private List<TypeParameter> _typeParameters;
 		private object _typeParametersLock = new object();
 
@@ -61,7 +61,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// List of implemented interface names
 		/// </summary>
-		private List<string> BaseInterfaces
+		private List<InterfaceReference> BaseInterfaces
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace NArrange.Core.CodeElements
 			        {
 			            if (_interfaces == null)
 			            {
-			                _interfaces = new List<string>();
+			                _interfaces = new List<InterfaceReference>();
 			            }
 			        }
 			    }
@@ -121,7 +121,7 @@ namespace NArrange.Core.CodeElements
 		/// Gets the collection of implemented interface names for the type
 		/// definition.
 		/// </summary>
-		public ReadOnlyCollection<string> Interfaces
+		public ReadOnlyCollection<InterfaceReference> Interfaces
 		{
 			get
 			{
@@ -136,7 +136,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_typeModifiers & TypeModifier.Abstract) == TypeModifier.Abstract;
+			    return (_typeModifiers & TypeModifiers.Abstract) == TypeModifiers.Abstract;
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_typeModifiers & TypeModifier.Partial) == TypeModifier.Partial;
+			    return (_typeModifiers & TypeModifiers.Partial) == TypeModifiers.Partial;
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_typeModifiers & TypeModifier.Sealed) == TypeModifier.Sealed;
+			    return (_typeModifiers & TypeModifiers.Sealed) == TypeModifiers.Sealed;
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_typeModifiers & TypeModifier.Static) == TypeModifier.Static;
+			    return (_typeModifiers & TypeModifiers.Static) == TypeModifiers.Static;
 			}
 		}
 
@@ -180,14 +180,14 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_typeModifiers & TypeModifier.Unsafe) == TypeModifier.Unsafe;
+			    return (_typeModifiers & TypeModifiers.Unsafe) == TypeModifiers.Unsafe;
 			}
 		}
 
 		/// <summary>
 		/// Gets or sets the type of the type element
 		/// </summary>
-		public TypeElementType Type
+		public TypeElementType TypeElementType
 		{
 			get
 			{
@@ -202,7 +202,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the type attributes
 		/// </summary>
-		public TypeModifier TypeModifiers
+		public TypeModifiers TypeModifiers
 		{
 			get
 			{
@@ -242,9 +242,10 @@ namespace NArrange.Core.CodeElements
 			//
 			clone._typeModifiers = _typeModifiers;
 			clone._type = _type;
-			foreach (string interfaceName in Interfaces)
+			foreach (InterfaceReference interfaceReference in Interfaces)
 			{
-			    clone.AddInterface(interfaceName);
+			    InterfaceReference referenceClone = interfaceReference.Clone() as InterfaceReference;
+			    clone.AddInterface(referenceClone);
 			}
 			foreach (TypeParameter typeParam in TypeParameters)
 			{
@@ -272,10 +273,13 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Adds an interface implementation to the type definition.
 		/// </summary>
-		/// <param name="interfaceName"></param>
-		public void AddInterface(string interfaceName)
+		/// <param name="interfaceReference"></param>
+		public void AddInterface(InterfaceReference interfaceReference)
 		{
-			BaseInterfaces.Add(interfaceName);
+			if (interfaceReference != null)
+			{
+			    BaseInterfaces.Add(interfaceReference);
+			}
 		}
 
 		/// <summary>

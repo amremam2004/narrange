@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -60,9 +61,31 @@ namespace NArrange.Core
 		/// </summary>
 		public static readonly string BackupRoot = Path.Combine(
 			Path.GetTempPath(), "NArrange");
-		private static readonly int MaxIntLength = int.MinValue.ToString().Length;
+		private static readonly int MaxIntLength = 
+            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
 
 		#endregion Static Fields
+
+		#region Private Methods
+
+		/// <summary>
+		/// Attempts to delete a directory, catching any exceptions.
+		/// </summary>
+		/// <param name="workingDirectory"></param>
+		private static bool TryDeleteDirectory(string workingDirectory)
+		{
+			try
+			{
+			    Directory.Delete(workingDirectory, true);
+			    return true;
+			}
+			catch
+			{
+			    return false;
+			}
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 
@@ -85,16 +108,13 @@ namespace NArrange.Core
 				throw new ArgumentException("Invalid backup key", "key");
 			}
 
-
-
-
 			if(!Directory.Exists(backupRoot))
 			{
 				Directory.CreateDirectory(backupRoot);
 			}
 
 			DateTime backupDate = DateTime.Now;
-			string dateDirectory = backupDate.ToFileTime().ToString();
+			string dateDirectory = backupDate.ToFileTime().ToString(CultureInfo.InvariantCulture);
 			string keyRoot = Path.Combine(backupRoot, key);
 			if (!Directory.Exists(keyRoot))
 			{
@@ -108,7 +128,7 @@ namespace NArrange.Core
 			//
 			// Copy all files to a temporary working directory
 			//
-			string workingDirectory = GetTempFilePath();
+			string workingDirectory = CreateTempFilePath();
 			Directory.CreateDirectory(workingDirectory);
 			try
 			{
@@ -137,13 +157,7 @@ namespace NArrange.Core
 			}
 			finally
 			{
-				try
-				{
-					Directory.Delete(workingDirectory, true);
-				}
-				catch
-				{
-				}
+			    TryDeleteDirectory(workingDirectory);
 			}
 
 			return backupLocation;
@@ -165,14 +179,16 @@ namespace NArrange.Core
 			    throw new ArgumentException("Invalid fileName", "fileName");
 			}
 
-			return fileName.ToLower().GetHashCode().ToString().Replace('-', '_').PadLeft(MaxIntLength, '_');
+			return fileName.ToUpperInvariant().GetHashCode()
+				.ToString(CultureInfo.InvariantCulture)
+				.Replace('-', '_').PadLeft(MaxIntLength, '_');
 		}
 
 		/// <summary>
 		/// Gets a new temporary file path for use as a directory or filename
 		/// </summary>
 		/// <returns></returns>
-		public static string GetTempFilePath()
+		public static string CreateTempFilePath()
 		{
 			string fileName = Path.Combine(Path.GetTempPath(),
 				Guid.NewGuid().ToString().Replace('-', '_'));
@@ -221,7 +237,7 @@ namespace NArrange.Core
 				//
 				// Extract all files to a temporary working directory
 				//
-				string workingDirectory = GetTempFilePath();
+				string workingDirectory = CreateTempFilePath();
 				Directory.CreateDirectory(workingDirectory);
 				try
 				{
@@ -244,8 +260,6 @@ namespace NArrange.Core
 										Path.Combine(workingDirectory, fileBackupName);
 
 								string restorePath = line.Substring(separatorIndex + 1);
-
-								FileAttributes origAttributes = File.GetAttributes(fileBackupPath);
 
 								string backupText = File.ReadAllText(fileBackupPath);
 								string restoreText = null;
@@ -273,13 +287,7 @@ namespace NArrange.Core
 				}
 				finally
 				{
-					try
-					{
-						Directory.Delete(workingDirectory, true);
-					}
-					catch
-					{
-					}
+			        TryDeleteDirectory(workingDirectory);
 				}
 			}
 

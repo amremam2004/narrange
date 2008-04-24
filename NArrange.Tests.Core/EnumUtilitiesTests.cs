@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using NUnit.Framework;
+
+using NArrange.Core;
+
+namespace NArrange.Tests.Core
+{
+	/// <summary>
+	/// Test fixture for the EnumUtilities class.
+	/// </summary>
+	[TestFixture]
+	public class EnumUtilitiesTests
+	{
+		#region Public Methods
+
+		/// <summary>
+		/// Tests the ToString method.
+		/// </summary>
+		[Test]
+		public void ToStringTest()
+		{
+			string str;
+
+			str = DayOfWeek.Friday.ToString();
+			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
+			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
+
+			str = DayOfWeek.Sunday.ToString();
+			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
+			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
+
+			MemberModifiers modifiers;
+			modifiers = MemberModifiers.Override | MemberModifiers.ReadOnly;
+			str = modifiers.ToString();
+			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+
+			modifiers = MemberModifiers.Override | MemberModifiers.Partial;
+			str = modifiers.ToString();
+			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+		}
+
+		#endregion Public Methods
+	}
+}

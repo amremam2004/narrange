@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the FieldElement class.
 	/// </summary>
 	[TestFixture]
-	public class FieldElementTests : CommentedElementTests<FieldElement>
+	public class FieldElementTests : AttributedElementTests<FieldElement>
 	{
 		#region Protected Methods
 
@@ -27,7 +27,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeField";
 			prototype.Access = CodeAccess.Private;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.Type = "int";
+			prototype.ReturnType = "int";
 			prototype.IsVolatile = true;
 
 			prototype.AddHeaderCommentLine("/// <summary>");
@@ -36,7 +36,7 @@ namespace NArrange.Tests.Core.CodeElements
 
 			prototype.InitialValue = "4";
 
-			prototype.MemberModifiers = MemberModifier.Abstract; 
+			prototype.MemberModifiers = MemberModifiers.Abstract; 
 
 			return prototype;
 		}
@@ -66,7 +66,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.Type, clone.Type,
+			Assert.AreEqual(original.ReturnType, clone.ReturnType,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.InitialValue, clone.InitialValue,
 			    "InitialValue was not copied correctly.");

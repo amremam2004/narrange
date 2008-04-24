@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
@@ -166,7 +167,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("Handler: {0}", this._assembly);
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Handler: {0}", this._assembly);
 		}
 
 		#endregion Public Methods

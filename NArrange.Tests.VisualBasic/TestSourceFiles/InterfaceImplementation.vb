@@ -10,8 +10,7 @@ Namespace SampleNamespace
         Implements IList(Of T)
         Implements IList
         Implements ICollection
-        Implements IBindingList
-        Implements ITypedList
+        Implements IBindingList, ITypedList
 
         Public Sub Add(ByVal item As T) Implements ICollection(Of T).Add
         End Sub
@@ -43,7 +42,7 @@ Namespace SampleNamespace
             End Get
         End Property
 
-        Public Function Remove(ByVal item As T) As Boolean _
+        Public Overloads Function Remove(ByVal item As T) As Boolean _
         Implements System.Collections.Generic.ICollection(Of T).Remove
         End Function
 
@@ -110,7 +109,7 @@ Namespace SampleNamespace
             End Set
         End Property
 
-        Public Sub RemoveObject(ByVal value As Object) Implements IList.Remove
+        Public Overloads Sub Remove(ByVal value As Object) Implements IList.Remove
         End Sub
 
         Public Sub AddIndex(ByVal [property] As PropertyDescriptor) _

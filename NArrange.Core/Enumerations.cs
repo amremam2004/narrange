@@ -33,6 +33,7 @@
  *      - Initial creation
  *      - Added a TabStyle enumeration
  *		- Added an enumeration for whitespace characters
+ *      - Added an enumeration for interface implementation types
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -47,9 +48,9 @@ namespace NArrange.Core
 	public enum CodeAccess
 	{
 		/// <summary>
-		/// Not specified
+		/// None/Not specified
 		/// </summary>
-		NotSpecified = 0,
+		None = 0,
 
 		/// <summary>
 		/// Private
@@ -96,7 +97,7 @@ namespace NArrange.Core
 	/// <summary>
 	/// Element attribute
 	/// </summary>
-	public enum ElementAttribute
+	public enum ElementAttributeType
 	{
 		/// <summary>
 		/// None
@@ -253,6 +254,27 @@ namespace NArrange.Core
 	}
 
 	/// <summary>
+	/// Enumeration for interface impelementation types.
+	/// </summary>
+	public enum InterfaceReferenceType
+	{
+		/// <summary>
+		/// None/Unknown
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Base class implementation
+		/// </summary>
+		Class,
+
+		/// <summary>
+		/// Interface implementation
+		/// </summary>
+		Interface
+	}
+
+	/// <summary>
 	/// Log level
 	/// </summary>
 	public enum LogLevel
@@ -287,7 +309,7 @@ namespace NArrange.Core
 	/// Member attributes
 	/// </summary>
 	[Flags]
-	public enum MemberModifier
+	public enum MemberModifiers
 	{
 		/// <summary>
 		/// None
@@ -342,19 +364,23 @@ namespace NArrange.Core
 		/// <summary>
 		/// External
 		/// </summary>
-		External = 512
+		External = 512,
+
+		/// <summary>
+		/// Partial
+		/// </summary>
+		Partial = 1024
 	}
 
 	/// <summary>
 	/// Operator type
 	/// </summary>
-	[Flags]
 	public enum OperatorType
 	{
 		/// <summary>
-		/// Not specified
+		/// None/Not specified
 		/// </summary>
-		NotSpecified = 0,
+		None = 0,
 
 		/// <summary>
 		/// Explicit
@@ -406,7 +432,12 @@ namespace NArrange.Core
 		/// <summary>
 		/// Enumeration
 		/// </summary>
-		Enum
+		Enum,
+
+		/// <summary>
+		/// Module
+		/// </summary>
+		Module
 	}
 
 	/// <summary>
@@ -414,32 +445,32 @@ namespace NArrange.Core
 	/// </summary>
 	/// <remarks>This is a subset of member attributes that apply to types.</remarks>
 	[Flags]
-	public enum TypeModifier
+	public enum TypeModifiers
 	{
 		/// <summary>
 		/// None
 		/// </summary>
-		None = MemberModifier.None,
+		None = MemberModifiers.None,
 
 		/// <summary>
 		/// Abstract
 		/// </summary>
-		Abstract = MemberModifier.Abstract,
+		Abstract = MemberModifiers.Abstract,
 
 		/// <summary>
 		/// Sealed
 		/// </summary>
-		Sealed = MemberModifier.Sealed,
+		Sealed = MemberModifiers.Sealed,
 
 		/// <summary>
 		/// Static
 		/// </summary>
-		Static = MemberModifier.Static,
+		Static = MemberModifiers.Static,
 
 		/// <summary>
 		/// Unsafe
 		/// </summary>
-		Unsafe = MemberModifier.Unsafe,
+		Unsafe = MemberModifiers.Unsafe,
 
 		/// <summary>
 		/// Partial
@@ -451,7 +482,7 @@ namespace NArrange.Core
 	/// Whitespace character types
 	/// </summary>
 	[Flags]
-	public enum Whitespace
+	public enum WhiteSpaceTypes
 	{
 		/// <summary>
 		/// None
@@ -476,7 +507,7 @@ namespace NArrange.Core
 		/// <summary>
 		/// Line feeds
 		/// </summary>
-		LineFeed = 8,
+		Linefeed = 8,
 
 		/// <summary>
 		/// Spaces and tabs
@@ -486,11 +517,11 @@ namespace NArrange.Core
 		/// <summary>
 		/// Carriage returns and line feeds
 		/// </summary>
-		CarriageReturnAndLineFeed = CarriageReturn | LineFeed,
+		CarriageReturnAndLinefeed = CarriageReturn | Linefeed,
 
 		/// <summary>
 		/// All whitespace characters
 		/// </summary>
-		All = SpaceAndTab | CarriageReturnAndLineFeed
+		All = SpaceAndTab | CarriageReturnAndLinefeed
 	}
 }

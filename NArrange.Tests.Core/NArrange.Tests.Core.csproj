@@ -42,6 +42,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BackupUtilitiesTests.cs" />
+    <Compile Include="CodeElements\AttributedElementTests.cs" />
     <Compile Include="CodeElements\CodeElementTests.cs" />
     <Compile Include="CodeElements\CommentedElementTests.cs" />
     <Compile Include="CodeElements\CommentLineElementTests.cs" />
@@ -68,6 +69,9 @@
     <Compile Include="Configuration\SortByTests.cs" />
     <Compile Include="Configuration\FilterByTests.cs" />
     <Compile Include="Configuration\GroupByTests.cs" />
+    <Compile Include="EnumUtilitiesTests.cs" />
+    <Compile Include="ISourceCodeTestFile.cs" />
+    <Compile Include="ProjectManagerTests.cs" />
     <Compile Include="SolutionParserTests.cs" />
     <Compile Include="GroupedInserterTests.cs" />
     <Compile Include="CodeElements\ElementUtilitiesTests.cs" />
@@ -80,6 +84,8 @@
     <Compile Include="SortedInserterTests.cs" />
     <Compile Include="TestLogger.cs" />
     <Compile Include="TestUtilities.cs" />
+    <Compile Include="CodeWriterTests.cs" />
+    <Compile Include="WriteArrangedTests.cs" />
     <Compile Include="ZipUtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>

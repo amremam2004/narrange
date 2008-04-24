@@ -44,32 +44,19 @@ using NArrange.Core.Configuration;
 namespace NArrange.Core
 {
 	/// <summary>
-	/// Interface for writing NArrange code elements to 
+	/// Interface for parsing NArrange code elements from 
 	/// a source file stream.
 	/// </summary>
-	public interface ICodeWriter
+	public interface ICodeElementParser
 	{
-		#region Properties
-
-		/// <summary>
-		/// Gets or sets the code configuration
-		/// </summary>
-		CodeConfiguration Configuration
-		{
-			get;
-			set;
-		}
-
-		#endregion Properties
-
 		#region Methods
 
 		/// <summary>
-		/// Writes code elements to a stream.
+		/// Parses code elements from a stream.
 		/// </summary>
-		/// <param name="codeElements">Read only collection of elements</param>
-		/// <param name="writer">Code file writer</param>
-		void Write(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);
+		/// <param name="reader">Code file reader</param>
+		/// <returns>A read-only collection of code elements.</returns>
+		ReadOnlyCollection<ICodeElement> Parse(TextReader reader);
 
 		#endregion Methods
 	}

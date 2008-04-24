@@ -34,6 +34,7 @@
  *      - Moved logging into a ConsoleLogger class
  *		- Added a backup and restore feature
  *      - Fixed parsing of config file name
+ *      - Refactored out command argument parsing
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -63,99 +64,12 @@ namespace NArrange.ConsoleApplication
 		#region Private Methods
 
 		/// <summary>
-		/// Parses the command line arguments
-		/// </summary>
-		/// <param name="args"></param>
-		/// <param name="configFile"></param>
-		/// <param name="inputFile"></param>
-		/// <param name="outputFile"></param>
-		/// <param name="backup"></param>
-		/// <param name="restore"></param>
-		/// <param name="trace"></param>
-		private static void ParseArguments(string[] args,
-			ref string configFile, ref string inputFile, ref string outputFile,
-			ref bool backup, ref bool restore, ref bool trace)
-		{
-			List<string> argList = new List<string>(args);
-			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
-			{
-			    string arg = argList[argIndex];
-
-			    if (arg.StartsWith("/"))
-			    {
-			        string argLower = arg.ToLower();
-			        if (arg.Length >= 2)
-			        {
-			            char flag = argLower[1];
-
-			            switch (flag)
-			            {
-			                case 'c':
-			                    if (arg[2] != ':')
-			                    {
-			                        WriteUsage();
-			                        Environment.Exit(Fail);
-			                    }
-			                    configFile = arg.Substring(3);
-			                    break;
-
-							case 'b':
-								backup = true;
-								break;
-
-							case 'r':
-								restore = true;
-								break;
-
-							case 't':
-								trace = true;
-								break;
-
-			                default:
-			                    WriteUsage();
-			                    Environment.Exit(Fail);
-			                    break;
-			            }
-
-						argList.RemoveAt(argIndex);
-						argIndex--;
-			        }
-			        else
-			        {
-			            WriteUsage();
-			            Environment.Exit(Fail);
-			        }
-			    }
-			    else
-			    {
-			        if (inputFile == null)
-			        {
-			            inputFile = arg;
-			        }
-			        else if (outputFile == null)
-			        {
-			            outputFile = arg;
-			        }
-
-			        argList.RemoveAt(argIndex);
-			        argIndex--;
-			    }
-			}
-
-			if (argList.Count > 0)
-			{
-			    WriteUsage();
-			    Environment.Exit(Fail);
-			}
-		}
-
-		/// <summary>
 		/// Writes usage information to the console
 		/// </summary>
 		private static void WriteUsage()
 		{
 			Console.WriteLine("Usage:");
-			Console.WriteLine("narrange.console <input> [output] [/c:configuration]");
+			Console.WriteLine("narrange-console <input> [output] [/c:configuration]");
 			Console.WriteLine("\t[/b] [/r] [/t]");
 			Console.WriteLine();
 			Console.WriteLine();
@@ -171,10 +85,14 @@ namespace NArrange.ConsoleApplication
 			Console.WriteLine("\tconfiguration will be used.");
 			Console.WriteLine();
 			Console.WriteLine("/b\tBackup - Specifies to create a backup before arranging");
-			Console.WriteLine("\t[Optional] If not specified, no backup will be created ");
+			Console.WriteLine("\t[Optional] If not specified, no backup will be created.");
+			Console.WriteLine("\tOnly valid if an output file is not specified ");
+			Console.WriteLine("\tand cannot be used in conjunction with Restore.");
 			Console.WriteLine();
 			Console.WriteLine("/r\tRestore - Restores arranged files from the latest backup");
-			Console.WriteLine("\t[Optional] When this flag is provided, no files will be arranged ");
+			Console.WriteLine("\t[Optional] When this flag is provided, no files will be arranged.");
+			Console.WriteLine("\tOnly valid if an output file is not specified ");
+			Console.WriteLine("\tand cannot be used in conjunction with Backup.");
 			Console.WriteLine();
 			Console.WriteLine("/t\tTrace - Detailed logging");
 			Console.WriteLine();
@@ -195,7 +113,7 @@ namespace NArrange.ConsoleApplication
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			Version version = assembly.GetName().Version;
 			Console.WriteLine();
-			logger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
+			ConsoleLogger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
 			Console.WriteLine(new string('_', 60));
 
 			object[] copyrightAttributes = assembly.GetCustomAttributes(
@@ -204,8 +122,11 @@ namespace NArrange.ConsoleApplication
 			{
 			    AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
 			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
+			    Console.WriteLine("All rights reserved.");
+			    Console.WriteLine();
+			    Console.WriteLine("Zip functionality courtesy of ic#code (Mike Krueger, John Reilly).");
+			    Console.WriteLine();
 			}
-			Console.WriteLine();
 
 			if (args.Length < 1 || args[0] == "?" || args[0] == "/?" || args[0] == "help")
 			{
@@ -213,50 +134,94 @@ namespace NArrange.ConsoleApplication
 			    Environment.Exit(Fail);
 			}
 
-			string configFile = null;
-			string inputFile = null;
-			string outputFile = null;
-			bool backup = false;
-			bool restore = false;
-			bool trace = false;
-
-			ParseArguments(args, ref configFile, ref inputFile,
-					ref outputFile, ref backup, ref restore, ref trace);
-
-			logger.Trace = trace;
-
-			if (restore)
+			CommandArguments commandArgs = null;
+			try
 			{
-				logger.LogMessage(LogLevel.Verbose, "Restoring {0}...", inputFile);
-				string key = BackupUtilities.CreateFileNameKey(inputFile);
-				bool success = BackupUtilities.RestoreFiles(BackupUtilities.BackupRoot, key);
-				if (success)
-				{
-					logger.LogMessage(LogLevel.Info, "Restored");
-				}
-				else
-				{
-					logger.LogMessage(LogLevel.Error, "Restore failed.");
-				}
+			    commandArgs = CommandArguments.Parse(args);
+			}
+			catch (ArgumentException)
+			{
+			    WriteUsage();
+			    Environment.Exit(Fail);
+			}
+
+			logger.Trace = commandArgs.Trace;
+			bool success = false;
+			try
+			{
+			    success = Run(logger, commandArgs);
+			}
+			catch (Exception ex)
+			{
+			    logger.LogMessage(LogLevel.Error, ex.ToString());
+			}
+
+			if (!success)
+			{
+			    Environment.Exit(Fail);
+			}
+		}
+
+		/// <summary>
+		/// Runs NArrange using the specified arguments
+		/// </summary>
+		/// <param name="logger">Logger</param>
+		/// <param name="commandArgs">Arguments</param>
+		public static bool Run(ILogger logger, CommandArguments commandArgs)
+		{
+			bool success = true;
+
+			if (logger == null)
+			{
+			    throw new ArgumentNullException("logger");
+			}
+			else if (commandArgs == null)
+			{
+			    throw new ArgumentNullException("commandArgs");
+			}
+
+			if (commandArgs.Restore)
+			{
+			    logger.LogMessage(LogLevel.Verbose, "Restoring {0}...", commandArgs.Input);
+			    string key = BackupUtilities.CreateFileNameKey(commandArgs.Input);
+			    try
+			    {
+			        success = BackupUtilities.RestoreFiles(BackupUtilities.BackupRoot, key);
+			    }
+			    catch (Exception ex)
+			    {
+			        logger.LogMessage(LogLevel.Warning, ex.Message);
+			        success = false;
+			    }
+
+			    if (success)
+			    {
+			        logger.LogMessage(LogLevel.Info, "Restored");
+			    }
+			    else
+			    {
+			        logger.LogMessage(LogLevel.Error, "Restore failed");
+			    }
 			}
 			else
 			{
-				//
-				// Arrange the source code file
-				//
-				FileArranger fileArranger = new FileArranger(configFile, logger);
-				bool success = fileArranger.Arrange(inputFile, outputFile, backup);
+			    //
+			    // Arrange the source code file
+			    //
+			    FileArranger fileArranger = new FileArranger(commandArgs.Configuration, logger);
+			    success = fileArranger.Arrange(commandArgs.Input, commandArgs.Output, commandArgs.Backup);
 
-				if (!success)
-				{
-					logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", inputFile);
-					Environment.Exit(Fail);
-				}
-				else
-				{
-					logger.LogMessage(LogLevel.Info, "Arrange successful.");
-				}
+			    if (!success)
+			    {
+			        logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", commandArgs.Input);
+			    }
+			    else
+			    {
+			        logger.LogMessage(LogLevel.Info, "Arrange successful.");
+			    }
 			}
+
+			return success;
 		}
 
 		#endregion Public Methods

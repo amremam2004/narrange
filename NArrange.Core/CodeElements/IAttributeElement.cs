@@ -34,30 +34,27 @@
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Text;
 
 using NArrange.Core.CodeElements;
-using NArrange.Core.Configuration;
 
-namespace NArrange.Core
+namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Interface for parsing NArrange code elements from 
-	/// a source file stream.
+	/// Interface for attribute code elements.
 	/// </summary>
-	public interface ICodeParser
+	public interface IAttributeElement : ICodeElement
 	{
-		#region Methods
+		#region Properties
 
 		/// <summary>
-		/// Parses code elements from a stream.
+		/// Gets the body text.
 		/// </summary>
-		/// <param name="reader">Code file reader</param>
-		/// <returns>A read-only collection of code elements.</returns>
-		ReadOnlyCollection<ICodeElement> Parse(TextReader reader);
+		string BodyText
+		{
+			get;
+		}
 
-		#endregion Methods
+		#endregion Properties
 	}
 }

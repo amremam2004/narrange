@@ -12,6 +12,7 @@ using NArrange.CSharp;
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
+using NArrange.Tests.Core;
 
 namespace NArrange.Tests.CSharp
 {
@@ -19,7 +20,7 @@ namespace NArrange.Tests.CSharp
 	/// Test fixture for the CSharpWriter class
 	/// </summary>
 	[TestFixture]
-	public class CSharpWriterTests
+	public class CSharpWriterTests : CodeWriterTests<CSharpWriter>
 	{
 		#region Public Methods
 
@@ -31,13 +32,13 @@ namespace NArrange.Tests.CSharp
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.Type = "bool";
+			methodElement.ReturnType = "bool";
 			methodElement.BodyText = "\treturn false;";
 
 			classElement.AddChild(methodElement);
@@ -77,13 +78,13 @@ namespace NArrange.Tests.CSharp
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.Type = "bool";
+			methodElement.ReturnType = "bool";
 			methodElement.BodyText = "\treturn false;";
 
 			classElement.AddChild(methodElement);
@@ -122,7 +123,6 @@ namespace NArrange.Tests.CSharp
 			//
 			configuration.Tabs.SpacesPerTab = 4;
 			configuration.Tabs.Style = TabStyle.Spaces;
-			methodElement.BodyText = "\treturn false;";
 
 			writer = new StringWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
@@ -143,7 +143,6 @@ namespace NArrange.Tests.CSharp
 			//
 			configuration.Tabs.SpacesPerTab = 8;
 			configuration.Tabs.Style = TabStyle.Spaces;
-			methodElement.BodyText = "\treturn false;";
 
 			writer = new StringWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
@@ -179,90 +178,6 @@ namespace NArrange.Tests.CSharp
 			    "\t}\r\n" +
 			    "}", text,
 			    "Unexpected element text.");
-		}
-
-		/// <summary>
-		/// Tests writing an element with an unknown tab style.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void TabStyleUnknownTest()
-		{
-			TypeElement classElement = new TypeElement();
-			classElement.Name = "TestClass";
-			classElement.Type = TypeElementType.Class;
-			classElement.Access = CodeAccess.Public;
-
-			MethodElement methodElement = new MethodElement();
-			methodElement.Name = "DoSomething";
-			methodElement.Access = CodeAccess.Public;
-			methodElement.Type = "bool";
-			methodElement.BodyText = "\treturn false;";
-
-			classElement.AddChild(methodElement);
-
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-
-			StringWriter writer;
-			codeElements.Add(classElement);
-
-			CodeConfiguration configuration = new CodeConfiguration();
-			CSharpWriter csharpWriter = new CSharpWriter();
-			csharpWriter.Configuration = configuration;
-
-			//
-			// Unknown tab style
-			//
-			configuration.Tabs.SpacesPerTab = 4;
-			configuration.Tabs.Style = (TabStyle)int.MinValue;
-
-			writer = new StringWriter();
-			csharpWriter.Write(codeElements.AsReadOnly(), writer);
-		}
-
-		/// <summary>
-		/// Tests writing a tree of arranged elements
-		/// </summary>
-		[Test]
-		public void WriteArrangedElementTest()
-		{
-			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
-
-			ReadOnlyCollection<ICodeElement> testElements;
-
-			CSharpTestFile testFile = CSharpTestUtilities.GetClassMembersFile();
-			using (TextReader reader = testFile.GetReader())
-			{
-			    CSharpParser parser = new CSharpParser();
-			    testElements = parser.Parse(reader);
-
-			    Assert.IsTrue(testElements.Count > 0,
-			        "Test file does not contain any elements.");
-			}
-
-			ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
-
-			//
-			// Write the arranged elements
-			//
-			StringWriter writer = new StringWriter();
-			CSharpWriter csharpWriter = new CSharpWriter();
-			csharpWriter.Write(arranged, writer);
-
-			string text = writer.ToString();
-
-			//
-			// Verify that the arranged file still compiles sucessfully.
-			//
-			CompilerResults results = CSharpTestFile.Compile(text, "ArrangedClassMembers.cs");
-			CompilerError error = CSharpTestFile.GetCompilerError(results);
-			if (error != null)
-			{
-			    Assert.Fail("Arranged source code should not produce compiler errors. " +
-			        "Error: {0} - {1}, line {2}, column {3} ",
-			        error.ErrorText, "ArrangedClassMembers.cs",
-			        error.Line, error.Column);
-			}
 		}
 
 		/// <summary>
@@ -302,22 +217,45 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeModifiers = TypeModifier.Static;
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeModifiers = TypeModifiers.Static;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Name = "TestClass";
-			classElement.AddTypeParameter(
-			    new TypeParameter("T", "class", "IDisposable", "new()"));
-			classElement.AddInterface("IDisposable");
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+			classElement.AddTypeParameter(new TypeParameter("T"));
 
-			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
 
+			StringWriter writer = new StringWriter();
 			CSharpWriter csharpWriter = new CSharpWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
 
 			string text = writer.ToString();
 			Assert.AreEqual(
 			    "public static class TestClass<T> : IDisposable\r\n" + 
+			    "{\r\n}",
+			    text,
+			    "Class element was not written correctly.");
+
+			classElement = new TypeElement();
+			classElement.Access = CodeAccess.Public;
+			classElement.TypeModifiers = TypeModifiers.Static;
+			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Name = "TestClass";
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+			classElement.AddTypeParameter(
+			    new TypeParameter("T", "class", "IDisposable", "new()"));
+
+			codeElements[0] = classElement;
+
+			writer = new StringWriter();
+			csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "public static class TestClass<T> : IDisposable\r\n" +
 			    "\twhere T : class, IDisposable, new()\r\n" +
 			    "{\r\n}",
 			    text,
@@ -334,12 +272,13 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeModifiers = TypeModifier.Static | TypeModifier.Partial;
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeModifiers = TypeModifiers.Static | TypeModifiers.Partial;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddTypeParameter(
 			    new TypeParameter("T", "class", "IDisposable", "new()"));
-			classElement.AddInterface("IDisposable");
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
@@ -366,11 +305,13 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeModifiers = TypeModifier.Sealed;
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeModifiers = TypeModifiers.Sealed;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Name = "TestClass";
-			classElement.AddInterface("IDisposable");
-			classElement.AddInterface("IEnumerable");
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+			classElement.AddInterface(
+			    new InterfaceReference("IEnumerable", InterfaceReferenceType.Interface));
 
 			StringWriter writer; 
 			codeElements.Add(classElement);
@@ -385,7 +326,7 @@ namespace NArrange.Tests.CSharp
 			    text,
 			    "Class element was not written correctly.");
 
-			classElement.TypeModifiers = TypeModifier.Abstract;
+			classElement.TypeModifiers = TypeModifiers.Abstract;
 			csharpWriter = new CSharpWriter();
 			writer = new StringWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
@@ -396,7 +337,7 @@ namespace NArrange.Tests.CSharp
 			    text,
 			    "Class element was not written correctly.");
 
-			classElement.TypeModifiers = TypeModifier.Static;
+			classElement.TypeModifiers = TypeModifiers.Static;
 			csharpWriter = new CSharpWriter();
 			writer = new StringWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
@@ -407,7 +348,7 @@ namespace NArrange.Tests.CSharp
 			    text,
 			    "Class element was not written correctly.");
 
-			classElement.TypeModifiers = TypeModifier.Unsafe;
+			classElement.TypeModifiers = TypeModifiers.Unsafe;
 			csharpWriter = new CSharpWriter();
 			writer = new StringWriter();
 			csharpWriter.Write(codeElements.AsReadOnly(), writer);
@@ -429,7 +370,7 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.Type = TypeElementType.Class;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Name = "TestClass";
 
 			RegionElement fieldsRegion = new RegionElement();
@@ -438,12 +379,12 @@ namespace NArrange.Tests.CSharp
 			FieldElement field1 = new FieldElement();
 			field1.Name = "_val1";
 			field1.Access = CodeAccess.Private;
-			field1.Type = "int";
+			field1.ReturnType = "int";
 
 			FieldElement field2 = new FieldElement();
 			field2.Name = "_val2";
 			field2.Access = CodeAccess.Private;
-			field2.Type = "int";
+			field2.ReturnType = "int";
 
 			fieldsRegion.AddChild(field1);
 			fieldsRegion.AddChild(field2);
@@ -455,7 +396,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement method = new MethodElement();
 			method.Name = "DoSomething";
 			method.Access = CodeAccess.Public;
-			method.Type = "void";
+			method.ReturnType = "void";
 			method.BodyText = string.Empty;
 
 			methodsRegion.AddChild(method);
@@ -495,11 +436,12 @@ namespace NArrange.Tests.CSharp
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 
 			TypeElement classElement = new TypeElement();
-			classElement.Access = CodeAccess.NotSpecified;
-			classElement.TypeModifiers = TypeModifier.Partial;
-			classElement.Type = TypeElementType.Class;
+			classElement.Access = CodeAccess.None;
+			classElement.TypeModifiers = TypeModifiers.Partial;
+			classElement.TypeElementType = TypeElementType.Class;
 			classElement.Name = "TestClass";
-			classElement.AddInterface("IDisposable");
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
@@ -526,7 +468,7 @@ namespace NArrange.Tests.CSharp
 			ConstructorElement constructorElement = new ConstructorElement();
 			constructorElement.Access = CodeAccess.Public;
 			constructorElement.Name = "TestClass";
-			constructorElement.Params = "int value";
+			constructorElement.Parameters = "int value";
 			constructorElement.Reference = "base(value)";
 
 			StringWriter writer = new StringWriter();
@@ -552,7 +494,7 @@ namespace NArrange.Tests.CSharp
 			ConstructorElement constructorElement = new ConstructorElement();
 			constructorElement.Access = CodeAccess.Public;
 			constructorElement.Name = "TestClass";
-			constructorElement.Params = "int value";
+			constructorElement.Parameters = "int value";
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(constructorElement);
@@ -576,9 +518,9 @@ namespace NArrange.Tests.CSharp
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.Type = "int";
+			delegateElement.ReturnType = "int";
 			delegateElement.Name = "Compare";
-			delegateElement.Params = "T t1, T t2";
+			delegateElement.Parameters = "T t1, T t2";
 			delegateElement.AddTypeParameter(
 				new TypeParameter("T", "class"));
 
@@ -605,9 +547,9 @@ namespace NArrange.Tests.CSharp
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.Type = "int";
+			delegateElement.ReturnType = "int";
 			delegateElement.Name = "DoSomething";
-			delegateElement.Params = "bool flag";
+			delegateElement.Parameters = "bool flag";
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(delegateElement);
@@ -632,7 +574,7 @@ namespace NArrange.Tests.CSharp
 
 			EventElement eventElement = new EventElement();
 			eventElement.Access = CodeAccess.Public;
-			eventElement.Type = "EventHandler";
+			eventElement.ReturnType = "EventHandler";
 			eventElement.Name = "TestEvent";
 
 			StringWriter writer = new StringWriter();
@@ -648,40 +590,6 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
-		/// Tests writing an explicit operator
-		/// </summary>
-		[Test]
-		public void WriteExplicitOperatorTest()
-		{
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-
-			MethodElement operatorElement = new MethodElement();
-			operatorElement.IsOperator = true;
-			operatorElement.OperatorType = OperatorType.Explicit;
-			operatorElement.Name = null;
-			operatorElement.Access = CodeAccess.Public;
-			operatorElement.MemberModifiers = MemberModifier.Static;
-			operatorElement.Type = "decimal";
-			operatorElement.Params = "Fraction f";
-			operatorElement.BodyText = "return (decimal)f.num / f.den;";
-
-			StringWriter writer = new StringWriter();
-			codeElements.Add(operatorElement);
-
-			CSharpWriter csharpWriter = new CSharpWriter();
-			csharpWriter.Write(codeElements.AsReadOnly(), writer);
-
-			string text = writer.ToString();
-			Assert.AreEqual(
-			    "public static explicit operator decimal(Fraction f)\r\n" +
-			    "{\r\n" +
-			    "\treturn (decimal)f.num / f.den;\r\n" +
-			    "}",
-			    text,
-			    "Operator element was not written correctly.");
-		}
-
-		/// <summary>
 		/// Tests writing a generic field.
 		/// </summary>
 		[Test]
@@ -691,8 +599,8 @@ namespace NArrange.Tests.CSharp
 
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
-			fieldElement.MemberModifiers = MemberModifier.Static;
-			fieldElement.Type = "Dictionary<string, int>";
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.ReturnType = "Dictionary<string, int>";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "new Dictionary<string, int>()";
 
@@ -718,8 +626,8 @@ namespace NArrange.Tests.CSharp
 
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
-			fieldElement.MemberModifiers = MemberModifier.Static;
-			fieldElement.Type = "int";
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.ReturnType = "int";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "1";
 
@@ -790,40 +698,6 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
-		/// Tests writing an implicit operator
-		/// </summary>
-		[Test]
-		public void WriteImplicitOperatorTest()
-		{
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-
-			MethodElement operatorElement = new MethodElement();
-			operatorElement.IsOperator = true;
-			operatorElement.OperatorType = OperatorType.Implicit;
-			operatorElement.Name = null;
-			operatorElement.Access = CodeAccess.Public;
-			operatorElement.MemberModifiers = MemberModifier.Static;
-			operatorElement.Type = "double";
-			operatorElement.Params = "Fraction f";
-			operatorElement.BodyText = "return (double)f.num / f.den;";
-
-			StringWriter writer = new StringWriter();
-			codeElements.Add(operatorElement);
-
-			CSharpWriter csharpWriter = new CSharpWriter();
-			csharpWriter.Write(codeElements.AsReadOnly(), writer);
-
-			string text = writer.ToString();
-			Assert.AreEqual(
-			    "public static implicit operator double(Fraction f)\r\n" +
-			    "{\r\n" +
-			    "\treturn (double)f.num / f.den;\r\n" +
-			    "}",
-			    text,
-			    "Operator element was not written correctly.");
-		}
-
-		/// <summary>
 		/// Tests writing an interface definition.
 		/// </summary>
 		[Test]
@@ -833,9 +707,10 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.Type = TypeElementType.Interface;
+			classElement.TypeElementType = TypeElementType.Interface;
 			classElement.Name = "TestInterface";
-			classElement.AddInterface("IDisposable");
+			classElement.AddInterface(
+			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
@@ -861,8 +736,8 @@ namespace NArrange.Tests.CSharp
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Protected;
-			methodElement.MemberModifiers = MemberModifier.Abstract;
-			methodElement.Type = "void";
+			methodElement.MemberModifiers = MemberModifiers.Abstract;
+			methodElement.ReturnType = "void";
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -878,6 +753,99 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a method with a generic return type.
+		/// </summary>
+		[Test]
+		public void WriteMethodGenericReturnTypeTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.None;
+			methodElement.ReturnType = "IEnumerator<T>";
+			methodElement.Name = "IEnumerable<T>.GetEnumerator";
+			methodElement.BodyText = "\treturn null;";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "IEnumerator<T> IEnumerable<T>.GetEnumerator()\r\n" +
+			    "{\r\n" +
+			    "\treturn null;\r\n" +
+			    "}"
+			    ,
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a partial method declaration.
+		/// </summary>
+		[Test]
+		public void WriteMethodPartialDeclarationTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Private;
+			methodElement.MemberModifiers = MemberModifiers.Partial;
+			methodElement.ReturnType = "void";
+			methodElement.Name = "DoSomething";
+			methodElement.Parameters = "bool flag";
+			methodElement.BodyText = null;
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "partial private void DoSomething(bool flag);",
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a partial method implementation.
+		/// </summary>
+		[Test]
+		public void WriteMethodPartialImplementationTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Private;
+			methodElement.MemberModifiers = MemberModifiers.Partial;
+			methodElement.ReturnType = "void";
+			methodElement.Name = "DoSomething";
+			methodElement.Parameters = "bool flag";
+			methodElement.BodyText = "\treturn;";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "partial private void DoSomething(bool flag)\r\n" +
+			    "{\r\n" +
+			    "\treturn;\r\n" +
+			    "}"
+			    ,
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a sealed method.
 		/// </summary>
 		[Test]
@@ -887,8 +855,8 @@ namespace NArrange.Tests.CSharp
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
-			methodElement.MemberModifiers = MemberModifier.Sealed | MemberModifier.Override;
-			methodElement.Type = "void";
+			methodElement.MemberModifiers = MemberModifiers.Sealed | MemberModifiers.Override;
+			methodElement.ReturnType = "void";
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -913,10 +881,10 @@ namespace NArrange.Tests.CSharp
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
-			methodElement.MemberModifiers = MemberModifier.Static;
-			methodElement.Type = "int";
+			methodElement.MemberModifiers = MemberModifiers.Static;
+			methodElement.ReturnType = "int";
 			methodElement.Name = "DoSomething";
-			methodElement.Params = "bool flag";
+			methodElement.Parameters = "bool flag";
 			methodElement.BodyText = "\treturn 0;";
 
 			StringWriter writer = new StringWriter();
@@ -937,25 +905,71 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
-		/// Tests calling Write with a null element collection.
+		/// Tests writing an explicit operator
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void WriteNullElementsTest()
+		public void WriteOperatorExplicitTest()
 		{
-			CSharpWriter writer = new CSharpWriter();
-			writer.Write(null, new StringWriter());
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement operatorElement = new MethodElement();
+			operatorElement.IsOperator = true;
+			operatorElement.OperatorType = OperatorType.Explicit;
+			operatorElement.Name = null;
+			operatorElement.Access = CodeAccess.Public;
+			operatorElement.MemberModifiers = MemberModifiers.Static;
+			operatorElement.ReturnType = "decimal";
+			operatorElement.Parameters = "Fraction f";
+			operatorElement.BodyText = "return (decimal)f.num / f.den;";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(operatorElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "public static explicit operator decimal(Fraction f)\r\n" +
+			    "{\r\n" +
+			    "\treturn (decimal)f.num / f.den;\r\n" +
+			    "}",
+			    text,
+			    "Operator element was not written correctly.");
 		}
 
 		/// <summary>
-		/// Tests calling Write with a null writer.
+		/// Tests writing an implicit operator
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void WriteNullWriterTest()
+		public void WriteOperatorImplicitTest()
 		{
-			CSharpWriter writer = new CSharpWriter();
-			writer.Write(new List<ICodeElement>().AsReadOnly(), null);
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement operatorElement = new MethodElement();
+			operatorElement.IsOperator = true;
+			operatorElement.OperatorType = OperatorType.Implicit;
+			operatorElement.Name = null;
+			operatorElement.Access = CodeAccess.Public;
+			operatorElement.MemberModifiers = MemberModifiers.Static;
+			operatorElement.ReturnType = "double";
+			operatorElement.Parameters = "Fraction f";
+			operatorElement.BodyText = "return (double)f.num / f.den;";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(operatorElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "public static implicit operator double(Fraction f)\r\n" +
+			    "{\r\n" +
+			    "\treturn (double)f.num / f.den;\r\n" +
+			    "}",
+			    text,
+			    "Operator element was not written correctly.");
 		}
 
 		/// <summary>
@@ -970,9 +984,9 @@ namespace NArrange.Tests.CSharp
 			operatorElement.IsOperator = true;
 			operatorElement.Name = "+";
 			operatorElement.Access = CodeAccess.Public;
-			operatorElement.MemberModifiers = MemberModifier.Static;
-			operatorElement.Type = "Fraction";
-			operatorElement.Params = "Fraction a, Fraction b";
+			operatorElement.MemberModifiers = MemberModifiers.Static;
+			operatorElement.ReturnType = "Fraction";
+			operatorElement.Parameters = "Fraction a, Fraction b";
 			operatorElement.BodyText = "return new Fraction(a.num * b.den + b.num * a.den, a.den * b.den);";
 
 			StringWriter writer = new StringWriter();
@@ -989,27 +1003,6 @@ namespace NArrange.Tests.CSharp
 			    "}",
 			    text,
 			    "Operator element was not written correctly.");
-		}
-
-		/// <summary>
-		/// Tests writing an ungrecognized Type element.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void WriteUnrecognizedTypeTest()
-		{
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-
-			TypeElement classElement = new TypeElement();
-			classElement.Access = CodeAccess.Public;
-			classElement.Type = (TypeElementType)int.MinValue;
-			classElement.Name = "TestType";
-
-			StringWriter writer = new StringWriter();
-			codeElements.Add(classElement);
-
-			CSharpWriter csharpWriter = new CSharpWriter();
-			csharpWriter.Write(codeElements.AsReadOnly(), writer);
 		}
 
 		/// <summary>

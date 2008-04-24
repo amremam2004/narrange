@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
 	/// Test fixture for the ConstructorElement class.
 	/// </summary>
 	[TestFixture]
-	public class ConstructorElementTests : CommentedElementTests<ConstructorElement>
+	public class ConstructorElementTests : AttributedElementTests<ConstructorElement>
 	{
 		#region Protected Methods
 
@@ -27,8 +27,8 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeClass";
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.Params = "int val";
-			prototype.Type = "SomeClass";
+			prototype.Parameters = "int val";
+			prototype.ReturnType = "SomeClass";
 
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is a constructor.");
@@ -36,7 +36,7 @@ namespace NArrange.Tests.Core.CodeElements
 
 			prototype.BodyText = "{_val = val;}";
 
-			prototype.MemberModifiers = MemberModifier.Abstract;
+			prototype.MemberModifiers = MemberModifiers.Abstract;
 
 			return prototype;
 		}
@@ -50,7 +50,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			Assert.AreEqual(original.Name, clone.Name,
 			    "Name was not copied correctly.");
-			Assert.AreEqual(original.Params, clone.Params,
+			Assert.AreEqual(original.Parameters, clone.Parameters,
 			    "Params was not copied correctly.");
 			Assert.AreEqual(original.Access, clone.Access,
 			    "Access was not copied correctly.");
@@ -68,7 +68,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.Type, clone.Type,
+			Assert.AreEqual(original.ReturnType, clone.ReturnType,
 			    "Type was not copied correctly.");
 		}
 
@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected element type.");
 			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
 			    "Unexpected default value for Access.");
-			Assert.AreEqual(string.Empty, constructorElement.Params,
+			Assert.IsNull(constructorElement.Parameters,
 			    "Unexpected default value for Params.");
 			Assert.IsNotNull(constructorElement.Attributes,
 			    "Attributes collection should be instantiated.");

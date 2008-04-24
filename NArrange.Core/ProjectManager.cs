@@ -38,6 +38,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 
+using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 
 namespace NArrange.Core
@@ -65,7 +66,7 @@ namespace NArrange.Core
 		{
 			if (configuration == null)
 			{
-				throw new ArgumentNullException("configuration");
+			    throw new ArgumentNullException("configuration");
 			}
 
 			_configuration = configuration;
@@ -85,14 +86,11 @@ namespace NArrange.Core
 		private SourceHandler GetProjectHandler(string fileName)
 		{
 			string extension = GetExtension(fileName);
-			if (extension.Length > 0)
-			{
-				return _projectExtensionHandlers[extension];
-			}
-			else
-			{
-				return null;
-			}
+
+			SourceHandler sourceHandler = null;
+			_projectExtensionHandlers.TryGetValue(extension, out sourceHandler);
+
+			return sourceHandler;
 		}
 
 		private ReadOnlyCollection<string> GetProjectSourceFiles(string fileName)
@@ -102,30 +100,30 @@ namespace NArrange.Core
 			SourceHandler handler = GetProjectHandler(fileName);
 			if (handler != null)
 			{
-				IProjectParser projectParser = handler.ProjectParser;
+			    IProjectParser projectParser = handler.ProjectParser;
 
-				List<string> extensions = new List<string>();
-				foreach (string key in _sourceExtensionHandlers.Keys)
-				{
-					SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-					if (sourceHandler == handler)
-					{
-						extensions.Add(key);
-					}
-				}
+			    List<string> extensions = new List<string>();
+			    foreach (string key in _sourceExtensionHandlers.Keys)
+			    {
+			        SourceHandler sourceHandler = _sourceExtensionHandlers[key];
+			        if (sourceHandler == handler)
+			        {
+			            extensions.Add(key);
+			        }
+			    }
 
-				ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
-				if (fileNames.Count > 0)
-				{
-					foreach (string sourceFile in fileNames)
-					{
-						string extension = GetExtension(sourceFile);
-						if (extensions.Contains(extension))
-						{
-							sourceFiles.Add(sourceFile);
-						}
-					}
-				}
+			    ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
+			    if (fileNames.Count > 0)
+			    {
+			        foreach (string sourceFile in fileNames)
+			        {
+			            string extension = GetExtension(sourceFile);
+			            if (extensions.Contains(extension))
+			            {
+			                sourceFiles.Add(sourceFile);
+			            }
+			        }
+			    }
 			}
 
 			return sourceFiles.AsReadOnly();
@@ -135,12 +133,11 @@ namespace NArrange.Core
 		{
 			List<string> sourceFiles = new List<string>();
 
-			SolutionParser solutionParser = new SolutionParser();
-			ReadOnlyCollection<string> projectFiles = solutionParser.Parse(fileName);
+			ReadOnlyCollection<string> projectFiles = SolutionParser.Parse(fileName);
 
 			foreach (string projectFile in projectFiles)
 			{
-				sourceFiles.AddRange(GetProjectSourceFiles(projectFile));
+			    sourceFiles.AddRange(GetProjectSourceFiles(projectFile));
 			}
 
 			return sourceFiles.AsReadOnly();
@@ -156,22 +153,22 @@ namespace NArrange.Core
 			// Load extension handlers
 			//
 			_projectExtensionHandlers = new Dictionary<string, SourceHandler>(
-				StringComparer.InvariantCultureIgnoreCase);
+			    StringComparer.OrdinalIgnoreCase);
 			_sourceExtensionHandlers = new Dictionary<string, SourceHandler>(
-				StringComparer.InvariantCultureIgnoreCase);
+			    StringComparer.OrdinalIgnoreCase);
 			foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
 			{
-				SourceHandler handler = new SourceHandler(handlerConfiguration.AssemblyName);
+			    SourceHandler handler = new SourceHandler(handlerConfiguration.AssemblyName);
 
-				foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
-				{
-					_projectExtensionHandlers.Add(extension.Name, handler);
-				}
+			    foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
+			    {
+			        _projectExtensionHandlers.Add(extension.Name, handler);
+			    }
 
-				foreach (ExtensionConfiguration extension in handlerConfiguration.SourceExtensions)
-				{
-					_sourceExtensionHandlers.Add(extension.Name, handler);
-				}
+			    foreach (ExtensionConfiguration extension in handlerConfiguration.SourceExtensions)
+			    {
+			        _sourceExtensionHandlers.Add(extension.Name, handler);
+			    }
 			}
 		}
 
@@ -212,15 +209,15 @@ namespace NArrange.Core
 
 			if (IsSolution(fileName))
 			{
-				sourceFiles.AddRange(GetSolutionSourceFiles(fileName));
+			    sourceFiles.AddRange(GetSolutionSourceFiles(fileName));
 			}
 			else if (IsProject(fileName))
 			{
-				sourceFiles.AddRange(GetProjectSourceFiles(fileName));
+			    sourceFiles.AddRange(GetProjectSourceFiles(fileName));
 			}
 			else if (_sourceExtensionHandlers.ContainsKey(GetExtension(fileName)))
 			{
-				sourceFiles.Add(fileName);
+			    sourceFiles.Add(fileName);
 			}
 
 			return sourceFiles.AsReadOnly();
@@ -235,14 +232,10 @@ namespace NArrange.Core
 		{
 			string extension = GetExtension(fileName);
 
-			if (_sourceExtensionHandlers.ContainsKey(extension))
-			{
-				return _sourceExtensionHandlers[extension];
-			}
-			else
-			{
-				return null;
-			}
+			SourceHandler handler = null;
+			_sourceExtensionHandlers.TryGetValue(extension, out handler);
+
+			return handler;
 		}
 
 		/// <summary>
@@ -252,7 +245,7 @@ namespace NArrange.Core
 		/// <returns></returns>
 		public bool IsProject(string inputFile)
 		{
-			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
+			return this._projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
 		}
 
 		/// <summary>
@@ -260,9 +253,49 @@ namespace NArrange.Core
 		/// </summary>
 		/// <param name="inputFile"></param>
 		/// <returns></returns>
-		public bool IsSolution(string inputFile)
+		public static bool IsSolution(string inputFile)
 		{
 			return GetExtension(inputFile) == "sln";
+		}
+
+		/// <summary>
+		/// Parses code elements from the input file
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <returns></returns>
+		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
+		{
+			ReadOnlyCollection<ICodeElement> elements = null;
+
+			string inputFileText = File.ReadAllText(inputFile, Encoding.Default);
+			elements = ParseElements(inputFile, inputFileText);
+
+			return elements;
+		}
+
+		/// <summary>
+		/// Parses code elements from the input file
+		/// </summary>
+		/// <param name="inputFile"></param>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile, string text)
+		{
+			ReadOnlyCollection<ICodeElement> elements = null;
+			SourceHandler sourceHandler = this.GetSourceHandler(inputFile);
+			if (sourceHandler != null)
+			{
+			    ICodeElementParser parser = sourceHandler.CodeParser;
+			    if (parser != null)
+			    {
+			        using (StringReader reader = new StringReader(text))
+			        {
+			            elements = parser.Parse(reader);
+			        }
+			    }
+			}
+
+			return elements;
 		}
 
 		#endregion Public Methods

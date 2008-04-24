@@ -76,12 +76,16 @@
 		<Message Text="@(AdditionalFiles)"/>
 		<Copy SourceFiles="@(AdditionalFiles)" DestinationFolder="$(BinDirectory)"/>
 
-		<CreateItem Include="$(MSBuildProjectDirectory)\*.txt">
+		<CreateItem Include="$(MSBuildProjectDirectory)\*.txt;
+				     $(MSBuildProjectDirectory)\*.rtf;">
 			<Output ItemName="InfoFiles" TaskParameter="Include" />
 		</CreateItem>
 		<Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(BinDirectory)"/>
 
-		<CreateItem Include="$(BinDirectory)\**\*.*">
+		<CreateItem Include="$(BinDirectory)\**\*.*"
+					Exclude="$(BinDirectory)\**\narrange-*test*.exe;
+						$(BinDirectory)\**\NArrange.Tests*.*;
+						$(BinDirectory)\**\NArrange.Console.xml;">
 			<Output ItemName="ZipBinFiles" TaskParameter="Include"/>
 		</CreateItem>
 		

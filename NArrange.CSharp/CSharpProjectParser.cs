@@ -44,51 +44,9 @@ using NArrange.Core;
 namespace NArrange.CSharp
 {
 	/// <summary>
-	/// Parses a C# project for individual source file names
+	/// Parses a C# project for individual source file names.
 	/// </summary>
-	public class CSharpProjectParser : IProjectParser
+	public sealed class CSharpProjectParser : MSBuildProjectParser
 	{
-		#region Public Methods
-
-		/// <summary>
-		/// Parses source file names from a project file.
-		/// </summary>
-		/// <param name="projectFile"></param>
-		/// <returns>A list of source code filenames</returns>
-		public ReadOnlyCollection<string> Parse(string projectFile)
-		{
-			if (projectFile == null)
-			{
-			    throw new ArgumentNullException("projectFile");
-			}
-
-			string projectPath = Path.GetDirectoryName(projectFile);
-			List<string> sourceFiles = new List<string>();
-
-			XmlDocument xmlDocument = new XmlDocument();
-			xmlDocument.Load(projectFile);
-
-			XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xmlDocument.NameTable);
-			namespaceManager.AddNamespace("ns", "http://schemas.microsoft.com/developer/msbuild/2003");
-
-			XmlNodeList nodes = xmlDocument.SelectNodes("//ns:Compile", namespaceManager);
-			foreach (XmlNode node in nodes)
-			{
-			    if (node.Attributes["Include"] != null)
-			    {
-			        if (node.SelectSingleNode("ns:Link", namespaceManager) == null)
-			        {
-			            string fileName = node.Attributes["Include"].Value;
-
-			            string sourceFilePath = Path.Combine(projectPath, fileName);
-			            sourceFiles.Add(sourceFilePath);
-			        }
-			    }
-			}
-
-			return sourceFiles.AsReadOnly();
-		}
-
-		#endregion Public Methods
-	}
 }
+	}

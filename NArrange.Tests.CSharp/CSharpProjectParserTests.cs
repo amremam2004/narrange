@@ -12,7 +12,7 @@ using NArrange.CSharp;
 namespace NArrange.Tests.CSharp
 {
 	/// <summary>
-	/// Test fixture for the CSharpProjectParser class
+	/// Test fixture for the CSharpProjectParser class.
 	/// </summary>
 	[TestFixture]
 	public class CSharpProjectParserTests

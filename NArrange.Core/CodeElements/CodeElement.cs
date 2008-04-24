@@ -128,7 +128,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the code element name.
 		/// </summary>
-		public string Name
+		public virtual string Name
 		{
 			get
 			{
@@ -143,7 +143,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the parent element
 		/// </summary>
-		public ICodeElement Parent
+		public virtual ICodeElement Parent
 		{
 			get
 			{
@@ -172,18 +172,14 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public object this[string key]
+		public virtual object this[string key]
 		{
 			get
 			{
-			    if (_extendedProperties.ContainsKey(key))
-			    {
-			        return _extendedProperties[key];
-			    }
-			    else
-			    {
-			        return null;
-			    }
+			    object value = null;
+			    _extendedProperties.TryGetValue(key, out value);
+
+			    return value;
 			}
 			set
 			{
@@ -218,34 +214,45 @@ namespace NArrange.Core.CodeElements
 		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
 		/// <param name="visitor"></param>
 		public abstract void Accept(ICodeElementVisitor visitor);
+
 		/// <summary>
 		/// Adds a child to this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		public void AddChild(ICodeElement childElement)
+		public virtual void AddChild(ICodeElement childElement)
 		{
 			if (childElement != null && !BaseChildren.Contains(childElement))
 			{
-			    BaseChildren.Add(childElement);
-			    childElement.Parent = this;
+			    lock (_childrenLock)
+			    {
+			        if (childElement != null && !BaseChildren.Contains(childElement))
+			        {
+			            BaseChildren.Add(childElement);
+			            childElement.Parent = this;
+			        }
+			    }
 			}
 		}
 
 		/// <summary>
 		/// Removes all child elements
 		/// </summary>
-		public void ClearChildren()
+		public virtual void ClearChildren()
 		{
-			for (int childIndex = 0; childIndex < Children.Count; childIndex++)
+			lock (_childrenLock)
 			{
-			    ICodeElement child = Children[childIndex];
-			    if (child != null && child.Parent != null)
+			    for (int childIndex = 0; childIndex < Children.Count; childIndex++)
 			    {
-			        child.Parent = null;
+			        ICodeElement child = Children[childIndex];
+			        if (child != null && child.Parent != null)
+			        {
+			            child.Parent = null;
+			            childIndex--;
+			        }
 			    }
-			}
 
-			BaseChildren.Clear();
+			    BaseChildren.Clear();
+			}
 		}
 
 		/// <summary>
@@ -260,12 +267,15 @@ namespace NArrange.Core.CodeElements
 			// Copy base state
 			//
 			clone._name = _name;
-			for(int childIndex = 0; childIndex < Children.Count; childIndex++)
+			lock (_childrenLock)
 			{
-			    ICodeElement child = Children[childIndex];
-			    ICodeElement childClone = child.Clone() as ICodeElement;
+			    for (int childIndex = 0; childIndex < Children.Count; childIndex++)
+			    {
+			        ICodeElement child = Children[childIndex];
+			        ICodeElement childClone = child.Clone() as ICodeElement;
 
-			    clone.AddChild(childClone);
+			        clone.AddChild(childClone);
+			    }
 			}
 
 			foreach (string key in _extendedProperties.Keys)
@@ -280,22 +290,40 @@ namespace NArrange.Core.CodeElements
 		/// Inserts a child element at the specified index
 		/// </summary>
 		/// <param name="index"></param>
-		/// <param name="codeElement"></param>
-		public void InsertChild(int index, ICodeElement codeElement)
+		/// <param name="childElement"></param>
+		public virtual void InsertChild(int index, ICodeElement childElement)
 		{
-			BaseChildren.Insert(index, codeElement);
+			if (childElement != null)
+			{
+			    lock (_childrenLock)
+			    {
+			        if (BaseChildren.Contains(childElement))
+			        {
+			            BaseChildren.Remove(childElement);
+			        }
+
+			        BaseChildren.Insert(index, childElement);
+			        childElement.Parent = this;
+			    }
+			}
 		}
 
 		/// <summary>
 		/// Removes a child from this element
 		/// </summary>
 		/// <param name="childElement"></param>
-		public void RemoveChild(ICodeElement childElement)
+		public virtual void RemoveChild(ICodeElement childElement)
 		{
 			if (childElement != null && BaseChildren.Contains(childElement))
 			{
-			    BaseChildren.Remove(childElement);
-			    childElement.Parent = null;
+			    lock (_childrenLock)
+			    {
+			        if (childElement != null && BaseChildren.Contains(childElement))
+			        {
+			            BaseChildren.Remove(childElement);
+			            childElement.Parent = null;
+			        }
+			    }
 			}
 		}
 
@@ -313,7 +341,7 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		/// <param name="format"></param>
 		/// <returns></returns>
-		public string ToString(string format)
+		public virtual string ToString(string format)
 		{
 			return ElementUtilities.Format(format, this);
 		}

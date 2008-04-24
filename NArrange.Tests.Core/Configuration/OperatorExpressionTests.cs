@@ -21,28 +21,28 @@ namespace NArrange.Tests.Core.Configuration
 		/// Gets the string representation of the operator expression with an invalid operator type.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void ToStringInvalidOperatorTest()
 		{
-			AttributeExpression attributeExpression = new AttributeExpression(ElementAttribute.Name);
+			AttributeExpression attributeExpression = new AttributeExpression(ElementAttributeType.Name);
 			StringExpression stringExpression = new StringExpression("Test");
 			OperatorExpression operatorExpression = new OperatorExpression((ExpressionOperator)int.MinValue,
 			    attributeExpression, stringExpression);
 
-			string str = operatorExpression.ToString();
+			Assert.AreEqual(string.Format("($(Name) {0} 'Test')", int.MinValue), operatorExpression.ToString());
 		}
 
 		/// <summary>
 		/// Gets the string representation of the operator expression
 		/// </summary>
+		[Test]
 		public void ToStringTest()
 		{
-			AttributeExpression attributeExpression = new AttributeExpression(ElementAttribute.Name);
+			AttributeExpression attributeExpression = new AttributeExpression(ElementAttributeType.Name);
 			StringExpression stringExpression = new StringExpression("Test");
 			OperatorExpression operatorExpression = new OperatorExpression(ExpressionOperator.Equal,
 			    attributeExpression, stringExpression);
 
-			Assert.AreEqual("$(Name) == 'Test'", operatorExpression.ToString());
+			Assert.AreEqual("($(Name) == 'Test')", operatorExpression.ToString());
 		}
 
 		#endregion Public Methods

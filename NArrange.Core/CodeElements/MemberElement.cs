@@ -45,7 +45,7 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private MemberModifier _memberModifiers;
+		private MemberModifiers _memberModifiers;
 		private string _type;
 
 		#endregion Fields
@@ -59,7 +59,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Abstract) == MemberModifier.Abstract;
+			    return (_memberModifiers & MemberModifiers.Abstract) == MemberModifiers.Abstract;
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.New) == MemberModifier.New;
+			    return (_memberModifiers & MemberModifiers.New) == MemberModifiers.New;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Override) == MemberModifier.Override;
+			    return (_memberModifiers & MemberModifiers.Override) == MemberModifiers.Override;
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Sealed) == MemberModifier.Sealed;
+			    return (_memberModifiers & MemberModifiers.Sealed) == MemberModifiers.Sealed;
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Static) == MemberModifier.Static;
+			    return (_memberModifiers & MemberModifiers.Static) == MemberModifiers.Static;
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Unsafe) == MemberModifier.Unsafe;
+			    return (_memberModifiers & MemberModifiers.Unsafe) == MemberModifiers.Unsafe;
 			}
 		}
 
@@ -125,14 +125,14 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return (_memberModifiers & MemberModifier.Virtual) == MemberModifier.Virtual;
+			    return (_memberModifiers & MemberModifiers.Virtual) == MemberModifiers.Virtual;
 			}
 		}
 
 		/// <summary>
 		/// Gets or sets the member attributes
 		/// </summary>
-		public MemberModifier MemberModifiers
+		public MemberModifiers MemberModifiers
 		{
 			get
 			{
@@ -147,7 +147,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the type of the member.
 		/// </summary>
-		public string Type
+		public string ReturnType
 		{
 			get
 			{
@@ -179,7 +179,6 @@ namespace NArrange.Core.CodeElements
 
 			return clone;
 		}
-
 
 		/// <summary>
 		/// Clones this instance
