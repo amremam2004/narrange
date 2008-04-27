@@ -61,6 +61,12 @@ namespace NArrange.CSharp
 	/// </summary>
 	internal sealed class CSharpWriteVisitor : CodeWriteVisitor
 	{
+		#region Constants
+
+		private const string ClosingCommentPrefix = "// ";
+
+		#endregion Constants
+
 		#region Constructors
 
 		/// <summary>
@@ -114,7 +120,7 @@ namespace NArrange.CSharp
 			{
 			    WriteTextBlock(element.BodyText);
 			    WriteEndBlock();
-			    WriteClosingComment(element);
+			    WriteClosingComment(element, ClosingCommentPrefix);
 			}
 			else
 			{
@@ -126,20 +132,6 @@ namespace NArrange.CSharp
 		private void WriteChildren(ICodeElement element)
 		{
 			CodeWriter.WriteVisitElements(element.Children, Writer, this);
-		}
-
-		private void WriteClosingComment(TextCodeElement element)
-		{
-			if (Configuration.ClosingComments.Enabled)
-			{
-			    string format = Configuration.ClosingComments.Format;
-			    if (!string.IsNullOrEmpty(format))
-			    {
-			        string formatted = element.ToString(format);
-			        Writer.Write(string.Format(CultureInfo.InvariantCulture,
-			            " {0}{0} {1}", CSharpSymbol.BeginComment, formatted));
-			    }
-			}
 		}
 
 		private void WriteEndBlock()
@@ -830,7 +822,7 @@ namespace NArrange.CSharp
 			        WriteIndented(CSharpSymbol.EndBlock.ToString());
 			    }
 
-			    WriteClosingComment(element);
+			    WriteClosingComment(element, ClosingCommentPrefix);
 			}
 		}
 

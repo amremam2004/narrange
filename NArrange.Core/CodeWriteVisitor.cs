@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -130,6 +131,25 @@ namespace NArrange.Core
 		#endregion Protected Properties
 
 		#region Protected Methods
+
+		/// <summary>
+		/// Writes a closing comment.
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="commentPrefix">Comment prefix.</param>
+		protected void WriteClosingComment(TextCodeElement element, string commentPrefix)
+		{
+			if (Configuration.ClosingComments.Enabled)
+			{
+			    string format = Configuration.ClosingComments.Format;
+			    if (!string.IsNullOrEmpty(format))
+			    {
+			        string formatted = element.ToString(format);
+			        Writer.Write(string.Format(CultureInfo.InvariantCulture,
+			            " {0}{1}", commentPrefix, formatted));
+			    }
+			}
+		}
 
 		/// <summary>
 		/// Writes the specified text using the current TabCount.

@@ -133,7 +133,7 @@ namespace NArrange.VisualBasic
 			        Writer.WriteLine();
 			        WriteTextBlock(element.BodyText);
 			        WriteEndBlock(element);
-			        WriteClosingComment(element);
+			        WriteClosingComment(element, VBSymbol.BeginComment.ToString());
 			    }
 			    else
 			    {
@@ -154,20 +154,6 @@ namespace NArrange.VisualBasic
 			if (element.Children.Count > 0)
 			{
 			    Writer.WriteLine();
-			}
-		}
-
-		private void WriteClosingComment(TextCodeElement element)
-		{
-			if (Configuration.ClosingComments.Enabled)
-			{
-			    string format = Configuration.ClosingComments.Format;
-			    if (!string.IsNullOrEmpty(format))
-			    {
-			        string formatted = element.ToString(format);
-			        Writer.Write(string.Format(CultureInfo.InvariantCulture,
-			            " {0}{1}", VBSymbol.BeginComment, formatted));
-			    }
 			}
 		}
 
@@ -1036,7 +1022,7 @@ namespace NArrange.VisualBasic
 			    }
 			    WriteEndBlock(element);
 
-			    WriteClosingComment(element);
+			    WriteClosingComment(element, VBSymbol.BeginComment.ToString());
 			}
 		}
 
