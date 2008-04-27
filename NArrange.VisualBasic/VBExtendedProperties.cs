@@ -61,11 +61,6 @@ namespace NArrange.VisualBasic
 		public const string Dim = "Dim";
 
 		/// <summary>
-		/// External
-		/// </summary>
-		public const string External = "External";
-
-		/// <summary>
 		/// ExternalAlias 
 		/// </summary>
 		public const string ExternalAlias = "ExternalAlias";

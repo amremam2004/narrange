@@ -1376,6 +1376,35 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a volatile field.
+		/// </summary>
+		[Test]
+		public void ParseFieldVolatileTest()
+		{
+			StringReader reader = new StringReader(
+			    "private volatile int val;");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+			    "Element is not a FieldElement.");
+			Assert.AreEqual("val", fieldElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+			    "Unexpected code access.");
+			Assert.AreEqual("int", fieldElement.ReturnType,
+			    "Unexpected member type.");
+			Assert.IsNull(fieldElement.InitialValue,
+			    "Unexpected initial value.");
+			Assert.IsTrue(fieldElement.IsVolatile,
+			    "Unexpected value for IsVolatile.");
+		}
+
+		/// <summary>
 		/// Tests parsing a field with an initial value that contains
 		/// character symbols.
 		/// </summary>

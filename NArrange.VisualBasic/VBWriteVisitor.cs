@@ -837,10 +837,7 @@ namespace NArrange.VisualBasic
 
 			WriteAccess(element.Access);
 
-			bool isExternal = element[VBExtendedProperties.External] != null &&
-			    (bool)element[VBExtendedProperties.External];
-
-			if (isExternal)
+			if (element.IsExternal)
 			{
 			    _writer.Write(VBKeyword.Declare);
 			    _writer.Write(' ');
@@ -921,7 +918,7 @@ namespace NArrange.VisualBasic
 			    }
 			}
 
-			if (!isExternal)
+			if (!element.IsExternal)
 			{
 			    WriteBody(element);
 			}

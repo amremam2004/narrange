@@ -744,7 +744,7 @@ namespace NArrange.Tests.VisualBasic
 			methodElement.ReturnType = "String";
 			methodElement.Name = "ExternalFunction";
 			methodElement.Parameters = "ByVal filename As String";
-			methodElement[VBExtendedProperties.External] = true;
+			methodElement.MemberModifiers = MemberModifiers.External;
 			methodElement[VBExtendedProperties.ExternalLibrary] = "Some.dll";
 			methodElement[VBExtendedProperties.ExternalAlias] = "doit";
 			methodElement[VBExtendedProperties.ExternalModifier] = "Ansi";
@@ -1170,7 +1170,7 @@ namespace NArrange.Tests.VisualBasic
 			methodElement.ReturnType = null;
 			methodElement.Name = "ExternalSub";
 			methodElement.Parameters = "ByVal filename As String";
-			methodElement[VBExtendedProperties.External] = true;
+			methodElement.MemberModifiers = MemberModifiers.External;
 			methodElement[VBExtendedProperties.ExternalLibrary] = "Some.dll";
 			methodElement[VBExtendedProperties.ExternalAlias] = "doit";
 			methodElement[VBExtendedProperties.ExternalModifier] = "Ansi";

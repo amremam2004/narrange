@@ -37,6 +37,7 @@
  *      - Fixed extra tabs being written after field declaration statements
  *      - Handle writing of partial methods
  *      - Only write type parameter constraints when they are present.
+ *      - Fixed writing of volatile fields
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-using NArrange.Core;
+using NArrange.Core;                                        
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 
@@ -602,6 +603,12 @@ namespace NArrange.CSharp
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers);
+
+			if (element.IsVolatile)
+			{
+			    _writer.Write(CSharpKeyword.Volatile);
+			    _writer.Write(' ');
+			}
 
 			_writer.Write(element.ReturnType);
 			_writer.Write(' ');

@@ -903,11 +903,12 @@ namespace NArrange.VisualBasic
 
 			method.IsOperator = isOperator;
 			method.OperatorType = operatorType;
-			method[VBExtendedProperties.External] = isExternal;
 			method[VBExtendedProperties.ExternalModifier] = externalModifier;
 
 			if (isExternal)
 			{
+			    method.MemberModifiers = method.MemberModifiers | MemberModifiers.External;
+
 			    EatLineContinuation();
 
 			    EatWord(VBKeyword.Lib);

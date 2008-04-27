@@ -1,10 +1,4 @@
 The following changes were made in this release:
 
-0.1.7.0
-- Fixed a bug where the output file override was not being acknowledged
-  and improved the handling of command line args.
-- Added support for C# partial methods.
-- Fixed C# parsing of array return types with intermixed spaces.
-- Fixed a C# parsing error where type parameters were always expected
-  for generic type definitions.
-- Initial support for arranging Visual Basic .NET code.
+0.1.8.0
+- Fixed writing of C# volatile fields.

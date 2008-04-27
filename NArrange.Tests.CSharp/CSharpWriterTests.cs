@@ -644,6 +644,34 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a volatile field.
+		/// </summary>
+		[Test]
+		public void WriteFieldVolatileTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.IsVolatile = true;
+			fieldElement.ReturnType = "int";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "1";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("private static volatile int _test = 1;",
+			    text,
+			    "FielElement element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a group of elements.
 		/// </summary>
 		[Test]
