@@ -2,3 +2,4 @@ The following changes were made in this release:
 
 0.1.8.0
 - Fixed writing of C# volatile fields.
+- Refactored code writers to share a common base code visitor and improved writing for varying configurations.
