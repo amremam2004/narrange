@@ -97,6 +97,19 @@
   <ItemGroup>
     <EmbeddedResource Include="TestProject.sln" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="TestConfigurations\ImportRegionConfig.xml">
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\NArrange.Core\DefaultConfig.xml">
+      <Link>TestConfigurations\DefaultConfig.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestConfigurations\NoRegionsConfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

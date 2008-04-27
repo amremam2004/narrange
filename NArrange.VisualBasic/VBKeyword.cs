@@ -320,7 +320,7 @@ namespace NArrange.VisualBasic
 		#region Static Fields
 
 		private static Dictionary<string, string> _specialNormalizedKeywords = 
-            CreateNormalizedKeywordDictionary();
+		    CreateNormalizedKeywordDictionary();
 
 		#endregion Static Fields
 

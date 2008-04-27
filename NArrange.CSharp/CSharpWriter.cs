@@ -59,10 +59,7 @@ namespace NArrange.CSharp
 		protected override void DoWriteElements(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)
 		{
 			CSharpWriteVisitor visitor = new CSharpWriteVisitor(writer, Configuration);
-			foreach (ICodeElement codeElement in codeElements)
-			{
-			    codeElement.Accept(visitor);
-			}
+			WriteVisitElements(codeElements, writer, visitor);
 		}
 
 		#endregion Protected Methods

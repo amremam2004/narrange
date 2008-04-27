@@ -51,7 +51,7 @@ namespace NArrange.Core.CodeElements
 		#region Static Fields
 
 		private static Dictionary<Enum, string> _enumStrings = 
-            new Dictionary<Enum,string>();
+		    new Dictionary<Enum,string>();
 
 		#endregion Static Fields
 

@@ -144,6 +144,7 @@ namespace NArrange.Tests.Core
 			/// Log level
 			/// </summary>
 			public readonly LogLevel Level;
+
 			/// <summary>
 			/// Creates a new test log event
 			/// </summary>

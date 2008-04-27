@@ -59,10 +59,7 @@ namespace NArrange.VisualBasic
 		protected override void DoWriteElements(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer)
 		{
 			VBWriteVisitor visitor = new VBWriteVisitor(writer, Configuration);
-			foreach (ICodeElement codeElement in codeElements)
-			{
-			    codeElement.Accept(visitor);
-			}
+			WriteVisitElements(codeElements, writer, visitor);
 		}
 
 		#endregion Protected Methods

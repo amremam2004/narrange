@@ -247,7 +247,7 @@ namespace NArrange.Tests.VisualBasic
 			string text = writer.ToString();
 			Assert.AreEqual(
 			    "'''<summary>We no longer need this...</summary>\r\n" +
-			    "<Obsolete(\"This is obsolete\")>\r\n",
+			    "<Obsolete(\"This is obsolete\")>",
 			    text,
 			    "Attribute element was not written correctly.");
 		}
@@ -797,7 +797,7 @@ namespace NArrange.Tests.VisualBasic
 			Assert.AreEqual(
 			    "Imports System\r\n" +
 			    "Imports System.IO\r\n" +
-			    "Imports System.Text\r\n\r\n",
+			    "Imports System.Text",
 			    text,
 			    "Group was not written correctly.");
 
@@ -811,7 +811,7 @@ namespace NArrange.Tests.VisualBasic
 			Assert.AreEqual(
 			    "Imports System\r\n\r\n" +
 			    "Imports System.IO\r\n\r\n" +
-			    "Imports System.Text\r\n\r\n",
+			    "Imports System.Text",
 			    text,
 			    "Group was not written correctly.");
 		}

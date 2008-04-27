@@ -127,7 +127,14 @@ namespace NArrange.Core
 			    }
 			}
 
-			return rootElement.Children;
+			List<ICodeElement> arranged = new List<ICodeElement>(rootElement.Children);
+			foreach (ICodeElement arrangedElement in arranged)
+			{
+			    // Remove the root element as the parent.
+			    arrangedElement.Parent = null;
+			}
+
+			return arranged.AsReadOnly();
 		}
 
 		#endregion Public Methods

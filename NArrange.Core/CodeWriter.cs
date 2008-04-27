@@ -31,6 +31,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Code writer refactoring
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,42 @@ namespace NArrange.Core
 			}
 
 			DoWriteElements(codeElements, writer);
+		}
+
+		/// <summary>
+		/// Writes each element using the specified visitor.
+		/// </summary>
+		/// <param name="codeElements"></param>
+		/// <param name="writer"></param>
+		/// <param name="visitor"></param>
+		public static void WriteVisitElements(ReadOnlyCollection<ICodeElement> codeElements,
+			TextWriter writer, ICodeElementVisitor visitor)
+		{
+			for (int index = 0; index < codeElements.Count; index++)
+			{
+			    ICodeElement codeElement = codeElements[index];
+			    if (codeElement != null)
+			    {
+			        CommentedElement commentedElement = codeElement as CommentedElement;
+			        if (index > 0 &&
+			            ((commentedElement != null && commentedElement.HeaderComments.Count > 0) ||
+			            codeElement is NamespaceElement || codeElement is TypeElement || codeElement is RegionElement ||
+			            (codeElement is MemberElement && !(codeElement is FieldElement)) ||
+			            (!(codeElement is GroupElement) && 
+			            codeElement.ElementType != codeElements[index - 1].ElementType) ||
+			            codeElements[index - 1] is GroupElement))
+			        {
+			            writer.WriteLine();
+			        }
+
+			        codeElement.Accept(visitor);
+
+			        if (codeElements.Count > 1 && index < codeElements.Count - 1)
+			        {
+			            writer.WriteLine();
+			        }
+			    }
+			}
 		}
 
 		#endregion Public Methods

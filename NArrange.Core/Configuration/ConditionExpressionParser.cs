@@ -374,6 +374,7 @@ namespace NArrange.Core.Configuration
 		private class OperatorExpressionPlaceholder : LeafExpression
 		{
 			private ExpressionOperator _operatorType;
+
 			/// <summary>
 			/// Creates a new operator expression.
 			/// </summary>

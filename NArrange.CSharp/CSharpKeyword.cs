@@ -217,8 +217,8 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// new()
 		/// </summary>
-		public static readonly string NewConstraint = New + 
-            CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
+		public static readonly string NewConstraint = 		New + 
+		    CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
 
 		#endregion Static Fields
 	}

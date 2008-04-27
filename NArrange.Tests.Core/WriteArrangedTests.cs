@@ -52,7 +52,17 @@ namespace NArrange.Tests.Core
 		[Test]
 		public void WriteArrangedElementTest()
 		{
-			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+			string outputDirectory = "Arranged";
+			if (Directory.Exists(outputDirectory))
+			{
+			    try
+			    {
+			        Directory.Delete(outputDirectory, true);
+			    }
+			    catch
+			    {
+			    }
+			}
 
 			ReadOnlyCollection<ICodeElement> testElements;
 
@@ -68,28 +78,43 @@ namespace NArrange.Tests.Core
 			            "Test file does not contain any elements.");
 			    }
 
-			    ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
-
-			    //
-			    // Write the arranged elements
-			    //
-			    StringWriter writer = new StringWriter();
-			    TCodeWriter codeWriter = new TCodeWriter();
-			    codeWriter.Write(arranged, writer);
-
-			    string text = writer.ToString();
-
-			    //
-			    // Verify that the arranged file still compiles sucessfully.
-			    //
-			    CompilerResults results = Compile(text, testFile.Name);
-			    CompilerError error = TestUtilities.GetCompilerError(results);
-			    if (error != null)
+			    foreach (FileInfo configFile in TestUtilities.TestConfigurationFiles)
 			    {
-			        Assert.Fail("Arranged source code should not produce compiler errors. " +
-			            "Error: {0} - {1}, line {2}, column {3} ",
-			            error.ErrorText, testFile.Name,
-			            error.Line, error.Column);
+			        CodeConfiguration configuration = CodeConfiguration.Load(configFile.FullName);
+			        CodeArranger arranger = new CodeArranger(configuration);
+
+			        ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
+
+			        //
+			        // Write the arranged elements
+			        //
+			        StringWriter writer = new StringWriter();
+			        TCodeWriter codeWriter = new TCodeWriter();
+			        codeWriter.Write(arranged, writer);
+
+			        string text = writer.ToString();
+
+			        // Write the file to the output directory for further analysis
+			        Directory.CreateDirectory(outputDirectory);
+
+			        string configurationDirectory = Path.Combine(outputDirectory, 
+			            Path.GetFileNameWithoutExtension(configFile.FullName));
+			        Directory.CreateDirectory(configurationDirectory);
+			        
+			        File.WriteAllText(Path.Combine(configurationDirectory, testFile.Name), text);
+
+			        //
+			        // Verify that the arranged file still compiles sucessfully.
+			        //
+			        CompilerResults results = Compile(text, testFile.Name);
+			        CompilerError error = TestUtilities.GetCompilerError(results);
+			        if (error != null)
+			        {
+			            Assert.Fail("Arranged source code should not produce compiler errors. " +
+			                "Error: {0} - {1}, line {2}, column {3} ",
+			                error.ErrorText, testFile.Name,
+			                error.Line, error.Column);
+			        }
 			    }
 			}
 		}

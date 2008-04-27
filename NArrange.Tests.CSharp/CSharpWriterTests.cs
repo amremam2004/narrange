@@ -202,7 +202,7 @@ namespace NArrange.Tests.CSharp
 			string text = writer.ToString();
 			Assert.AreEqual(
 			    "///<summary>We no longer need this...</summary>\r\n" +
-			    "[Obsolete(\"This is obsolete\")]\r\n",
+			    "[Obsolete(\"This is obsolete\")]",
 			    text,
 			    "Attribute element was not written correctly.");
 		}
@@ -706,7 +706,7 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual(
 			    "using System;\r\n" +
 			    "using System.IO;\r\n" +
-			    "using System.Text;\r\n\r\n",
+			    "using System.Text;",
 			    text,
 			    "Group was not written correctly.");
 
@@ -720,7 +720,7 @@ namespace NArrange.Tests.CSharp
 			Assert.AreEqual(
 			    "using System;\r\n\r\n" +
 			    "using System.IO;\r\n\r\n" +
-			    "using System.Text;\r\n\r\n",
+			    "using System.Text;",
 			    text,
 			    "Group was not written correctly.");
 		}

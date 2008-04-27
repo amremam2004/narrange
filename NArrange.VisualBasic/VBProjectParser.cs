@@ -48,5 +48,5 @@ namespace NArrange.VisualBasic
 	/// </summary>
 	public sealed class VBProjectParser : MSBuildProjectParser
 	{
-}
 	}
+}

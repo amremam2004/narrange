@@ -52,6 +52,7 @@
     <Compile Include="CodeElements\TextCodeElement.cs" />
     <Compile Include="CodeElements\RegionElement.cs" />
     <Compile Include="CodeParser.cs" />
+    <Compile Include="CodeWriteVisitor.cs" />
     <Compile Include="ConditionExpressionEvaluator.cs" />
     <Compile Include="Configuration\AttributeExpression.cs" />
     <Compile Include="Configuration\CodeConfiguration.cs" />

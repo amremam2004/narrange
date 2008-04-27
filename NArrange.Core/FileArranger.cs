@@ -471,6 +471,7 @@ namespace NArrange.Core
 			private readonly string _outputFile;
 			private readonly string _outputFileText;
 			private readonly bool _modified;
+
 			/// <summary>
 			/// Creates a new ArrangeResult
 			/// </summary>

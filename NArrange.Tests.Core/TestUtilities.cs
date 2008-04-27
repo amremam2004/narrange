@@ -13,6 +13,24 @@ namespace NArrange.Tests.Core
 	/// </summary>
 	public static class TestUtilities
 	{
+		#region Public Properties
+
+		/// <summary>
+		/// Test code configuration files.
+		/// </summary>
+		public static FileInfo[] TestConfigurationFiles
+		{
+			get
+			{
+			    DirectoryInfo testConfigDirectory = new DirectoryInfo("TestConfigurations");
+			    FileInfo[] testConfigFiles = testConfigDirectory.GetFiles("*.xml");
+
+			    return testConfigFiles;
+			}
+		}
+
+		#endregion Public Properties
+
 		#region Public Methods
 
 		/// <summary>

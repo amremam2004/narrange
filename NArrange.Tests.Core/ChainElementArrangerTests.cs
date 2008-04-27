@@ -117,6 +117,7 @@ namespace NArrange.Tests.Core
 		{
 			private bool _canArrange;
 			private bool _arrangeCalled;
+
 			public TestElementArranger(bool canArrange)
 			{
 				_canArrange = canArrange;

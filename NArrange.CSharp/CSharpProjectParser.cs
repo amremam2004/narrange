@@ -48,5 +48,5 @@ namespace NArrange.CSharp
 	/// </summary>
 	public sealed class CSharpProjectParser : MSBuildProjectParser
 	{
-}
 	}
+}

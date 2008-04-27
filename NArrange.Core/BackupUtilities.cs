@@ -59,10 +59,10 @@ namespace NArrange.Core
 		/// <summary>
 		/// Default backup root directory
 		/// </summary>
-		public static readonly string BackupRoot = Path.Combine(
+		public static readonly string BackupRoot = 		Path.Combine(
 			Path.GetTempPath(), "NArrange");
 		private static readonly int MaxIntLength = 
-            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
+		    int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
 
 		#endregion Static Fields
 
