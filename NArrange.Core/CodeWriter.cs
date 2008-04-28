@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -33,6 +35,9 @@
  *      - Initial creation
  *      - Code writer refactoring
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -139,6 +144,10 @@ namespace NArrange.Core
 			        if (codeElements.Count > 1 && index < codeElements.Count - 1)
 			        {
 			            writer.WriteLine();
+			            if (codeElement is RegionElement && codeElement.Parent == null)
+			            {
+			                writer.WriteLine();
+			            }
 			        }
 			    }
 			}

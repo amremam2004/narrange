@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -32,6 +34,9 @@
  *      James Nies
  *      - Initial creation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -55,10 +60,26 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Creates a new comment line
 		/// </summary>
+		public CommentElement()
+		{
+		}
+
+		/// <summary>
+		/// Creates a new comment line
+		/// </summary>
 		/// <param name="text">Comment text</param>
 		public CommentElement(string text)
 		{
 			_text = text;
+		}
+
+		/// <summary>
+		/// Creates a new comment line
+		/// </summary>
+		/// <param name="commentType">Whether or not this is an XML comment or block comment</param>
+		public CommentElement(CommentType commentType)
+		{
+			_commentType = commentType;
 		}
 
 		/// <summary>
@@ -83,7 +104,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return ElementType.CommentLine;
+			    return ElementType.Comment;
 			}
 		}
 
@@ -99,7 +120,7 @@ namespace NArrange.Core.CodeElements
 		}
 
 		/// <summary>
-		/// Gets the type of the comment
+		/// Gets the type of the comment.
 		/// </summary>
 		public CommentType Type
 		{

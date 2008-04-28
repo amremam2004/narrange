@@ -27,7 +27,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeField";
 			prototype.Access = CodeAccess.Private;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.ReturnType = "int";
+			prototype.Type = "int";
 			prototype.IsVolatile = true;
 
 			prototype.AddHeaderCommentLine("/// <summary>");
@@ -66,7 +66,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.ReturnType, clone.ReturnType,
+			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.InitialValue, clone.InitialValue,
 			    "InitialValue was not copied correctly.");

@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -33,6 +35,9 @@
  *      - Initial creation
  *		- Implement the IGenericElement interface
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -187,7 +192,7 @@ namespace NArrange.Core.CodeElements
 		/// <summary>
 		/// Gets or sets the type of the type element
 		/// </summary>
-		public TypeElementType TypeElementType
+		public TypeElementType Type
 		{
 			get
 			{

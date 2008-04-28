@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -34,6 +36,9 @@
  *		- Implement the IGenericElement interface
  *      - Added an IsPartial property for partial method support
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

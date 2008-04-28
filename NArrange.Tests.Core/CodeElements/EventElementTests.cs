@@ -27,7 +27,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Name = "SomeEvent";
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
-			prototype.ReturnType = "EventHandler";
+			prototype.Type = "EventHandler";
 
 			prototype.AddHeaderCommentLine("/// <summary>");
 			prototype.AddHeaderCommentLine("/// This is an event.");
@@ -66,7 +66,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.ReturnType, clone.ReturnType,
+			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.Parameters, clone.Parameters,
 			    "Parameters was not copied correctly.");

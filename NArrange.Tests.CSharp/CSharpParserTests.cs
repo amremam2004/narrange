@@ -61,7 +61,7 @@ namespace NArrange.Tests.CSharp
 
 			classElement = namespaceElement.Children[1] as TypeElement;
 			Assert.IsNotNull(classElement, "Expected a type element.");
-			Assert.AreEqual(TypeElementType.Class, classElement.TypeElementType, "Expected a class type.");
+			Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
 			Assert.AreEqual("SampleClass", classElement.Name,
 			    "Unexpected class name.");
 			Assert.AreEqual(4, classElement.HeaderComments.Count,
@@ -175,7 +175,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected index parameter.");
 			    Assert.AreEqual(CodeAccess.Public, propertyElement.Access,
 			        "Unexpected code access.");
-			    Assert.AreEqual("string[][]", propertyElement.ReturnType,
+			    Assert.AreEqual("string[][]", propertyElement.Type,
 			        "Unexpected member type.");
 			    Assert.IsTrue(propertyElement.BodyText.Contains("get{return null;}"),
 			        "Unexpected body text.");
@@ -239,7 +239,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected index parameter.");
 			    Assert.AreEqual(CodeAccess.Public, propertyElement.Access,
 			        "Unexpected code access.");
-			    Assert.AreEqual("string[]", propertyElement.ReturnType,
+			    Assert.AreEqual("string[]", propertyElement.Type,
 			        "Unexpected member type.");
 			    Assert.IsTrue(propertyElement.BodyText.Contains("get{return null;}"),
 			        "Unexpected body text.");
@@ -481,25 +481,40 @@ namespace NArrange.Tests.CSharp
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
-			    Assert.AreEqual(4, elements.Count,
+			    Assert.AreEqual(7, elements.Count,
 			        "An unexpected number of elements were parsed.");
 
-			    UsingElement using1 = elements[0] as UsingElement;
+			    CommentElement commentElement1 = elements[0] as CommentElement;
+			    Assert.IsNotNull(commentElement1, "Expected a CommentElement.");
+			    Assert.AreEqual(" This is comment line 1", commentElement1.Text,
+			        "Unexpected comment text.");
+
+			    CommentElement commentElement2 = elements[1] as CommentElement;
+			    Assert.IsNotNull(commentElement2, "Expected a CommentElement.");
+			    Assert.AreEqual(" This is comment line 2", commentElement2.Text,
+			        "Unexpected comment text.");
+
+			    CommentElement commentElement3 = elements[2] as CommentElement;
+			    Assert.IsNotNull(commentElement3, "Expected a CommentElement.");
+			    Assert.AreEqual(" This is comment line 3", commentElement3.Text,
+			        "Unexpected comment text.");
+
+			    UsingElement using1 = elements[3] as UsingElement;
 			    Assert.IsNotNull(using1, "Expected a UsingElement.");
 			    Assert.AreEqual("System", using1.Name,
 			        "Unexpected using name.");
 
-			    UsingElement using2 = elements[1] as UsingElement;
+			    UsingElement using2 = elements[4] as UsingElement;
 			    Assert.IsNotNull(using2, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Collections.Generic", using2.Name,
 			        "Unexpected using name.");
 
-			    UsingElement using3 = elements[2] as UsingElement;
+			    UsingElement using3 = elements[5] as UsingElement;
 			    Assert.IsNotNull(using3, "Expected a UsingElement.");
 			    Assert.AreEqual("System.Text", using3.Name,
 			        "Unexpected using name.");
 
-			    NamespaceElement namespaceElement = elements[3] as NamespaceElement;
+			    NamespaceElement namespaceElement = elements[6] as NamespaceElement;
 			    Assert.IsNotNull(namespaceElement, "Expected a NamespaceElement.");
 			    Assert.AreEqual("SampleNamespace", namespaceElement.Name,
 			        "Unexpected namespace name.");
@@ -595,7 +610,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
 			Assert.AreEqual(1, typeElement.Interfaces.Count,
 			    "Unexpected number of interface implementations.");
@@ -703,7 +718,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.IsTrue(typeElement.IsPartial,
 			    "Expected a partial class.");
-			Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected type element type.");
 		}
 
@@ -736,7 +751,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected name.");
 			    Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			        "Unexpected code access.");
-			    Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			        "Unexpected type element type.");
 			}
 		}
@@ -1066,7 +1081,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(delegateElement.IsStatic,
 			        "Delegate should not be static.");
-			    Assert.AreEqual("void", delegateElement.ReturnType,
+			    Assert.AreEqual("void", delegateElement.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(delegateElement.IsAbstract,
 			        "Delegate should not be abstract.");
@@ -1093,7 +1108,7 @@ namespace NArrange.Tests.CSharp
 					"Unexpected number of header comment lines.");
 				Assert.IsFalse(delegateElement.IsStatic,
 					"Delegate should not be static.");
-				Assert.AreEqual("int", delegateElement.ReturnType,
+				Assert.AreEqual("int", delegateElement.Type,
 					"Unexpected return type.");
 				Assert.IsFalse(delegateElement.IsAbstract,
 					"Delegate should not be abstract.");
@@ -1145,7 +1160,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual(TypeElementType.Enum, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Enum, typeElement.Type,
 			    "Unexpected type element type.");
 			Assert.IsTrue(
 			    typeElement.BodyText.Contains("On") && 
@@ -1178,7 +1193,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual(TypeElementType.Enum, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Enum, typeElement.Type,
 			    "Unexpected type element type.");
 			Assert.IsTrue(
 			    typeElement.BodyText.Contains("On") &&
@@ -1215,7 +1230,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
-			    Assert.AreEqual("SampleEventHandler", eventElement.ReturnType,
+			    Assert.AreEqual("SampleEventHandler", eventElement.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(eventElement.IsAbstract,
 			        "Event should not be abstract.");
@@ -1242,7 +1257,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
-			    Assert.AreEqual("EventHandler<EventArgs>", eventElement.ReturnType,
+			    Assert.AreEqual("EventHandler<EventArgs>", eventElement.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(eventElement.IsAbstract,
 			        "Event should not be abstract.");
@@ -1269,7 +1284,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(eventElement.IsStatic,
 			        "Delegate should not be static.");
-			    Assert.AreEqual("SampleEventHandler", eventElement.ReturnType,
+			    Assert.AreEqual("SampleEventHandler", eventElement.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(eventElement.IsAbstract,
 			        "Event should not be abstract.");
@@ -1313,7 +1328,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected code access.");
 			Assert.IsTrue(fieldElement.IsStatic,
 			    "Unexpected value for IsStatic.");
-			Assert.AreEqual("Dictionary<string, int>", fieldElement.ReturnType,
+			Assert.AreEqual("Dictionary<string, int>", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("new Dictionary<string, int>()", fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1340,7 +1355,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.ReturnType,
+			Assert.AreEqual("int", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1367,7 +1382,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.ReturnType,
+			Assert.AreEqual("int", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1396,7 +1411,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.ReturnType,
+			Assert.AreEqual("int", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1426,7 +1441,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("char", fieldElement.ReturnType,
+			Assert.AreEqual("char", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("'X'", fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1453,7 +1468,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.ReturnType,
+			Assert.AreEqual("int", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("17", fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1481,7 +1496,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("char", fieldElement.ReturnType,
+			Assert.AreEqual("char", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("'\\''", fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -1501,7 +1516,7 @@ namespace NArrange.Tests.CSharp
 				"Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 				"Unexpected code access.");
-			Assert.AreEqual("char", fieldElement.ReturnType,
+			Assert.AreEqual("char", fieldElement.Type,
 				"Unexpected member type.");
 			Assert.AreEqual("'\\\\'", fieldElement.InitialValue,
 				"Unexpected initial value.");
@@ -1521,7 +1536,7 @@ namespace NArrange.Tests.CSharp
 				"Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 				"Unexpected code access.");
-			Assert.AreEqual("string", fieldElement.ReturnType,
+			Assert.AreEqual("string", fieldElement.Type,
 				"Unexpected member type.");
 			Assert.AreEqual("\"\\\\\\\\Server\\\\share\\\\\"", fieldElement.InitialValue,
 				"Unexpected initial value.");
@@ -1541,7 +1556,7 @@ namespace NArrange.Tests.CSharp
 				"Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 				"Unexpected code access.");
-			Assert.AreEqual("string", fieldElement.ReturnType,
+			Assert.AreEqual("string", fieldElement.Type,
 				"Unexpected member type.");
 			Assert.AreEqual("@\"\\\\Server\\share\\\"", fieldElement.InitialValue,
 				"Unexpected initial value.");
@@ -1568,7 +1583,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_simpleField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("bool", field.ReturnType,
+			    Assert.AreEqual("bool", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1587,7 +1602,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_fieldWithInitialVal", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("int", field.ReturnType,
+			    Assert.AreEqual("int", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1602,7 +1617,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("StaticStr", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("string", field.ReturnType,
+			    Assert.AreEqual("string", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Protected, field.Access,
 			        "Unexpected field access level.");
@@ -1619,7 +1634,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_genericField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("Nullable<int>", field.ReturnType,
+			    Assert.AreEqual("Nullable<int>", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1634,7 +1649,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_arrayField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("string[]", field.ReturnType,
+			    Assert.AreEqual("string[]", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Protected | CodeAccess.Internal, field.Access,
 			        "Unexpected field access level.");
@@ -1649,7 +1664,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("@internal", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("bool", field.ReturnType,
+			    Assert.AreEqual("bool", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Internal, field.Access,
 			        "Unexpected field access level.");
@@ -1664,7 +1679,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_globalNamespaceTypeField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("global::System.Boolean", field.ReturnType,
+			    Assert.AreEqual("global::System.Boolean", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1679,7 +1694,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_attributedField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("string", field.ReturnType,
+			    Assert.AreEqual("string", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1696,7 +1711,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("ConstantStr", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("string", field.ReturnType,
+			    Assert.AreEqual("string", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Public, field.Access,
 			        "Unexpected field access level.");
@@ -1717,7 +1732,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_volatileField", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("int", field.ReturnType,
+			    Assert.AreEqual("int", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1740,7 +1755,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val1, _val2", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("int", field.ReturnType,
+			    Assert.AreEqual("int", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1763,7 +1778,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(field, "Expected a field.");
 			    Assert.AreEqual("_val3, _val4, _val5, _val6", field.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("int", field.ReturnType,
+			    Assert.AreEqual("int", field.Type,
 			        "Unexpected field type.");
 			    Assert.AreEqual(CodeAccess.Private, field.Access,
 			        "Unexpected field access level.");
@@ -1911,7 +1926,7 @@ namespace NArrange.Tests.CSharp
 
 			    TypeElement interfaceElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(interfaceElement, "Expected a TypeElement.");
-			    Assert.AreEqual(TypeElementType.Interface, interfaceElement.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Interface, interfaceElement.Type,
 			        "Expected type to be an interface.");
 			    Assert.IsFalse(interfaceElement.IsStatic,
 			        "Structure should not be static.");
@@ -1949,7 +1964,7 @@ namespace NArrange.Tests.CSharp
 			TypeElement typeElement = elements[0] as TypeElement;
 			Assert.IsNotNull(typeElement,
 				"Element is not a type element.");
-			Assert.AreEqual(TypeElementType.Interface, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Interface, typeElement.Type,
 				"Expected an interface.");
 			Assert.AreEqual("ISettings", typeElement.Name,
 				"Unexpected type name.");
@@ -1961,7 +1976,7 @@ namespace NArrange.Tests.CSharp
 			EventElement eventElement = typeElement.Children[0] as EventElement;
 			Assert.IsNotNull(eventElement, "Expected an event element.");
 			Assert.AreEqual(CodeAccess.None, eventElement.Access);
-			Assert.AreEqual("SettingsEventHandler", eventElement.ReturnType);
+			Assert.AreEqual("SettingsEventHandler", eventElement.Type);
 			Assert.AreEqual("Changed", eventElement.Name);
 			Assert.IsNull(eventElement.BodyText);
 		}
@@ -2041,7 +2056,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.None, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("IEnumerator<T>", methodElement.ReturnType,
+			Assert.AreEqual("IEnumerator<T>", methodElement.Type,
 			    "Unexpected member type.");
 		}
 
@@ -2066,7 +2081,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.None, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 			Assert.IsTrue(methodElement.IsPartial,
 			    "Expected a partial method.");
@@ -2098,7 +2113,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.None, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 			Assert.IsTrue(methodElement.IsPartial,
 			    "Expected a partial method.");
@@ -2127,7 +2142,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 		}
 
@@ -2153,7 +2168,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("/*Test }*/", methodElement.BodyText,
 			    "Unexpected body text.");
@@ -2181,7 +2196,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("//Test }", methodElement.BodyText,
 			    "Unexpected body text.");
@@ -2208,7 +2223,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("void", methodElement.ReturnType,
+			Assert.AreEqual("void", methodElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("Console.WriteLine(\"}\";Console.WriteLine();", methodElement.BodyText,
 			    "Unexpected body text.");
@@ -2241,7 +2256,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
-			    Assert.AreEqual("void", method.ReturnType,
+			    Assert.AreEqual("void", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2272,7 +2287,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected header comment text.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
-			    Assert.AreEqual("string", method.ReturnType,
+			    Assert.AreEqual("string", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2299,7 +2314,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
-			    Assert.AreEqual("bool", method.ReturnType,
+			    Assert.AreEqual("bool", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2328,7 +2343,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
-			    Assert.AreEqual("int?", method.ReturnType,
+			    Assert.AreEqual("int?", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2361,7 +2376,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(method.IsStatic,
 			        "Method should not be static.");
-			    Assert.AreEqual("bool", method.ReturnType,
+			    Assert.AreEqual("bool", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2402,7 +2417,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
-			    Assert.AreEqual("int", method.ReturnType,
+			    Assert.AreEqual("int", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2437,7 +2452,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(method.IsStatic,
 			        "Method should be static.");
-			    Assert.AreEqual("void", method.ReturnType,
+			    Assert.AreEqual("void", method.Type,
 			        "Unexpected return type.");
 			    Assert.IsFalse(method.IsAbstract,
 			        "Method should not be abstract.");
@@ -2721,7 +2736,7 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected name.");
 			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			    "Unexpected code access.");
-			Assert.AreEqual("int", fieldElement.ReturnType,
+			Assert.AreEqual("int", fieldElement.Type,
 			    "Unexpected member type.");
 			Assert.AreEqual("1", fieldElement.InitialValue,
 			    "Unexpected initial value.");
@@ -2757,7 +2772,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected name. Field definition: {0}", fieldDefinition);
 			    Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
 			        "Unexpected code access. Field definition: {0}", fieldDefinition);
-			    Assert.AreEqual("int", fieldElement.ReturnType,
+			    Assert.AreEqual("int", fieldElement.Type,
 			        "Unexpected member type. Field definition: {0}", fieldDefinition);
 			    Assert.IsNull(fieldElement.InitialValue,
 			        "Unexpected initial value. Field definition: {0}", fieldDefinition);
@@ -2846,7 +2861,7 @@ namespace NArrange.Tests.CSharp
 
 			    type = regionElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
-			    Assert.AreEqual(TypeElementType.Enum, type.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Enum, type.Type,
 			        "Unexpected type element type.");
 			    Assert.AreEqual("SampleEnum", type.Name,
 			        "Unexpected type name.");
@@ -2865,7 +2880,7 @@ namespace NArrange.Tests.CSharp
 
 			    type = regionElement.Children[1] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
-			    Assert.AreEqual(TypeElementType.Structure, type.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Structure, type.Type,
 			        "Unexpected type element type.");
 			    Assert.AreEqual("SampleStructure", type.Name,
 			        "Unexpected type name.");
@@ -2886,7 +2901,7 @@ namespace NArrange.Tests.CSharp
 
 			    type = regionElement.Children[2] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
-			    Assert.AreEqual(TypeElementType.Class, type.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Class, type.Type,
 			        "Unexpected type element type.");
 			    Assert.AreEqual("SampleNestedClass", type.Name,
 			        "Unexpected type name.");
@@ -2907,7 +2922,7 @@ namespace NArrange.Tests.CSharp
 
 			    type = regionElement.Children[3] as TypeElement;
 			    Assert.IsNotNull(type, "Expected a type.");
-			    Assert.AreEqual(TypeElementType.Class, type.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Class, type.Type,
 			        "Unexpected type element type.");
 			    Assert.AreEqual("SampleNestedStaticClass", type.Name,
 			        "Unexpected type name.");
@@ -2983,7 +2998,7 @@ namespace NArrange.Tests.CSharp
 
 			    TypeElement classElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(classElement, "Expected a type element.");
-			    Assert.AreEqual(TypeElementType.Class, classElement.TypeElementType, "Expected a class type.");
+			    Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class type.");
 			    Assert.AreEqual("Fraction", classElement.Name,
 			        "Unexpected type name.");
 			    Assert.AreEqual(CodeAccess.Public, classElement.Access,
@@ -3006,7 +3021,7 @@ namespace NArrange.Tests.CSharp
 			    Assert.IsNotNull(fieldElement, "Expected a field element.");
 			    Assert.AreEqual("num, den", fieldElement.Name,
 			        "Unexpected field name.");
-			    Assert.AreEqual("int", fieldElement.ReturnType,
+			    Assert.AreEqual("int", fieldElement.Type,
 			        "Unexpected field type.");
 
 			    ConstructorElement constructorElement = classElement.Children[1] as ConstructorElement;
@@ -3028,7 +3043,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("Fraction", operatorElement.ReturnType,
+			    Assert.AreEqual("Fraction", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3047,7 +3062,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("Fraction", operatorElement.ReturnType,
+			    Assert.AreEqual("Fraction", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3066,7 +3081,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("Fraction", operatorElement.ReturnType,
+			    Assert.AreEqual("Fraction", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3085,7 +3100,7 @@ namespace NArrange.Tests.CSharp
 					"Unexpected operator access.");
 				Assert.IsTrue(operatorElement.IsStatic,
 					"Expected operator to be static.");
-				Assert.AreEqual("bool", operatorElement.ReturnType,
+				Assert.AreEqual("bool", operatorElement.Type,
 					"Unexpected operator return type.");
 				Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 					"Unexpected operator parameters.");
@@ -3104,7 +3119,7 @@ namespace NArrange.Tests.CSharp
 					"Unexpected operator access.");
 				Assert.IsTrue(operatorElement.IsStatic,
 					"Expected operator to be static.");
-				Assert.AreEqual("bool", operatorElement.ReturnType,
+				Assert.AreEqual("bool", operatorElement.Type,
 					"Unexpected operator return type.");
 				Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 					"Unexpected operator parameters.");
@@ -3123,7 +3138,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("bool", operatorElement.ReturnType,
+			    Assert.AreEqual("bool", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3142,7 +3157,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("bool", operatorElement.ReturnType,
+			    Assert.AreEqual("bool", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction a, Fraction b", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3161,7 +3176,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("double", operatorElement.ReturnType,
+			    Assert.AreEqual("double", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction f", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3180,7 +3195,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected operator access.");
 			    Assert.IsTrue(operatorElement.IsStatic,
 			        "Expected operator to be static.");
-			    Assert.AreEqual("decimal", operatorElement.ReturnType,
+			    Assert.AreEqual("decimal", operatorElement.Type,
 			        "Unexpected operator return type.");
 			    Assert.AreEqual("Fraction f", operatorElement.Parameters,
 			        "Unexpected operator parameters.");
@@ -3216,7 +3231,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
-			    Assert.AreEqual("bool", property.ReturnType,
+			    Assert.AreEqual("bool", property.Type,
 			        "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3241,7 +3256,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
-			    Assert.AreEqual("int", property.ReturnType,
+			    Assert.AreEqual("int", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3266,7 +3281,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(property.IsStatic,
 			        "Property should be static.");
-			    Assert.AreEqual("string", property.ReturnType,
+			    Assert.AreEqual("string", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3293,7 +3308,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsTrue(property.IsStatic,
 			        "Property should be static.");
-			    Assert.AreEqual("string", property.ReturnType,
+			    Assert.AreEqual("string", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3320,7 +3335,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
-			    Assert.AreEqual("Nullable<int>", property.ReturnType,
+			    Assert.AreEqual("Nullable<int>", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3351,7 +3366,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
-			    Assert.AreEqual("string[]", property.ReturnType,
+			    Assert.AreEqual("string[]", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3385,7 +3400,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected number of header comment lines.");
 			    Assert.IsFalse(property.IsStatic,
 			        "Property should not be static.");
-			    Assert.AreEqual("string", property.ReturnType,
+			    Assert.AreEqual("string", property.Type,
 			       "Unexpected property type.");
 			    Assert.IsFalse(property.IsAbstract,
 			        "Property should not be abstract.");
@@ -3459,7 +3474,7 @@ namespace NArrange.Tests.CSharp
 			        "Unexpected index parameter.");
 			    Assert.AreEqual(CodeAccess.Public, propertyElement.Access,
 			        "Unexpected code access.");
-			    Assert.AreEqual("bool", propertyElement.ReturnType,
+			    Assert.AreEqual("bool", propertyElement.Type,
 			        "Unexpected member type.");
 			    Assert.IsTrue(propertyElement.BodyText.Contains("return true;"),
 			        "Unexpected body text.");
@@ -3604,7 +3619,7 @@ namespace NArrange.Tests.CSharp
 
 			    TypeElement structElement = namespaceElement.Children[0] as TypeElement;
 			    Assert.IsNotNull(structElement, "Expected a TypeElement.");
-			    Assert.AreEqual(TypeElementType.Structure, structElement.TypeElementType,
+			    Assert.AreEqual(TypeElementType.Structure, structElement.Type,
 			        "Expected type to be a structure.");
 			    Assert.IsFalse(structElement.IsStatic,
 			        "Structure should not be static.");

@@ -25,7 +25,7 @@ namespace NArrange.Tests.Core.CodeElements
 		{
 			TypeElement prototype = new TypeElement();
 			prototype.Name = "SomeType";
-			prototype.TypeElementType = TypeElementType.Structure;
+			prototype.Type = TypeElementType.Structure;
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 
@@ -76,7 +76,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.TypeElementType, clone.TypeElementType,
+			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.TypeParameters.Count, clone.TypeParameters.Count,
 			    "TypeParameters were not copied correctly.");
@@ -97,7 +97,7 @@ namespace NArrange.Tests.Core.CodeElements
 			//
 			// Verify default property values
 			//
-			Assert.AreEqual(TypeElementType.Class, typeElement.TypeElementType,
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
 			    "Unexpected default value for Type.");
 			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
 			    "Unexpected default value for Access.");

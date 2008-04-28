@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -33,7 +35,11 @@
  *      - Initial creation
  *      - Added parsing support for partial methods
  *      - Support parsing of Handles and WithEvents keywords
+ *      - Preserve header comments without associating w/ imports.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -482,6 +488,31 @@ namespace NArrange.VisualBasic
 			return commentLine;
 		}
 
+		private ReadOnlyCollection<ICommentElement> ParseComments()
+		{
+			EatWhiteSpace();
+
+			List<ICommentElement> comments = new List<ICommentElement>();
+
+			char nextChar = NextChar;
+			while (nextChar == VBSymbol.BeginComment)
+			{
+			    TryReadChar();
+
+
+			    CommentElement commentLine = ParseCommentLine();
+			    comments.Add(commentLine);
+
+			    EatWhiteSpace();
+
+			    nextChar = NextChar;
+			}
+
+			EatWhiteSpace();
+
+			return comments.AsReadOnly();
+		}
+
 		private DelegateElement ParseDelegate(
 			CodeAccess access, MemberModifiers memberAttributes)
 		{
@@ -515,7 +546,7 @@ namespace NArrange.VisualBasic
 			delegateElement.BodyText = methodElement.BodyText;
 			if (isFunction)
 			{
-			    delegateElement.ReturnType = methodElement.ReturnType;
+			    delegateElement.Type = methodElement.Type;
 			}
 
 			foreach (TypeParameter typeParameter in methodElement.TypeParameters)
@@ -567,6 +598,15 @@ namespace NArrange.VisualBasic
 			            string[] words = line.Split(WhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries);
 			            if (words.Length > 0 && VBKeyword.Normalize(words[0]) == VBKeyword.Region)
 			            {
+			                if (comments.Count > 0)
+			                {
+			                    foreach (ICommentElement commentElement in comments)
+			                    {
+			                        codeElements.Add(commentElement);
+			                    }
+			                    comments.Clear();
+			                }
+
 			                RegionElement regionElement = ParseRegion(line);
 			                regionStack.Push(regionElement);
 			            }
@@ -575,6 +615,15 @@ namespace NArrange.VisualBasic
 			                VBKeyword.Normalize(words[1]) == VBKeyword.Region)
 			            {
 			                RegionElement regionElement = regionStack.Pop();
+
+			                if (comments.Count > 0)
+			                {
+			                    foreach (ICommentElement commentElement in comments)
+			                    {
+			                        regionElement.AddChild(commentElement);
+			                    }
+			                    comments.Clear();
+			                }
 
 			                if (regionStack.Count > 0)
 			                {
@@ -705,6 +754,32 @@ namespace NArrange.VisualBasic
 			                            parentElement);
 			                        if (element != null)
 			                        {
+			                            if (element is CommentedElement)
+			                            {
+			                                UsingElement usingElement = element as UsingElement;
+
+			                                //
+			                                // If this is the first using statement, then don't attach
+			                                // header comments to the element.
+			                                //
+			                                if (usingElement != null && parentElement == null && codeElements.Count == 0)
+			                                {
+			                                    foreach (ICommentElement commentElement in usingElement.HeaderComments)
+			                                    {
+			                                        if (regionStack.Count > 0)
+			                                        {
+			                                            regionStack.Peek().AddChild(commentElement);
+			                                        }
+			                                        else
+			                                        {
+			                                            codeElements.Add(commentElement);
+			                                        }
+			                                    }
+			                                    usingElement.ClearHeaderCommentLines();
+			                                }
+			                                comments.Clear();
+			                            }
+
 			                            if (regionStack.Count > 0)
 			                            {
 			                                regionStack.Peek().AddChild(element);
@@ -713,8 +788,9 @@ namespace NArrange.VisualBasic
 			                            {
 			                                codeElements.Add(element);
 			                            }
+			                            
 			                            elementBuilder = new StringBuilder(DefaultBlockLength);
-			                            comments.Clear();
+			                            
 			                            if (element is IAttributedElement)
 			                            {
 			                                foreach (AttributeElement attribute in attributes)
@@ -739,7 +815,7 @@ namespace NArrange.VisualBasic
 			{
 			    foreach (ICommentElement comment in comments)
 			    {
-			        codeElements.Add(comment);
+			        codeElements.Insert(0, comment);
 			    }
 			}
 
@@ -785,7 +861,7 @@ namespace NArrange.VisualBasic
 			    {
 			        this.OnParseError("Expected type identifier");
 			    }
-			    eventElement.ReturnType = eventType;
+			    eventElement.Type = eventType;
 			}
 
 			string[] implements;
@@ -841,7 +917,7 @@ namespace NArrange.VisualBasic
 			    {
 			        returnType += " " + CaptureTypeName();
 			    }
-			    field.ReturnType = returnType;
+			    field.Type = returnType;
 			}
 
 			field.Access = access;
@@ -967,7 +1043,7 @@ namespace NArrange.VisualBasic
 			{
 			    EatWhiteSpace();
 			    EatWord(VBKeyword.As);
-			    method.ReturnType = CaptureTypeName();
+			    method.Type = CaptureTypeName();
 			}
 
 			EatWhiteSpace();
@@ -1024,7 +1100,7 @@ namespace NArrange.VisualBasic
 			//
 			// Parse child elements
 			//
-			List<ICodeElement> childElements = DoParseElements();
+			List<ICodeElement> childElements = ParseElements(namespaceElement);
 			foreach (ICodeElement childElement in childElements)
 			{
 			    namespaceElement.AddChild(childElement);
@@ -1163,7 +1239,7 @@ namespace NArrange.VisualBasic
 			    this.OnParseError("Expected return type");
 			}
 
-			property.ReturnType = type;
+			property.Type = type;
 
 			string[] implements;
 			string blockTemp = TryParseImplements(out implements);
@@ -1231,7 +1307,7 @@ namespace NArrange.VisualBasic
 			}
 
 			typeElement.Access = access;
-			typeElement.TypeElementType = elementType;
+			typeElement.Type = elementType;
 			typeElement.TypeModifiers = typeAttributes;
 
 			if (elementType == TypeElementType.Enum)
@@ -1575,7 +1651,7 @@ namespace NArrange.VisualBasic
 
 			            TypeElement parentTypeElement = parentElement as TypeElement;
 			            bool inInterface = parentTypeElement != null && 
-			                parentTypeElement.TypeElementType == TypeElementType.Interface;
+			                parentTypeElement.Type == TypeElementType.Interface;
 			           
 			            switch (elementType)
 			            {

@@ -219,6 +219,152 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests inserting elements by element type.
+		/// </summary>
+		[Test]
+		public void InsertByElementTypeAndNameTest()
+		{
+			SortBy sortBy = new SortBy();
+			sortBy.By = ElementAttributeType.ElementType;
+			sortBy.Direction = ListSortDirection.Ascending;
+
+			sortBy.InnerSortBy = new SortBy();
+			sortBy.InnerSortBy.By = ElementAttributeType.Name;
+			sortBy.InnerSortBy.Direction = ListSortDirection.Ascending;
+
+			SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, sortBy);
+
+			//
+			// Create a parent element
+			//
+			RegionElement regionElement = new RegionElement();
+			Assert.AreEqual(0, regionElement.Children.Count,
+			    "Parent element should not have any children.");
+
+			//
+			// Insert an element with a middle access.
+			//
+			ConstructorElement constructor = new ConstructorElement();
+			constructor.Name = "SomeClass";
+			constructor.Access = CodeAccess.Public;
+			sortedInserter.InsertElement(regionElement, constructor);
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(constructor),
+			    "Element was not inserted at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the end
+			//
+			MethodElement methodElement1 = new MethodElement();
+			methodElement1.Name = "SomeMethod";
+			methodElement1.Access = CodeAccess.Public;
+			sortedInserter.InsertElement(regionElement, methodElement1);
+			Assert.AreEqual(2, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(constructor),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(methodElement1),
+			    "Element is not at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the beginning
+			//
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Name = "someField";
+			fieldElement.Access = CodeAccess.Private;
+			sortedInserter.InsertElement(regionElement, fieldElement);
+			Assert.AreEqual(3, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(fieldElement),
+			   "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(constructor),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(2, regionElement.Children.IndexOf(methodElement1),
+			  "Element is not at the correct index.");
+
+			//
+			// Insert an element that should be sorted by name
+			//
+			MethodElement methodElement2 = new MethodElement();
+			methodElement1.Name = "AnotherMethod";
+			methodElement1.Access = CodeAccess.Public;
+			sortedInserter.InsertElement(regionElement, methodElement2);
+			Assert.AreEqual(4, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(fieldElement),
+			   "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(constructor),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(2, regionElement.Children.IndexOf(methodElement2),
+			  "Element is not at the correct index.");
+			Assert.AreEqual(3, regionElement.Children.IndexOf(methodElement1),
+			  "Element is not at the correct index.");
+		}
+
+		/// <summary>
+		/// Tests inserting elements by element type.
+		/// </summary>
+		[Test]
+		public void InsertByElementTypeTest()
+		{
+			SortBy sortBy = new SortBy();
+			sortBy.By = ElementAttributeType.ElementType;
+			sortBy.Direction = ListSortDirection.Ascending;
+
+			SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, sortBy);
+
+			//
+			// Create a parent element
+			//
+			RegionElement regionElement = new RegionElement();
+			Assert.AreEqual(0, regionElement.Children.Count,
+			    "Parent element should not have any children.");
+
+			//
+			// Insert an element with a middle access.
+			//
+			ConstructorElement constructor = new ConstructorElement();
+			constructor.Name = "SomeClass";
+			constructor.Access = CodeAccess.Public;
+			sortedInserter.InsertElement(regionElement, constructor);
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(constructor),
+			    "Element was not inserted at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the end
+			//
+			MethodElement methodElement = new MethodElement();
+			methodElement.Name = "SomeMethod";
+			methodElement.Access = CodeAccess.Public;
+			sortedInserter.InsertElement(regionElement, methodElement);
+			Assert.AreEqual(2, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(constructor),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(methodElement),
+			    "Element is not at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the beginning
+			//
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Name = "someField";
+			fieldElement.Access = CodeAccess.Private;
+			sortedInserter.InsertElement(regionElement, fieldElement);
+			Assert.AreEqual(3, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(fieldElement),
+			   "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(constructor),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(2, regionElement.Children.IndexOf(methodElement),
+			  "Element is not at the correct index.");
+		}
+
+		/// <summary>
 		/// Tests inserting elements by name in descending order.
 		/// </summary>
 		[Test]

@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -32,6 +34,9 @@
  *      James Nies
  *      - Initial creation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -167,6 +172,15 @@ namespace NArrange.Core.Configuration
 			            }
 			            break;
 
+			        case '!':
+			            nextCh = (char)reader.Peek();
+			            if (nextCh == '=')
+			            {
+			                nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.NotEqual));
+			                reader.Read();
+			            }
+			            break;
+
 			        case ':':
 			            nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.Contains));
 			            reader.Read();
@@ -293,6 +307,7 @@ namespace NArrange.Core.Configuration
 
 			Queue<ExpressionOperator> operatorPrecedence = new Queue<ExpressionOperator>();
 			operatorPrecedence.Enqueue(ExpressionOperator.Equal);
+			operatorPrecedence.Enqueue(ExpressionOperator.NotEqual);
 			operatorPrecedence.Enqueue(ExpressionOperator.Contains);
 			operatorPrecedence.Enqueue(ExpressionOperator.And);
 			operatorPrecedence.Enqueue(ExpressionOperator.Or);

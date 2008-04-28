@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
-			fieldElement.ReturnType = "int";
+			fieldElement.Type = "int";
 			fieldElement.MemberModifiers = MemberModifiers.Static;
 
 			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Modifier, fieldElement);
@@ -145,13 +145,13 @@ namespace NArrange.Tests.Core.CodeElements
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Name = "TestField";
 			fieldElement.Access = CodeAccess.Protected;
-			fieldElement.ReturnType = "int";
+			fieldElement.Type = "int";
 
 			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, fieldElement);
 			Assert.AreEqual("int", attribute, "Unexpected attribute.");
 
 			TypeElement typeElement = new TypeElement();
-			typeElement.TypeElementType = TypeElementType.Interface;
+			typeElement.Type = TypeElementType.Interface;
 
 			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, typeElement);
 			Assert.AreEqual("Interface", attribute, "Unexpected attribute.");

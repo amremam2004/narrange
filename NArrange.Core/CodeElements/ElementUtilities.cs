@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -34,6 +36,9 @@
  *      - Added a Format method for getting a formatted string representation 
  *        of a code element
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -80,14 +85,22 @@ namespace NArrange.Core.CodeElements
 			MemberElement memberElement = codeElement as MemberElement;
 			if (memberElement != null)
 			{
-			    attributeString = memberElement.ReturnType;
+			    attributeString = memberElement.Type;
 			}
 			else
 			{
 			    TypeElement typeElement = codeElement as TypeElement;
 			    if (typeElement != null)
 			    {
-			        attributeString = EnumUtilities.ToString(typeElement.TypeElementType);
+			        attributeString = EnumUtilities.ToString(typeElement.Type);
+			    }
+			    else
+			    {
+			        CommentElement commentElement = codeElement as CommentElement;
+			        if (commentElement != null)
+			        {
+			            attributeString = EnumUtilities.ToString(commentElement.Type);
+			        }
 			    }
 			}
 

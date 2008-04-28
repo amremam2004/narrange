@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -35,6 +37,9 @@
  *		- Added an enumeration for whitespace characters
  *      - Added an enumeration for interface implementation types
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -141,6 +146,16 @@ namespace NArrange.Core
 		NotSpecified,
 
 		/// <summary>
+		/// Comment
+		/// </summary>
+		Comment,
+
+		/// <summary>
+		/// Attribute
+		/// </summary>
+		Attribute,
+
+		/// <summary>
 		/// Using statement
 		/// </summary>
 		Using,
@@ -151,9 +166,34 @@ namespace NArrange.Core
 		Namespace,
 
 		/// <summary>
-		/// Type
+		/// Region
 		/// </summary>
-		Type,
+		Region,
+
+		/// <summary>
+		/// Field
+		/// </summary>
+		Field,
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		Constructor,
+
+		/// <summary>
+		/// Property
+		/// </summary>
+		Property,
+
+		/// <summary>
+		/// Method
+		/// </summary>
+		Method,
+
+		/// <summary>
+		/// Event
+		/// </summary>
+		Event,
 
 		/// <summary>
 		/// Enumeration
@@ -166,49 +206,9 @@ namespace NArrange.Core
 		Delegate,
 
 		/// <summary>
-		/// Constructor
+		/// Type
 		/// </summary>
-		Constructor,
-
-		/// <summary>
-		/// Field
-		/// </summary>
-		Field,
-
-		/// <summary>
-		/// Method
-		/// </summary>
-		Method,
-
-		/// <summary>
-		/// Property
-		/// </summary>
-		Property,
-
-		/// <summary>
-		/// Event
-		/// </summary>
-		Event,
-
-		/// <summary>
-		/// Attribute
-		/// </summary>
-		Attribute,
-
-		/// <summary>
-		/// Region
-		/// </summary>
-		Region,
-
-		/// <summary>
-		/// Single line comment
-		/// </summary>
-		CommentLine,
-
-		/// <summary>
-		/// Block comment
-		/// </summary>
-		CommentBlock
+		Type,
 	}
 
 	/// <summary>
@@ -220,6 +220,11 @@ namespace NArrange.Core
 		/// Equality
 		/// </summary>
 		Equal,
+
+		/// <summary>
+		/// Not equal
+		/// </summary>
+		NotEqual,
 
 		/// <summary>
 		/// Contains

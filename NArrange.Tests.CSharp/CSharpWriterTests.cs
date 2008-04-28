@@ -32,13 +32,13 @@ namespace NArrange.Tests.CSharp
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "bool";
+			methodElement.Type = "bool";
 			methodElement.BodyText = "\treturn false;";
 
 			classElement.AddChild(methodElement);
@@ -78,13 +78,13 @@ namespace NArrange.Tests.CSharp
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "bool";
+			methodElement.Type = "bool";
 			methodElement.BodyText = "\treturn false;";
 
 			classElement.AddChild(methodElement);
@@ -218,7 +218,7 @@ namespace NArrange.Tests.CSharp
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Static;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -240,7 +240,7 @@ namespace NArrange.Tests.CSharp
 			classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Static;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -273,7 +273,7 @@ namespace NArrange.Tests.CSharp
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Static | TypeModifiers.Partial;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddTypeParameter(
 			    new TypeParameter("T", "class", "IDisposable", "new()"));
@@ -306,7 +306,7 @@ namespace NArrange.Tests.CSharp
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Sealed;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -370,7 +370,7 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 
 			RegionElement fieldsRegion = new RegionElement();
@@ -379,12 +379,12 @@ namespace NArrange.Tests.CSharp
 			FieldElement field1 = new FieldElement();
 			field1.Name = "_val1";
 			field1.Access = CodeAccess.Private;
-			field1.ReturnType = "int";
+			field1.Type = "int";
 
 			FieldElement field2 = new FieldElement();
 			field2.Name = "_val2";
 			field2.Access = CodeAccess.Private;
-			field2.ReturnType = "int";
+			field2.Type = "int";
 
 			fieldsRegion.AddChild(field1);
 			fieldsRegion.AddChild(field2);
@@ -396,7 +396,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement method = new MethodElement();
 			method.Name = "DoSomething";
 			method.Access = CodeAccess.Public;
-			method.ReturnType = "void";
+			method.Type = "void";
 			method.BodyText = string.Empty;
 
 			methodsRegion.AddChild(method);
@@ -438,7 +438,7 @@ namespace NArrange.Tests.CSharp
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.None;
 			classElement.TypeModifiers = TypeModifiers.Partial;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -518,7 +518,7 @@ namespace NArrange.Tests.CSharp
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.ReturnType = "int";
+			delegateElement.Type = "int";
 			delegateElement.Name = "Compare";
 			delegateElement.Parameters = "T t1, T t2";
 			delegateElement.AddTypeParameter(
@@ -547,7 +547,7 @@ namespace NArrange.Tests.CSharp
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.ReturnType = "int";
+			delegateElement.Type = "int";
 			delegateElement.Name = "DoSomething";
 			delegateElement.Parameters = "bool flag";
 
@@ -574,7 +574,7 @@ namespace NArrange.Tests.CSharp
 
 			EventElement eventElement = new EventElement();
 			eventElement.Access = CodeAccess.Public;
-			eventElement.ReturnType = "EventHandler";
+			eventElement.Type = "EventHandler";
 			eventElement.Name = "TestEvent";
 
 			StringWriter writer = new StringWriter();
@@ -600,7 +600,7 @@ namespace NArrange.Tests.CSharp
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.MemberModifiers = MemberModifiers.Static;
-			fieldElement.ReturnType = "Dictionary<string, int>";
+			fieldElement.Type = "Dictionary<string, int>";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "new Dictionary<string, int>()";
 
@@ -613,7 +613,7 @@ namespace NArrange.Tests.CSharp
 			string text = writer.ToString();
 			Assert.AreEqual("private static Dictionary<string, int> _test = new Dictionary<string, int>();",
 			    text,
-			    "FielElement element was not written correctly.");
+			    "FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -627,7 +627,7 @@ namespace NArrange.Tests.CSharp
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.MemberModifiers = MemberModifiers.Static;
-			fieldElement.ReturnType = "int";
+			fieldElement.Type = "int";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "1";
 
@@ -640,7 +640,7 @@ namespace NArrange.Tests.CSharp
 			string text = writer.ToString();
 			Assert.AreEqual("private static int _test = 1;",
 			    text,
-			    "FielElement element was not written correctly.");
+			    "FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -655,7 +655,7 @@ namespace NArrange.Tests.CSharp
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.MemberModifiers = MemberModifiers.Static;
 			fieldElement.IsVolatile = true;
-			fieldElement.ReturnType = "int";
+			fieldElement.Type = "int";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "1";
 
@@ -668,7 +668,7 @@ namespace NArrange.Tests.CSharp
 			string text = writer.ToString();
 			Assert.AreEqual("private static volatile int _test = 1;",
 			    text,
-			    "FielElement element was not written correctly.");
+			    "FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -735,7 +735,7 @@ namespace NArrange.Tests.CSharp
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeElementType = TypeElementType.Interface;
+			classElement.Type = TypeElementType.Interface;
 			classElement.Name = "TestInterface";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -765,7 +765,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Protected;
 			methodElement.MemberModifiers = MemberModifiers.Abstract;
-			methodElement.ReturnType = "void";
+			methodElement.Type = "void";
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -790,7 +790,7 @@ namespace NArrange.Tests.CSharp
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.None;
-			methodElement.ReturnType = "IEnumerator<T>";
+			methodElement.Type = "IEnumerator<T>";
 			methodElement.Name = "IEnumerable<T>.GetEnumerator";
 			methodElement.BodyText = "\treturn null;";
 
@@ -822,7 +822,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Private;
 			methodElement.MemberModifiers = MemberModifiers.Partial;
-			methodElement.ReturnType = "void";
+			methodElement.Type = "void";
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "bool flag";
 			methodElement.BodyText = null;
@@ -851,7 +851,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Private;
 			methodElement.MemberModifiers = MemberModifiers.Partial;
-			methodElement.ReturnType = "void";
+			methodElement.Type = "void";
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "bool flag";
 			methodElement.BodyText = "\treturn;";
@@ -884,7 +884,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Sealed | MemberModifiers.Override;
-			methodElement.ReturnType = "void";
+			methodElement.Type = "void";
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -910,7 +910,7 @@ namespace NArrange.Tests.CSharp
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Static;
-			methodElement.ReturnType = "int";
+			methodElement.Type = "int";
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "bool flag";
 			methodElement.BodyText = "\treturn 0;";
@@ -946,7 +946,7 @@ namespace NArrange.Tests.CSharp
 			operatorElement.Name = null;
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "decimal";
+			operatorElement.Type = "decimal";
 			operatorElement.Parameters = "Fraction f";
 			operatorElement.BodyText = "return (decimal)f.num / f.den;";
 
@@ -980,7 +980,7 @@ namespace NArrange.Tests.CSharp
 			operatorElement.Name = null;
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "double";
+			operatorElement.Type = "double";
 			operatorElement.Parameters = "Fraction f";
 			operatorElement.BodyText = "return (double)f.num / f.den;";
 
@@ -1013,7 +1013,7 @@ namespace NArrange.Tests.CSharp
 			operatorElement.Name = "+";
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "Fraction";
+			operatorElement.Type = "Fraction";
 			operatorElement.Parameters = "Fraction a, Fraction b";
 			operatorElement.BodyText = "return new Fraction(a.num * b.den + b.num * a.den, a.den * b.den);";
 

@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -40,6 +42,9 @@
  *      - Fixed writing of volatile fields
  *      - Code writer refactoring
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -139,18 +144,6 @@ namespace NArrange.CSharp
 			Writer.WriteLine();
 			TabCount--;
 			WriteIndented(CSharpSymbol.EndBlock.ToString());
-		}
-
-		/// <summary>
-		/// Writes a collection of header comment lines
-		/// </summary>
-		/// <param name="headerComments"></param>
-		private void WriteHeaderComments(ReadOnlyCollection<ICommentElement> headerComments)
-		{
-			foreach (ICommentElement comment in headerComments)
-			{
-			    comment.Accept(this);
-			}
 		}
 
 		private void WriteMemberAttributes(MemberModifiers memberAttributes)
@@ -363,7 +356,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitAttributeElement(AttributeElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpSymbol.BeginAttribute);
@@ -392,7 +385,6 @@ namespace NArrange.CSharp
 			    builder.Append("*/");
 
 			    WriteTextBlock(builder.ToString());
-			    WriteIndentedLine();
 			}
 			else
 			{
@@ -406,7 +398,7 @@ namespace NArrange.CSharp
 			    }
 
 			    builder.Append(comment.Text);
-			    WriteIndentedLine(builder.ToString());
+			    WriteIndented(builder.ToString());
 			}
 		}
 
@@ -416,7 +408,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitConstructorElement(ConstructorElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -446,7 +438,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitDelegateElement(DelegateElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -456,7 +448,7 @@ namespace NArrange.CSharp
 			Writer.Write(CSharpKeyword.Delegate);
 			Writer.Write(' ');
 
-			Writer.Write(element.ReturnType);
+			Writer.Write(element.Type);
 			Writer.Write(' ');
 
 			Writer.Write(element.Name);
@@ -473,7 +465,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitEventElement(EventElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -483,7 +475,7 @@ namespace NArrange.CSharp
 			Writer.Write(CSharpKeyword.Event);
 			Writer.Write(' ');
 
-			Writer.Write(element.ReturnType);
+			Writer.Write(element.Type);
 			Writer.Write(' ');
 
 			Writer.Write(element.Name);
@@ -505,7 +497,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitFieldElement(FieldElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -518,7 +510,7 @@ namespace NArrange.CSharp
 			    Writer.Write(' ');
 			}
 
-			Writer.Write(element.ReturnType);
+			Writer.Write(element.Type);
 			Writer.Write(' ');
 
 			Writer.Write(element.Name);
@@ -547,7 +539,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitMethodElement(MethodElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			if (element.IsPartial)
@@ -562,7 +554,7 @@ namespace NArrange.CSharp
 
 			if (element.OperatorType == OperatorType.None)
 			{
-			    Writer.Write(element.ReturnType);
+			    Writer.Write(element.Type);
 			    Writer.Write(' ');
 
 			    if (element.IsOperator)
@@ -587,7 +579,7 @@ namespace NArrange.CSharp
 
 			    Writer.Write(CSharpKeyword.Operator);
 			    Writer.Write(' ');
-			    Writer.Write(element.ReturnType);
+			    Writer.Write(element.Type);
 			}
 
 			WriteTypeParameters(element);
@@ -611,7 +603,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitNamespaceElement(NamespaceElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpKeyword.Namespace);
@@ -635,14 +627,14 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitPropertyElement(PropertyElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers);
 
-			Writer.Write(element.ReturnType);
+			Writer.Write(element.Type);
 			Writer.Write(' ');
 
 			Writer.Write(element.Name);
@@ -688,11 +680,6 @@ namespace NArrange.CSharp
 			builder.Append(element.Name);
 
 			WriteIndented(builder.ToString());
-			if (element.Parent == null)
-			{
-			    Writer.WriteLine();
-			    Writer.WriteLine();
-			}
 		}
 
 		/// <summary>
@@ -701,7 +688,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitTypeElement(TypeElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			if (element.Access != CodeAccess.None)
@@ -745,7 +732,7 @@ namespace NArrange.CSharp
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
-			switch (element.TypeElementType)
+			switch (element.Type)
 			{
 			    case TypeElementType.Class:
 			        builder.Append(CSharpKeyword.Class);
@@ -766,7 +753,7 @@ namespace NArrange.CSharp
 			    default:
 			        throw new ArgumentOutOfRangeException(
 			            string.Format(Thread.CurrentThread.CurrentCulture,
-			            "Unhandled type element type {0}", element.TypeElementType));
+			            "Unhandled type element type {0}", element.Type));
 			}
 
 			builder.Append(' ');
@@ -802,7 +789,7 @@ namespace NArrange.CSharp
 			WriteTypeParameterConstraints(element);
 			Writer.WriteLine();
 
-			if (element.TypeElementType == TypeElementType.Enum)
+			if (element.Type == TypeElementType.Enum)
 			{
 			    WriteBody(element);
 			}
@@ -832,7 +819,7 @@ namespace NArrange.CSharp
 		/// <param name="element"></param>
 		public override void VisitUsingElement(UsingElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpKeyword.Using);

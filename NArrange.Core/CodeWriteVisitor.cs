@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -32,8 +34,12 @@
  *      James Nies
  *      - Initial creation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -148,6 +154,19 @@ namespace NArrange.Core
 			        Writer.Write(string.Format(CultureInfo.InvariantCulture,
 			            " {0}{1}", commentPrefix, formatted));
 			    }
+			}
+		}
+
+		/// <summary>
+		/// Writes a collection of comment lines.
+		/// </summary>
+		/// <param name="comments"></param>
+		protected void WriteComments(ReadOnlyCollection<ICommentElement> comments)
+		{
+			foreach (ICommentElement comment in comments)
+			{
+			    comment.Accept(this);
+			    WriteIndentedLine();
 			}
 		}
 

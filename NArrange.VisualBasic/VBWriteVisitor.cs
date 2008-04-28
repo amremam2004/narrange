@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -33,6 +35,9 @@
  *      - Initial creation
  *      - Code writer refactoring
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -121,7 +126,7 @@ namespace NArrange.VisualBasic
 			bool isAbstract = memberElement != null &&
 			    (memberElement.MemberModifiers & MemberModifiers.Abstract) == MemberModifiers.Abstract;
 			bool inInterface = memberElement != null &&
-			    parentTypeElement != null && parentTypeElement.TypeElementType == TypeElementType.Interface;
+			    parentTypeElement != null && parentTypeElement.Type == TypeElementType.Interface;
 
 			if (!(isAbstract || inInterface))
 			{
@@ -174,7 +179,7 @@ namespace NArrange.VisualBasic
 			        {
 			            blockName = VBKeyword.Operator;
 			        }
-			        else if (!string.IsNullOrEmpty(memberElement.ReturnType))
+			        else if (!string.IsNullOrEmpty(memberElement.Type))
 			        {
 			            blockName = VBKeyword.Function;
 			        }
@@ -190,7 +195,7 @@ namespace NArrange.VisualBasic
 			    TypeElement typeElement = codeElement as TypeElement;
 			    if (typeElement != null)
 			    {
-			        blockName = EnumUtilities.ToString(typeElement.TypeElementType);
+			        blockName = EnumUtilities.ToString(typeElement.Type);
 			    }
 
 			    if (string.IsNullOrEmpty(blockName))
@@ -200,18 +205,6 @@ namespace NArrange.VisualBasic
 			}
 
 			WriteIndented(VBKeyword.End + ' ' + blockName);
-		}
-
-		/// <summary>
-		/// Writes a collection of header comment lines
-		/// </summary>
-		/// <param name="headerComments"></param>
-		private void WriteHeaderComments(ReadOnlyCollection<ICommentElement> headerComments)
-		{
-			foreach (ICommentElement comment in headerComments)
-			{
-			    comment.Accept(this);
-			}
 		}
 
 		private void WriteImplements(ReadOnlyCollection<InterfaceReference> interfaceReferences)
@@ -475,7 +468,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitAttributeElement(AttributeElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
@@ -510,14 +503,14 @@ namespace NArrange.VisualBasic
 		/// <param name="comment"></param>
 		public override void VisitCommentElement(CommentElement comment)
 		{
-			StringBuilder builder = new StringBuilder(DefaultBlockLength);
-
 			if (comment.Type == CommentType.Block)
 			{
 			    throw new InvalidOperationException("Block comments are not supported by VB.");
 			}
 			else
 			{
+			    StringBuilder builder = new StringBuilder(DefaultBlockLength);
+
 			    if (comment.Type == CommentType.XmlLine)
 			    {
 			        builder.Append("'''");
@@ -528,9 +521,8 @@ namespace NArrange.VisualBasic
 			    }
 
 			    builder.Append(comment.Text);
+			    WriteIndented(builder.ToString());
 			}
-
-			WriteIndentedLine(builder.ToString());
 		}
 
 		/// <summary>
@@ -539,7 +531,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitConstructorElement(ConstructorElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -572,7 +564,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitDelegateElement(DelegateElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -584,14 +576,14 @@ namespace NArrange.VisualBasic
 			Writer.Write(VBKeyword.Delegate);
 			Writer.Write(' ');
 
-			WriteMethodType(element.ReturnType);
+			WriteMethodType(element.Type);
 
 			Writer.Write(element.Name);
 
 			WriteTypeParameters(element);			
 			WriteParameterList(element.Parameters);
 
-			WriteReturnType(element.ReturnType);
+			WriteReturnType(element.Type);
 		}
 
 		/// <summary>
@@ -600,7 +592,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitEventElement(EventElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -626,7 +618,7 @@ namespace NArrange.VisualBasic
 			{
 			    WriteParameterList(element.Parameters);
 			}
-			WriteReturnType(element.ReturnType);
+			WriteReturnType(element.Type);
 
 			if (isCustom)
 			{
@@ -640,7 +632,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitFieldElement(FieldElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -667,7 +659,7 @@ namespace NArrange.VisualBasic
 
 			Writer.Write(element.Name);
 
-			WriteReturnType(element.ReturnType);
+			WriteReturnType(element.Type);
 
 			if (!string.IsNullOrEmpty(element.InitialValue))
 			{
@@ -684,7 +676,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitMethodElement(MethodElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			if (element.IsPartial)
@@ -729,7 +721,7 @@ namespace NArrange.VisualBasic
 			}
 			else
 			{
-			    WriteMethodType(element.ReturnType);
+			    WriteMethodType(element.Type);
 			}
 
 			Writer.Write(element.Name);
@@ -761,7 +753,7 @@ namespace NArrange.VisualBasic
 
 			WriteParameterList(element.Parameters);
 
-			WriteReturnType(element.ReturnType);
+			WriteReturnType(element.Type);
 			WriteImplements(element.Implements);
 
 			string[] handles = element[VBExtendedProperties.Handles] as string[];
@@ -788,7 +780,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitNamespaceElement(NamespaceElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(VBKeyword.Namespace);
@@ -814,7 +806,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitPropertyElement(PropertyElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			WriteAccess(element.Access);
@@ -848,7 +840,7 @@ namespace NArrange.VisualBasic
 			}
 			Writer.Write(VBSymbol.EndParameterList);
 
-			WriteReturnType(element.ReturnType);
+			WriteReturnType(element.Type);
 			WriteImplements(element.Implements);
 
 			WriteBody(element);
@@ -886,12 +878,6 @@ namespace NArrange.VisualBasic
 			builder.Append(element.Name);
 
 			WriteIndented(builder.ToString());
-
-			if (element.Parent == null)
-			{
-			    Writer.WriteLine();
-			    Writer.WriteLine();
-			}
 		}
 
 		/// <summary>
@@ -900,7 +886,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitTypeElement(TypeElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 			this.WriteAttributes(element);
 
 			if (element.Access != CodeAccess.None)
@@ -932,7 +918,7 @@ namespace NArrange.VisualBasic
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
-			switch (element.TypeElementType)
+			switch (element.Type)
 			{
 			    case TypeElementType.Class:
 			        builder.Append(VBKeyword.Class);
@@ -957,7 +943,7 @@ namespace NArrange.VisualBasic
 			    default:
 			        throw new ArgumentOutOfRangeException(
 			            string.Format(Thread.CurrentThread.CurrentCulture,
-			            "Unrecognized type element type {0}", element.TypeElementType));
+			            "Unrecognized type element type {0}", element.Type));
 			}
 
 			builder.Append(' ');
@@ -969,7 +955,7 @@ namespace NArrange.VisualBasic
 
 			if (element.Interfaces.Count > 0)
 			{
-			    if (element.TypeElementType == TypeElementType.Enum)
+			    if (element.Type == TypeElementType.Enum)
 			    {
 			        Writer.Write(' ');
 			        Writer.Write(VBKeyword.As);
@@ -1007,7 +993,7 @@ namespace NArrange.VisualBasic
 			    }
 			}
 
-			if (element.TypeElementType == TypeElementType.Enum)
+			if (element.Type == TypeElementType.Enum)
 			{
 			    WriteBody(element);
 			}
@@ -1032,7 +1018,7 @@ namespace NArrange.VisualBasic
 		/// <param name="element"></param>
 		public override void VisitUsingElement(UsingElement element)
 		{
-			this.WriteHeaderComments(element.HeaderComments);
+			this.WriteComments(element.HeaderComments);
 
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(VBKeyword.Imports);

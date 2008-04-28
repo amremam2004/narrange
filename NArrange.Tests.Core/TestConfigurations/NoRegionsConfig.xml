@@ -54,125 +54,25 @@
 					</Element>
 				</Elements>
 				<Element Type="Type">
-					<!-- Interfaces only -->
-					<Sort By="Access">
-						<Sort By="Name"/>
-					</Sort>
-					<Filter Condition="$(Type) == 'Interface'"/>
-					<Elements>
-						<Elements>
-							<Element Type="Property">
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Method">
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Event">
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-					</Elements>
-				</Element>
-				<!-- End Interface -->
-				<Element Type="Type">
-					<!-- Classes and structures -->
 					<Sort By="Access">
 						<Sort By="Name"/>
 					</Sort>
 					<Elements>
-						<Elements>
-							<Element Type="Field">
-								<Filter Condition="$(Modifier) : 'Constant'"/>
+						<Element>
+							<Sort By="ElementType">
 								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Field">
-								<Filter Condition="$(Modifier) : 'Static'"/>
-								<!-- Do not sort statics due to dependencies among fields -->
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Field">
-								<Group By="Access" SeparatorType="NewLine"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Constructor">
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Property">
-								<Filter Condition="$(Access) == 'Private'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Property">
-								<Filter Condition="$(Access) == 'Protected'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Property">
-								<Filter Condition="$(Access) : 'Internal'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Property">
-								<Filter Condition="$(Access) == 'Public'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Method">
-								<Filter Condition="$(Access) == 'Private'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Method">
-								<Filter Condition="$(Access) == 'Protected'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Method">
-								<Filter Condition="$(Access) : 'Internal'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Method">
-								<Filter Condition="$(Access) == 'Public'"/>
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element Type="Event">
-								<Sort By="Name"/>
-							</Element>
-						</Elements>
-						<Elements>
-							<Element>
-								<Sort By="Name"/>
-								<Elements>
-									<Element/>
-								</Elements>
-							</Element>
-						</Elements>
+							</Sort>
+							<Elements>
+								<Element>
+									<Sort By="ElementType">
+										<Sort By="Name"/>
+									</Sort>
+									<Elements>
+										<Element/>
+									</Elements>
+								</Element>
+							</Elements>
+						</Element>
 					</Elements>
 				</Element>
 				<!-- End Type -->

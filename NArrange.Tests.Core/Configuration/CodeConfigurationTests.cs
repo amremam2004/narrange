@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(3, defaultConfig.Elements.Count,
+			Assert.AreEqual(4, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			CodeConfiguration clonedConfig = defaultConfig.Clone() as CodeConfiguration;
@@ -78,7 +78,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(3, defaultConfig.Elements.Count,
+			Assert.AreEqual(4, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			//
@@ -99,9 +99,20 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected number of spaces per tab.");
 
 			//
+			// Header comment region
+			//
+			RegionConfiguration commentRegion = defaultConfig.Elements[0] as RegionConfiguration;
+			Assert.IsNotNull(commentRegion, "Expected a RegionConfiguration.");
+			ElementConfiguration commentElement = commentRegion.Elements[0] as ElementConfiguration;
+			Assert.AreEqual(ElementType.Comment, commentElement.ElementType,
+			    "Unexpected element type.");
+			Assert.IsNull(commentElement.GroupBy, "Expected grouping to not be specified.");
+			Assert.IsNotNull(commentElement.FilterBy, "Expected a filter to be specified.");
+
+			//
 			// Using elements
 			//
-			ElementConfiguration usingElement = defaultConfig.Elements[0] as ElementConfiguration;
+			ElementConfiguration usingElement = defaultConfig.Elements[1] as ElementConfiguration;
 			Assert.IsNotNull(usingElement, "Expected an ElementConfiguration.");
 			Assert.AreEqual(ElementType.Using, usingElement.ElementType,
 			    "Unexpected element type.");
@@ -115,7 +126,7 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			// Assembly attributes
 			//
-			ElementConfiguration attributeElement = defaultConfig.Elements[1] as ElementConfiguration;
+			ElementConfiguration attributeElement = defaultConfig.Elements[2] as ElementConfiguration;
 			Assert.IsNotNull(attributeElement, "Expected an ElementConfiguration");
 			Assert.AreEqual(ElementType.Attribute, attributeElement.ElementType,
 			    "Unexpected element type.");
@@ -126,7 +137,7 @@ namespace NArrange.Tests.Core.Configuration
 			//
 			// Namespace elements
 			//
-			ElementConfiguration namespaceElement = defaultConfig.Elements[2] as ElementConfiguration;
+			ElementConfiguration namespaceElement = defaultConfig.Elements[3] as ElementConfiguration;
 			Assert.IsNotNull(namespaceElement, "Expected an ElementConfiguration.");
 			Assert.AreEqual(ElementType.Namespace, namespaceElement.ElementType,
 			    "Unexpected element type.");

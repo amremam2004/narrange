@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.CodeElements
 			prototype.Access = CodeAccess.Internal;
 			prototype.AddAttribute(new AttributeElement("Obsolete"));
 			prototype.Parameters = "T val";
-			prototype.ReturnType = "bool";
+			prototype.Type = "bool";
 			prototype.AddTypeParameter(
 			    new TypeParameter("T", "class", "new()"));
 			prototype.MemberModifiers = MemberModifiers.Abstract;
@@ -76,7 +76,7 @@ namespace NArrange.Tests.Core.CodeElements
 			    "IsSealed was not copied correctly.");
 			Assert.AreEqual(original.IsStatic, clone.IsStatic,
 			    "IsStatic was not copied correctly.");
-			Assert.AreEqual(original.ReturnType, clone.ReturnType,
+			Assert.AreEqual(original.Type, clone.Type,
 			    "Type was not copied correctly.");
 			Assert.AreEqual(original.IsOperator, clone.IsOperator,
 			    "IsOperator was not copied correctly.");

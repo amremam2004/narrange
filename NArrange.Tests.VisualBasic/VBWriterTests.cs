@@ -32,13 +32,13 @@ namespace NArrange.Tests.VisualBasic
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "Boolean";
+			methodElement.Type = "Boolean";
 			methodElement.BodyText = "\tReturn False";
 
 			classElement.AddChild(methodElement);
@@ -78,13 +78,13 @@ namespace NArrange.Tests.VisualBasic
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "Boolean";
+			methodElement.Type = "Boolean";
 			methodElement.BodyText = "\tReturn False";
 
 			classElement.AddChild(methodElement);
@@ -263,7 +263,7 @@ namespace NArrange.Tests.VisualBasic
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Sealed;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -286,7 +286,7 @@ namespace NArrange.Tests.VisualBasic
 			classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Sealed;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -319,7 +319,7 @@ namespace NArrange.Tests.VisualBasic
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Sealed | TypeModifiers.Partial;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddTypeParameter(
 			    new TypeParameter("T", "IDisposable", "New"));
@@ -352,7 +352,7 @@ namespace NArrange.Tests.VisualBasic
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
 			classElement.TypeModifiers = TypeModifiers.Sealed;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -428,7 +428,7 @@ namespace NArrange.Tests.VisualBasic
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 
 			RegionElement fieldsRegion = new RegionElement();
@@ -437,12 +437,12 @@ namespace NArrange.Tests.VisualBasic
 			FieldElement field1 = new FieldElement();
 			field1.Name = "_val1";
 			field1.Access = CodeAccess.Private;
-			field1.ReturnType = "Integer";
+			field1.Type = "Integer";
 
 			FieldElement field2 = new FieldElement();
 			field2.Name = "_val2";
 			field2.Access = CodeAccess.Private;
-			field2.ReturnType = "Integer";
+			field2.Type = "Integer";
 
 			fieldsRegion.AddChild(field1);
 			fieldsRegion.AddChild(field2);
@@ -454,7 +454,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement method = new MethodElement();
 			method.Name = "DoSomething";
 			method.Access = CodeAccess.Public;
-			method.ReturnType = null;
+			method.Type = null;
 			method.BodyText = string.Empty;
 
 			methodsRegion.AddChild(method);
@@ -496,7 +496,7 @@ namespace NArrange.Tests.VisualBasic
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.None;
 			classElement.TypeModifiers = TypeModifiers.Partial;
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -578,7 +578,7 @@ namespace NArrange.Tests.VisualBasic
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.ReturnType = "Integer";
+			delegateElement.Type = "Integer";
 			delegateElement.Name = "Compare";
 			delegateElement.Parameters = "ByVal t1 As T, ByVal t2 As T";
 			delegateElement.AddTypeParameter(
@@ -607,7 +607,7 @@ namespace NArrange.Tests.VisualBasic
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Access = CodeAccess.Public;
-			delegateElement.ReturnType = "Integer";
+			delegateElement.Type = "Integer";
 			delegateElement.Name = "DoSomething";
 			delegateElement.Parameters = "ByVal flag As Boolean";
 
@@ -634,7 +634,7 @@ namespace NArrange.Tests.VisualBasic
 
 			EventElement eventElement = new EventElement();
 			eventElement.Access = CodeAccess.Public;
-			eventElement.ReturnType = "EventHandler";
+			eventElement.Type = "EventHandler";
 			eventElement.Name = "TestEvent";
 
 			Assert.IsNull(eventElement.Parameters);
@@ -661,7 +661,7 @@ namespace NArrange.Tests.VisualBasic
 
 			EventElement eventElement = new EventElement();
 			eventElement.Access = CodeAccess.Public;
-			eventElement.ReturnType = null;
+			eventElement.Type = null;
 			eventElement.Name = "TestEvent";
 			eventElement.Parameters = "ByVal args As EventArgs";
 
@@ -688,7 +688,7 @@ namespace NArrange.Tests.VisualBasic
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.MemberModifiers = MemberModifiers.Static;
-			fieldElement.ReturnType = "Dictionary(Of String, Integer)";
+			fieldElement.Type = "Dictionary(Of String, Integer)";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "New Dictionary(Of String, Integer)()";
 
@@ -701,7 +701,7 @@ namespace NArrange.Tests.VisualBasic
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As Dictionary(Of String, Integer) = New Dictionary(Of String, Integer)()",
 			    text,
-			    "FielElement element was not written correctly.");
+			    "FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -715,7 +715,7 @@ namespace NArrange.Tests.VisualBasic
 			FieldElement fieldElement = new FieldElement();
 			fieldElement.Access = CodeAccess.Private;
 			fieldElement.MemberModifiers = MemberModifiers.Static;
-			fieldElement.ReturnType = "Integer";
+			fieldElement.Type = "Integer";
 			fieldElement.Name = "_test";
 			fieldElement.InitialValue = "1";
 
@@ -728,7 +728,7 @@ namespace NArrange.Tests.VisualBasic
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As Integer = 1",
 			    text,
-			    "FielElement element was not written correctly.");
+			    "FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -741,7 +741,7 @@ namespace NArrange.Tests.VisualBasic
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "String";
+			methodElement.Type = "String";
 			methodElement.Name = "ExternalFunction";
 			methodElement.Parameters = "ByVal filename As String";
 			methodElement.MemberModifiers = MemberModifiers.External;
@@ -826,7 +826,7 @@ namespace NArrange.Tests.VisualBasic
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeElementType = TypeElementType.Interface;
+			classElement.Type = TypeElementType.Interface;
 			classElement.Name = "TestInterface";
 			classElement.AddInterface(
 			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
@@ -865,7 +865,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Protected;
 			methodElement.MemberModifiers = MemberModifiers.Abstract;
-			methodElement.ReturnType = null;
+			methodElement.Type = null;
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -890,7 +890,7 @@ namespace NArrange.Tests.VisualBasic
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.None;
-			methodElement.ReturnType = "IEnumerator(Of T)";
+			methodElement.Type = "IEnumerator(Of T)";
 			methodElement.Name = "IEnumerable(Of T).GetEnumerator";
 			methodElement.BodyText = "\tReturn Nothing";
 
@@ -921,7 +921,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Static;
-			methodElement.ReturnType = "Integer";
+			methodElement.Type = "Integer";
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "ByVal flag As Boolean";
 			methodElement.AddImplementation(new InterfaceReference("ISomething.DoSomething", InterfaceReferenceType.Interface));
@@ -954,7 +954,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Private;
 			methodElement.MemberModifiers = MemberModifiers.Partial;
-			methodElement.ReturnType = null;
+			methodElement.Type = null;
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "ByVal flag As Boolean";
 			methodElement.BodyText = null;
@@ -983,7 +983,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Private;
 			methodElement.MemberModifiers = MemberModifiers.Partial;
-			methodElement.ReturnType = null;
+			methodElement.Type = null;
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "ByVal flag As Boolean";
 			methodElement.BodyText = null;
@@ -1013,7 +1013,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Sealed | MemberModifiers.Override;
-			methodElement.ReturnType = string.Empty;
+			methodElement.Type = string.Empty;
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
@@ -1039,7 +1039,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Static;
-			methodElement.ReturnType = "Integer";
+			methodElement.Type = "Integer";
 			methodElement.Name = "DoSomething";
 			methodElement.Parameters = "ByVal flag As Boolean";
 			methodElement.BodyText = "\tReturn 0";
@@ -1073,7 +1073,7 @@ namespace NArrange.Tests.VisualBasic
 			operatorElement.Name = "CType";
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "Decimal";
+			operatorElement.Type = "Decimal";
 			operatorElement.Parameters = "ByVal f As Fraction";
 			operatorElement.BodyText = "Return CDec(f.num) / f.den";
 
@@ -1106,7 +1106,7 @@ namespace NArrange.Tests.VisualBasic
 			operatorElement.Name = "CType";
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "Double";
+			operatorElement.Type = "Double";
 			operatorElement.Parameters = "ByVal f As Fraction";
 			operatorElement.BodyText = "Return CDbl(f.num) / f.den";
 
@@ -1138,7 +1138,7 @@ namespace NArrange.Tests.VisualBasic
 			operatorElement.Name = "+";
 			operatorElement.Access = CodeAccess.Public;
 			operatorElement.MemberModifiers = MemberModifiers.Static;
-			operatorElement.ReturnType = "Fraction";
+			operatorElement.Type = "Fraction";
 			operatorElement.Parameters = "ByVal a As Fraction, ByVal b As Fraction";
 			operatorElement.BodyText = "Return New Fraction(a.num * b.den + b.num * a.den, a.den * b.den)";
 
@@ -1167,7 +1167,7 @@ namespace NArrange.Tests.VisualBasic
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = null;
+			methodElement.Type = null;
 			methodElement.Name = "ExternalSub";
 			methodElement.Parameters = "ByVal filename As String";
 			methodElement.MemberModifiers = MemberModifiers.External;

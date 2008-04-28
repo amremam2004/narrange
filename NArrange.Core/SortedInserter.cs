@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -32,6 +34,9 @@
  *      James Nies
  *      - Initial creation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -78,7 +83,7 @@ namespace NArrange.Core
 
 		private Comparison<ICodeElement> CreateComparison(SortBy sortBy)
 		{
-			_comparison = delegate(ICodeElement x, ICodeElement y)
+			Comparison<ICodeElement> comparison = delegate(ICodeElement x, ICodeElement y)
 			{
 			    int compareValue = 0;
 
@@ -101,6 +106,16 @@ namespace NArrange.Core
 			                {
 			                    compareValue = attributedX.Access.CompareTo(attributedY.Access);
 			                }
+			                break;
+
+			            case ElementAttributeType.ElementType:
+			                compareValue = x.ElementType.CompareTo(y.ElementType);
+			                break;
+
+			            case ElementAttributeType.Type:
+			                string xType = ElementUtilities.GetAttribute(ElementAttributeType.Type, x);
+			                string yType = ElementUtilities.GetAttribute(ElementAttributeType.Type, y);
+			                compareValue = xType.CompareTo(yType);
 			                break;
 
 			            case ElementAttributeType.Name:
@@ -134,7 +149,7 @@ namespace NArrange.Core
 			    return compareValue;
 			};
 
-			return _comparison;
+			return comparison;
 		}
 
 		#endregion Private Methods

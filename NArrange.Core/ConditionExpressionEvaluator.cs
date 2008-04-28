@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -32,6 +34,9 @@
  *      James Nies
  *      - Initial creation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -154,6 +159,12 @@ namespace NArrange.Core
 			            leftStr = GetExpressionValue(operatorExpression.Left, element);
 			            rightStr = GetExpressionValue(operatorExpression.Right, element);
 			            result = leftStr == rightStr;
+			            break;
+
+			        case ExpressionOperator.NotEqual:
+			            leftStr = GetExpressionValue(operatorExpression.Left, element);
+			            rightStr = GetExpressionValue(operatorExpression.Right, element);
+			            result = leftStr != rightStr;
 			            break;
 
 			        case ExpressionOperator.Contains:

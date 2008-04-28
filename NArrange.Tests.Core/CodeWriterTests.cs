@@ -29,13 +29,13 @@ namespace NArrange.Tests.Core
 		{
 			TypeElement classElement = new TypeElement();
 			classElement.Name = "TestClass";
-			classElement.TypeElementType = TypeElementType.Class;
+			classElement.Type = TypeElementType.Class;
 			classElement.Access = CodeAccess.Public;
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
 			methodElement.Access = CodeAccess.Public;
-			methodElement.ReturnType = "Object";
+			methodElement.Type = "Object";
 
 			classElement.AddChild(methodElement);
 
@@ -91,7 +91,7 @@ namespace NArrange.Tests.Core
 
 			TypeElement classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
-			classElement.TypeElementType = (TypeElementType)int.MinValue;
+			classElement.Type = (TypeElementType)int.MinValue;
 			classElement.Name = "TestType";
 
 			StringWriter writer = new StringWriter();

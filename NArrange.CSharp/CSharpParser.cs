@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -46,7 +48,11 @@
  *      - Fixed parsing of array return types with intermixed spaces
  *      - Fixed a parsing error where type parameters were always expected
  *        when parsing generic types.
+ *       - Preserve header comments without associating w/ using elements.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -732,7 +738,7 @@ namespace NArrange.CSharp
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Name = memberName;
 			delegateElement.Access = access;
-			delegateElement.ReturnType = returnType;
+			delegateElement.Type = returnType;
 			delegateElement.MemberModifiers = memberAttributes;
 
 			int genericIndex = memberName.IndexOf(CSharpSymbol.BeginGeneric);
@@ -766,6 +772,288 @@ namespace NArrange.CSharp
 		}
 
 		/// <summary>
+		/// Parses a collection of elements.
+		/// </summary>
+		/// <param name="parentElement">Parent element</param>
+		/// <returns></returns>
+		private List<ICodeElement> ParseElements(ICodeElement parentElement)
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+			List<ICommentElement> comments = new List<ICommentElement>();
+			List<AttributeElement> attributes = new List<AttributeElement>();
+			Stack<RegionElement> regionStack = new Stack<RegionElement>();
+
+			StringBuilder elementBuilder = new StringBuilder(DefaultBlockLength);
+
+			char nextChar;
+
+			while (TryReadChar())
+			{
+			    switch (CurrentChar)
+			    {
+			        //
+			        // Comments
+			        //
+			        case CSharpSymbol.BeginComment:
+			            nextChar = NextChar;
+			            if (nextChar == CSharpSymbol.BeginComment)
+			            {
+			                CommentElement commentLine = ParseCommentLine();
+			                comments.Add(commentLine);
+			            }
+			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
+			            {
+			                CommentElement commentBlock = ParseCommentBlock();
+			                comments.Add(commentBlock);
+			            }
+			            else
+			            {
+			                elementBuilder.Append(CurrentChar);
+			            }
+			            break;
+
+			        //
+			        // Preprocessor
+			        //
+			        case CSharpSymbol.Preprocessor:
+			            //
+			            // TODO: Besides regions, parse preprocessor elements so that
+			            // member preprocessor information is preserved.
+			            //
+			            string line = ReadLine().Trim();
+			            if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
+			            {
+			                if (comments.Count > 0)
+			                {
+			                    foreach (ICommentElement commentElement in comments)
+			                    {
+			                        codeElements.Add(commentElement);
+			                    }
+			                    comments.Clear();
+			                }
+
+			                RegionElement regionElement = ParseRegion(line);
+			                regionStack.Push(regionElement);
+			            }
+			            else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal)
+			                && regionStack.Count > 0)
+			            {
+			                RegionElement regionElement = regionStack.Pop();
+
+			                if (comments.Count > 0)
+			                {
+			                    foreach (ICommentElement commentElement in comments)
+			                    {
+			                        regionElement.AddChild(commentElement);
+			                    }
+			                    comments.Clear();
+			                }
+
+			                if (regionStack.Count > 0)
+			                {
+			                    regionStack.Peek().AddChild(regionElement);
+			                }
+			                else
+			                {
+			                    codeElements.Add(regionElement);
+			                }
+			            }
+			            else
+			            {
+			                this.OnParseError(
+			                    "Cannot arrange files with preprocessor directives " +
+			                    "other than #region and #endregion");
+			            }
+			            break;
+
+			        //
+			        // Attribute
+			        //
+			        case CSharpSymbol.BeginAttribute:
+			            nextChar = NextChar;
+
+			            //
+			            // Parse array definition
+			            //
+			            if (elementBuilder.Length > 0)
+			            {
+			                EatWhiteSpace();
+			                nextChar = NextChar;
+
+			                if (nextChar == CSharpSymbol.EndAttribute)
+			                {
+			                    // Array type
+			                    EatChar(CSharpSymbol.EndAttribute);
+
+			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
+			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
+			                    elementBuilder.Append(' ');
+			                }
+			                else
+			                {
+			                    string nestedText = ParseNestedText(
+			                        CSharpSymbol.BeginAttribute,
+			                        CSharpSymbol.EndAttribute,
+			                        false,
+			                        true);
+
+			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
+			                    elementBuilder.Append(nestedText);
+			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
+			                }
+			            }
+			            else
+			            {
+			                //
+			                // Parse attribute
+			                //
+			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
+
+			                attributes.Add(attributeElement);
+			                codeElements.Add(attributeElement);
+			                comments.Clear();
+			            }
+			            break;
+
+			        //
+			        // Trim generics
+			        //
+			        case CSharpSymbol.BeginGeneric:
+			            string elementText = elementBuilder.ToString();
+			            if (elementBuilder.Length > 0 &&
+			                !(elementText.Trim().EndsWith(CSharpKeyword.Operator, StringComparison.Ordinal)))
+			            {
+			                string nestedText = ParseNestedText(
+			                    CSharpSymbol.BeginGeneric,
+			                    CSharpSymbol.EndGeneric,
+			                    false,
+			                    true);
+
+			                elementBuilder.Append(CSharpSymbol.BeginGeneric);
+			                elementBuilder.Append(nestedText);
+			                elementBuilder.Append(CSharpSymbol.EndGeneric);
+			            }
+			            else
+			            {
+			                elementBuilder.Append(CurrentChar);
+			            }
+			            break;
+
+			        // Eat any unneeded whitespace
+			        case ' ':
+			        case '\n':
+			        case '\r':
+			        case '\t':
+			            if (elementBuilder.Length > 0 &&
+			                elementBuilder[elementBuilder.Length - 1] != ' ')
+			            {
+			                elementBuilder.Append(' ');
+			            }
+			            break;
+
+			        default:
+			            elementBuilder.Append(CurrentChar);
+			            nextChar = NextChar;
+
+			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
+			            {
+			                //
+			                // Try to parse a code element
+			                //
+			                ICodeElement element = TryParseElement(
+			                    elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
+			                if (element != null)
+			                {
+			                    if (element is CommentedElement)
+			                    {
+			                        UsingElement usingElement = element as UsingElement;
+
+			                        //
+			                        // If this is the first using statement, then don't attach
+			                        // header comments to the element.
+			                        //
+			                        if (usingElement != null && parentElement == null && codeElements.Count == 0)
+			                        {
+			                            foreach (ICommentElement commentElement in usingElement.HeaderComments)
+			                            {
+			                                if (regionStack.Count > 0)
+			                                {
+			                                    regionStack.Peek().AddChild(commentElement);
+			                                }
+			                                else
+			                                {
+			                                    codeElements.Add(commentElement);
+			                                }
+			                            }
+			                            usingElement.ClearHeaderCommentLines();
+			                        }
+			                        comments.Clear();
+			                    }
+
+			                    if (regionStack.Count > 0)
+			                    {
+			                        regionStack.Peek().AddChild(element);
+			                    }
+			                    else
+			                    {
+			                        codeElements.Add(element);
+			                    }
+			                    
+			                    elementBuilder = new StringBuilder(DefaultBlockLength);
+			                    
+			                    if (element is IAttributedElement)
+			                    {
+			                        foreach (AttributeElement attribute in attributes)
+			                        {
+			                            codeElements.Remove(attribute);
+			                        }
+
+			                        attributes = new List<AttributeElement>();
+			                    }
+			                }
+			            }
+
+			            break;
+			    }
+
+			    char nextCh = NextChar;
+
+			    //
+			    // Elements should capture closing block characters
+			    //
+			    if (nextCh == CSharpSymbol.EndBlock)
+			    {
+			        break;
+			    }
+			}
+
+			if (comments.Count > 0)
+			{
+			    foreach (ICommentElement comment in comments)
+			    {
+			        codeElements.Insert(0, comment);
+			    }
+			}
+
+			//
+			// Make sure that all region elements have been closed
+			//
+			if (regionStack.Count > 0)
+			{
+			    this.OnParseError("Expected #endregion");
+			}
+
+			if (elementBuilder.Length > 0)
+			{
+			    this.OnParseError(
+			        string.Format(Thread.CurrentThread.CurrentCulture,
+			        "Unhandled element text '{0}'", elementBuilder));
+			}
+
+			return codeElements;
+		}
+
+		/// <summary>
 		/// Parses an event
 		/// </summary>
 		/// <param name="access"></param>
@@ -774,7 +1062,7 @@ namespace NArrange.CSharp
 		private EventElement ParseEvent(CodeAccess access, MemberModifiers memberAttributes)
 		{
 			EventElement eventElement = new EventElement();
-			eventElement.ReturnType = CaptureTypeName();
+			eventElement.Type = CaptureTypeName();
 			eventElement.Name = CaptureWord();
 			eventElement.Access = access;
 			eventElement.MemberModifiers = memberAttributes;
@@ -800,7 +1088,7 @@ namespace NArrange.CSharp
 		{
 			FieldElement field = new FieldElement();
 			field.Name = memberName;
-			field.ReturnType = returnType;
+			field.Type = returnType;
 			field.Access = access;
 			field.MemberModifiers = memberAttributes;
 			field.IsVolatile = isVolatile;
@@ -856,14 +1144,14 @@ namespace NArrange.CSharp
 			MethodElement method = new MethodElement();
 			method.Name = memberName;
 			method.Access = access;
-			method.ReturnType = returnType;
+			method.Type = returnType;
 			method.MemberModifiers = memberAttributes;
 			method.IsOperator = isOperator;
 			method.OperatorType = operatorType;
 			if (isOperator &&
 			    (returnType == CSharpKeyword.Implicit || returnType == CSharpKeyword.Explicit))
 			{
-			    method.ReturnType = memberName;
+			    method.Type = memberName;
 			    method.Name = null;
 			}
 
@@ -929,7 +1217,7 @@ namespace NArrange.CSharp
 				//
 				// Parse child elements
 				//
-				List<ICodeElement> childElements = DoParseElements();
+				List<ICodeElement> childElements = ParseElements(namespaceElement);
 				foreach (ICodeElement childElement in childElements)
 				{
 					namespaceElement.AddChild(childElement);
@@ -1099,7 +1387,7 @@ namespace NArrange.CSharp
 
 			property.Name = memberName;
 			property.Access = access;
-			property.ReturnType = returnType;
+			property.Type = returnType;
 			property.MemberModifiers = memberAttributes;
 
 			property.BodyText = this.ParseBlock(false, property);
@@ -1145,7 +1433,7 @@ namespace NArrange.CSharp
 			}
 
 			typeElement.Access = access;
-			typeElement.TypeElementType = elementType;
+			typeElement.Type = elementType;
 			typeElement.TypeModifiers = typeAttributes;
 
 			EatWhiteSpace();
@@ -1224,7 +1512,7 @@ namespace NArrange.CSharp
 					//
 					// Parse child elements
 					//
-					List<ICodeElement> childElements = DoParseElements();
+					List<ICodeElement> childElements = ParseElements(typeElement);
 					foreach (ICodeElement childElement in childElements)
 					{
 						typeElement.AddChild(childElement);
@@ -1524,22 +1812,6 @@ namespace NArrange.CSharp
 			                        if (isOperator)
 			                        {
 			                            operatorType = GetOperatorType(wordList);
-
-										//
-										// HACK: Need to somehow not remove '=' from 
-										// the word list for operators
-										//
-			                            //if (elementBuilder[elementBuilder.Length - 2] == CSharpSymbol.Assignment)
-			                            //{
-			                            //    if (memberName == CSharpKeyword.Operator)
-			                            //    {
-			                            //        memberName = "==";
-			                            //    }
-			                            //    else if (memberName == CSharpSymbol.Negate.ToString())
-			                            //    {
-			                            //        memberName = "!=";
-			                            //    }
-			                            //}
 			                        }
 
 			                        //
@@ -1604,234 +1876,7 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		protected override List<ICodeElement> DoParseElements()
 		{
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-			List<ICommentElement> comments = new List<ICommentElement>();
-			List<AttributeElement> attributes = new List<AttributeElement>();
-			Stack<RegionElement> regionStack = new Stack<RegionElement>();
-
-			StringBuilder elementBuilder = new StringBuilder(DefaultBlockLength);
-
-			char nextChar;
-
-			while (TryReadChar())
-			{
-			    switch (CurrentChar)
-			    {
-			        //
-			        // Comments
-			        //
-			        case CSharpSymbol.BeginComment:
-			            nextChar = NextChar;
-			            if (nextChar == CSharpSymbol.BeginComment)
-			            {
-			                CommentElement commentLine = ParseCommentLine();
-			                comments.Add(commentLine);
-			            }
-			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
-			            {
-			                CommentElement commentBlock = ParseCommentBlock();
-			                comments.Add(commentBlock);
-			            }
-			            else
-			            {
-			                elementBuilder.Append(CurrentChar);
-			            }
-			            break;
-
-			        //
-			        // Preprocessor
-			        //
-			        case CSharpSymbol.Preprocessor:
-			            //
-			            // TODO: Besides regions, parse preprocessor elements so that
-			            // member preprocessor information is preserved.
-			            //
-			            string line = ReadLine().Trim();
-			            if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
-			            {
-			                RegionElement regionElement = ParseRegion(line);
-			                regionStack.Push(regionElement);
-			            }
-			            else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal) 
-			                && regionStack.Count > 0)
-			            {
-			                RegionElement regionElement = regionStack.Pop();
-
-			                if (regionStack.Count > 0)
-			                {
-			                    regionStack.Peek().AddChild(regionElement);
-			                }
-			                else
-			                {
-			                    codeElements.Add(regionElement);
-			                }
-			            }
-			            else
-			            {
-			                this.OnParseError(
-			                    "Cannot arrange files with preprocessor directives " + 
-			                    "other than #region and #endregion");
-			            }
-			            break;
-
-			        //
-			        // Attribute
-			        //
-			        case CSharpSymbol.BeginAttribute:
-			            nextChar = NextChar;
-
-			            //
-			            // Parse array definition
-			            //
-			            if (elementBuilder.Length > 0)
-			            {
-			                EatWhiteSpace();
-			                nextChar = NextChar;
-
-			                if (nextChar == CSharpSymbol.EndAttribute)
-			                {
-			                    // Array type
-			                    EatChar(CSharpSymbol.EndAttribute);
-
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
-			                    elementBuilder.Append(' ');
-			                }
-			                else
-			                {
-			                    string nestedText = ParseNestedText(
-			                        CSharpSymbol.BeginAttribute,
-			                        CSharpSymbol.EndAttribute,
-			                        false,
-			                        true);
-
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                    elementBuilder.Append(nestedText);
-			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
-			                }
-			            }
-			            else
-			            {
-			                //
-			                // Parse attribute
-			                //
-			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
-
-			                attributes.Add(attributeElement);
-			                codeElements.Add(attributeElement);
-			                comments.Clear();
-			            }
-			            break;
-
-			        //
-			        // Trim generics
-			        //
-			        case CSharpSymbol.BeginGeneric:
-			            string elementText = elementBuilder.ToString();
-			            if (elementBuilder.Length > 0 &&
-			                !(elementText.Trim().EndsWith(CSharpKeyword.Operator, StringComparison.Ordinal)))
-			            {
-			                string nestedText = ParseNestedText(
-			                    CSharpSymbol.BeginGeneric,
-			                    CSharpSymbol.EndGeneric,
-			                    false,
-			                    true);
-
-			                elementBuilder.Append(CSharpSymbol.BeginGeneric);
-			                elementBuilder.Append(nestedText);
-			                elementBuilder.Append(CSharpSymbol.EndGeneric);
-			            }
-			            else
-			            {
-			                elementBuilder.Append(CurrentChar);
-			            }
-			            break;
-
-			        // Eat any unneeded whitespace
-			        case ' ':
-			        case '\n':
-			        case '\r':
-			        case '\t':
-			            if (elementBuilder.Length > 0 &&
-			                elementBuilder[elementBuilder.Length - 1] != ' ')
-			            {
-			                elementBuilder.Append(' ');
-			            }
-			            break;
-
-			        default:
-			            elementBuilder.Append(CurrentChar);
-			            nextChar = NextChar;
-
-			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
-			            {
-			                //
-			                // Try to parse a code element
-			                //
-			                ICodeElement element = TryParseElement(
-			                    elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
-			                if (element != null)
-			                {
-			                    if (regionStack.Count > 0)
-			                    {
-			                        regionStack.Peek().AddChild(element);
-			                    }
-			                    else
-			                    {
-			                        codeElements.Add(element);
-			                    }
-			                    elementBuilder = new StringBuilder(DefaultBlockLength);
-			                    comments.Clear();
-			                    if (element is IAttributedElement)
-			                    {
-			                        foreach (AttributeElement attribute in attributes)
-			                        {
-			                            codeElements.Remove(attribute);
-			                        }
-
-			                        attributes = new List<AttributeElement>();
-			                    }
-			                }
-			            }
-
-			            break;
-			    }
-
-			    char nextCh = NextChar;
-
-			    //
-			    // Elements should capture closing block characters
-			    //
-			    if (nextCh == CSharpSymbol.EndBlock)
-			    {
-			        break;
-			    }
-			}
-
-			if (comments.Count > 0)
-			{
-			    foreach (ICommentElement comment in comments)
-			    {
-			        codeElements.Add(comment);
-			    }
-			}
-
-			//
-			// Make sure that all region elements have been closed
-			//
-			if (regionStack.Count > 0)
-			{
-			    this.OnParseError("Expected #endregion");
-			}
-
-			if (elementBuilder.Length > 0)
-			{
-			    this.OnParseError(
-			        string.Format(Thread.CurrentThread.CurrentCulture,
-			        "Unhandled element text '{0}'", elementBuilder));
-			}
-
-			return codeElements;
+			return ParseElements(null);
 		}
 
 		#endregion Protected Methods

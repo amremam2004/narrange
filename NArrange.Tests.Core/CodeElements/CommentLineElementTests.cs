@@ -90,7 +90,8 @@ namespace NArrange.Tests.Core.CodeElements
 			    "Unexpected default value for IsXmlComment.");
 			Assert.AreEqual("Comment here", commentLine.Text,
 			    "Unexpected value for Text.");
-			Assert.AreEqual(ElementType.CommentLine, commentLine.ElementType);
+			Assert.AreEqual(ElementType.Comment, commentLine.ElementType);
+			Assert.AreEqual(CommentType.Line, commentLine.Type);
 		}
 
 		/// <summary>

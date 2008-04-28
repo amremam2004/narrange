@@ -25,6 +25,14 @@
 	<Tabs Style="Tabs" SpacesPerTab="4"/>
 	<ClosingComments Enabled="false" Format="End $(ElementType) $(Name)"/>
 	<Elements>
+		<Region Name="Header">
+			<Elements>
+				<Element Type="Comment">
+					<!-- File header comments -->
+					<Filter Condition="$(Type) != 'XmlLine'"/>
+				</Element>
+			</Elements>
+		</Region>
 		<Region Name="Imports">
 			<Elements>
 				<Element Type="Using">

@@ -1,3 +1,5 @@
+#region Header
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
@@ -33,6 +35,9 @@
  *      - Initial creation
  *      - Added configuration for closing comments
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endregion Header
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,6 +55,7 @@ namespace NArrange.Core.Configuration
 	{
 		#region Static Fields
 
+		private static XmlSerializer _serializer = new XmlSerializer(typeof(CodeConfiguration));
 		private static CodeConfiguration _default;
 		private static object _defaultLock = new object();
 
@@ -239,9 +245,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public static CodeConfiguration Load(Stream stream)
 		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CodeConfiguration));
 			CodeConfiguration configuration = 
-			    serializer.Deserialize(stream) as CodeConfiguration;
+			    _serializer.Deserialize(stream) as CodeConfiguration;
 
 			return configuration;
 		}
@@ -252,10 +257,9 @@ namespace NArrange.Core.Configuration
 		/// <param name="fileName"></param>
 		public void Save(string fileName)
 		{
-			XmlSerializer serializer = new XmlSerializer(this.GetType());
 			using (FileStream stream = new FileStream(fileName, FileMode.Create))
 			{
-			    serializer.Serialize(stream, this);
+			    _serializer.Serialize(stream, this);
 			}
 		}
 
