@@ -55,6 +55,7 @@ namespace NArrange.Core.Configuration
 		#region Fields
 
 		private string _assembly;
+		private string _language;
 		private List<ExtensionConfiguration> _projectExtensions;
 		private List<ExtensionConfiguration> _sourceExtensions;
 
@@ -86,6 +87,22 @@ namespace NArrange.Core.Configuration
 			set
 			{
 			    _assembly = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the language name.
+		/// </summary>
+		[XmlAttribute("Language")]
+		public string Language
+		{
+			get
+			{
+			    return _language;
+			}
+			set
+			{
+			    _language = value;
 			}
 		}
 

@@ -71,6 +71,47 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing a region with and without end region names enabled.
+		/// </summary>
+		[Test]
+		public void EndRegionNameTest()
+		{
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "TestRegion";
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(regionElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Configuration = configuration;
+
+			configuration.Regions.EndRegionNameEnabled = true;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "#Region \"TestRegion\"\r\n" + 
+			    "#End Region 'TestRegion", text,
+			    "Unexpected element text.");
+
+			configuration.Regions.EndRegionNameEnabled = false;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "#Region \"TestRegion\"\r\n" +
+			    "#End Region", text,
+			    "Unexpected element text.");
+		}
+
+		/// <summary>
 		/// Tests writing an element with different tab styles
 		/// </summary>
 		[Test]

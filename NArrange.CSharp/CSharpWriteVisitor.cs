@@ -41,6 +41,7 @@
  *      - Only write type parameter constraints when they are present.
  *      - Fixed writing of volatile fields
  *      - Code writer refactoring
+ *      - Optionally write end region name
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -676,8 +677,11 @@ namespace NArrange.CSharp
 			builder = new StringBuilder(DefaultBlockLength);
 			builder.Append(CSharpSymbol.Preprocessor);
 			builder.Append(CSharpKeyword.EndRegion);
-			builder.Append(' ');
-			builder.Append(element.Name);
+			if (Configuration.Regions.EndRegionNameEnabled)
+			{
+			    builder.Append(' ');
+			    builder.Append(element.Name);
+			}
 
 			WriteIndented(builder.ToString());
 		}

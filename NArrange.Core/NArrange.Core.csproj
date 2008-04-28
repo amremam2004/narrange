@@ -73,6 +73,7 @@
     <Compile Include="CodeElements\CommentElement.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
+    <Compile Include="Configuration\RegionsConfiguration.cs" />
     <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
     <Compile Include="Configuration\HandlerConfiguration.cs" />

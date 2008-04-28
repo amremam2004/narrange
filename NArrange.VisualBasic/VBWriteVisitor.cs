@@ -34,6 +34,7 @@
  *      James Nies
  *      - Initial creation
  *      - Code writer refactoring
+ *      - Optionally write end region name
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -874,8 +875,11 @@ namespace NArrange.VisualBasic
 			builder.Append(VBKeyword.End);
 			builder.Append(' ');
 			builder.Append(VBKeyword.Region);
-			builder.Append(" '");
-			builder.Append(element.Name);
+			if (Configuration.Regions.EndRegionNameEnabled)
+			{
+			    builder.Append(" '");
+			    builder.Append(element.Name);
+			}
 
 			WriteIndented(builder.ToString());
 		}

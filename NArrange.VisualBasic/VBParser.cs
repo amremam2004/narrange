@@ -35,7 +35,7 @@
  *      - Initial creation
  *      - Added parsing support for partial methods
  *      - Support parsing of Handles and WithEvents keywords
- *      - Preserve header comments without associating w/ imports.
+ *      - Preserve header comments without associating w/ imports
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header

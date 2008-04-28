@@ -6,3 +6,4 @@ The following changes were made in this release:
 - Preserve header comments (i.e. do not attach to using/import statements) and by default surround with a "Header" region.
 - Added a != operator for condition expressions.
 - Fixed some behavior in multiple attribute (i.e. nested) sorting.
+- Allow configuration of writing end region names.

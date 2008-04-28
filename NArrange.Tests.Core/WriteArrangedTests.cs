@@ -90,6 +90,7 @@ namespace NArrange.Tests.Core
 			        //
 			        StringWriter writer = new StringWriter();
 			        TCodeWriter codeWriter = new TCodeWriter();
+			        codeWriter.Configuration = configuration;
 			        codeWriter.Write(arranged, writer);
 
 			        string text = writer.ToString();

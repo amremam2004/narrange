@@ -89,7 +89,9 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.AreEqual(2, defaultConfig.Handlers.Count,
 			    "Unexpected number of default handlers.");
 			Assert.IsTrue(defaultConfig.Handlers[0].AssemblyName.Contains("NArrange.CSharp"));
+			Assert.AreEqual("CSharp", defaultConfig.Handlers[0].Language);
 			Assert.IsTrue(defaultConfig.Handlers[1].AssemblyName.Contains("NArrange.VisualBasic"));
+			Assert.AreEqual("VisualBasic", defaultConfig.Handlers[1].Language);
 
 			Assert.IsNotNull(defaultConfig.Tabs,
 			    "Tab configuration should not be null.");
@@ -97,6 +99,8 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected tab style.");
 			Assert.AreEqual(4, defaultConfig.Tabs.SpacesPerTab, 
 			    "Unexpected number of spaces per tab.");
+
+			Assert.IsTrue(defaultConfig.Regions.EndRegionNameEnabled);
 
 			//
 			// Header comment region
@@ -143,6 +147,17 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected element type.");
 
 			// TODO: Verify entire heirarchy
+		}
+
+		/// <summary>
+		/// Tests loading a configuration with EndRegionNamesEnabled set to false.
+		/// </summary>
+		[Test]
+		public void NoEndRegionNamesTest()
+		{
+			CodeConfiguration configuration = CodeConfiguration.Load(@"TestConfigurations\NoEndRegionNames.xml");
+			Assert.IsNotNull(configuration);
+			Assert.IsFalse(configuration.Regions.EndRegionNameEnabled, "Unexpected value for EndRegionNameEnabled.");
 		}
 
 		/// <summary>
@@ -211,6 +226,18 @@ namespace NArrange.Tests.Core.Configuration
 			{
 			    File.Delete(tempFile);
 			}
+		}
+
+		/// <summary>
+		/// Tests loading a configuration with spaces specified.
+		/// </summary>
+		[Test]
+		public void SpacesTest()
+		{
+			CodeConfiguration configuration = CodeConfiguration.Load(@"TestConfigurations\SpacesConfig.xml");
+			Assert.IsNotNull(configuration);
+			Assert.AreEqual(TabStyle.Spaces, configuration.Tabs.Style,
+			    "Unexpected tab style.");
 		}
 
 		#endregion Public Methods

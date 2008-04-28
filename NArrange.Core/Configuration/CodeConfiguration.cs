@@ -34,6 +34,7 @@
  *      James Nies
  *      - Initial creation
  *      - Added configuration for closing comments
+ *      - Added configuration for region options
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -65,6 +66,7 @@ namespace NArrange.Core.Configuration
 
 		private ClosingCommentConfiguration _closingComments;
 		private List<HandlerConfiguration> _handlers;
+		private RegionsConfiguration _regions;
 		private TabConfiguration _tabs;
 
 		#endregion Fields
@@ -164,6 +166,36 @@ namespace NArrange.Core.Configuration
 			    }
 
 			    return _handlers;
+			}
+		}
+
+		/// <summary>
+		/// Regions configuration.
+		/// </summary>
+		[Description("Regions configuration")]
+		public RegionsConfiguration Regions
+		{
+			get
+			{
+			    if (_regions == null)
+			    {
+			        lock (this)
+			        {
+			            if (_regions == null)
+			            {
+			                //
+			                // Default regions configuration
+			                //
+			                _regions = new RegionsConfiguration();
+			            }
+			        }
+			    }
+
+			    return _regions;
+			}
+			set
+			{
+			    _regions = value;
 			}
 		}
 

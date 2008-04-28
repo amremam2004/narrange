@@ -538,6 +538,68 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests inserting elements by type.
+		/// </summary>
+		[Test]
+		public void InsertByTypeTest()
+		{
+			SortBy sortBy = new SortBy();
+			sortBy.By = ElementAttributeType.Type;
+			sortBy.Direction = ListSortDirection.Ascending;
+
+			SortedInserter sortedInserter = new SortedInserter(ElementType.Method, sortBy);
+
+			//
+			// Create a parent element
+			//
+			RegionElement regionElement = new RegionElement();
+			Assert.AreEqual(0, regionElement.Children.Count,
+			    "Parent element should not have any children.");
+
+			//
+			// Insert an element with a mid alphabet return type.
+			//
+			MethodElement method1 = new MethodElement();
+			method1.Name = "DoSomething";
+			method1.Type = "Nullable<DateTime>";
+			sortedInserter.InsertElement(regionElement, method1);
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(method1),
+			    "Element was not inserted at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the end
+			//
+			MethodElement method2 = new MethodElement();
+			method2.Name = "DoSomething";
+			method2.Type = "Type";
+			sortedInserter.InsertElement(regionElement, method2);
+			Assert.AreEqual(2, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(method1),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(method2),
+			    "Element is not at the correct index.");
+
+			//
+			// Insert an element that should be sorted toward the beginning
+			//
+			MethodElement method3 = new MethodElement();
+			method3.Name = "DoSomething";
+			method3.Type = "IEnumerable";
+			sortedInserter.InsertElement(regionElement, method3);
+			Assert.AreEqual(3, regionElement.Children.Count,
+			    "Element was not inserted into the parent.");
+			Assert.AreEqual(0, regionElement.Children.IndexOf(method3),
+			   "Element is not at the correct index.");
+			Assert.AreEqual(1, regionElement.Children.IndexOf(method1),
+			    "Element is not at the correct index.");
+			Assert.AreEqual(2, regionElement.Children.IndexOf(method2),
+			  "Element is not at the correct index.");
+		}
+
+		/// <summary>
 		/// Tests inserting a null element.
 		/// </summary>
 		[Test]

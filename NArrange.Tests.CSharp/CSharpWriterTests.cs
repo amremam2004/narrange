@@ -71,6 +71,47 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a region with and without end region names enabled.
+		/// </summary>
+		[Test]
+		public void EndRegionNameTest()
+		{
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "TestRegion";
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(regionElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			CSharpWriter codeWriter = new CSharpWriter();
+			codeWriter.Configuration = configuration;
+
+			configuration.Regions.EndRegionNameEnabled = true;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "#region TestRegion\r\n\r\n" +
+			    "#endregion TestRegion", text,
+			    "Unexpected element text.");
+
+			configuration.Regions.EndRegionNameEnabled = false;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "#region TestRegion\r\n\r\n" +
+			    "#endregion", text,
+			    "Unexpected element text.");
+		}
+
+		/// <summary>
 		/// Tests writing an element with different tab styles
 		/// </summary>
 		[Test]

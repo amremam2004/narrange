@@ -47,8 +47,8 @@
  *      - Added parsing support for partial methods
  *      - Fixed parsing of array return types with intermixed spaces
  *      - Fixed a parsing error where type parameters were always expected
- *        when parsing generic types.
- *       - Preserve header comments without associating w/ using elements.
+ *        when parsing generic types
+ *       - Preserve header comments without associating w/ using elements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
