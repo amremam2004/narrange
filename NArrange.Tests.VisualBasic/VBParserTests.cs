@@ -3893,6 +3893,40 @@ namespace NArrange.Tests.VisualBasic
 			        property.BodyText.Contains("Set"), "Unexpeced body text.");
 			    Assert.AreEqual(0, property.Attributes.Count,
 			        "Unexpected number of attributes.");
+			    Assert.AreEqual(true, property[VBExtendedProperties.Default]);
+
+			    property = regionElement.Children[7] as PropertyElement;
+			    Assert.IsNotNull(property, "Expected a property.");
+			    Assert.AreEqual("Item", property.Name,
+			        "Unexpected property name.");
+			    Assert.AreEqual("ByVal string1 As String, ByVal string2 As String", property.IndexParameter,
+			        "Unexpected index parameter.");
+			    Assert.AreEqual(CodeAccess.Public, property.Access,
+			        "Unexpected access level.");
+			    Assert.AreEqual(0, property.HeaderComments.Count,
+			        "Unexpected number of header comment lines.");
+			    Assert.IsFalse(property.IsStatic,
+			        "Property should not be static.");
+			    Assert.AreEqual("Integer", property.Type,
+			       "Unexpected property type.");
+			    Assert.IsFalse(property.IsAbstract,
+			        "Property should not be abstract.");
+			    Assert.IsFalse(property.IsOverride,
+			        "Property should not be an override.");
+			    Assert.IsFalse(property.IsSealed,
+			        "Property should not be sealed.");
+			    Assert.IsFalse(property.IsVirtual,
+			        "Property should not be virtual.");
+			    Assert.IsFalse(property.IsNew,
+			        "Property should not be new.");
+			    Assert.IsTrue(
+			        property.BodyText.Contains("Get"), "Unexpected body text.");
+			    Assert.IsTrue(
+			        property.BodyText.Contains("Set"), "Unexpeced body text.");
+			    Assert.AreEqual(0, property.Attributes.Count,
+			        "Unexpected number of attributes.");
+			    Assert.AreEqual(true, property[VBExtendedProperties.Default]);
+
 			}
 		}
 

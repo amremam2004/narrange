@@ -48,7 +48,8 @@
  *      - Fixed parsing of array return types with intermixed spaces
  *      - Fixed a parsing error where type parameters were always expected
  *        when parsing generic types
- *       - Preserve header comments without associating w/ using elements
+ *      - Preserve header comments without associating w/ using elements
+ *      - Fixed parsing of properties with multiple index parameters
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -404,9 +405,12 @@ namespace NArrange.CSharp
 			        //
 			        // Property indexer
 			        //
-			        name = typeCandidate + " " + name;
-			        typeIndex--;
-			        typeCandidate = wordList[typeIndex];
+			        while (typeIndex > 0 && name.IndexOf(CSharpSymbol.BeginAttribute) < 0)
+			        {
+			            name = typeCandidate + " " + name;
+			            typeIndex--;
+			            typeCandidate = wordList[typeIndex];
+			        }
 
 			        if (name[0] == CSharpSymbol.BeginAttribute)
 			        {

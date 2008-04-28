@@ -188,6 +188,17 @@ namespace SampleNamespace
             }
         }
 
+        public int this[string string1, string string2]
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+            }
+        }
+
         #endregion Properties
 
         #region Methods

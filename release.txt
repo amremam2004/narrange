@@ -7,3 +7,4 @@ The following changes were made in this release:
 - Added a != operator for condition expressions.
 - Fixed some behavior in multiple attribute (i.e. nested) sorting.
 - Allow configuration of writing end region names.
+- Fixed parsing of properties with multiple index parameters.

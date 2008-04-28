@@ -155,6 +155,14 @@ Namespace SampleNamespace
 				_arrayField(index) = value
 			End Set
 		End Property
+		
+		Public Default Property Item(ByVal string1 As String, ByVal string2 As String) As Integer
+			Get
+				Return 0
+			End Get
+			Set
+			End Set
+		End Property
 
 		#End Region
 
