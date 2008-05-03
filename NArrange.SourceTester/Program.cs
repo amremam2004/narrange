@@ -203,110 +203,110 @@ namespace NArrange.SourceTester
 			logger.LogMessage(LogLevel.Info, "Testing with {0} source files...",
 			    allSourceFiles.Length);
 
-			int noNamespaceCount = 0;
 			int preprocessorCount = 0;
 			int uncompiledCount = 0;
 			int successCount = 0;
 			int failedCount = 0;
 
-			foreach (FileInfo sourceFile in allSourceFiles)
-			{
-			    string initialSource = File.ReadAllText(sourceFile.FullName, Encoding.Default);
+            foreach (FileInfo sourceFile in allSourceFiles)
+            {
+                string initialSource = File.ReadAllText(sourceFile.FullName, Encoding.Default);
 
-			    if (initialSource.ToLower().Contains("namespace"))
-			    {
-			        CompilerResults initialResults = CompileSourceFile(sourceFile, initialSource);
+                CompilerResults initialResults = CompileSourceFile(sourceFile, initialSource);
 
-			        CompilerError error = TestUtilities.GetCompilerError(initialResults);
-			        if (error == null)
-			        {
-			            logger.LogMessage(LogLevel.Trace, "Succesfully compiled {0}", sourceFile.FullName);
+                CompilerError error = TestUtilities.GetCompilerError(initialResults);
+                if (error == null)
+                {
+                    logger.LogMessage(LogLevel.Trace, "Succesfully compiled {0}", sourceFile.FullName);
 
 
-			            //
-			            // Arrange the source code file
-			            //
-			            TestLogger testLogger = new TestLogger();
-			            FileArranger fileArranger = new FileArranger(null, testLogger);
-			            string outputFile = Path.Combine(arrangedDir, sourceFile.Name);
-			            bool success = false;
-			            try
-			            {
-			                success = fileArranger.Arrange(sourceFile.FullName, outputFile);
-			            }
-			            catch (Exception ex)
-			            {
-			                logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.  {1}",
-			                    sourceFile.Name, ex.Message);
-			                failedCount++;
-			            }
+                    //
+                    // Arrange the source code file
+                    //
+                    TestLogger testLogger = new TestLogger();
+                    FileArranger fileArranger = new FileArranger(null, testLogger);
+                    string outputFile = Path.Combine(arrangedDir, sourceFile.Name);
+                    bool success = false;
+                    try
+                    {
+                        success = fileArranger.Arrange(sourceFile.FullName, outputFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.  {1}",
+                            sourceFile.Name, ex.Message);
+                        failedCount++;
+                    }
 
-			            if (success)
-			            {
-			                logger.LogMessage(LogLevel.Info, "Arrange successful.");
-			            }
-			            else if (testLogger.HasPartialMessage(LogLevel.Warning,
-			                "preprocessor"))
-			            {
-			                logger.LogMessage(LogLevel.Trace, "File is unhandled.");
-			                preprocessorCount++;
-			            }
-			            else
-			            {
-			                foreach (TestLogger.TestLogEvent logEvent in testLogger.Events)
-			                {
-			                    logger.LogMessage(logEvent.Level, logEvent.Message);
-			                }
+                    if (success)
+                    {
+                        logger.LogMessage(LogLevel.Info, "Arrange successful.");
+                    }
+                    else if (testLogger.HasPartialMessage(LogLevel.Warning,
+                        "preprocessor"))
+                    {
+                        logger.LogMessage(LogLevel.Trace, "File is unhandled.");
+                        preprocessorCount++;
+                    }
+                    else
+                    {
+                        foreach (TestLogger.TestLogEvent logEvent in testLogger.Events)
+                        {
+                            logger.LogMessage(logEvent.Level, logEvent.Message);
+                        }
 
-			                logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", sourceFile.Name);
-			                failedCount++;
-			            }
+                        logger.LogMessage(LogLevel.Error, "Unable to arrange {0}.", sourceFile.Name);
+                        failedCount++;
+                    }
 
-			            if (success)
-			            {
-			                string arrangedSource = File.ReadAllText(outputFile, Encoding.Default);
-			                CompilerResults arrangedResults = CompileSourceFile(
-			                    new FileInfo(outputFile), arrangedSource);
+                    if (success)
+                    {
+                        string arrangedSource = File.ReadAllText(outputFile, Encoding.Default);
+                        CompilerResults arrangedResults = CompileSourceFile(
+                            new FileInfo(outputFile), arrangedSource);
 
-			                CompilerError arrangedError = TestUtilities.GetCompilerError(arrangedResults);
-			                if (arrangedError == null)
-			                {
-			                    logger.LogMessage(LogLevel.Trace, "Succesfully compiled arranged file {0}", outputFile);
-			                    bool assembliesMatch = CompareAssemblies(
-			                        initialResults.CompiledAssembly, arrangedResults.CompiledAssembly,
-			                        logger);
-			                    if (assembliesMatch)
-			                    {
-			                        successCount++;
-			                    }
-			                    else
-			                    {
-			                        logger.LogMessage(LogLevel.Error, "Arranged assembly differs.");
-			                        failedCount++;
-			                    }
-			                }
-			                else
-			                {
-			                    logger.LogMessage(LogLevel.Error, "Failed to compile arranged file {0}, {1}",
-			                        outputFile, arrangedError.ToString());
-			                    failedCount++;
-			                }
-			            }
-			        }
-			        else
-			        {
-			            logger.LogMessage(LogLevel.Error, "Failed to compile {0}", sourceFile.FullName);
-			            uncompiledCount++;
-			        }
-			    }
-			    else
-			    {
-			        noNamespaceCount++;
-			    }
-			}
+                        CompilerError arrangedError = TestUtilities.GetCompilerError(arrangedResults);
+                        if (arrangedError == null)
+                        {
+                            logger.LogMessage(LogLevel.Trace, "Succesfully compiled arranged file {0}", outputFile);
+                            try
+                            {
+                                bool assembliesMatch = CompareAssemblies(
+                                    initialResults.CompiledAssembly, arrangedResults.CompiledAssembly,
+                                    logger);
+                                if (assembliesMatch)
+                                {
+                                    successCount++;
+                                }
+                                else
+                                {
+                                    logger.LogMessage(LogLevel.Error, "Arranged assembly differs.");
+                                    failedCount++;
+                                }
+                            }
+                            catch (ReflectionTypeLoadException ex)
+                            {
+                                logger.LogMessage(LogLevel.Error, "Failed to load one or more types. {0}, {1}",
+                                    outputFile, ex.ToString());
+                                failedCount++;
+                            }
+                        }
+                        else
+                        {
+                            logger.LogMessage(LogLevel.Error, "Failed to compile arranged file {0}, {1}",
+                                outputFile, arrangedError.ToString());
+                            failedCount++;
+                        }
+                    }
+                }
+                else
+                {
+                    logger.LogMessage(LogLevel.Error, "Failed to compile {0}", sourceFile.FullName);
+                    uncompiledCount++;
+                }
+            }
 
 			logger.LogMessage(LogLevel.Info, "Unsupported - preprocessor: " + preprocessorCount.ToString());
-			logger.LogMessage(LogLevel.Info, "Unsupported - no namespace: " + noNamespaceCount.ToString());
 			logger.LogMessage(LogLevel.Info, "Uncompiled: " + uncompiledCount.ToString());
 			logger.LogMessage(LogLevel.Info, "Success: " + successCount.ToString());
 			logger.LogMessage(LogLevel.Info, "Failed: " + failedCount.ToString());

@@ -2522,7 +2522,7 @@ namespace NArrange.Tests.CSharp
 			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 
 			    Assert.IsNotNull(elements, "Code element collection should not be null.");
-			    Assert.AreEqual(5, elements.Count,
+			    Assert.AreEqual(6, elements.Count,
 			        "An unexpected number of elements were parsed.");
 
 			    UsingElement using1 = elements[0] as UsingElement;
@@ -2740,6 +2740,24 @@ namespace NArrange.Tests.CSharp
 			    Assert.AreEqual(0, classElement9.Interfaces.Count,
 			        "Unexpected base class name.");
 			    Assert.AreEqual(2, classElement4.TypeParameters.Count,
+			        "Unexpected number of type parameters.");
+
+			    //
+			    // Global class
+			    //
+			    TypeElement globalClassElement = elements[5] as TypeElement;
+			    Assert.IsNotNull(globalClassElement, "Expected a TypeElement.");
+                Assert.AreEqual("GlobalClass", globalClassElement.Name,
+			        "Unexpected class name.");
+			    Assert.AreEqual(CodeAccess.Public, globalClassElement.Access,
+			        "Unexpected class code access level.");
+			    Assert.IsFalse(globalClassElement.IsStatic,
+			        "Class should not be static.");
+			    Assert.IsFalse(globalClassElement.IsSealed,
+			       "Class should not be sealed.");
+			    Assert.AreEqual(0, globalClassElement.Interfaces.Count,
+			        "Unexpected base class name.");
+			    Assert.AreEqual(0, globalClassElement.TypeParameters.Count,
 			        "Unexpected number of type parameters.");
 			}
 		}

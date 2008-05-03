@@ -87,3 +87,10 @@ namespace SampleNamespace
     {
     }
 }
+
+/// <summary>
+/// This is a global class definition.
+/// </summary>
+public class GlobalClass
+{
+}

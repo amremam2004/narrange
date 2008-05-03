@@ -120,7 +120,7 @@ Namespace SampleNamespace
 		''' that should still be matched to the property.
 		''' </summary>
 
-		<Obsolete()> _
+		<Obsolete(), Description("Multiple attribute property.")> _
 		Friend Property GenericProperty() As Nullable(Of Integer)
 			Get
 				Return _genericField

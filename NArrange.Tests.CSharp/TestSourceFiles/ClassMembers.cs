@@ -136,7 +136,7 @@ namespace SampleNamespace
             }
         }
 
-        [Obsolete]  
+        [Obsolete, Description("Multiple attribute property.")]  
         /// <summary>
         /// Generic property.  This comment has extra whitespace
         /// before the member, but should still be considered header comments.

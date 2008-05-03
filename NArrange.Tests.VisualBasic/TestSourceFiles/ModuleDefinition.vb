@@ -19,3 +19,6 @@ Namespace SampleNamespace
 	End Module
 	
 End Namespace
+
+Public Module GlobalModule
+End Module

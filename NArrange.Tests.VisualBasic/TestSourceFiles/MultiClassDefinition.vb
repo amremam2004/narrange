@@ -67,3 +67,6 @@ Namespace SampleNamespace
 	Friend NotInheritable Class SampleClass9(Of T1, T2)
 	End Class
 End Namespace
+
+Public Class GlobalClass
+End Class
