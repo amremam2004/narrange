@@ -50,6 +50,7 @@
  *        when parsing generic types
  *      - Preserve header comments without associating w/ using elements
  *      - Fixed parsing of properties with multiple index parameters
+ *      - Handle fixed size buffer fields
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -1088,7 +1089,7 @@ namespace NArrange.CSharp
 
 		private FieldElement ParseField(bool isAssignment, CodeAccess access,
 			MemberModifiers memberAttributes, string memberName,
-			string returnType, bool isVolatile)
+			string returnType, bool isVolatile, bool isFixed)
 		{
 			FieldElement field = new FieldElement();
 			field.Name = memberName;
@@ -1096,6 +1097,7 @@ namespace NArrange.CSharp
 			field.Access = access;
 			field.MemberModifiers = memberAttributes;
 			field.IsVolatile = isVolatile;
+			field[CSharpExtendedProperties.Fixed] = isFixed;
 
 			if (isAssignment)
 			{
@@ -1832,8 +1834,9 @@ namespace NArrange.CSharp
 			                // Field
 			                //
 			                bool isVolatile = wordList.Contains(CSharpKeyword.Volatile);
+			                bool isFixed = wordList.Contains(CSharpKeyword.Fixed);
 			                FieldElement field = ParseField(isAssignment, access, memberAttributes, 
-			                    memberName, returnType, isVolatile);
+			                    memberName, returnType, isVolatile, isFixed);
 
 			                codeElement = field;
 			            }

@@ -1306,6 +1306,35 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a fixed field.
+		/// </summary>
+		[Test]
+		public void ParseFieldFixedTest()
+		{
+			StringReader reader = new StringReader(
+			    "public fixed char pathName[128];");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+			    "Element is not a FieldElement.");
+			Assert.AreEqual("pathName[128]", fieldElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(CodeAccess.Public, fieldElement.Access,
+			    "Unexpected code access.");
+			Assert.AreEqual("char", fieldElement.Type,
+			    "Unexpected member type.");
+			Assert.IsNull(fieldElement.InitialValue,
+			    "Unexpected initial value.");
+			Assert.AreEqual(true, fieldElement[CSharpExtendedProperties.Fixed],
+			    "Unexpected value for extended property Fixed.");
+		}
+
+		/// <summary>
 		/// Tests parsing a generic field.
 		/// </summary>
 		[Test]

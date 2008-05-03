@@ -101,6 +101,11 @@ namespace NArrange.CSharp
 		public const string External = "extern";
 
 		/// <summary>
+		/// fixed
+		/// </summary>
+		public const string Fixed = "fixed";
+
+		/// <summary>
 		/// global
 		/// </summary>
 		public const string Global = "global";

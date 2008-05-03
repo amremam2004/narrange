@@ -631,6 +631,32 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a fixed field.
+		/// </summary>
+		[Test]
+		public void WriteFieldFixedTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Public;
+			fieldElement.Type = "char";
+			fieldElement.Name = "pathName[128]";
+			fieldElement[CSharpExtendedProperties.Fixed] = true;
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("public fixed char pathName[128];",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a generic field.
 		/// </summary>
 		[Test]

@@ -38,6 +38,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CSharpExtendedProperties.cs" />
     <Compile Include="CSharpKeyword.cs" />
     <Compile Include="CSharpParser.cs" />
     <Compile Include="CSharpProjectParser.cs" />

@@ -474,7 +474,7 @@ namespace NArrange.VisualBasic
 			StringBuilder builder = new StringBuilder(DefaultBlockLength);
 
 			// HACK: Create an explicit element type for Option (or compiler directive)
-			if (element[VBExtendedProperties.Option] != null &&
+			if (element[VBExtendedProperties.Option] is bool &&
 			    (bool)element[VBExtendedProperties.Option])
 			{
 			    builder.Append(element.BodyText);
@@ -538,7 +538,7 @@ namespace NArrange.VisualBasic
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null && 
+			    element[VBExtendedProperties.Overloads] is bool && 
 			    (bool)element[VBExtendedProperties.Overloads]);
 
 			Writer.Write(VBKeyword.Sub);
@@ -571,7 +571,7 @@ namespace NArrange.VisualBasic
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null &&
+			    element[VBExtendedProperties.Overloads] is bool &&
 			    (bool)element[VBExtendedProperties.Overloads]);
 
 			Writer.Write(VBKeyword.Delegate);
@@ -599,7 +599,7 @@ namespace NArrange.VisualBasic
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null &&
+			    element[VBExtendedProperties.Overloads] is bool &&
 			    (bool)element[VBExtendedProperties.Overloads]);
 
 			bool isCustom = false;
@@ -639,10 +639,10 @@ namespace NArrange.VisualBasic
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null &&
+			    element[VBExtendedProperties.Overloads] is bool &&
 			    (bool)element[VBExtendedProperties.Overloads]);
 
-			if (element[VBExtendedProperties.Dim] != null &&
+			if (element[VBExtendedProperties.Dim] is bool &&
 			    (bool)element[VBExtendedProperties.Dim])
 			{
 			    Writer.Write(' ');
@@ -650,7 +650,7 @@ namespace NArrange.VisualBasic
 			    Writer.Write(' ');
 			}
 
-			if (element[VBExtendedProperties.WithEvents] != null &&
+			if (element[VBExtendedProperties.WithEvents] is bool &&
 			    (bool)element[VBExtendedProperties.WithEvents])
 			{
 			    Writer.Write(' ');
@@ -701,7 +701,7 @@ namespace NArrange.VisualBasic
 			}
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null &&
+			    element[VBExtendedProperties.Overloads] is bool &&
 			    (bool)element[VBExtendedProperties.Overloads]);
 
 			if (element.IsOperator)
@@ -813,10 +813,10 @@ namespace NArrange.VisualBasic
 			WriteAccess(element.Access);
 
 			WriteMemberAttributes(element.MemberModifiers,
-			    element[VBExtendedProperties.Overloads] != null &&
+			    element[VBExtendedProperties.Overloads] is bool &&
 			    (bool)element[VBExtendedProperties.Overloads]);
 
-			if (element[VBExtendedProperties.Default] != null && 
+			if (element[VBExtendedProperties.Default] is bool && 
 			    (bool)element[VBExtendedProperties.Default])
 			{
 			    Writer.Write(VBKeyword.Default);

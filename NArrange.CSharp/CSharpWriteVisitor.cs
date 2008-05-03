@@ -42,6 +42,7 @@
  *      - Fixed writing of volatile fields
  *      - Code writer refactoring
  *      - Optionally write end region name
+ *      - Handle fixed size buffer fields
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -508,6 +509,13 @@ namespace NArrange.CSharp
 			if (element.IsVolatile)
 			{
 			    Writer.Write(CSharpKeyword.Volatile);
+			    Writer.Write(' ');
+			}
+
+			if (element[CSharpExtendedProperties.Fixed] is bool && 
+			    (bool)element[CSharpExtendedProperties.Fixed])
+			{
+			    Writer.Write(CSharpKeyword.Fixed);
 			    Writer.Write(' ');
 			}
 
