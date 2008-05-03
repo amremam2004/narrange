@@ -3400,7 +3400,7 @@ namespace NArrange.Tests.CSharp
 			        property.BodyText.Contains("set"), "Unexpeced body text.");
 			    Assert.AreEqual(1, property.Attributes.Count,
 			        "Unexpected number of attributes.");
-			    Assert.AreEqual("Obsolete", property.Attributes[0].BodyText,
+			    Assert.AreEqual("Obsolete, Description(\"Multiple attribute property.\")", property.Attributes[0].BodyText,
 			        "Unexpected attribute text.");
 
 			    property = regionElement.Children[5] as PropertyElement;
