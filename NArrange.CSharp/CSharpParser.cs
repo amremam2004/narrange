@@ -51,6 +51,8 @@
  *      - Preserve header comments without associating w/ using elements
  *      - Fixed parsing of properties with multiple index parameters
  *      - Handle fixed size buffer fields
+ *      - Parse attribute names and params to the code element model
+ *        vs. entire attribute text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -92,7 +94,17 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private string CaptureTypeName()
 		{
-			string typeName = CaptureWord(true);
+			return CaptureTypeName(true);
+		}
+
+		/// <summary>
+		/// Captures an type name alias from the stream.
+		/// </summary>
+		/// <param name="captureGeneric"></param>
+		/// <returns></returns>
+		private string CaptureTypeName(bool captureGeneric)
+		{
+			string typeName = CaptureWord(captureGeneric);
 			EatWhiteSpace();
 
 			//
@@ -484,7 +496,9 @@ namespace NArrange.CSharp
 			        ch == CSharpSymbol.BeginBlock ||
 			        ch == CSharpSymbol.EndBlock ||
 			        ch == CSharpSymbol.Negate ||
-			        ch == CSharpSymbol.Assignment;
+			        ch == CSharpSymbol.Assignment ||
+			        ch == CSharpSymbol.BeginAttribute ||
+			        ch == CSharpSymbol.EndAttribute;
 		}
 
 		private string[] ParseAliasList()
@@ -554,13 +568,64 @@ namespace NArrange.CSharp
 		/// <returns></returns>
 		private AttributeElement ParseAttribute(ReadOnlyCollection<ICommentElement> comments)
 		{
-			AttributeElement attributeElement;
-			string attributeText = ParseNestedText(CSharpSymbol.BeginAttribute, CSharpSymbol.EndAttribute,
-			    false, true);
-			attributeElement = new AttributeElement();
-			attributeElement.BodyText = attributeText;
+			return ParseAttribute(comments, false);
+		}
 
-			if (comments.Count > 0)
+		/// <summary>
+		/// Parses an attribute
+		/// </summary>
+		/// <param name="comments"></param>
+		/// <param name="nested"></param>
+		/// <returns></returns>
+		private AttributeElement ParseAttribute(ReadOnlyCollection<ICommentElement> comments, bool nested)
+		{
+			AttributeElement attributeElement = new AttributeElement();
+
+			string typeName = CaptureTypeName(false);
+			EatWhiteSpace();
+
+			//
+			// Check for an attribute target
+			//
+			if (TryReadChar(CSharpSymbol.TypeImplements))
+			{
+			    attributeElement.Target = typeName;
+			    typeName = CaptureTypeName(false);
+			    EatWhiteSpace();
+			}
+
+			attributeElement.Name = typeName;
+
+			if (NextChar == CSharpSymbol.BeginParameterList)
+			{
+			    string attributeText = ParseNestedText(CSharpSymbol.BeginParameterList, CSharpSymbol.EndParameterList,
+			        true, true);
+			    attributeElement.BodyText = attributeText;
+			}
+
+			EatWhiteSpace();
+
+			while(!nested && TryReadChar(CSharpSymbol.AliasSeparator))
+			{
+			    if (NextChar != CSharpSymbol.AliasSeparator)
+			    {
+			        AttributeElement childAttributeElement = ParseAttribute(null, true);
+			        if (string.IsNullOrEmpty(childAttributeElement.Target))
+			        {
+			            childAttributeElement.Target = attributeElement.Target;
+			        }
+			        attributeElement.AddChild(childAttributeElement);
+			    }
+			}
+
+			EatWhiteSpace();
+
+			if (!nested)
+			{
+			    EatChar(CSharpSymbol.EndAttribute);
+			}
+
+			if (comments != null && comments.Count > 0)
 			{
 			    foreach (ICommentElement comment in comments)
 			    {

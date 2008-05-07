@@ -60,6 +60,14 @@ namespace NArrange.Core.CodeElements
 			get;
 		}
 
+		/// <summary>
+		/// Gets the attribute target.
+		/// </summary>
+		string Target
+		{
+			get;
+		}
+
 		#endregion Properties
 	}
 }

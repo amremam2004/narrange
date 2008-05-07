@@ -43,6 +43,8 @@
  *      - Code writer refactoring
  *      - Optionally write end region name
  *      - Handle fixed size buffer fields
+ *      - Parse attribute names and params to the code element model
+ *        vs. entire attribute text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -353,20 +355,55 @@ namespace NArrange.CSharp
 		#region Public Methods
 
 		/// <summary>
-		/// Processes an attribute element
+		/// Processes an attribute element.
 		/// </summary>
 		/// <param name="element"></param>
 		public override void VisitAttributeElement(AttributeElement element)
 		{
 			this.WriteComments(element.HeaderComments);
 
-			StringBuilder builder = new StringBuilder(DefaultBlockLength);
-			builder.Append(CSharpSymbol.BeginAttribute);
-			builder.Append(element.BodyText);
-			builder.Append(CSharpSymbol.EndAttribute);
+			bool nested = element.Parent is AttributeElement;
 
-			WriteIndented(builder.ToString());
-			if (element.Parent != null)
+			if (!nested)
+			{
+			    WriteIndented(CSharpSymbol.BeginAttribute.ToString());
+			    if (!string.IsNullOrEmpty(element.Target))
+			    {
+			        Writer.Write(element.Target);
+			        Writer.Write(CSharpSymbol.TypeImplements);
+			        Writer.Write(' ');
+			    }
+			}
+
+			Writer.Write(element.Name);
+			if (!string.IsNullOrEmpty(element.BodyText))
+			{
+			    Writer.Write(CSharpSymbol.BeginParameterList);
+			    Writer.Write(element.BodyText);
+			    Writer.Write(CSharpSymbol.EndParameterList);
+			}
+
+			//
+			// Nested list of attributes?
+			//
+			foreach (ICodeElement childElement in element.Children)
+			{
+			    AttributeElement childAttribute = childElement as AttributeElement;
+			    if (childAttribute != null)
+			    {
+			        Writer.Write(',');
+			        Writer.WriteLine();
+			        WriteIndented(string.Empty);
+			        childAttribute.Accept(this);
+			    }
+			}
+
+			if (!nested)
+			{
+			    Writer.Write(CSharpSymbol.EndAttribute);
+			}
+
+			if (!nested && element.Parent != null)
 			{
 			    Writer.WriteLine();
 			}

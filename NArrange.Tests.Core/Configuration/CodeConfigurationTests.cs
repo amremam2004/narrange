@@ -134,9 +134,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(attributeElement, "Expected an ElementConfiguration");
 			Assert.AreEqual(ElementType.Attribute, attributeElement.ElementType,
 			    "Unexpected element type.");
-			Assert.IsNotNull(attributeElement.SortBy, "Expected a sort to be specified.");
-			Assert.AreEqual(ElementAttributeType.Name, attributeElement.SortBy.By,
-			    "Expected name sorting.");
+			Assert.IsNull(attributeElement.SortBy, "Expected a sort to not be specified.");
 
 			//
 			// Namespace elements

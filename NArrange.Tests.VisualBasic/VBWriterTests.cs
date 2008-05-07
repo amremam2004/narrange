@@ -267,6 +267,40 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing an attribute element with a list of children.
+		/// </summary>
+		[Test]
+		public void WriteAttributeElementListTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			AttributeElement attributeElement = new AttributeElement();
+			attributeElement.Name = "Obsolete";
+			attributeElement.Target = "property";
+			attributeElement.BodyText = "\"This is obsolete\"";
+			attributeElement.AddHeaderCommentLine(
+			    "<summary>We no longer need this...</summary>", true);
+
+			AttributeElement childAttributeElement = new AttributeElement();
+			childAttributeElement.Name = "Description";
+			childAttributeElement.BodyText = "\"This is a description.\"";
+			attributeElement.AddChild(childAttributeElement);
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(attributeElement);
+
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "'''<summary>We no longer need this...</summary>\r\n" +
+			    "<property: Obsolete(\"This is obsolete\"), _\r\nDescription(\"This is a description.\")>",
+			    text,
+			    "Attribute element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an attribute element
 		/// </summary>
 		[Test]
@@ -275,7 +309,8 @@ namespace NArrange.Tests.VisualBasic
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 
 			AttributeElement attributeElement = new AttributeElement();
-			attributeElement.BodyText = "Obsolete(\"This is obsolete\")";
+			attributeElement.Name = "Obsolete";
+			attributeElement.BodyText = "\"This is obsolete\"";
 			attributeElement.AddHeaderCommentLine(
 			    "<summary>We no longer need this...</summary>", true);
 

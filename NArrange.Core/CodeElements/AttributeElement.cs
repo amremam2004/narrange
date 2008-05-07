@@ -51,6 +51,7 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private ICodeElement _parent;
+		private string _target;
 
 		#endregion Fields
 
@@ -133,6 +134,21 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the attribute target. 
+		/// </summary>
+		public string Target
+		{
+			get
+			{
+			    return _target;
+			}
+			set
+			{
+			    _target = value;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Protected Methods
@@ -143,7 +159,10 @@ namespace NArrange.Core.CodeElements
 		/// <returns></returns>
 		protected override CodeElement DoClone()
 		{
-			return new AttributeElement();
+			AttributeElement clone = new AttributeElement();
+			clone._target = _target;
+
+			return clone;
 		}
 
 		#endregion Protected Methods

@@ -36,6 +36,8 @@
  *      - Added parsing support for partial methods
  *      - Support parsing of Handles and WithEvents keywords
  *      - Preserve header comments without associating w/ imports
+ *      - Parse attribute names and params to the code element model
+ *        vs. entire attribute text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -65,10 +67,20 @@ namespace NArrange.VisualBasic
 		/// <summary>
 		/// Captures an type name alias from the stream.
 		/// </summary>
+		/// <param name="captureGeneric"></param>
+		/// <returns></returns>
+		private string CaptureTypeName(bool captureGeneric)
+		{
+			return CaptureWord(captureGeneric);
+		}
+
+		/// <summary>
+		/// Captures an type name alias from the stream.
+		/// </summary>
 		/// <returns></returns>
 		private string CaptureTypeName()
 		{
-			return CaptureWord(true);
+			return CaptureTypeName(true);
 		}
 
 		/// <summary>
@@ -372,7 +384,10 @@ namespace NArrange.VisualBasic
 			        ch == VBSymbol.BeginTypeConstraintList ||
 			        ch == VBSymbol.EndTypeConstraintList ||
 			        ch == Environment.NewLine[0] ||
-			        ch == VBSymbol.AliasSeparator;
+			        ch == VBSymbol.AliasSeparator ||
+			        ch == VBSymbol.BeginAttribute ||
+			        ch == VBSymbol.EndAttribute ||
+			        ch == VBSymbol.LineDelimiter;
 		}
 
 		/// <summary>
@@ -382,13 +397,64 @@ namespace NArrange.VisualBasic
 		/// <returns></returns>
 		private AttributeElement ParseAttribute(ReadOnlyCollection<ICommentElement> comments)
 		{
-			AttributeElement attributeElement;
-			string attributeText = ParseNestedText(VBSymbol.BeginAttribute, VBSymbol.EndAttribute,
-			    false, true);
-			attributeElement = new AttributeElement();
-			attributeElement.BodyText = attributeText;
+			return ParseAttribute(comments, false);
+		}
 
-			if (comments.Count > 0)
+		/// <summary>
+		/// Parses an attribute
+		/// </summary>
+		/// <param name="comments"></param>
+		/// <param name="nested"></param>
+		/// <returns></returns>
+		private AttributeElement ParseAttribute(ReadOnlyCollection<ICommentElement> comments, bool nested)
+		{
+			AttributeElement attributeElement = new AttributeElement();
+
+			string typeName = CaptureTypeName(false);
+			EatLineContinuation();
+
+			//
+			// Check for an attribute target
+			//
+			if (TryReadChar(VBSymbol.LineDelimiter))
+			{
+			    attributeElement.Target = typeName;
+			    typeName = CaptureTypeName(false);
+			    EatLineContinuation();
+			}
+
+			attributeElement.Name = typeName;
+
+			if (NextChar == VBSymbol.BeginParameterList)
+			{
+			    string attributeText = ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
+			        true, true);
+			    attributeElement.BodyText = attributeText;
+			}
+
+			EatLineContinuation();
+
+			while (!nested && TryReadChar(VBSymbol.AliasSeparator))
+			{
+			    if (NextChar != VBSymbol.AliasSeparator)
+			    {
+			        AttributeElement childAttributeElement = ParseAttribute(null, true);
+			        if (string.IsNullOrEmpty(childAttributeElement.Target))
+			        {
+			            childAttributeElement.Target = attributeElement.Target;
+			        }
+			        attributeElement.AddChild(childAttributeElement);
+			    }
+			}
+
+			EatLineContinuation();
+
+			if (!nested)
+			{
+			    EatChar(VBSymbol.EndAttribute);
+			}
+
+			if (comments != null && comments.Count > 0)
 			{
 			    foreach (ICommentElement comment in comments)
 			    {
@@ -973,7 +1039,19 @@ namespace NArrange.VisualBasic
 			string externalModifier)
 		{
 			MethodElement method = new MethodElement();
+
 			method.Name = CaptureWord();
+			if (isOperator)
+			{
+			    // Handle greater than/less than for the method name since these will get 
+			    // excluded with < and > being alias breaks (needed by attributes).
+			    while (NextChar == VBSymbol.BeginAttribute || NextChar == VBSymbol.EndAttribute)
+			    {
+			        TryReadChar();
+			        method.Name += CurrentChar + CaptureWord();
+			    }
+			}
+
 			method.Access = access;
 			method.MemberModifiers = memberAttributes;
 

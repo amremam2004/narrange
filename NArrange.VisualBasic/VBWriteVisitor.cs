@@ -35,6 +35,8 @@
  *      - Initial creation
  *      - Code writer refactoring
  *      - Optionally write end region name
+ *      - Parse attribute names and params to the code element model
+ *        vs. entire attribute text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -464,37 +466,73 @@ namespace NArrange.VisualBasic
 		#region Public Methods
 
 		/// <summary>
-		/// Processes an attribute element
+		/// Processes an attribute element.
 		/// </summary>
 		/// <param name="element"></param>
 		public override void VisitAttributeElement(AttributeElement element)
 		{
 			this.WriteComments(element.HeaderComments);
 
-			StringBuilder builder = new StringBuilder(DefaultBlockLength);
-
 			// HACK: Create an explicit element type for Option (or compiler directive)
 			if (element[VBExtendedProperties.Option] is bool &&
 			    (bool)element[VBExtendedProperties.Option])
 			{
-			    builder.Append(element.BodyText);
+			    WriteIndented(element.BodyText);
 			}
 			else
 			{
-			    builder.Append(VBSymbol.BeginAttribute);
-			    builder.Append(element.BodyText);
-			    builder.Append(VBSymbol.EndAttribute);
 
-			    if (element.Parent is TextCodeElement)
+			    bool nested = element.Parent is AttributeElement;
+
+			    if (!nested)
 			    {
-			        builder.Append(" _");
+			        WriteIndented(VBSymbol.BeginAttribute.ToString());
 			    }
-			}
 
-			WriteIndented(builder.ToString());
-			if (element.Parent != null)
-			{
-			    Writer.WriteLine();
+			    if (!string.IsNullOrEmpty(element.Target))
+			    {
+			        Writer.Write(element.Target);
+			        Writer.Write(VBSymbol.LineDelimiter);
+			        Writer.Write(' ');
+			    }
+
+			    Writer.Write(element.Name);
+			    if (!string.IsNullOrEmpty(element.BodyText))
+			    {
+			        Writer.Write(VBSymbol.BeginParameterList);
+			        Writer.Write(element.BodyText);
+			        Writer.Write(VBSymbol.EndParameterList);
+			    }
+
+			    //
+			    // Nested list of attributes?
+			    //
+			    foreach (ICodeElement childElement in element.Children)
+			    {
+			        AttributeElement childAttribute = childElement as AttributeElement;
+			        if (childAttribute != null)
+			        {
+			            Writer.Write(", _");
+			            Writer.WriteLine();
+			            WriteIndented(string.Empty);
+			            childAttribute.Accept(this);
+			        }
+			    }
+
+			    if (!nested)
+			    {
+			        Writer.Write(VBSymbol.EndAttribute);
+
+			        if (element.Parent is TextCodeElement)
+			        {
+			            Writer.Write(" _");
+			        }
+			    }
+
+			    if (!nested && element.Parent != null)
+			    {
+			        Writer.WriteLine();
+			    }
 			}
 		}
 

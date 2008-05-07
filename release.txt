@@ -2,3 +2,4 @@ The following changes were made in this release:
 
 0.1.9.0
 - Fixed handling of C# fixed size buffer fields (i.e. "fixed" keyword).
+- Parse attribute names and params to the code element model, vs. entire attribute text.

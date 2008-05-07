@@ -39,10 +39,7 @@
 			<Sort By="Name"/>
 		</Element>
 		<!-- End Using -->
-		<Element Type="Attribute">
-			<Sort By="Name"/>
-		</Element>
-		<!-- End Attribute -->
+		<Element Type="Attribute"/>
 		<Element Type="Namespace">
 			<Sort By="Name"/>
 			<Elements>
