@@ -133,9 +133,28 @@ namespace NArrange.Core
 		/// <returns></returns>
 		public virtual bool CanArrange(ICodeElement codeElement)
 		{
+			return CanArrange(null, codeElement);
+		}
+
+		/// <summary>
+		/// Determines whether or not the specified element can be arranged by 
+		/// this arranger.
+		/// </summary>
+		/// <param name="codeElement"></param>
+		/// <param name="parentElement"></param>
+		/// <returns></returns>
+		public virtual bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
+		{
+			// Clone the instance and assign the parent
+			ICodeElement codeElementClone = codeElement.Clone() as ICodeElement;
+			if (parentElement != null)
+			{
+			    codeElementClone.Parent = parentElement.Clone() as ICodeElement;
+			}
+
 			return (_elementType == ElementType.NotSpecified ||
-			    codeElement.ElementType == _elementType) && 
-			    (_filter == null || _filter.IsMatch(codeElement));
+			    codeElement.ElementType == _elementType) &&
+			    (_filter == null || _filter.IsMatch(codeElementClone));
 		}
 
 		#endregion Public Methods

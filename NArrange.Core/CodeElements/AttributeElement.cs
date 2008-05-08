@@ -65,12 +65,12 @@ namespace NArrange.Core.CodeElements
 		}
 
 		/// <summary>
-		/// Creates a new attribute element with the specified attribute text
+		/// Creates a new attribute element with the specified name.
 		/// </summary>
-		/// <param name="bodyText"></param>
-		public AttributeElement(string bodyText)
+		/// <param name="name"></param>
+		public AttributeElement(string name)
 		{
-			this.BodyText = bodyText;
+			this.Name = name;
 		}
 
 		#endregion Constructors

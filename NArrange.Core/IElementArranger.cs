@@ -67,6 +67,15 @@ namespace NArrange.Core
 		/// <returns></returns>
 		bool CanArrange(ICodeElement codeElement);
 
+		/// <summary>
+		/// Determines whether or not this arranger can handle arrangement of 
+		/// the specified element.
+		/// </summary>
+		/// <param name="parentElement"></param>
+		/// <param name="codeElement"></param>
+		/// <returns></returns>
+		bool CanArrange(ICodeElement parentElement, ICodeElement codeElement);
+
 		#endregion Methods
 	}
 }

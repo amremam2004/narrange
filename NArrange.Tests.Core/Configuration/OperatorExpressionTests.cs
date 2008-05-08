@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.Configuration
 			OperatorExpression operatorExpression = new OperatorExpression((ExpressionOperator)int.MinValue,
 			    attributeExpression, stringExpression);
 
-			Assert.AreEqual(string.Format("($(Name) {0} 'Test')", int.MinValue), operatorExpression.ToString());
+			Assert.AreEqual(string.Format("($(Element.Name) {0} 'Test')", int.MinValue), operatorExpression.ToString());
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace NArrange.Tests.Core.Configuration
 			OperatorExpression operatorExpression = new OperatorExpression(ExpressionOperator.Equal,
 			    attributeExpression, stringExpression);
 
-			Assert.AreEqual("($(Name) == 'Test')", operatorExpression.ToString());
+			Assert.AreEqual("($(Element.Name) == 'Test')", operatorExpression.ToString());
 		}
 
 		#endregion Public Methods

@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Allow scoping in element attribute expression evaluation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -113,6 +114,12 @@ namespace NArrange.Core
 			    else
 			    {
 			        AttributeExpression attributeExpression = expression as AttributeExpression;
+
+			        if (attributeExpression.Scope == ElementAttributeScope.Parent)
+			        {
+			            element = element.Parent;
+			        }
+
 			        if (attributeExpression != null)
 			        {
 			            value = ElementUtilities.GetAttribute(attributeExpression.ElementAttribute,

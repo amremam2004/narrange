@@ -100,6 +100,22 @@ namespace NArrange.Core
 	}
 
 	/// <summary>
+	/// Element attribute scope.
+	/// </summary>
+	public enum ElementAttributeScope
+	{
+		/// <summary>
+		/// Element
+		/// </summary>
+		Element,
+
+		/// <summary>
+		/// Parent
+		/// </summary>
+		Parent
+	}
+
+	/// <summary>
 	/// Element attribute
 	/// </summary>
 	public enum ElementAttributeType
@@ -132,7 +148,12 @@ namespace NArrange.Core
 		/// <summary>
 		/// Type
 		/// </summary>
-		Type
+		Type,
+
+		/// <summary>
+		/// Attributes
+		/// </summary>
+		Attributes
 	}
 
 	/// <summary>

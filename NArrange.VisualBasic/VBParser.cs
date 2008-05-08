@@ -1270,7 +1270,8 @@ namespace NArrange.VisualBasic
 		{
 			// HACK: Create an explicit element type for Option (or compiler directive)
 			string option = VBKeyword.Option + ReadCodeLine();
-			AttributeElement optionElement = new AttributeElement(option);
+			AttributeElement optionElement = new AttributeElement();
+			optionElement.BodyText = option;
 			optionElement[VBExtendedProperties.Option] = true;
 
 			foreach (ICommentElement comment in comments)

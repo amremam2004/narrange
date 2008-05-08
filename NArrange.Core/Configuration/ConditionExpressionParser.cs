@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Allow scoping in element attribute expression evaluation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -63,6 +64,11 @@ namespace NArrange.Core.Configuration
 		/// Expression start
 		/// </summary>
 		public const char ExpressionStart = '(';
+
+		/// <summary>
+		/// Scope separator
+		/// </summary>
+		public const char ScopeSeparator = '.';
 
 		#endregion Constants
 
@@ -223,6 +229,27 @@ namespace NArrange.Core.Configuration
 			                string attribute = expressionBuilder.ToString();
 			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
 			                ElementAttributeType elementAttribute;
+			                ElementAttributeScope elementScope = ElementAttributeScope.Element;
+
+			                int separatorIndex = attribute.LastIndexOf(ScopeSeparator);
+			                if (separatorIndex > 0)
+			                {
+			                    try
+			                    {
+			                        string attributeScope = attribute.Substring(0, separatorIndex);
+			                        attribute = attribute.Substring(separatorIndex + 1);
+
+			                        elementScope = (ElementAttributeScope)
+			                            Enum.Parse(typeof(ElementAttributeScope), attributeScope);
+			                    }
+			                    catch (ArgumentException ex)
+			                    {
+			                        throw new FormatException(
+			                            string.Format(Thread.CurrentThread.CurrentCulture,
+			                            "Unknown element scope: {0}", ex.Message));
+			                    }
+			                }
+
 			                try
 			                {
 			                    elementAttribute = (ElementAttributeType)
@@ -234,8 +261,9 @@ namespace NArrange.Core.Configuration
 			                        string.Format(Thread.CurrentThread.CurrentCulture,
 			                        "Unknown attribute: {0}", ex.Message));
 			                }
+
 			                AttributeExpression attributeExpresion = new AttributeExpression(
-			                    elementAttribute);
+			                    elementAttribute, elementScope);
 			                nodes.Add(attributeExpresion);
 			                inAttribute = false;
 			            }

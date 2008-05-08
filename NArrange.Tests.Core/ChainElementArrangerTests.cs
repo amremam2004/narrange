@@ -136,6 +136,11 @@ namespace NArrange.Tests.Core
 				return _canArrange;
 			}
 
+			public bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
+			{
+				return _canArrange;
+			}
+
 			public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
 			{
 				_arrangeCalled = true;

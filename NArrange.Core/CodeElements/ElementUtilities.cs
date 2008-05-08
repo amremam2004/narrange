@@ -78,6 +78,38 @@ namespace NArrange.Core.CodeElements
 			return enumString;
 		}
 
+		private static string GetAttributesAttribute(ICodeElement codeElement)
+		{
+			StringBuilder attributesBuilder = new StringBuilder();
+
+			AttributedElement attributedElement = codeElement as AttributedElement;
+			if (attributedElement != null)
+			{
+			    for(int attributeIndex = 0; attributeIndex < attributedElement.Attributes.Count; attributeIndex++)
+			    {
+			        IAttributeElement attribute = attributedElement.Attributes[attributeIndex];
+			        attributesBuilder.Append(attribute.Name);
+
+			        foreach (ICodeElement attributeChild in attribute.Children)
+			        {
+			            IAttributeElement childAttributeElement = attributeChild as IAttributeElement;
+			            if (childAttributeElement != null)
+			            {
+			                attributesBuilder.Append(", ");
+			                attributesBuilder.Append(childAttributeElement.Name);
+			            }
+			        }
+
+			        if (attributeIndex < attributedElement.Attributes.Count - 1)
+			        {
+			            attributesBuilder.Append(", ");
+			        }
+			    }
+			}
+
+			return attributesBuilder.ToString();
+		}
+
 		private static string GetTypeAttribute(ICodeElement codeElement)
 		{
 			string attributeString = string.Empty;
@@ -188,54 +220,61 @@ namespace NArrange.Core.CodeElements
 			MemberElement memberElement;
 			TypeElement typeElement;
 
-			switch (attributeType)
+			if (codeElement != null)
 			{
-			    case ElementAttributeType.Name:
-			        attributeString = codeElement.Name;
-			        break;
+			    switch (attributeType)
+			    {
+			        case ElementAttributeType.Name:
+			            attributeString = codeElement.Name;
+			            break;
 
-			    case ElementAttributeType.Access:
-			        AttributedElement attributedElement = codeElement as AttributedElement;
-			        if (attributedElement != null)
-			        {
-			            if (attributedElement.Access == CodeAccess.None)
+			        case ElementAttributeType.Access:
+			            AttributedElement attributedElement = codeElement as AttributedElement;
+			            if (attributedElement != null)
 			            {
-			                attributeString = EnumToString(CodeAccess.Internal);
+			                if (attributedElement.Access == CodeAccess.None)
+			                {
+			                    attributeString = EnumToString(CodeAccess.Internal);
+			                }
+			                else
+			                {
+			                    attributeString = EnumToString(attributedElement.Access);
+			                }
+			            }
+			            break;
+
+			        case ElementAttributeType.ElementType:
+			            attributeString = EnumToString(codeElement.ElementType);
+			            break;
+
+			        case ElementAttributeType.Type:
+			            attributeString = GetTypeAttribute(codeElement);
+			            break;
+
+			        case ElementAttributeType.Attributes:
+			            attributeString = GetAttributesAttribute(codeElement);
+			            break;
+
+			        case ElementAttributeType.Modifier:
+			            memberElement = codeElement as MemberElement;
+			            if (memberElement != null)
+			            {
+			                attributeString = EnumToString(memberElement.MemberModifiers);
 			            }
 			            else
 			            {
-			                attributeString = EnumToString(attributedElement.Access);
+			                typeElement = codeElement as TypeElement;
+			                if (typeElement != null)
+			                {
+			                    attributeString = EnumToString(typeElement.TypeModifiers);
+			                }
 			            }
-			        }
-			        break;
+			            break;
 
-			    case ElementAttributeType.ElementType:
-			        attributeString = EnumToString(codeElement.ElementType);
-			        break;
-
-			    case ElementAttributeType.Type:
-			        attributeString = GetTypeAttribute(codeElement);
-			        break;
-
-			    case ElementAttributeType.Modifier:
-			        memberElement = codeElement as MemberElement;
-			        if (memberElement != null)
-			        {
-			            attributeString = EnumToString(memberElement.MemberModifiers);
-			        }
-			        else
-			        {
-			            typeElement = codeElement as TypeElement;
-			            if (typeElement != null)
-			            {
-			                attributeString = EnumToString(typeElement.TypeModifiers);
-			            }
-			        }
-			        break;
-
-			    default:
-			        attributeString = string.Empty;
-			        break;
+			        default:
+			            attributeString = string.Empty;
+			            break;
+			    }
 			}
 
 			if (attributeString == null)

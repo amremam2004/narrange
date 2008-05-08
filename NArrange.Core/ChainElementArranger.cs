@@ -117,7 +117,7 @@ namespace NArrange.Core
 			{
 				foreach (IElementArranger arranger in _arrangers)
 				{
-					if (arranger.CanArrange(codeElement))
+					if (arranger.CanArrange(parentElement, codeElement))
 					{
 						arranger.ArrangeElement(parentElement, codeElement);
 						arranged = true;
@@ -151,13 +151,25 @@ namespace NArrange.Core
 		/// <returns></returns>
 		public bool CanArrange(ICodeElement codeElement)
 		{
+			return CanArrange(null, codeElement);
+		}
+
+		/// <summary>
+		/// Determines if the specified code element can be arranged by
+		/// any arranger in the chain.
+		/// </summary>
+		/// <param name="parentElement"></param>
+		/// <param name="codeElement"></param>
+		/// <returns></returns>
+		public bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
+		{
 			bool canArrange = false;
 
 			if (codeElement != null)
 			{
 			    foreach (IElementArranger arranger in _arrangers)
 			    {
-			        if (arranger != null && arranger.CanArrange(codeElement))
+			        if (arranger != null && arranger.CanArrange(parentElement, codeElement))
 			        {
 			            canArrange = true;
 			            break;

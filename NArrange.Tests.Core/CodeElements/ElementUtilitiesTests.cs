@@ -69,6 +69,54 @@ namespace NArrange.Tests.Core.CodeElements
 		}
 
 		/// <summary>
+		/// Tests the GetAttribute method for Attributes.
+		/// </summary>
+		[Test]
+		public void GetAttributeAttributesTest()
+		{
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Name = "TestField";
+
+			string attribute = ElementUtilities.GetAttribute(ElementAttributeType.Attributes, fieldElement);
+			Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
+
+			//
+			// Add some attributes to the element.
+			//
+			AttributeElement attribute1 = new AttributeElement();
+			attribute1.Name = "Attribute1";
+			attribute1.BodyText = "false";
+
+			AttributeElement attribute2 = new AttributeElement();
+			attribute2.Name = "Attribute2";
+			attribute2.BodyText = "false";
+
+			fieldElement.AddAttribute(attribute1);
+			fieldElement.AddAttribute(attribute2);
+
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Attributes, fieldElement);
+			Assert.AreEqual("Attribute1, Attribute2", attribute, "Unexpected attribute.");
+
+			//
+			// Add nested attributes to the element.
+			//
+			fieldElement.ClearAttributes();
+			attribute1 = new AttributeElement();
+			attribute1.Name = "Attribute1";
+			attribute1.BodyText = "false";
+
+			attribute2 = new AttributeElement();
+			attribute2.Name = "Attribute2";
+			attribute2.BodyText = "false";
+			attribute1.AddChild(attribute2);
+
+			fieldElement.AddAttribute(attribute1);
+
+			attribute = ElementUtilities.GetAttribute(ElementAttributeType.Attributes, fieldElement);
+			Assert.AreEqual("Attribute1, Attribute2", attribute, "Unexpected attribute.");
+		}
+
+		/// <summary>
 		/// Tests the GetAttribute method for ElementType
 		/// </summary>
 		[Test]

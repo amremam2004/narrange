@@ -185,6 +185,38 @@ namespace NArrange.Tests.Core
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");
 		}
 
+		/// <summary>
+		/// Tests the Evaluate method with a Contains expression and a parent scope.
+		/// </summary>
+		[Test]
+		public void EvaluateParentContainsTest()
+		{
+			IConditionExpression expression = new OperatorExpression(
+			   ExpressionOperator.Contains, 
+			   new AttributeExpression(ElementAttributeType.Attributes, ElementAttributeScope.Parent),
+			   new StringExpression("Attribute2"));
+
+			FieldElement element = new FieldElement();
+			element.Name = "Test";
+
+			TypeElement typeElement = new TypeElement();
+			typeElement.Type = TypeElementType.Structure;
+			typeElement.Name = "TestType";
+			typeElement.AddChild(element);
+
+			typeElement.AddAttribute(new AttributeElement("Attribute1"));
+			typeElement.AddAttribute(new AttributeElement("Attribute24"));
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			typeElement.ClearAttributes();
+			result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsFalse(result, "Unexpected expression evaluation result.");
+		}
+
 		#endregion Public Methods
 	}
 }

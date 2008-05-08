@@ -143,6 +143,80 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging a structure with the StructLayout attribute.
+		/// </summary>
+		[Test]
+		public void DefaultArrangeStructLayoutTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			TypeElement structElement = new TypeElement();
+			structElement.Type = TypeElementType.Structure;
+			structElement.Access = CodeAccess.Public;
+			structElement.Name = "TestStructure";
+			structElement.AddAttribute(new AttributeElement("System.Runtime.InteropServices.StructLayout"));
+
+			NamespaceElement namesspaceElement = new NamespaceElement();
+			namesspaceElement.Name = "TestNamespace";
+			namesspaceElement.AddChild(structElement);
+
+			FieldElement fieldElement1 = new FieldElement();
+			fieldElement1.Type = "int";
+			fieldElement1.Access = CodeAccess.Public;
+			fieldElement1.Name = "z";
+			structElement.AddChild(fieldElement1);
+
+			FieldElement fieldElement2 = new FieldElement();
+			fieldElement2.Type = "int";
+			fieldElement2.Access = CodeAccess.Public;
+			fieldElement2.Name = "x";
+			structElement.AddChild(fieldElement2);
+
+			FieldElement fieldElement3 = new FieldElement();
+			fieldElement3.Type = "int";
+			fieldElement3.Access = CodeAccess.Public;
+			fieldElement3.Name = "y";
+			structElement.AddChild(fieldElement3);
+
+			codeElements.Add(namesspaceElement);
+
+			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+
+			ReadOnlyCollection<ICodeElement> arranged =
+			    arranger.Arrange(codeElements.AsReadOnly());
+
+			Assert.AreEqual(1, arranged.Count,
+			    "After arranging, an unexpected number of elements were returned.");
+			NamespaceElement namespaceElementTest = arranged[0] as NamespaceElement;
+			Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+
+			Assert.AreEqual(1, namespaceElementTest.Children.Count,
+			    "After arranging, an unexpected number of namespace elements were returned.");
+			TypeElement typeElement = namespaceElementTest.Children[0] as TypeElement;
+			Assert.IsNotNull(typeElement, "Expected a type element.");
+			Assert.AreEqual(TypeElementType.Structure, typeElement.Type,
+			    "Unexpected type element type.");
+			Assert.AreEqual(structElement.Name, typeElement.Name,
+			    "Unexpected type element name.");
+
+			Assert.AreEqual(1, typeElement.Children.Count,
+			    "An unexpected number of class child elements were returned.");
+			RegionElement regionElement = typeElement.Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element but was {0}.",
+			   regionElement.ElementType);
+			Assert.AreEqual("Fixed Fields", regionElement.Name,
+			    "Unexpected region name.");
+
+			Assert.AreEqual(3, regionElement.Children.Count,
+			    "Unexpected number of region child elements.");
+
+			// The fields should not have been sorted
+			Assert.AreEqual(fieldElement1.Name, regionElement.Children[0].Name);
+			Assert.AreEqual(fieldElement2.Name, regionElement.Children[1].Name);
+			Assert.AreEqual(fieldElement3.Name, regionElement.Children[2].Name);
+		}
+
+		/// <summary>
 		/// Tests arranging with the default configuration
 		/// </summary>
 		[Test]

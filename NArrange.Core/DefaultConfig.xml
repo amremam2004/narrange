@@ -121,6 +121,14 @@
 								</Element>
 							</Elements>
 						</Region>
+						<Region Name="Fixed Fields">
+							<Elements>
+								<Element Type="Field">
+									<Filter Condition="$(Parent.Attributes) : 'StructLayout'"/>
+									<!-- Do not sort fields that are members of a type with a StructLayout attribute -->
+								</Element>
+							</Elements>
+						</Region>
 						<Region Name="Fields">
 							<Elements>
 								<Element Type="Field">

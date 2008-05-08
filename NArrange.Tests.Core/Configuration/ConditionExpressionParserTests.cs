@@ -194,8 +194,8 @@ namespace NArrange.Tests.Core.Configuration
 		public void ParseComplexTest()
 		{
 			string expression =
-			    "$(Name) : 'Test' Or $(Access) == 'Protected' Or " +
-			    "$(Access) == 'Private' And $(Name) : 'OrAnd' And $(Type) == 'int'";
+			    "$(Element.Name) : 'Test' Or $(Access) == 'Protected' Or " +
+			    "$(Access) == 'Private' And $(Element.Name) : 'OrAnd' And $(Type) == 'int'";
 
 			IConditionExpression conditionExpression = ConditionExpressionParser.Instance.Parse(
 			    expression);
@@ -203,8 +203,8 @@ namespace NArrange.Tests.Core.Configuration
 
 			string expressionString = conditionExpression.ToString();
 			Assert.AreEqual(
-			    "((($(Name) : 'Test') Or ($(Access) == 'Protected')) Or " +
-			    "((($(Access) == 'Private') And ($(Name) : 'OrAnd')) And ($(Type) == 'int')))",
+			    "((($(Element.Name) : 'Test') Or ($(Element.Access) == 'Protected')) Or " +
+			    "((($(Element.Access) == 'Private') And ($(Element.Name) : 'OrAnd')) And ($(Element.Type) == 'int')))",
 			    expressionString,
 			    "Unexpected parsed expression.");
 		}

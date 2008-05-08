@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Allow scoping in element attribute expression evaluation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -60,7 +61,8 @@ namespace NArrange.Core.Configuration
 
 		#region Fields
 
-		private ElementAttributeType _elementAttribute;
+		private ElementAttributeType _elementAttributeType;
+		private ElementAttributeScope _elementScope;
 
 		#endregion Fields
 
@@ -71,8 +73,19 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		/// <param name="elementAttribute"></param>
 		public AttributeExpression(ElementAttributeType elementAttribute)
+			: this(elementAttribute, ElementAttributeScope.Element)
 		{
-			_elementAttribute = elementAttribute;
+		}
+
+		/// <summary>
+		/// Creates a new attribute expression
+		/// </summary>
+		/// <param name="elementAttribute"></param>
+		/// <param name="scope"></param>
+		public AttributeExpression(ElementAttributeType elementAttribute, ElementAttributeScope scope)
+		{
+			_elementAttributeType = elementAttribute;
+			_elementScope = scope;
 		}
 
 		#endregion Constructors
@@ -86,7 +99,18 @@ namespace NArrange.Core.Configuration
 		{
 			get
 			{
-			    return _elementAttribute;
+			    return _elementAttributeType;
+			}
+		}
+
+		/// <summary>
+		/// Gets the element scope specified by the expression
+		/// </summary>
+		public ElementAttributeScope Scope
+		{
+			get
+			{
+			    return _elementScope;
 			}
 		}
 
@@ -100,7 +124,11 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format(Thread.CurrentThread.CurrentCulture, "$({0})", _elementAttribute);
+			return string.Format(
+			    Thread.CurrentThread.CurrentCulture, 
+			    "$({0}.{1})", 
+			    _elementScope, 
+			    _elementAttributeType);
 		}
 
 		#endregion Public Methods
