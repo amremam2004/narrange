@@ -900,6 +900,51 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest1()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test{test}");
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException), 
+            MatchType = MessageMatch.Contains, 
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest2()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test{\r\ntest\r\npublic string Test;\r\n}");
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest3()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test{\r\n{\r\npublic string Test;\r\n}");
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Tests parsing a class with an unknown type parameter constraint.
 		/// </summary>
 		[Test]
@@ -1946,7 +1991,7 @@ namespace NArrange.Tests.CSharp
 		public void ParseHeaderCommentsBlockTest()
 		{
 			StringReader reader = new StringReader(
-			    "/*Comment1\r\nComment2*/</summary>\r\npublic TestClass(){}");
+			    "/*Comment1\r\nComment2*/\r\npublic TestClass(){}");
 
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);

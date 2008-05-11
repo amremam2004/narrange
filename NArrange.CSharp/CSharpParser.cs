@@ -53,6 +53,7 @@
  *      - Handle fixed size buffer fields
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
+ *      - Improved handling of unhandled element text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -176,22 +177,22 @@ namespace NArrange.CSharp
 		{
 			CodeAccess access = CodeAccess.None;
 
-			if (wordList.Contains(CSharpKeyword.Public))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Public))
 			{
 			    access = CodeAccess.Public;
 			}
-			else if (wordList.Contains(CSharpKeyword.Private))
+			else if (TryFindAndRemoveWord(wordList, CSharpKeyword.Private))
 			{
 			    access = CodeAccess.Private;
 			}
 			else
 			{
-				if (wordList.Contains(CSharpKeyword.Protected))
+			    if (TryFindAndRemoveWord(wordList, CSharpKeyword.Protected))
 			    {
 			        access |= CodeAccess.Protected;
 			    }
 
-				if (wordList.Contains(CSharpKeyword.Internal))
+			    if (TryFindAndRemoveWord(wordList, CSharpKeyword.Internal))
 			    {
 			        access |= CodeAccess.Internal;
 			    }
@@ -206,41 +207,41 @@ namespace NArrange.CSharp
 			elementType = ElementType.NotSpecified;
 			typeElementType = null;
 
-			if(wordList.Contains(CSharpKeyword.Class))
+			if(TryFindAndRemoveWord(wordList, CSharpKeyword.Class))
 			{
 				elementType = ElementType.Type;
 				typeElementType = TypeElementType.Class;
 				return;
 			}
 
-			if (wordList.Contains(CSharpKeyword.Structure))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Structure))
 			{
 				elementType = ElementType.Type;
 				typeElementType = TypeElementType.Structure;
 				return;
 			}
 
-			if (wordList.Contains(CSharpKeyword.Enumeration))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Enumeration))
 			{
 				elementType = ElementType.Type;
 				typeElementType = TypeElementType.Enum;
 				return;
 			}
 
-			if (wordList.Contains(CSharpKeyword.Interface))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Interface))
 			{
 				elementType = ElementType.Type;
 				typeElementType = TypeElementType.Interface;
 				return;
 			}
 
-			if (wordList.Contains(CSharpKeyword.Event))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Event))
 			{
 				elementType = ElementType.Event;
 				return;
 			}
 
-			if (wordList.Contains(CSharpKeyword.Delegate))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Delegate))
 			{
 				elementType = ElementType.Delegate;
 				return;
@@ -252,68 +253,57 @@ namespace NArrange.CSharp
 			MemberModifiers memberAttributes;
 			memberAttributes = MemberModifiers.None;
 
-			bool isSealed = wordList.Contains(CSharpKeyword.Sealed);
-			if (isSealed)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Sealed))
 			{
 			    memberAttributes |= MemberModifiers.Sealed;
 			}
 
-			bool isAbstract = wordList.Contains(CSharpKeyword.Abstract);
-			if (isAbstract)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Abstract))
 			{
 			    memberAttributes |= MemberModifiers.Abstract;
 			}
 
-			bool isStatic = wordList.Contains(CSharpKeyword.Static);
-			if (isStatic)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Static))
 			{
 			    memberAttributes |= MemberModifiers.Static;
 			}
 
-			bool isUnsafe = wordList.Contains(CSharpKeyword.Unsafe);
-			if (isUnsafe)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Unsafe))
 			{
 			    memberAttributes |= MemberModifiers.Unsafe;
 			}
 
-			bool isVirtual = wordList.Contains(CSharpKeyword.Virtual);
-			if (isVirtual)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Virtual))
 			{
 			    memberAttributes |= MemberModifiers.Virtual;
 			}
 
-			bool isOverride = wordList.Contains(CSharpKeyword.Override);
-			if (isOverride)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Override))
 			{
 			    memberAttributes |= MemberModifiers.Override;
 			}
 
-			bool isNew = wordList.Contains(CSharpKeyword.New);
-			if (isNew)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.New))
 			{
 			    memberAttributes |= MemberModifiers.New;
 			}
 
-			bool isConstant = wordList.Contains(CSharpKeyword.Constant);
-			if (isConstant)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Constant))
 			{
 			    memberAttributes |= MemberModifiers.Constant;
 			}
 
-			bool isReadOnly = wordList.Contains(CSharpKeyword.ReadOnly);
-			if (isReadOnly)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.ReadOnly))
 			{
 			    memberAttributes |= MemberModifiers.ReadOnly;
 			}
 
-			bool isExternal = wordList.Contains(CSharpKeyword.External);
-			if (isExternal)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.External))
 			{
 			    memberAttributes |= MemberModifiers.External;
 			}
 
-			bool isPartial = wordList.Contains(CSharpKeyword.Partial);
-			if (isPartial)
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Partial))
 			{
 			    memberAttributes |= MemberModifiers.Partial;
 			}
@@ -334,15 +324,9 @@ namespace NArrange.CSharp
 			name = null;
 			returnType = null;
 
-			List<string> wordList = new List<string>();
-			foreach (string word in words)
+			for (int wordIndex = 0; wordIndex < words.Count; wordIndex++)
 			{
-			    wordList.Add(word);
-			}
-
-			for (int wordIndex = 0; wordIndex < wordList.Count; wordIndex++)
-			{
-			    string wordGroup = wordList[wordIndex];
+			    string wordGroup = words[wordIndex];
 			    int separatorIndex = wordGroup.IndexOf(CSharpSymbol.AliasSeparator);
 			    if (separatorIndex >= 0 && wordGroup[wordGroup.Length - 1] != CSharpSymbol.EndAttribute)
 			    {
@@ -364,7 +348,7 @@ namespace NArrange.CSharp
 			            }
 
 			            wordGroup = wordGroup.TrimEnd();
-			            wordList[wordIndex] = wordGroup;
+			            words[wordIndex] = wordGroup;
 			        }
 
 			        //
@@ -372,48 +356,55 @@ namespace NArrange.CSharp
 			        //
 			        if (wordGroup[0] == CSharpSymbol.AliasSeparator && wordIndex > 0)
 			        {
-			            if (wordGroup.Length == 1 && wordIndex < wordList.Count - 1)
+			            if (wordGroup.Length == 1 && wordIndex < words.Count - 1)
 			            {
-			                wordList[wordIndex - 1] = wordList[wordIndex - 1] +
+			                words[wordIndex - 1] = words[wordIndex - 1] +
 			                    CSharpSymbol.AliasSeparator + " " +
-			                    wordList[wordIndex + 1];
-			                wordList.RemoveAt(wordIndex);
-			                wordList.RemoveAt(wordIndex);
+			                    words[wordIndex + 1];
+			                words.RemoveAt(wordIndex);
+			                words.RemoveAt(wordIndex);
 			                wordIndex--;
 			                wordIndex--;
 			            }
 			            else
 			            {
-			                wordList[wordIndex - 1] = wordList[wordIndex - 1] + wordGroup;
-			                wordList.RemoveAt(wordIndex);
+			                words[wordIndex - 1] = words[wordIndex - 1] + wordGroup;
+			                words.RemoveAt(wordIndex);
 			                wordIndex--;
 			            }
 			        }
-			        else if (wordIndex < wordList.Count &&
+			        else if (wordIndex < words.Count &&
 			            wordGroup[wordGroup.Length - 1] == CSharpSymbol.AliasSeparator)
 			        {
-			            wordGroup = wordGroup + " " + wordList[wordIndex + 1];
-			            wordList[wordIndex] = wordGroup;
-			            wordList.RemoveAt(wordIndex + 1);
+			            wordGroup = wordGroup + " " + words[wordIndex + 1];
+			            words[wordIndex] = wordGroup;
+			            words.RemoveAt(wordIndex + 1);
 			            wordIndex--;
 			        }
 			    }
 			}
 
-			if (wordList.Count > 1)
+			if (words.Count > 1)
 			{
-			    int nameIndex = wordList.Count - 1;
-			    name = wordList[nameIndex];
+			    int nameIndex = words.Count - 1;
+			    name = words[nameIndex];
+			    words.RemoveAt(nameIndex);
 
-			    int typeIndex = nameIndex - 1;
-			    string typeCandidate = wordList[typeIndex];
-			    if (typeCandidate == CSharpKeyword.Operator)
+			    int typeIndex = nameIndex;
+			    string typeCandidate;
+
+			    do
 			    {
 			        typeIndex--;
-			        typeCandidate = wordList[typeIndex];
+			        typeCandidate = words[typeIndex];
+			        words.RemoveAt(typeIndex);
 			    }
+			    while (words.Count > 0 &&
+			        (typeCandidate == CSharpKeyword.Operator ||
+			        typeCandidate == CSharpKeyword.Implicit ||
+			        typeCandidate == CSharpKeyword.Explicit));
 
-			    if (name[name.Length - 1] == CSharpSymbol.EndAttribute && wordList.Count > 2)
+			    if (name[name.Length - 1] == CSharpSymbol.EndAttribute && words.Count > 0)
 			    {
 			        //
 			        // Property indexer
@@ -422,14 +413,16 @@ namespace NArrange.CSharp
 			        {
 			            name = typeCandidate + " " + name;
 			            typeIndex--;
-			            typeCandidate = wordList[typeIndex];
+			            typeCandidate = words[typeIndex];
+			            words.RemoveAt(typeIndex);
 			        }
 
 			        if (name[0] == CSharpSymbol.BeginAttribute)
 			        {
 			            name = typeCandidate + name;
 			            typeIndex--;
-			            typeCandidate = wordList[typeIndex];
+			            typeCandidate = words[typeIndex];
+			            words.RemoveAt(typeIndex);
 			        }
 			    }
 
@@ -440,7 +433,8 @@ namespace NArrange.CSharp
 			        typeCandidate[0] == CSharpSymbol.BeginAttribute)
 			    {
 			        typeIndex--;
-			        typeCandidate = wordList[typeIndex] + typeCandidate;
+			        typeCandidate = words[typeIndex] + typeCandidate;
+			        words.RemoveAt(typeIndex);
 			    }
 
 			    if (typeCandidate != CSharpKeyword.Abstract &&
@@ -454,25 +448,29 @@ namespace NArrange.CSharp
 			        typeCandidate != CSharpKeyword.ReadOnly &&
 			        typeCandidate != CSharpKeyword.Sealed &&
 			        typeCandidate != CSharpKeyword.Static &&
-			        typeCandidate != CSharpKeyword.Virtual)
+			        typeCandidate != CSharpKeyword.Virtual &&
+			        typeCandidate != CSharpKeyword.Operator &&
+			        typeCandidate != CSharpKeyword.Implicit &&
+			        typeCandidate != CSharpKeyword.Explicit)
 			    {
 			        returnType = typeCandidate;
 			    }
 			}
 			else
 			{
-			    name = wordList[0];
+			    name = words[0];
+			    words.RemoveAt(0);
 			}
 		}
 
 		private static OperatorType GetOperatorType(StringCollection wordList)
 		{
 			OperatorType operatorType = OperatorType.None;
-			if (wordList.Contains(CSharpKeyword.Explicit))
+			if (TryFindAndRemoveWord(wordList, CSharpKeyword.Explicit))
 			{
 			    operatorType = OperatorType.Explicit;
 			}
-			else if (wordList.Contains(CSharpKeyword.Implicit))
+			else if (TryFindAndRemoveWord(wordList, CSharpKeyword.Implicit))
 			{
 			    operatorType = OperatorType.Implicit;
 			}
@@ -1220,7 +1218,7 @@ namespace NArrange.CSharp
 			method.IsOperator = isOperator;
 			method.OperatorType = operatorType;
 			if (isOperator &&
-			    (returnType == CSharpKeyword.Implicit || returnType == CSharpKeyword.Explicit))
+			    (operatorType == OperatorType.Implicit || operatorType == OperatorType.Explicit))
 			{
 			    method.Type = memberName;
 			    method.Name = null;
@@ -1725,6 +1723,20 @@ namespace NArrange.CSharp
 			return usingElement;
 		}
 
+		private static bool TryFindAndRemoveWord(StringCollection wordList, string word)
+		{
+			bool removed = false;
+
+			int wordIndex = wordList.IndexOf(word);
+			if (wordIndex >= 0)
+			{
+			    wordList.RemoveAt(wordIndex);
+			    removed = true;
+			}
+
+			return removed;
+		}
+
 		/// <summary>
 		/// Tries to parse a code element
 		/// </summary>
@@ -1819,6 +1831,7 @@ namespace NArrange.CSharp
 
 			        CodeAccess access = CodeAccess.None;
 			        MemberModifiers memberAttributes = MemberModifiers.None;
+			        OperatorType operatorType = OperatorType.None;
 
 			        if (isStatement || isAssignment || hasParams ||
 						elementType == ElementType.Property ||
@@ -1828,6 +1841,7 @@ namespace NArrange.CSharp
 			        {
 						access = GetAccess(wordList);
 			            memberAttributes = GetMemberAttributes(wordList);
+			            operatorType = GetOperatorType(wordList);
 			        }
 
 			        //
@@ -1836,10 +1850,6 @@ namespace NArrange.CSharp
 					if (elementType == ElementType.Type)
 			        {
 			            TypeModifiers typeAttributes = (TypeModifiers)memberAttributes;
-			            if (wordList.Contains(CSharpKeyword.Partial))
-			            {
-			                typeAttributes |= TypeModifiers.Partial;
-			            }
 
 			            //
 			            // Parse a type definition
@@ -1869,7 +1879,7 @@ namespace NArrange.CSharp
 			                }
 			                else
 			                {
-			                    if (returnType == null)
+			                    if (returnType == null && operatorType == OperatorType.None)
 			                    {
 			                        //
 			                        // Constructor/finalizer
@@ -1878,13 +1888,6 @@ namespace NArrange.CSharp
 			                    }
 			                    else
 			                    {
-			                        //bool isOperator = wordList.Contains(CSharpKeyword.Operator);
-			                        OperatorType operatorType = OperatorType.None;
-			                        if (isOperator)
-			                        {
-			                            operatorType = GetOperatorType(wordList);
-			                        }
-
 			                        //
 			                        // Method
 			                        //
@@ -1898,8 +1901,8 @@ namespace NArrange.CSharp
 			                //
 			                // Field
 			                //
-			                bool isVolatile = wordList.Contains(CSharpKeyword.Volatile);
-			                bool isFixed = wordList.Contains(CSharpKeyword.Fixed);
+			                bool isVolatile = TryFindAndRemoveWord(wordList, CSharpKeyword.Volatile);
+			                bool isFixed = TryFindAndRemoveWord(wordList, CSharpKeyword.Fixed);
 			                FieldElement field = ParseField(isAssignment, access, memberAttributes, 
 			                    memberName, returnType, isVolatile, isFixed);
 
@@ -1909,6 +1912,20 @@ namespace NArrange.CSharp
 			            {
 			                codeElement = ParseProperty(memberName, returnType, access, memberAttributes);
 			            }
+			        }
+
+			        // Check for any unhandled element text
+			        if (codeElement != null && wordList.Count > 0)
+			        {
+			            StringBuilder remainingWords = new StringBuilder();
+			            foreach (string word in wordList)
+			            {
+			                remainingWords.Append(word + " ");
+			            }
+
+			            this.OnParseError(
+			                string.Format(Thread.CurrentThread.CurrentCulture,
+			                "Unhandled element text '{0}'", remainingWords.ToString().Trim()));
 			        }
 			    }
 			}

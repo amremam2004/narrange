@@ -38,6 +38,7 @@
  *      - Preserve header comments without associating w/ imports
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
+ *      - Improved handling of unhandled element text
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -639,6 +640,7 @@ namespace NArrange.VisualBasic
 
 			char nextChar;
 			bool end = false;
+			bool lineContinuation = false;
 
 			while (TryReadChar() && !end)
 			{
@@ -725,7 +727,11 @@ namespace NArrange.VisualBasic
 			            break;
 
 			        case VBSymbol.LineContinuation:
-			            if (!(IsWhiteSpace(PreviousChar) && IsWhiteSpace(NextChar)))
+			            if (IsWhiteSpace(PreviousChar) && IsWhiteSpace(NextChar))
+			            {
+			                lineContinuation = true;
+			            }
+			            else
 			            {
 			                elementBuilder.Append(CurrentChar);
 			            }
@@ -737,10 +743,27 @@ namespace NArrange.VisualBasic
 			        case '\r':
 			        case '\t':
 			        case ':':
-			            if (elementBuilder.Length > 0 &&
-			                elementBuilder[elementBuilder.Length - 1] != ' ')
+			            if (elementBuilder.Length > 0)
 			            {
-			                elementBuilder.Append(' ');
+			                string processedText = elementBuilder.ToString().Trim();
+			                if (CurrentChar == '\n')
+			                {
+			                    if (!lineContinuation)
+			                    {
+			                        this.OnParseError(
+			                            string.Format(Thread.CurrentThread.CurrentCulture,
+			                            "Unhandled element text '{0}'", processedText));
+			                    }
+			                    else
+			                    {
+			                        lineContinuation = false;
+			                    }
+			                }
+
+			                if (elementBuilder[elementBuilder.Length - 1] != ' ')
+			                {
+			                    elementBuilder.Append(' ');
+			                }
 			            }
 			            break;
 

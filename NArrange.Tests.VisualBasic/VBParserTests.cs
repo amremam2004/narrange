@@ -946,6 +946,51 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest1()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\ntest\r\nend class");
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest2()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\ntest\r\n\r\nPublic Test as String\r\nend class");
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a class with an invalid element.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+            ExpectedMessage = "Unhandled element")]
+		public void ParseClassUnhandledElementTest3()
+		{
+			StringReader reader = new StringReader(
+			    "public class Test\r\n;\r\n\r\nPublic Test as String\r\nend class");
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Tests parsing an invalid comment line.
 		/// </summary>
 		[Test]
@@ -3522,12 +3567,11 @@ namespace NArrange.Tests.VisualBasic
 		public void ParseNonRegionPreprocessorTest()
 		{
 			StringReader reader = new StringReader(
-			    "public class Test\r\n" + 
-			    "{\r\n" + 
-			    "#if DEBUG\r\n" + 
-			    "\tprivate bool _test = false;\r\n" +
-			    "#endif\r\n" + 
-			    "}");
+			    "Public Class Test\r\n" + 
+			    "#If DEBUG Then\r\n" + 
+			    "\tprivate _test As Boolean = false\r\n" +
+			    "#End If\r\n" + 
+			    "End Class");
 
 			VBParser parser = new VBParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);

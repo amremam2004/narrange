@@ -501,7 +501,7 @@ namespace NArrange.Core
 		/// <summary>
 		/// Partial
 		/// </summary>
-		Partial = 16
+		Partial = MemberModifiers.Partial
 	}
 
 	/// <summary>
