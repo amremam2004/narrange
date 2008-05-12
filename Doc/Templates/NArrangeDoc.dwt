@@ -1,7 +1,7 @@
 <html>
 <head>
 <!-- #BeginEditable "doctitle" -->
-<title>NArrange at SourceForge: Organize Your .NET Code</title>
+<title>NArrange - .NET Code Organizer</title>
 <!-- #EndEditable -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <META NAME="Description" CONTENT="NArrange is a tool for arranging .NET source code. This code beautifier allows you to sort and organize C# code members into groups or regions.">
@@ -16,7 +16,7 @@
       <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
         <tr> 
           <td width="80"> 
-            <div align="center"><a href="../index.htm"><img src="../Images/Logo.png" width="80" height="30" border="0"></a></div>
+            <div align="center"><a href="http://narrange.sourceforge.net"><img src="../Images/Logo.png" width="80" height="30" border="0"></a></div>
           </td>
           <td width="812"> 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
