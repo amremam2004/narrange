@@ -7,8 +7,8 @@
 		<SourceDistributionDirectory>$(BuildDirectory)\NArrange\src</SourceDistributionDirectory>
 		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
 		<Major>0</Major>
-		<Minor>1</Minor>
-		<Build>9</Build>
+		<Minor>2</Minor>
+		<Build>0</Build>
 	</PropertyGroup>
 	<ItemGroup>
 		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>

@@ -35,6 +35,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="VBProjectParser.cs" />
     <Compile Include="VBWriteVisitor.cs" />
     <Compile Include="VBWriter.cs" />
