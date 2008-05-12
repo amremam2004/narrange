@@ -7,3 +7,4 @@ The following changes were made in this release:
   By default, place fields in types with StructLayout attributes in a "Fixed Fields"
   region and do not sort. 
 - Improved parser handling of unhandled element text.
+- Initial documentation.
