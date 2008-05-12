@@ -30,11 +30,15 @@
 		<CreateItem Include="$(MSBuildProjectDirectory)\**\*.*"
 					Exclude="$(MSBuildProjectDirectory)\**\*svn\**\*.*;
 						$(MSBuildProjectDirectory)\**\bin\**\*.*;
+						$(MSBuildProjectDirectory)\**\Build\**\*.*;
 						$(MSBuildProjectDirectory)\**\obj\**\*.*;
 						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;
 						$(MSBuildProjectDirectory)\TestResult.xml;
 						$(MSBuildProjectDirectory)\**\*.suo;;
-						$(MSBuildProjectDirectory)\**\*.user;">
+						$(MSBuildProjectDirectory)\**\*.user;
+						$(MSBuildProjectDirectory)\**\Doc\Templates\*.*;
+						$(MSBuildProjectDirectory)\**\Doc\_notes\*.*;
+						$(MSBuildProjectDirectory)\**\Doc\Images\Originals\*.*">
 			<Output ItemName="SourceFiles" TaskParameter="Include"/>
 		</CreateItem>
 
@@ -77,12 +81,26 @@
 		<Copy SourceFiles="@(AdditionalFiles)" DestinationFolder="$(BinDirectory)"/>
 
 		<CreateItem Include="$(MSBuildProjectDirectory)\*.txt;
-				     $(MSBuildProjectDirectory)\*.rtf;">
+				     $(MSBuildProjectDirectory)\*.rtf">
 			<Output ItemName="InfoFiles" TaskParameter="Include" />
 		</CreateItem>
-		<Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(BinDirectory)"/>
+		<Copy SourceFiles="@(InfoFiles)" 
+			DestinationFolder="$(BuildDirectory)\NArrange\"/>
 
-		<CreateItem Include="$(BinDirectory)\**\*.*"
+		<CreateItem Include="$(MSBuildProjectDirectory)\Doc\**\*.*"
+			        	Exclude="$(MSBuildProjectDirectory)\Doc\**\*svn\**\*.*;
+						$(MSBuildProjectDirectory)\Doc\Templates\**\*.*;
+						$(MSBuildProjectDirectory)\Doc\_notes\**\*.*;
+						$(MSBuildProjectDirectory)\Doc\Images\Originals\**\*.*">
+			<Output ItemName="DocFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Copy SourceFiles="@(DocFiles)" 
+			DestinationFiles="@(DocFiles->'$(BuildDirectory)\NArrange\Doc\%(RecursiveDir)%(Filename)%(Extension)')"/>
+
+		<CreateItem Include="$(BinDirectory)\**\*.*;
+					$(BuildDirectory)\NArrange\doc\**\*.*;
+					$(BuildDirectory)\NArrange\*.txt;
+					$(BuildDirectory)\NArrange\*.rtf"
 					Exclude="$(BinDirectory)\**\narrange-*test*.exe;
 						$(BinDirectory)\**\NArrange.Tests*.*;
 						$(BinDirectory)\**\NArrange.Console.xml;">

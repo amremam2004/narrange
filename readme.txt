@@ -9,7 +9,10 @@ THIS PROGRAM MODIFIES SOURCE CODE.  BECAUSE IT IS POSSIBLE THAT BUGS EXIST IN TH
 
 To ease command line usage, it is also recommended that you add the NArrange bin folder to your %PATH% environment variable.
 
-To setup NArrange as an external tool in Microsoft Visual Studio, see NArrangeVSSetup.rtf.
+To setup NArrange as an external tool in Microsoft Visual Studio or for more information on using NArrange, please refer to the documentation included with this distribution in the Doc directory.
+
+
+The following should help you get started:
 
 
 ARRANGING FILES
@@ -47,3 +50,5 @@ To enable closing comments, add the following element under the CodeConfiguratio
 <ClosingComments Enabled="true" Format="End $(ElementType) $(Name)"/>
 
 For an example, see DefaultConfig.xml in the bin directory.  Other valid format variables include $(Access), $(Type) and $(Modifer).
+
+
