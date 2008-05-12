@@ -66,13 +66,12 @@
                     Usage</a><br>
                     &nbsp;&nbsp;&nbsp; - <a href="#vssetup">Microsoft&reg; Visual 
                     Studio&reg; Setup</a><br>
-                    - Features<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#backup">Source Code Backup</a><br>
-                    - Configuration<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;- Creating a Custom Configuration 
-                    File<br>
-                    - Limitations<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;- Preprocessor Directives<br>
+                    - <a href="#configuration">Configuration</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#createconfig">Creating 
+                    a Custom Configuration File</a><br>
+                    - <a href="#limitations">Limitations</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#preprocessor">Preprocessor 
+                    Directives</a><br>
                     <br>
                   </p>
                   <h2>Introduction<a name="introduction"></a></h2>
@@ -105,14 +104,14 @@
                     <li>Extension Methods</li>
                     <li>Object Initializers</li>
                   </ul>
-                  <p>Many 3.+ language features are exluded from this list, such 
+                  <p>Many 3.+ language features are excluded from this list, such 
                     as LINQ and Lambda Expressions. However, NArrange does not 
                     currently parse to the statement level of constructors, methods 
                     and properties, so these features are inherently supported.<br>
                     <br>
                     NArrange has been designed with the intention of supporting 
                     many .NET languages. If you are interested in implementing 
-                    a parser/writer for an addional CLI language, please contact 
+                    a parser/writer for an additonal CLI language, please contact 
                     an NArrange contributor through the <a href="http|//sourceforge.net/projects/narrange/">SourceForge 
                     project site</a>. NArrange is still in the early stages of 
                     development so any suggestions to help make the framework 
@@ -184,6 +183,167 @@
                     (see image below).</p>
                   <p><img src="Images/DemoHeaderAndUsingsAnnotated.png" width="800" height="600"><br>
                     <b>Header Region and Sorted Using Directives</b></p>
+                  <h3>Command Line Usage<a name="commandline"></a></h3>
+                  <p>To arrange a file just run the following:</p>
+                  <pre>&gt;narrange-console &lt;source file&gt; [optional output file]</pre>
+                  <p>If an output file is not specified, the original source file 
+                    will be overwritten. Alternatively, you can run NArrange against 
+                    a C# or VB project file or solution. When arranging a project 
+                    or solution, the original source files will be overwritten.</p>
+                  <p>The command line usage is as follows:</p>
+                  <pre>narrange-console &lt;input&gt; [output] [/c:configuration]
+        [/b] [/r] [/t]
+
+
+input   Specifies the source code file, project or solution to arrange.
+
+output  For a single source file, specifies the output file
+        to write arranged code to.
+        [Optional] If not specified the input source
+        file will be overwritten.
+
+/c      Configuration - Specifies the XML configuration file to use.
+        [Optional] If not specified the default
+        configuration will be used.
+
+/b      Backup - Specifies to create a backup before arranging
+        [Optional] If not specified, no backup will be created.
+        Only valid if an output file is not specified
+        and cannot be used in conjunction with Restore.
+
+/r      Restore - Restores arranged files from the latest backup
+        [Optional] When this flag is provided, no files will be arranged.
+        Only valid if an output file is not specified
+        and cannot be used in conjunction with Backup.
+
+/t      Trace - Detailed logging</pre>
+                  <h3>Microsoft&reg; Visual Studio&reg; Setup<a name="vssetup"></a></h3>
+                  <ol>
+                    <li>From the Tools menu, select External Tools.</li>
+                    <li>Add a new entry for NArrange. 
+                      <ul>
+                        <li>For the Command, select the location of narrange-console.exe.</li>
+                        <li> For arguments, pass the solution, project or file 
+                          path macro depending on your preference. When choosing 
+                          this, you may want to take into consideration your revision 
+                          control system (i.e. whether or not files are marked 
+                          as read-only). NArrange cannot arrange read-only files. 
+                          It is recommended to pass the /b argument to specify 
+                          that an automatic backup be created in your user temp 
+                          directory. </li>
+                      </ul>
+                      <br>
+                      <p><img src="Images/VSExternalTool.png" width="471" height="458"></p>
+                    </li>
+                    <li>It is also recommended to setup a restore command using 
+                      the same parameters, replacing /b with /r. However, be careful 
+                      when using restore as it will revert any edits made to a 
+                      file since the last NArrange. 
+                      <p><img src="Images/VSExternalToolRestore.png" width="471" height="458"><br>
+                        <br>
+                      </p>
+                    </li>
+                  </ol>
+                  <h2>Configuration<a name="configuration"></a></h2>
+                  <h3>Creating a Custom Configuration File<a name="createconfig"></a></h3>
+                  <p>To override the default arrangement of source code members, 
+                    a custom configuration file can be used. To create your own 
+                    custom configuration file, you should start by creating a 
+                    copy of DefaultConfig.xml and renaming appropriately. Note 
+                    that NArrange does not read DefaultConfig.xml by default, 
+                    but it is rather provided as an example for creating a custom 
+                    configuration. The actual default configuration is embedded 
+                    within the NArrange core assembly.</p>
+                  <p>The figure below shows sections from a sample XML configuration 
+                    file. NArrange uses the ordering of Element and Region tags 
+                    in the configuration file to define the ordering of code members 
+                    in the output source files.</p>
+                  <p><img src="Images/DemoConfig.png" width="800" height="600"><br>
+                    <b>Sample NArrange Configuration File</b></p>
+                  <p>By defining a sort attribute for elements in a region, NArrange 
+                    will sort those elements alphabetically in the region by the 
+                    specified attribute. Valid element attributes are:</p>
+                  <ul>
+                    <li>Name - Returns the element name</li>
+                    <li>Access - Returns the element access (&quot;Public&quot;, 
+                      &quot;Private&quot;, &quot;Protected&quot;, &quot;Internal&quot; 
+                      or &quot;Protected, Internal&quot;).</li>
+                    <li>Modifier - Returns element modifiers as a comma separated 
+                      list 
+                      <ul>
+                        <li>Abstract</li>
+                        <li>Sealed</li>
+                        <li>Static</li>
+                        <li>Unsafe</li>
+                        <li>Virtual</li>
+                        <li>Override</li>
+                        <li>New</li>
+                        <li>ReadOnly</li>
+                        <li>Constant</li>
+                        <li>External</li>
+                        <li>Partial</li>
+                      </ul>
+                    </li>
+                    <li>ElementType - Returns the NArrange element type 
+                      <ul>
+                        <li>Comment</li>
+                        <li>Attribute</li>
+                        <li>Using</li>
+                        <li>Namespace</li>
+                        <li>Region</li>
+                        <li>Field</li>
+                        <li>Constructor</li>
+                        <li>Property</li>
+                        <li>Method</li>
+                        <li>Event</li>
+                        <li>Enum</li>
+                        <li>Delegate</li>
+                        <li>Type</li>
+                      </ul>
+                    </li>
+                    <li>Type - Returns the return type of the element (e.g. &quot;string&quot;)</li>
+                    <li>Attributes - Returns a comma separated list of the names 
+                      of all attributes associated with an element.</li>
+                  </ul>
+                  <p>Attributes can also be qualified with a scope. For example 
+                    $(Element.Name) or $(Parent.ElementType).</p>
+                  <p>You may notice that filter conditions can be applied to elements, 
+                    which are used to filter elements into the appropriate group 
+                    or region. Filter expressions can use the element attributes 
+                    above using the $(AttributeHere) syntax. Filter expressions 
+                    use string comparison and the following operators are available:</p>
+                  <table width="200" border="1" cellspacing="0" cellpadding="5">
+                    <tr> 
+                      <td>Equality</td>
+                      <td>=</td>
+                    </tr>
+                    <tr> 
+                      <td>Inequality</td>
+                      <td>!=</td>
+                    </tr>
+                    <tr> 
+                      <td>Contains</td>
+                      <td>:</td>
+                    </tr>
+                    <tr> 
+                      <td>Logical Or</td>
+                      <td>Or</td>
+                    </tr>
+                    <tr> 
+                      <td>Logical And</td>
+                      <td>And</td>
+                    </tr>
+                  </table>
+                  <p>Strings in element expressions should be enclosed with single 
+                    quotes.</p>
+                  <h2>Limitations<a name="limitations"></a></h2>
+                  <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
+                  <p>One of the biggest limitations with the current version of 
+                    NArrange is that it cannot handle preprocessor directives 
+                    (e.g. #if ). Thus, you will get a warning message indicating 
+                    that files containing preprocessor directives other than #region 
+                    and #endregion cannot be parsed. Note that this is not an 
+                    issue if the preprocessor directive is a method body.</p>
                   <!-- #EndEditable --></td>
               </tr>
             </table>
