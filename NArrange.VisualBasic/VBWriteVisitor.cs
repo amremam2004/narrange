@@ -37,6 +37,8 @@
  *      - Optionally write end region name
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
+ *      - Fixed ordering of new and const for fields
+ *      - Honor the new keyword for nested types
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -234,6 +236,12 @@ namespace NArrange.VisualBasic
 
 		private void WriteMemberAttributes(MemberModifiers memberAttributes, bool overloads)
 		{
+			if ((memberAttributes & MemberModifiers.New) == MemberModifiers.New)
+			{
+			    Writer.Write(VBKeyword.Shadows);
+			    Writer.Write(' ');
+			}
+
 			if ((memberAttributes & MemberModifiers.Constant) == MemberModifiers.Constant)
 			{
 			    Writer.Write(VBKeyword.Constant);
@@ -249,12 +257,6 @@ namespace NArrange.VisualBasic
 			if ((memberAttributes & MemberModifiers.Abstract) == MemberModifiers.Abstract)
 			{
 			    Writer.Write(VBKeyword.MustOverride);
-			    Writer.Write(' ');
-			}
-
-			if ((memberAttributes & MemberModifiers.New) == MemberModifiers.New)
-			{
-			    Writer.Write(VBKeyword.Shadows);
 			    Writer.Write(' ');
 			}
 
@@ -938,6 +940,12 @@ namespace NArrange.VisualBasic
 			else
 			{
 			    WriteIndented(string.Empty);
+			}
+
+			if (element.IsNew)
+			{
+			    Writer.Write(VBKeyword.Shadows);
+			    Writer.Write(' ');
 			}
 
 			if (element.IsSealed)

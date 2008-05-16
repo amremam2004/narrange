@@ -471,6 +471,7 @@ namespace NArrange.Tests.VisualBasic
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			text = writer.ToString();
+			// Static doesn't apply to VB
 			Assert.AreEqual(
 			    "Public Class TestClass\r\n" +
 			    "\tImplements IDisposable\r\n" +
@@ -485,8 +486,23 @@ namespace NArrange.Tests.VisualBasic
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			text = writer.ToString();
+			// Unsafe doesn't apply to VB
 			Assert.AreEqual(
 			    "Public Class TestClass\r\n" +
+			    "\tImplements IDisposable\r\n" +
+			    "\tImplements IEnumerable\r\n" +
+			    "End Class",
+			    text,
+			    "Class element was not written correctly.");
+
+			classElement.TypeModifiers = TypeModifiers.New;
+			VBWriter = new VBWriter();
+			writer = new StringWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "Public Shadows Class TestClass\r\n" +
 			    "\tImplements IDisposable\r\n" +
 			    "\tImplements IEnumerable\r\n" +
 			    "End Class",
@@ -776,6 +792,33 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As Dictionary(Of String, Integer) = New Dictionary(Of String, Integer)()",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a new constant field.
+		/// </summary>
+		[Test]
+		public void WriteFieldNewConstantTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Public;
+			fieldElement.MemberModifiers = MemberModifiers.Constant | MemberModifiers.New;
+			fieldElement.Type = "String";
+			fieldElement.Name = "Test";
+			fieldElement.InitialValue = "\"Test\"";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("Public Shadows Const Test As String = \"Test\"",
 			    text,
 			    "FieldElement element was not written correctly.");
 		}

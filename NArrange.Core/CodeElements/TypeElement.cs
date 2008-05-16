@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *		- Implement the IGenericElement interface
+ *      Everton Elvio Koser
+ *      - Added an IsNew property (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -142,6 +144,17 @@ namespace NArrange.Core.CodeElements
 			get
 			{
 			    return (_typeModifiers & TypeModifiers.Abstract) == TypeModifiers.Abstract;
+			}
+		}
+
+		/// <summary>
+		/// Gets whether or not the type is new
+		/// </summary>
+		public bool IsNew
+		{
+			get
+			{
+			    return (_typeModifiers & TypeModifiers.New) == TypeModifiers.New;
 			}
 		}
 

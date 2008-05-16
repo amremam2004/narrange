@@ -36,6 +36,8 @@
  *      - Added a TabStyle enumeration
  *		- Added an enumeration for whitespace characters
  *      - Added an enumeration for interface implementation types
+ *      Everton Elvio Koser
+ *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -501,7 +503,12 @@ namespace NArrange.Core
 		/// <summary>
 		/// Partial
 		/// </summary>
-		Partial = MemberModifiers.Partial
+		Partial = MemberModifiers.Partial,
+
+		/// <summary>
+		/// New
+		/// </summary>
+		New = MemberModifiers.New
 	}
 
 	/// <summary>

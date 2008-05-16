@@ -434,6 +434,18 @@ namespace NArrange.Tests.CSharp
 			    "public unsafe class TestClass : IDisposable, IEnumerable\r\n{\r\n}",
 			    text,
 			    "Class element was not written correctly.");
+
+			classElement.TypeModifiers = TypeModifiers.New;
+			classElement.Access = CodeAccess.Private;
+			csharpWriter = new CSharpWriter();
+			writer = new StringWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+			    "private new class TestClass : IDisposable, IEnumerable\r\n{\r\n}",
+			    text,
+			    "Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -714,6 +726,33 @@ namespace NArrange.Tests.CSharp
 
 			string text = writer.ToString();
 			Assert.AreEqual("private static Dictionary<string, int> _test = new Dictionary<string, int>();",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a new constant field.
+		/// </summary>
+		[Test]
+		public void WriteFieldNewConstantTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Public;
+			fieldElement.MemberModifiers = MemberModifiers.Constant | MemberModifiers.New;
+			fieldElement.Type = "string";
+			fieldElement.Name = "Test";
+			fieldElement.InitialValue = "\"Test\"";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			CSharpWriter codeWriter = new CSharpWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("public new const string Test = \"Test\";",
 			    text,
 			    "FieldElement element was not written correctly.");
 		}

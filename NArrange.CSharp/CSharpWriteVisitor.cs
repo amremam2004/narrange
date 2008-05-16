@@ -38,13 +38,16 @@
  *      - Provided support for closing comments
  *      - Fixed extra tabs being written after field declaration statements
  *      - Handle writing of partial methods
- *      - Only write type parameter constraints when they are present.
+ *      - Only write type parameter constraints when they are present
  *      - Fixed writing of volatile fields
  *      - Code writer refactoring
  *      - Optionally write end region name
  *      - Handle fixed size buffer fields
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
+ *      Everton Elvio Koser
+ *      - Fixed ordering of new and const for fields (merged by James Nies)
+ *      - Honor the new keyword for nested types (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -158,6 +161,12 @@ namespace NArrange.CSharp
 			    Writer.Write(' ');
 			}
 
+			if ((memberAttributes & MemberModifiers.New) == MemberModifiers.New)
+			{
+			    Writer.Write(CSharpKeyword.New);
+			    Writer.Write(' ');
+			}
+
 			if ((memberAttributes & MemberModifiers.Constant) == MemberModifiers.Constant)
 			{
 			    Writer.Write(CSharpKeyword.Constant);
@@ -179,12 +188,6 @@ namespace NArrange.CSharp
 			if ((memberAttributes & MemberModifiers.External) == MemberModifiers.External)
 			{
 			    Writer.Write(CSharpKeyword.External);
-			    Writer.Write(' ');
-			}
-
-			if ((memberAttributes & MemberModifiers.New) == MemberModifiers.New)
-			{
-			    Writer.Write(CSharpKeyword.New);
 			    Writer.Write(' ');
 			}
 
@@ -747,6 +750,12 @@ namespace NArrange.CSharp
 			else
 			{
 			    WriteIndented(string.Empty);
+			}
+
+			if (element.IsNew)
+			{
+			    Writer.Write(CSharpKeyword.New);
+			    Writer.Write(' ');
 			}
 
 			if (element.IsUnsafe)
