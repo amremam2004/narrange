@@ -172,7 +172,7 @@ namespace NArrange.Core.CodeElements
 			    {
 			        char ch = (char)data;
 
-			        if (ch == AttributeExpression.ExpressionPrefix &&
+			        if (ch == ConditionExpressionParser.ExpressionPrefix &&
 			            (char)(reader.Peek()) == ConditionExpressionParser.ExpressionStart)
 			        {
 			            reader.Read();

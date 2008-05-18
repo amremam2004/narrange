@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Allow filtering of source and project files
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -105,27 +106,31 @@ namespace NArrange.Core
 			SourceHandler handler = GetProjectHandler(fileName);
 			if (handler != null)
 			{
-			    IProjectParser projectParser = handler.ProjectParser;
+			    bool isRecognizedProject = IsRecognizedFile(fileName, handler.Configuration.ProjectExtensions);
 
-			    List<string> extensions = new List<string>();
-			    foreach (string key in _sourceExtensionHandlers.Keys)
+			    if (isRecognizedProject)
 			    {
-			        SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-			        if (sourceHandler == handler)
-			        {
-			            extensions.Add(key);
-			        }
-			    }
+			        IProjectParser projectParser = handler.ProjectParser;
 
-			    ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
-			    if (fileNames.Count > 0)
-			    {
-			        foreach (string sourceFile in fileNames)
+			        List<string> extensions = new List<string>();
+			        foreach (string key in _sourceExtensionHandlers.Keys)
 			        {
-			            string extension = GetExtension(sourceFile);
-			            if (extensions.Contains(extension))
+			            SourceHandler sourceHandler = _sourceExtensionHandlers[key];
+			            if (sourceHandler == handler)
 			            {
-			                sourceFiles.Add(sourceFile);
+			                extensions.Add(key);
+			            }
+			        }
+
+			        ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
+			        if (fileNames.Count > 0)
+			        {
+			            foreach (string sourceFile in fileNames)
+			            {
+			                if (IsRecognizedSourceFile(sourceFile))
+			                {
+			                    sourceFiles.Add(sourceFile);
+			                }
 			            }
 			        }
 			    }
@@ -163,7 +168,7 @@ namespace NArrange.Core
 			    StringComparer.OrdinalIgnoreCase);
 			foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
 			{
-			    SourceHandler handler = new SourceHandler(handlerConfiguration.AssemblyName);
+			    SourceHandler handler = new SourceHandler(handlerConfiguration);
 
 			    foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
 			    {
@@ -175,6 +180,46 @@ namespace NArrange.Core
 			        _sourceExtensionHandlers.Add(extension.Name, handler);
 			    }
 			}
+		}
+
+		private static bool IsRecognizedFile(string fileName, List<ExtensionConfiguration> extensions)
+		{
+			bool isRecognizedFile = true;
+
+			string extension = GetExtension(fileName);
+			ExtensionConfiguration extensionConfiguration = null;
+			foreach (ExtensionConfiguration extensionEntry in extensions)
+			{
+			    if (extensionEntry.Name == extension)
+			    {
+			        extensionConfiguration = extensionEntry;
+			        break;
+			    }
+			}
+
+			if (extensionConfiguration != null && extensionConfiguration.FilterBy != null)
+			{
+			    FilterBy filterBy = extensionConfiguration.FilterBy;
+			    FileFilter fileFilter = new FileFilter(filterBy.Condition);
+			    if (File.Exists(fileName))
+			    {
+			        isRecognizedFile = fileFilter.IsMatch(new FileInfo(fileName));
+			    }
+			}
+			return isRecognizedFile;
+		}
+
+		private bool IsRecognizedSourceFile(string fileName)
+		{
+			bool recognized = false;
+
+			SourceHandler handler = GetSourceHandler(fileName);
+			if (handler != null)
+			{
+			    recognized = IsRecognizedFile(fileName, handler.Configuration.SourceExtensions);
+			}
+
+			return recognized;
 		}
 
 		#endregion Private Methods
@@ -220,7 +265,7 @@ namespace NArrange.Core
 			{
 			    sourceFiles.AddRange(GetProjectSourceFiles(fileName));
 			}
-			else if (_sourceExtensionHandlers.ContainsKey(GetExtension(fileName)))
+			else if (IsRecognizedSourceFile(fileName))
 			{
 			    sourceFiles.Add(fileName);
 			}

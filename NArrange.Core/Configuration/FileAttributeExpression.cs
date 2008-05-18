@@ -33,40 +33,37 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow filter conditions to be specified for file extensions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies source code extension
+	/// File attribute expression
 	/// </summary>
-	[XmlType("Extension")]
-	public class ExtensionConfiguration : ICloneable
+	public class FileAttributeExpression : LeafExpression
 	{
 		#region Fields
 
-		private FilterBy _filterBy;
-		private string _name;
+		private FileAttributeType _fileAttributeType;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
+		/// Creates a new element attribute expression
 		/// </summary>
-		public ExtensionConfiguration()
+		/// <param name="fileAttribute"></param>
+		public FileAttributeExpression(FileAttributeType fileAttribute)
 		{
+			_fileAttributeType = fileAttribute;
 		}
 
 		#endregion Constructors
@@ -74,34 +71,13 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the filter specification
+		/// Gets the file attribute specified by the expression
 		/// </summary>
-		[XmlElement("Filter")]
-		public FilterBy FilterBy
+		public FileAttributeType FileAttribute
 		{
 			get
 			{
-			    return _filterBy;
-			}
-			set
-			{
-			    _filterBy = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the extension name
-		/// </summary>
-		[XmlAttribute("Name")]
-		public string Name
-		{
-			get
-			{
-			    return _name;
-			}
-			set
-			{
-			    _name = value;
+			    return _fileAttributeType;
 			}
 		}
 
@@ -110,32 +86,16 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			ExtensionConfiguration clone = new ExtensionConfiguration();
-
-			clone._name = _name;
-
-			if (_filterBy != null)
-			{
-			    FilterBy filterByClone = _filterBy.Clone() as FilterBy;
-			    clone._filterBy = filterByClone;
-			}
-
-			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
+		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Extension: {0}", this._name);
+			return string.Format(
+			    Thread.CurrentThread.CurrentCulture, 
+			    "$({0}.{1})", 
+			    ConditionExpressionParser.FileAttributeScope,
+			    _fileAttributeType);
 		}
 
 		#endregion Public Methods

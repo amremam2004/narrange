@@ -10,6 +10,7 @@ using NUnit.Framework;
 
 using NArrange.CSharp;
 using NArrange.Core;
+using NArrange.Core.Configuration;
 using NArrange.Tests.CSharp;
 using NArrange.Tests.Core;
 
@@ -23,6 +24,8 @@ namespace NArrange.Tests.Core
 	{
 		#region Fields
 
+		private string _testFilteredFile;
+		private string _testFilteredProjectFile;
 		private string _testInvalidExtensionFile;
 		private string _testInvalidSourceFile;
 		private string _testProjectFile;
@@ -207,6 +210,46 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging a project file that is excluded in the configuration.
+		/// </summary>
+		[Test]
+		public void ArrangeProjectFilteredTest()
+		{
+			CodeConfiguration filterProjectConfig = CodeConfiguration.Default.Clone() as CodeConfiguration;
+
+            // Set up the filter
+            FilterBy filter = new FilterBy();
+            filter.Condition = "!($(File.Path) : '.Filtered.')";
+            filterProjectConfig.Handlers[0].ProjectExtensions[0].FilterBy = filter;
+
+			string filterProjectConfigFile = Path.Combine(Path.GetTempPath(), "FilterProjectConfig.xml");
+
+			try
+			{
+			    filterProjectConfig.Save(filterProjectConfigFile);
+
+			    TestLogger logger = new TestLogger();
+			    FileArranger fileArranger = new FileArranger(filterProjectConfigFile, logger);
+
+			    bool success = fileArranger.Arrange(_testFilteredProjectFile, null);
+
+			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
+			    Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."),
+			        "Expected 0 files to be written - " + logger.ToString());
+			}
+			finally
+			{
+			    try
+			    {
+			        File.Delete(filterProjectConfigFile);
+			    }
+			    catch
+			    {
+			    }
+			}
+		}
+
+		/// <summary>
 		/// Tests arranging a project file
 		/// </summary>
 		[Test]
@@ -218,7 +261,8 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testProjectFile, null);
 
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."),
+			    "Expected 2 files to be written - " + logger.ToString());
 		}
 
 		/// <summary>
@@ -257,7 +301,8 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testValidSourceFile1, null);
 
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files written."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files written."), 
+			    "Expected 1 file to be written. - " + logger.ToString());
 		}
 
 		/// <summary>
@@ -272,7 +317,8 @@ namespace NArrange.Tests.Core
 			bool success = fileArranger.Arrange(_testSolutionFile, null);
 
 			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."),
+			    "Expected 2 files to be written. - " + logger.ToString());
 		}
 
 		/// <summary>
@@ -291,8 +337,14 @@ namespace NArrange.Tests.Core
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
 
+			_testFilteredFile = Path.Combine(Path.GetTempPath(), "Test.Designer.cs");
+			File.WriteAllText(_testFilteredFile, "//This file should be excluded\r\n"  + contents);
+
 			_testProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.csproj");
 			CSharpProjectParserTests.WriteTestProject(_testProjectFile);
+
+			_testFilteredProjectFile = Path.Combine(Path.GetTempPath(), "Test.Filtered.csproj");
+			CSharpProjectParserTests.WriteTestProject(_testFilteredProjectFile);
 
 			_testSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
 			SolutionParserTests.WriteTestSolution(_testSolutionFile);
@@ -326,6 +378,8 @@ namespace NArrange.Tests.Core
 			        File.Delete(_testValidSourceFile2);
 			        File.Delete(_testProjectFile);
 			        File.Delete(_testSolutionFile);
+			        File.Delete(_testFilteredFile);
+			        File.Delete(_testFilteredProjectFile);
 			    }
 			}
 			catch

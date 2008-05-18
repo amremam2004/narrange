@@ -33,40 +33,45 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow filter conditions to be specified for file extensions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Globalization;
 using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies source code extension
+	/// Binary operator expression
 	/// </summary>
-	[XmlType("Extension")]
-	public class ExtensionConfiguration : ICloneable
+	public class BinaryOperatorExpression : IConditionExpression
 	{
 		#region Fields
 
-		private FilterBy _filterBy;
-		private string _name;
+		private IConditionExpression _left;
+		private BinaryExpressionOperator _operatorType;
+		private IConditionExpression _right;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
+		/// Creates a new operator expression.
 		/// </summary>
-		public ExtensionConfiguration()
+		/// <param name="operatorType"></param>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		public BinaryOperatorExpression(BinaryExpressionOperator operatorType, 
+			IConditionExpression left, IConditionExpression right)
 		{
+			_operatorType = operatorType;
+			_left = left;
+			_right = right;
 		}
 
 		#endregion Constructors
@@ -74,34 +79,35 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the filter specification
+		/// Left expression
 		/// </summary>
-		[XmlElement("Filter")]
-		public FilterBy FilterBy
+		public IConditionExpression Left
 		{
-			get
+			get 
 			{
-			    return _filterBy;
-			}
-			set
-			{
-			    _filterBy = value;
+			    return _left;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the extension name
+		/// Gets the expression operator
 		/// </summary>
-		[XmlAttribute("Name")]
-		public string Name
+		public BinaryExpressionOperator Operator
 		{
 			get
 			{
-			    return _name;
+			    return _operatorType;
 			}
-			set
+		}
+
+		/// <summary>
+		/// Right expression
+		/// </summary>
+		public IConditionExpression Right
+		{
+			get 
 			{
-			    _name = value;
+			    return _right;
 			}
 		}
 
@@ -110,32 +116,38 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			ExtensionConfiguration clone = new ExtensionConfiguration();
-
-			clone._name = _name;
-
-			if (_filterBy != null)
-			{
-			    FilterBy filterByClone = _filterBy.Clone() as FilterBy;
-			    clone._filterBy = filterByClone;
-			}
-
-			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
+		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
 		{
+			string operatorString = string.Empty;
+			switch(_operatorType)
+			{
+			    case BinaryExpressionOperator.Equal:
+			        operatorString = "==";
+			        break;
+
+			    case BinaryExpressionOperator.Contains:
+			        operatorString = ":";
+			        break;
+
+			    case BinaryExpressionOperator.And:
+			        operatorString = "And";
+			        break;
+
+			    case BinaryExpressionOperator.Or:
+			        operatorString = "Or";
+			        break;
+
+			    default:
+			        operatorString = EnumUtilities.ToString(_operatorType);
+			        break;
+			}
+
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Extension: {0}", this._name);
+			    "({0} {1} {2})", 
+			    Left, operatorString, Right);
 		}
 
 		#endregion Public Methods

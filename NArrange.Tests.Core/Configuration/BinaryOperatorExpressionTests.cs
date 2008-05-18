@@ -10,10 +10,10 @@ using NArrange.Core.Configuration;
 namespace NArrange.Tests.Core.Configuration
 {
 	/// <summary>
-	/// Test fixture for the Operator expression class.
+	/// Test fixture for the binary operator expression class.
 	/// </summary>
 	[TestFixture]
-	public class OperatorExpressionTests
+	public class BinaryOperatorExpressionTests
 	{
 		#region Public Methods
 
@@ -23,9 +23,9 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void ToStringInvalidOperatorTest()
 		{
-			AttributeExpression attributeExpression = new AttributeExpression(ElementAttributeType.Name);
+			ElementAttributeExpression attributeExpression = new ElementAttributeExpression(ElementAttributeType.Name);
 			StringExpression stringExpression = new StringExpression("Test");
-			OperatorExpression operatorExpression = new OperatorExpression((ExpressionOperator)int.MinValue,
+			BinaryOperatorExpression operatorExpression = new BinaryOperatorExpression((BinaryExpressionOperator)int.MinValue,
 			    attributeExpression, stringExpression);
 
 			Assert.AreEqual(string.Format("($(Element.Name) {0} 'Test')", int.MinValue), operatorExpression.ToString());
@@ -37,9 +37,9 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void ToStringTest()
 		{
-			AttributeExpression attributeExpression = new AttributeExpression(ElementAttributeType.Name);
+			ElementAttributeExpression attributeExpression = new ElementAttributeExpression(ElementAttributeType.Name);
 			StringExpression stringExpression = new StringExpression("Test");
-			OperatorExpression operatorExpression = new OperatorExpression(ExpressionOperator.Equal,
+			BinaryOperatorExpression operatorExpression = new BinaryOperatorExpression(BinaryExpressionOperator.Equal,
 			    attributeExpression, stringExpression);
 
 			Assert.AreEqual("($(Element.Name) == 'Test')", operatorExpression.ToString());

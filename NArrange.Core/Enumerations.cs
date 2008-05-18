@@ -36,6 +36,7 @@
  *      - Added a TabStyle enumeration
  *		- Added an enumeration for whitespace characters
  *      - Added an enumeration for interface implementation types
+ *      - Added FileAttributeType and UnaryExpressionOperator enumerations
  *      Everton Elvio Koser
  *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -48,6 +49,37 @@ using System.Text;
 
 namespace NArrange.Core
 {
+	/// <summary>
+	/// Binary expression operator
+	/// </summary>
+	public enum BinaryExpressionOperator
+	{
+		/// <summary>
+		/// Equality
+		/// </summary>
+		Equal,
+
+		/// <summary>
+		/// Not equal
+		/// </summary>
+		NotEqual,
+
+		/// <summary>
+		/// Contains
+		/// </summary>
+		Contains,
+
+		/// <summary>
+		/// And
+		/// </summary>
+		And,
+
+		/// <summary>
+		/// Or
+		/// </summary>
+		Or
+	}
+
 	/// <summary>
 	/// Code access level
 	/// </summary>
@@ -235,34 +267,29 @@ namespace NArrange.Core
 	}
 
 	/// <summary>
-	/// Expression operator
+	/// File attribute
 	/// </summary>
-	public enum ExpressionOperator
+	public enum FileAttributeType
 	{
 		/// <summary>
-		/// Equality
+		/// None
 		/// </summary>
-		Equal,
+		None,
 
 		/// <summary>
-		/// Not equal
+		/// Name
 		/// </summary>
-		NotEqual,
+		Name,
 
 		/// <summary>
-		/// Contains
+		/// Path
 		/// </summary>
-		Contains,
+		Path,
 
 		/// <summary>
-		/// And
+		/// Attributes
 		/// </summary>
-		And,
-
-		/// <summary>
-		/// Or
-		/// </summary>
-		Or
+		Attributes
 	}
 
 	/// <summary>
@@ -509,6 +536,17 @@ namespace NArrange.Core
 		/// New
 		/// </summary>
 		New = MemberModifiers.New
+	}
+
+	/// <summary>
+	/// Unary expression operator
+	/// </summary>
+	public enum UnaryExpressionOperator
+	{
+		/// <summary>
+		/// Negate
+		/// </summary>
+		Negate
 	}
 
 	/// <summary>

@@ -46,68 +46,80 @@ using System.Threading;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Operator expression
+	/// Unary operator expression
 	/// </summary>
-	public class OperatorExpression : IConditionExpression
+	public class UnaryOperatorExpression : IConditionExpression
 	{
 		#region Fields
 
-		private IConditionExpression _left;
-		private ExpressionOperator _operatorType;
-		private IConditionExpression _right;
+		private IConditionExpression _innerExpression;
+		private UnaryExpressionOperator _operatorType;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new operator expression.
+		/// Creates a new unary operator expression.
 		/// </summary>
 		/// <param name="operatorType"></param>
-		/// <param name="left"></param>
-		/// <param name="right"></param>
-		public OperatorExpression(ExpressionOperator operatorType, 
-			IConditionExpression left, IConditionExpression right)
+		/// <param name="innerExpression"></param>
+		public UnaryOperatorExpression(UnaryExpressionOperator operatorType, 
+			IConditionExpression innerExpression)
 		{
 			_operatorType = operatorType;
-			_left = left;
-			_right = right;
+			_innerExpression = innerExpression;
 		}
 
 		#endregion Constructors
 
-		#region Public Properties
+		#region Internal Properties
 
 		/// <summary>
 		/// Left expression
 		/// </summary>
-		public IConditionExpression Left
+		IConditionExpression IConditionExpression.Left
 		{
 			get 
 			{
-			    return _left;
-			}
-		}
-
-		/// <summary>
-		/// Gets the expression operator
-		/// </summary>
-		public ExpressionOperator Operator
-		{
-			get
-			{
-			    return _operatorType;
+			    return _innerExpression;
 			}
 		}
 
 		/// <summary>
 		/// Right expression
 		/// </summary>
-		public IConditionExpression Right
+		IConditionExpression IConditionExpression.Right
 		{
 			get 
 			{
-			    return _right;
+			    return null;
+			}
+		}
+
+		#endregion Internal Properties
+
+		#region Public Properties
+
+		/// <summary>
+		/// Inner expression
+		/// </summary>
+		public IConditionExpression InnerExpression
+		{
+			get
+			{
+			    return _innerExpression;
+			}
+		}
+
+		/// <summary>
+		/// Gets the expression operator
+		/// </summary>
+		public UnaryExpressionOperator Operator
+		{
+			get
+			{
+			    return _operatorType;
 			}
 		}
 
@@ -121,33 +133,23 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public override string ToString()
 		{
-			string operatorString = string.Empty;
+			string preOperatorString = string.Empty;
+
 			switch(_operatorType)
 			{
-			    case ExpressionOperator.Equal :
-			        operatorString = "==";
-			        break;
-
-			    case ExpressionOperator.Contains:
-			        operatorString = ":";
-			        break;
-
-			    case ExpressionOperator.And:
-			        operatorString = "And";
-			        break;
-
-			    case ExpressionOperator.Or:
-			        operatorString = "Or";
+			    case UnaryExpressionOperator.Negate:
+			        preOperatorString = "!";
 			        break;
 
 			    default:
-			        operatorString = EnumUtilities.ToString(_operatorType);
+			        preOperatorString = EnumUtilities.ToString(_operatorType);
 			        break;
 			}
 
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "({0} {1} {2})", 
-			    Left, operatorString, Right);
+			    "{0}({1})", 
+			    preOperatorString,
+			    InnerExpression);
 		}
 
 		#endregion Public Methods

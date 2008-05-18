@@ -59,7 +59,7 @@ namespace NArrange.Tests.Core.CodeElements
 			Assert.AreEqual(string.Empty, element.Name,
 			    "Unexpected default value for Name.");
 			Assert.IsNull(element.Redefine,
-			    "Unexpected defaulf value for Redefine.");
+			    "Unexpected default value for Redefine.");
 
 			Assert.IsNotNull(element.Children,
 			    "Children collection should not be null.");

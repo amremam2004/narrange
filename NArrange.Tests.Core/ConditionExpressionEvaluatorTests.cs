@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using NUnit.Framework;
@@ -25,11 +26,11 @@ namespace NArrange.Tests.Core
 		public void EvaluateAndTest()
 		{
 			IConditionExpression expression =
-			   new OperatorExpression(ExpressionOperator.And,
-			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
-			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
+			   new BinaryOperatorExpression(BinaryExpressionOperator.And,
+			   new BinaryOperatorExpression(BinaryExpressionOperator.Equal,
+			   new ElementAttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
+			   new BinaryOperatorExpression(BinaryExpressionOperator.Equal,
+			   new ElementAttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
 
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
@@ -52,13 +53,24 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests the Evaluate method with a null expression
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void EvaluateElementExpressionNullTest()
+		{
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    null, new FieldElement());
+		}
+
+		/// <summary>
 		/// Tests the Evaluate method with a Contains expression
 		/// </summary>
 		[Test]
-		public void EvaluateContainsTest()
+		public void EvaluateElementNameContainsTest()
 		{
-			IConditionExpression expression = new OperatorExpression(
-			   ExpressionOperator.Contains, new AttributeExpression(ElementAttributeType.Name),
+			IConditionExpression expression = new BinaryOperatorExpression(
+			   BinaryExpressionOperator.Contains, new ElementAttributeExpression(ElementAttributeType.Name),
 			   new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -83,10 +95,10 @@ namespace NArrange.Tests.Core
 		/// Tests the Evaluate method with an Equal expression
 		/// </summary>
 		[Test]
-		public void EvaluateEqualTest()
+		public void EvaluateElementNameEqualTest()
 		{
-			IConditionExpression expression = new OperatorExpression(
-			   ExpressionOperator.Equal, new AttributeExpression(ElementAttributeType.Name),
+			IConditionExpression expression = new BinaryOperatorExpression(
+			   BinaryExpressionOperator.Equal, new ElementAttributeExpression(ElementAttributeType.Name),
 			   new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -103,6 +115,177 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests the Evaluate method with a null element
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void EvaluateElementNullTest()
+		{
+			IConditionExpression expression = new BinaryOperatorExpression(
+			    BinaryExpressionOperator.Equal, new ElementAttributeExpression(ElementAttributeType.Name),
+			    new StringExpression("Test"));
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, null as ICodeElement);
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with a Contains expression and a parent scope.
+		/// </summary>
+		[Test]
+		public void EvaluateElementParentAttributesContainsTest()
+		{
+			IConditionExpression expression = new BinaryOperatorExpression(
+			   BinaryExpressionOperator.Contains, 
+			   new ElementAttributeExpression(ElementAttributeType.Attributes, ElementAttributeScope.Parent),
+			   new StringExpression("Attribute2"));
+
+			FieldElement element = new FieldElement();
+			element.Name = "Test";
+
+			TypeElement typeElement = new TypeElement();
+			typeElement.Type = TypeElementType.Structure;
+			typeElement.Name = "TestType";
+			typeElement.AddChild(element);
+
+			typeElement.AddAttribute(new AttributeElement("Attribute1"));
+			typeElement.AddAttribute(new AttributeElement("Attribute24"));
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			typeElement.ClearAttributes();
+			result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsFalse(result, "Unexpected expression evaluation result.");
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with an Attributes Contains expression
+		/// </summary>
+		[Test]
+		public void EvaluateFileAttributesContainsTest()
+		{
+			string testFile = Path.GetTempFileName();
+			try
+			{
+			    IConditionExpression expression = new BinaryOperatorExpression(
+			       BinaryExpressionOperator.Contains, new FileAttributeExpression(FileAttributeType.Attributes),
+			       new StringExpression("ReadOnly"));
+
+			    FileInfo file = new FileInfo(testFile);
+			    file.Attributes = FileAttributes.ReadOnly | FileAttributes.Hidden;
+
+			    bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			        expression, file);
+			    Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			    file.Attributes = FileAttributes.Normal;
+			    file = new FileInfo(testFile);
+			    result = ConditionExpressionEvaluator.Instance.Evaluate(
+			        expression, file);
+			    Assert.IsFalse(result, "Unexpected expression evaluation result.");
+			}
+			finally
+			{
+			    try
+			    {
+			        File.Delete(testFile);
+			    }
+			    catch
+			    {
+			    }
+			}
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with a null expression
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void EvaluateFileExpressionNullTest()
+		{
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    null, new FileInfo("Test"));
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with a Contains expression
+		/// </summary>
+		[Test]
+		public void EvaluateFileNameContainsTest()
+		{
+			IConditionExpression expression = new BinaryOperatorExpression(
+			   BinaryExpressionOperator.Contains, new FileAttributeExpression(FileAttributeType.Name),
+			   new StringExpression("Test"));
+
+			FileInfo file = new FileInfo("Test");
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, file);
+			Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			file = new FileInfo("Blah");
+			result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, file);
+			Assert.IsFalse(result, "Unexpected expression evaluation result.");
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with a null file.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void EvaluateFileNullTest()
+		{
+			IConditionExpression expression = new BinaryOperatorExpression(
+			    BinaryExpressionOperator.Equal, new FileAttributeExpression(FileAttributeType.Name),
+			    new StringExpression("Test"));
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, null as FileInfo);
+		}
+
+		/// <summary>
+		/// Tests the Evaluate method with an Path Contains expression
+		/// </summary>
+		[Test]
+		public void EvaluateFilePathContainsTest()
+		{
+			string testFile1 = Path.GetTempFileName();
+			string testFile2 = Path.GetTempFileName();
+			try
+			{
+			    IConditionExpression expression = new BinaryOperatorExpression(
+			       BinaryExpressionOperator.Contains, new FileAttributeExpression(FileAttributeType.Path),
+			       new StringExpression(Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(testFile1))));
+
+			    FileInfo file = new FileInfo(testFile1);
+
+			    bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			        expression, file);
+			    Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			    file = new FileInfo(testFile2);
+			    result = ConditionExpressionEvaluator.Instance.Evaluate(
+			        expression, file);
+			    Assert.IsFalse(result, "Unexpected expression evaluation result.");
+			}
+			finally
+			{
+			    try
+			    {
+			        File.Delete(testFile1);
+			        File.Delete(testFile2);
+			    }
+			    catch
+			    {
+			    }
+			}
+		}
+
+		/// <summary>
 		/// Tests the Evaluate method with a an operator element that has an 
 		/// unknown operator type.
 		/// </summary>
@@ -110,8 +293,8 @@ namespace NArrange.Tests.Core
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void EvaluateInvalidOperatorTest()
 		{
-			IConditionExpression expression = new OperatorExpression(
-			    (ExpressionOperator)int.MinValue, new AttributeExpression(ElementAttributeType.Name),
+			IConditionExpression expression = new BinaryOperatorExpression(
+			    (BinaryExpressionOperator)int.MinValue, new ElementAttributeExpression(ElementAttributeType.Name),
 			    new StringExpression("Test"));
 
 			FieldElement element = new FieldElement();
@@ -122,43 +305,17 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
-		/// Tests the Evaluate method with a null element
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void EvaluateNullElementTest()
-		{
-			IConditionExpression expression = new OperatorExpression(
-			    ExpressionOperator.Equal, new AttributeExpression(ElementAttributeType.Name),
-			    new StringExpression("Test"));
-
-			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
-			    expression, null);
-		}
-
-		/// <summary>
-		/// Tests the Evaluate method with a null expression
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void EvaluateNullExpressionTest()
-		{
-			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
-			    null, new FieldElement());
-		}
-
-		/// <summary>
 		/// Tests the Evaluate method with an Or expression
 		/// </summary>
 		[Test]
 		public void EvaluateOrTest()
 		{
 			IConditionExpression expression =
-			   new OperatorExpression(ExpressionOperator.Or,
-			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
-			   new OperatorExpression(ExpressionOperator.Equal,
-			   new AttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
+			   new BinaryOperatorExpression(BinaryExpressionOperator.Or,
+			   new BinaryOperatorExpression(BinaryExpressionOperator.Equal,
+			   new ElementAttributeExpression(ElementAttributeType.Name), new StringExpression("Test")),
+			   new BinaryOperatorExpression(BinaryExpressionOperator.Equal,
+			   new ElementAttributeExpression(ElementAttributeType.Access), new StringExpression("Protected")));
 
 			FieldElement element = new FieldElement();
 			element.Name = "Test";
@@ -180,38 +337,6 @@ namespace NArrange.Tests.Core
 			Assert.IsTrue(result, "Unexpected expression evaluation result.");
 
 			element.Name = "Foo";
-			result = ConditionExpressionEvaluator.Instance.Evaluate(
-			    expression, element);
-			Assert.IsFalse(result, "Unexpected expression evaluation result.");
-		}
-
-		/// <summary>
-		/// Tests the Evaluate method with a Contains expression and a parent scope.
-		/// </summary>
-		[Test]
-		public void EvaluateParentContainsTest()
-		{
-			IConditionExpression expression = new OperatorExpression(
-			   ExpressionOperator.Contains, 
-			   new AttributeExpression(ElementAttributeType.Attributes, ElementAttributeScope.Parent),
-			   new StringExpression("Attribute2"));
-
-			FieldElement element = new FieldElement();
-			element.Name = "Test";
-
-			TypeElement typeElement = new TypeElement();
-			typeElement.Type = TypeElementType.Structure;
-			typeElement.Name = "TestType";
-			typeElement.AddChild(element);
-
-			typeElement.AddAttribute(new AttributeElement("Attribute1"));
-			typeElement.AddAttribute(new AttributeElement("Attribute24"));
-
-			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
-			    expression, element);
-			Assert.IsTrue(result, "Unexpected expression evaluation result.");
-
-			typeElement.ClearAttributes();
 			result = ConditionExpressionEvaluator.Instance.Evaluate(
 			    expression, element);
 			Assert.IsFalse(result, "Unexpected expression evaluation result.");

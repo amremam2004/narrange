@@ -33,102 +33,64 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow scoping in element attribute expression evaluation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using System.Threading;
 
-namespace NArrange.Core.Configuration
+using NArrange.Core.Configuration;
+
+namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Element attribute expression
+	/// File utility methods
 	/// </summary>
-	public class AttributeExpression : LeafExpression
+	public static class FileUtilities
 	{
-		#region Constants
-
-		/// <summary>
-		/// Character that marks the start of an attribute expression
-		/// </summary>
-		public const char ExpressionPrefix = '$';
-
-		#endregion Constants
-
-		#region Fields
-
-		private ElementAttributeType _elementAttributeType;
-		private ElementAttributeScope _elementScope;
-
-		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new attribute expression
-		/// </summary>
-		/// <param name="elementAttribute"></param>
-		public AttributeExpression(ElementAttributeType elementAttribute)
-			: this(elementAttribute, ElementAttributeScope.Element)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new attribute expression
-		/// </summary>
-		/// <param name="elementAttribute"></param>
-		/// <param name="scope"></param>
-		public AttributeExpression(ElementAttributeType elementAttribute, ElementAttributeScope scope)
-		{
-			_elementAttributeType = elementAttribute;
-			_elementScope = scope;
-		}
-
-		#endregion Constructors
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets the element attribute specified by the expression
-		/// </summary>
-		public ElementAttributeType ElementAttribute
-		{
-			get
-			{
-			    return _elementAttributeType;
-			}
-		}
-
-		/// <summary>
-		/// Gets the element scope specified by the expression
-		/// </summary>
-		public ElementAttributeScope Scope
-		{
-			get
-			{
-			    return _elementScope;
-			}
-		}
-
-		#endregion Public Properties
-
 		#region Public Methods
 
 		/// <summary>
-		/// Gets the string representation of this expression
+		/// Gets the string representation of a file attribute.
 		/// </summary>
+		/// <param name="attributeType"></param>
+		/// <param name="file"></param>
 		/// <returns></returns>
-		public override string ToString()
+		public static string GetAttribute(FileAttributeType attributeType, FileInfo file)
 		{
-			return string.Format(
-			    Thread.CurrentThread.CurrentCulture, 
-			    "$({0}.{1})", 
-			    _elementScope, 
-			    _elementAttributeType);
+			string attributeString = null;
+
+			if (file != null)
+			{
+			    switch (attributeType)
+			    {
+			        case FileAttributeType.Name:
+			            attributeString = file.Name;
+			            break;
+
+			        case FileAttributeType.Path:
+			            attributeString = file.FullName;
+			            break;
+
+			        case FileAttributeType.Attributes:
+			            attributeString = EnumUtilities.ToString(file.Attributes);
+			            break;
+
+			        default:
+			            attributeString = string.Empty;
+			            break;
+			    }
+			}
+
+			if (attributeString == null)
+			{
+			    attributeString = string.Empty;
+			}
+
+			return attributeString;
 		}
 
 		#endregion Public Methods

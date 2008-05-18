@@ -34,12 +34,14 @@
  *      James Nies
  *      - Initial creation
  *      - Allow scoping in element attribute expression evaluation
+ *      - Added parsing for file attribute expressions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -61,9 +63,19 @@ namespace NArrange.Core.Configuration
 		public const char ExpressionEnd = ')';
 
 		/// <summary>
+		/// Character that marks the start of an attribute expression
+		/// </summary>
+		public const char ExpressionPrefix = '$';
+
+		/// <summary>
 		/// Expression start
 		/// </summary>
 		public const char ExpressionStart = '(';
+
+		/// <summary>
+		/// File attribute scope
+		/// </summary>
+		public const string FileAttributeScope = "File";
 
 		/// <summary>
 		/// Scope separator
@@ -116,6 +128,108 @@ namespace NArrange.Core.Configuration
 
 		#endregion Public Properties
 
+		#region Private Methods
+
+		/// <summary>
+		/// Takes in a list of expressions and operator expression placeholders and
+		/// builds an expression tree node.
+		/// </summary>
+		/// <param name="originalNodes"></param>
+		/// <param name="originalExpression"></param>
+		/// <returns></returns>
+		private static IConditionExpression AssembleExpressionTree(
+			ReadOnlyCollection<IConditionExpression> originalNodes, string originalExpression)
+		{
+			IConditionExpression conditionExpression = null;
+
+			List<IConditionExpression> nodes = new List<IConditionExpression>(originalNodes);
+
+			//
+			// Build a queue that represents the binary operator precedence
+			//
+			Queue<BinaryExpressionOperator> operatorPrecedence = new Queue<BinaryExpressionOperator>();
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.Equal);
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.NotEqual);
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.Contains);
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.And);
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.Or);
+
+			//
+			// Loop through the nodes and merge them by operator precedence
+			//
+			BinaryExpressionOperator currentOperator = operatorPrecedence.Dequeue();
+			while (nodes.Count > 1)
+			{
+			    for (int nodeIndex = 1; nodeIndex < nodes.Count - 1; nodeIndex++)
+			    {
+			        OperatorExpressionPlaceholder operatorExpressionPlaceHolder =
+			            nodes[nodeIndex] as OperatorExpressionPlaceholder;
+
+			        if (operatorExpressionPlaceHolder != null &&
+			            operatorExpressionPlaceHolder.Operator == currentOperator)
+			        {
+			            IConditionExpression left = nodes[nodeIndex - 1];
+			            IConditionExpression right = nodes[nodeIndex + 1];
+
+			            if ((operatorExpressionPlaceHolder.Operator == BinaryExpressionOperator.Equal ||
+			                operatorExpressionPlaceHolder.Operator == BinaryExpressionOperator.Contains) &&
+			                !(left is LeafExpression && right is LeafExpression))
+			            {
+			                throw new FormatException(
+			                    string.Format(Thread.CurrentThread.CurrentCulture,
+			                    "Invalid expression {0}", originalExpression));
+			            }
+
+			            BinaryOperatorExpression operatorExpression = new BinaryOperatorExpression(
+			                operatorExpressionPlaceHolder.Operator, left, right);
+
+			            nodes[nodeIndex] = operatorExpression;
+			            nodes.Remove(left);
+			            nodes.Remove(right);
+
+			            //
+			            // Restart processing of this level
+			            //
+			            nodeIndex = 0;
+			        }
+			    }
+
+			    if (operatorPrecedence.Count > 0)
+			    {
+			        currentOperator = operatorPrecedence.Dequeue();
+			    }
+			    else
+			    {
+			        break;
+			    }
+			}
+
+			//
+			// At the end of everything, we should have a single binary or unary
+			// condition expression.  Anything else is invalid and a format exception
+			// will be thrown.
+			//
+			if (nodes.Count == 1)
+			{
+			    conditionExpression = nodes[0] as BinaryOperatorExpression;
+			    if (conditionExpression == null)
+			    {
+			        conditionExpression = nodes[0] as UnaryOperatorExpression;
+			    }
+			}
+
+			if (conditionExpression == null)
+			{
+			    throw new FormatException(
+			    string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Invalid expression {0}", originalExpression));
+			}
+
+			return conditionExpression;
+		}
+
+		#endregion Private Methods
+
 		#region Public Methods
 
 		/// <summary>
@@ -160,7 +274,7 @@ namespace NArrange.Core.Configuration
 			            }
 			            break;
 
-			        case AttributeExpression.ExpressionPrefix:
+			        case ExpressionPrefix:
 			            char nextCh = (char)reader.Peek();
 			            if (nextCh == ExpressionStart)
 			            {
@@ -173,7 +287,7 @@ namespace NArrange.Core.Configuration
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == '=')
 			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.Equal));
+			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Equal));
 			                reader.Read();
 			            }
 			            break;
@@ -182,13 +296,17 @@ namespace NArrange.Core.Configuration
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == '=')
 			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.NotEqual));
+			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.NotEqual));
 			                reader.Read();
+			            }
+			            else
+			            {
+			                expressionBuilder.Append(ch);
 			            }
 			            break;
 
 			        case ':':
-			            nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.Contains));
+			            nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Contains));
 			            reader.Read();
 			            break;
 
@@ -196,7 +314,7 @@ namespace NArrange.Core.Configuration
 			            nextCh = (char)reader.Peek();
 			            if (nextCh == 'r' && !(inString || inAttribute))
 			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.Or));
+			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Or));
 			                reader.Read();
 			            }
 			            else
@@ -213,7 +331,7 @@ namespace NArrange.Core.Configuration
 			                nextCh = (char)reader.Peek();
 			                if (nextCh == 'd')
 			                {
-			                    nodes.Add(new OperatorExpressionPlaceholder(ExpressionOperator.And));
+			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.And));
 			                    reader.Read();
 			                }
 			            }
@@ -228,8 +346,8 @@ namespace NArrange.Core.Configuration
 			            {
 			                string attribute = expressionBuilder.ToString();
 			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
-			                ElementAttributeType elementAttribute;
 			                ElementAttributeScope elementScope = ElementAttributeScope.Element;
+			                bool isFileExpression = false;
 
 			                int separatorIndex = attribute.LastIndexOf(ScopeSeparator);
 			                if (separatorIndex > 0)
@@ -239,8 +357,15 @@ namespace NArrange.Core.Configuration
 			                        string attributeScope = attribute.Substring(0, separatorIndex);
 			                        attribute = attribute.Substring(separatorIndex + 1);
 
-			                        elementScope = (ElementAttributeScope)
-			                            Enum.Parse(typeof(ElementAttributeScope), attributeScope);
+			                        if (attributeScope == FileAttributeScope)
+			                        {
+			                            isFileExpression = true;
+			                        }
+			                        else
+			                        {
+			                            elementScope = (ElementAttributeScope)
+			                                Enum.Parse(typeof(ElementAttributeScope), attributeScope);
+			                        }
 			                    }
 			                    catch (ArgumentException ex)
 			                    {
@@ -250,26 +375,83 @@ namespace NArrange.Core.Configuration
 			                    }
 			                }
 
-			                try
+			                if (isFileExpression)
 			                {
-			                    elementAttribute = (ElementAttributeType)
-			                        Enum.Parse(typeof(ElementAttributeType), attribute);
+			                    FileAttributeType fileAttribute;
+
+			                    try
+			                    {
+			                        fileAttribute = (FileAttributeType)
+			                            Enum.Parse(typeof(FileAttributeType), attribute);
+			                    }
+			                    catch (ArgumentException ex)
+			                    {
+			                        throw new FormatException(
+			                            string.Format(Thread.CurrentThread.CurrentCulture,
+			                            "Unknown attribute: {0}", ex.Message));
+			                    }
+
+			                    FileAttributeExpression attributeExpresion = new FileAttributeExpression(
+			                        fileAttribute);
+			                    nodes.Add(attributeExpresion);
 			                }
-			                catch (ArgumentException ex)
+			                else
 			                {
-			                    throw new FormatException(
-			                        string.Format(Thread.CurrentThread.CurrentCulture,
-			                        "Unknown attribute: {0}", ex.Message));
+			                    ElementAttributeType elementAttribute;
+
+			                    try
+			                    {
+			                        elementAttribute = (ElementAttributeType)
+			                            Enum.Parse(typeof(ElementAttributeType), attribute);
+			                    }
+			                    catch (ArgumentException ex)
+			                    {
+			                        throw new FormatException(
+			                            string.Format(Thread.CurrentThread.CurrentCulture,
+			                            "Unknown attribute: {0}", ex.Message));
+			                    }
+
+			                    ElementAttributeExpression attributeExpresion = new ElementAttributeExpression(
+			                        elementAttribute, elementScope);
+			                    nodes.Add(attributeExpresion);
 			                }
 
-			                AttributeExpression attributeExpresion = new AttributeExpression(
-			                    elementAttribute, elementScope);
-			                nodes.Add(attributeExpresion);
 			                inAttribute = false;
+			            }
+			            else if (expressionBuilder.Length > 0 && nodes.Count > 0)
+			            {
+			                IConditionExpression innerExpression = nodes[nodes.Count - 1];
+			                nodes.RemoveAt(nodes.Count - 1);
+
+			                string unaryOperatorString = expressionBuilder.ToString().Trim();
+			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
+
+			                UnaryExpressionOperator unaryOperator;
+
+			                if (unaryOperatorString == "!")
+			                {
+			                    unaryOperator = UnaryExpressionOperator.Negate;
+			                }
+			                else
+			                {
+			                    throw new FormatException(
+			                    string.Format(Thread.CurrentThread.CurrentCulture,
+			                    "Invalid operator {0}", unaryOperatorString));
+			                }
+
+			                UnaryOperatorExpression unaryOperatorExpression = new UnaryOperatorExpression(
+			                    unaryOperator, innerExpression);
+
+			                nodes.Add(unaryOperatorExpression);
+			            }
+			            else
+			            {
+			                data = reader.Read();
 			            }
 			            break;
 
 			        case ExpressionStart:
+			            IConditionExpression nestedExpression = null;
 			            StringBuilder childExpressionBuilder = new StringBuilder(DefaultExpressionLength);
 			            data = reader.Read();
 			            int depth = 0;
@@ -278,35 +460,49 @@ namespace NArrange.Core.Configuration
 			                ch = (char)data;
 
 			                nextCh = (char)reader.Peek();
-			                if (ch == AttributeExpression.ExpressionPrefix && nextCh == ExpressionStart)
+			                if (ch == ExpressionPrefix && nextCh == ExpressionStart)
 			                {
 			                    inAttribute = true;
+			                    childExpressionBuilder.Append(ExpressionPrefix);
+			                    data = reader.Read();
+			                    childExpressionBuilder.Append(ExpressionStart);
 			                }
 			                else if (ch == ExpressionStart && !inAttribute)
 			                {
 			                    depth++;
+			                    childExpressionBuilder.Append(ExpressionStart);
 			                }
-			                else if (ch == ExpressionEnd)
+			                else if (nextCh == ExpressionEnd)
 			                {
-			                    if (inAttribute)
+			                    if (inAttribute || depth > 0)
 			                    {
-			                        inAttribute = false;
-			                    }
-			                    else if (depth > 0)
-			                    {
-			                        depth--;
+			                        if (inAttribute)
+			                        {
+			                            inAttribute = false;
+			                        }
+			                        else if (depth > 0)
+			                        {
+			                            depth--;
+			                        }
+
+			                        childExpressionBuilder.Append(ch);
+			                        data = reader.Read();
+			                        childExpressionBuilder.Append(ExpressionEnd);
 			                    }
 			                    else
 			                    {
+			                        childExpressionBuilder.Append(ch);
 			                        break;
 			                    }
 			                }
+			                else
+			                {
+			                    childExpressionBuilder.Append(ch);
+			                }
 
-			                childExpressionBuilder.Append(ch);
 			                data = reader.Read();
 			            }
-			            IConditionExpression nestedExpression =
-			                Parse(childExpressionBuilder.ToString());
+			            nestedExpression = Parse(childExpressionBuilder.ToString());
 			            nodes.Add(nestedExpression);
 			            break;
 
@@ -333,76 +529,11 @@ namespace NArrange.Core.Configuration
 			    data = reader.Read();
 			}
 
-			Queue<ExpressionOperator> operatorPrecedence = new Queue<ExpressionOperator>();
-			operatorPrecedence.Enqueue(ExpressionOperator.Equal);
-			operatorPrecedence.Enqueue(ExpressionOperator.NotEqual);
-			operatorPrecedence.Enqueue(ExpressionOperator.Contains);
-			operatorPrecedence.Enqueue(ExpressionOperator.And);
-			operatorPrecedence.Enqueue(ExpressionOperator.Or);
-
-			ExpressionOperator currentOperator = operatorPrecedence.Dequeue();
-			while (nodes.Count > 1)
-			{
-			    for (int nodeIndex = 1; nodeIndex < nodes.Count - 1; nodeIndex++)
-			    {
-			        OperatorExpressionPlaceholder operatorExpressionPlaceHolder =
-			            nodes[nodeIndex] as OperatorExpressionPlaceholder;
-
-			        if (operatorExpressionPlaceHolder != null &&
-			            operatorExpressionPlaceHolder.Operator == currentOperator)
-			        {
-			            IConditionExpression left = nodes[nodeIndex - 1];
-			            IConditionExpression right = nodes[nodeIndex + 1];
-
-			            if ((operatorExpressionPlaceHolder.Operator == ExpressionOperator.Equal ||
-			                operatorExpressionPlaceHolder.Operator == ExpressionOperator.Contains) &&
-			                !(left is LeafExpression && right is LeafExpression))
-			            {
-			                throw new FormatException(
-			                    string.Format(Thread.CurrentThread.CurrentCulture,
-			                    "Invalid expression {0}", expression));
-			            }
-
-			            OperatorExpression operatorExpression = new OperatorExpression(
-			                operatorExpressionPlaceHolder.Operator, left, right);
-
-			            nodes[nodeIndex] = operatorExpression;
-			            nodes.Remove(left);
-			            nodes.Remove(right);
-
-			            //
-			            // Restart processing of this level
-			            //
-			            nodeIndex = 0;
-			        }
-			    }
-
-			    if (operatorPrecedence.Count > 0)
-			    {
-			        currentOperator = operatorPrecedence.Dequeue();
-			    }
-			    else
-			    {
-			        break;
-			    }
-			}
-
-			if (nodes.Count != 1)
-			{
-			    throw new FormatException(
-			        string.Format(Thread.CurrentThread.CurrentCulture,
-			        "Invalid expression {0}", expression));
-			}
-			else
-			{
-			    conditionExpression = nodes[0] as OperatorExpression;
-			    if (conditionExpression == null)
-			    {
-			        throw new FormatException(
-			        string.Format(Thread.CurrentThread.CurrentCulture,
-			        "Invalid expression {0}", expression));
-			    }
-			}
+			//
+			// Assembly the flat list of expressions and expression placeholders into an
+			// expression tree.
+			//
+			conditionExpression = AssembleExpressionTree(nodes.AsReadOnly(), expression);
 
 			return conditionExpression;
 		}
@@ -416,13 +547,13 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		private class OperatorExpressionPlaceholder : LeafExpression
 		{
-			private ExpressionOperator _operatorType;
+			private BinaryExpressionOperator _operatorType;
 
 			/// <summary>
 			/// Creates a new operator expression.
 			/// </summary>
 			/// <param name="operatorType"></param>
-			public OperatorExpressionPlaceholder(ExpressionOperator operatorType)
+			public OperatorExpressionPlaceholder(BinaryExpressionOperator operatorType)
 			{
 				_operatorType = operatorType;
 			}
@@ -430,7 +561,7 @@ namespace NArrange.Core.Configuration
 			/// <summary>
 			/// Gets the expression operator
 			/// </summary>
-			public ExpressionOperator Operator
+			public BinaryExpressionOperator Operator
 			{
 				get
 				{

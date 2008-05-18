@@ -48,12 +48,12 @@ namespace NArrange.Core.Configuration
 	/// </summary>
 	public abstract class LeafExpression : IConditionExpression
 	{
-		#region Public Properties
+		#region Internal Properties
 
 		/// <summary>
 		/// Left expression
 		/// </summary>
-		public IConditionExpression Left
+		IConditionExpression IConditionExpression.Left
 		{
 			get
 			{
@@ -64,7 +64,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Right expression
 		/// </summary>
-		public IConditionExpression Right
+		IConditionExpression IConditionExpression.Right
 		{
 			get
 			{
@@ -72,6 +72,6 @@ namespace NArrange.Core.Configuration
 			}
 		}
 
-		#endregion Public Properties
+		#endregion Internal Properties
 	}
 }

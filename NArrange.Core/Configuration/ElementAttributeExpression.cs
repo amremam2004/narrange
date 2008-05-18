@@ -33,40 +33,50 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow filter conditions to be specified for file extensions
+ *      - Allow scoping in element attribute expression evaluation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies source code extension
+	/// Element attribute expression
 	/// </summary>
-	[XmlType("Extension")]
-	public class ExtensionConfiguration : ICloneable
+	public class ElementAttributeExpression : LeafExpression
 	{
 		#region Fields
 
-		private FilterBy _filterBy;
-		private string _name;
+		private ElementAttributeType _elementAttributeType;
+		private ElementAttributeScope _elementScope;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
+		/// Creates a new element attribute expression
 		/// </summary>
-		public ExtensionConfiguration()
+		/// <param name="elementAttribute"></param>
+		public ElementAttributeExpression(ElementAttributeType elementAttribute)
+			: this(elementAttribute, ElementAttributeScope.Element)
 		{
+		}
+
+		/// <summary>
+		/// Creates a new element attribute expression
+		/// </summary>
+		/// <param name="elementAttribute"></param>
+		/// <param name="scope"></param>
+		public ElementAttributeExpression(ElementAttributeType elementAttribute, ElementAttributeScope scope)
+		{
+			_elementAttributeType = elementAttribute;
+			_elementScope = scope;
 		}
 
 		#endregion Constructors
@@ -74,34 +84,24 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the filter specification
+		/// Gets the element attribute specified by the expression
 		/// </summary>
-		[XmlElement("Filter")]
-		public FilterBy FilterBy
+		public ElementAttributeType ElementAttribute
 		{
 			get
 			{
-			    return _filterBy;
-			}
-			set
-			{
-			    _filterBy = value;
+			    return _elementAttributeType;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the extension name
+		/// Gets the element scope specified by the expression
 		/// </summary>
-		[XmlAttribute("Name")]
-		public string Name
+		public ElementAttributeScope Scope
 		{
 			get
 			{
-			    return _name;
-			}
-			set
-			{
-			    _name = value;
+			    return _elementScope;
 			}
 		}
 
@@ -110,32 +110,16 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			ExtensionConfiguration clone = new ExtensionConfiguration();
-
-			clone._name = _name;
-
-			if (_filterBy != null)
-			{
-			    FilterBy filterByClone = _filterBy.Clone() as FilterBy;
-			    clone._filterBy = filterByClone;
-			}
-
-			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
+		/// Gets the string representation of this expression
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Extension: {0}", this._name);
+			return string.Format(
+			    Thread.CurrentThread.CurrentCulture, 
+			    "$({0}.{1})", 
+			    _elementScope, 
+			    _elementAttributeType);
 		}
 
 		#endregion Public Methods

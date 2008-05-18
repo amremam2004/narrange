@@ -90,8 +90,10 @@ namespace NArrange.Tests.Core.Configuration
 			    "Unexpected number of default handlers.");
 			Assert.IsTrue(defaultConfig.Handlers[0].AssemblyName.Contains("NArrange.CSharp"));
 			Assert.AreEqual("CSharp", defaultConfig.Handlers[0].Language);
+			Assert.IsNotNull(defaultConfig.Handlers[0].SourceExtensions[0].FilterBy);
 			Assert.IsTrue(defaultConfig.Handlers[1].AssemblyName.Contains("NArrange.VisualBasic"));
 			Assert.AreEqual("VisualBasic", defaultConfig.Handlers[1].Language);
+			Assert.IsNotNull(defaultConfig.Handlers[1].SourceExtensions[0].FilterBy);
 
 			Assert.IsNotNull(defaultConfig.Tabs,
 			    "Tab configuration should not be null.");

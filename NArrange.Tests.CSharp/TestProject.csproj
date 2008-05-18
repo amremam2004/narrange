@@ -42,6 +42,7 @@
     <Compile Include="Folder1\Class2.cs" />
     <Compile Include="Folder1\Folder2\Class3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="Test.Designer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

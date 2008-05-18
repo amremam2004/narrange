@@ -54,7 +54,7 @@
     <Compile Include="CodeParser.cs" />
     <Compile Include="CodeWriteVisitor.cs" />
     <Compile Include="ConditionExpressionEvaluator.cs" />
-    <Compile Include="Configuration\AttributeExpression.cs" />
+    <Compile Include="Configuration\BinaryOperatorExpression.cs" />
     <Compile Include="Configuration\CodeConfiguration.cs" />
     <Compile Include="CodeArranger.cs" />
     <Compile Include="CodeElements\AttributedElement.cs" />
@@ -73,6 +73,12 @@
     <Compile Include="CodeElements\CommentElement.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
+    <Compile Include="Configuration\UnaryOperatorExpression.cs" />
+    <Compile Include="Configuration\FileAttributeExpression.cs" />
+    <Compile Include="Configuration\ElementAttributeExpression.cs" />
+    <Compile Include="FileUtilities.cs" />
+    <Compile Include="FileFilter.cs" />
+    <Compile Include="ElementFilter.cs" />
     <Compile Include="Configuration\RegionsConfiguration.cs" />
     <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
@@ -81,7 +87,6 @@
     <Compile Include="Configuration\FilterBy.cs" />
     <Compile Include="Configuration\ConditionExpressionParser.cs" />
     <Compile Include="Configuration\IConditionExpression.cs" />
-    <Compile Include="Configuration\OperatorExpression.cs" />
     <Compile Include="Configuration\SortBy.cs" />
     <Compile Include="Configuration\ElementConfiguration.cs" />
     <Compile Include="Configuration\GroupBy.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="CodeElements\ICodeElementVisitor.cs" />
     <Compile Include="Configuration\StringExpression.cs" />
     <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="IFileFilter.cs" />
     <Compile Include="MSBuildProjectParser.cs" />
     <Compile Include="EnumUtilities.cs" />
     <Compile Include="FileArranger.cs" />
@@ -102,7 +108,6 @@
     <Compile Include="RegionedInserter.cs" />
     <Compile Include="DefaultElementInserter.cs" />
     <Compile Include="ElementArranger.cs" />
-    <Compile Include="ElementFilter.cs" />
     <Compile Include="GroupedInserter.cs" />
     <Compile Include="IElementArranger.cs" />
     <Compile Include="ChainElementArranger.cs" />

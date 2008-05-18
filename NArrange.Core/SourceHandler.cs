@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Changed constructor to use a handler configuration and expose
+ *        the configuration as a property
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -42,6 +44,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+
+using NArrange.Core.Configuration;
 
 namespace NArrange.Core
 {
@@ -56,6 +60,7 @@ namespace NArrange.Core
 		private Assembly _assembly;
 		private string _assemblyName;
 		private ICodeElementParser _codeParser;
+		private HandlerConfiguration _configuration;
 		private IProjectParser _projectParser;
 		private ICodeElementWriter _writer;
 
@@ -66,10 +71,16 @@ namespace NArrange.Core
 		/// <summary>
 		/// Creates a new ExtensionHandler
 		/// </summary>
-		/// <param name="assemblyName"></param>
-		public SourceHandler(string assemblyName)
+		/// <param name="configuration"></param>
+		public SourceHandler(HandlerConfiguration configuration)
 		{
-			_assemblyName = assemblyName;
+			if (configuration == null)
+			{
+			    throw new ArgumentNullException("configuration");
+			}
+
+			_configuration = configuration;
+			_assemblyName = configuration.AssemblyName;
 
 			Initialize();
 		}
@@ -86,6 +97,17 @@ namespace NArrange.Core
 			get
 			{
 			    return _codeParser;
+			}
+		}
+
+		/// <summary>
+		/// Gets the handler configuration used to create this SourceHandler.
+		/// </summary>
+		public HandlerConfiguration Configuration
+		{
+			get
+			{
+			    return _configuration;
 			}
 		}
 

@@ -9,7 +9,9 @@
 			</ProjectExtensions>
 			<!-- List of source file extensions valid for the handler's ICodeParser-->
 			<SourceExtensions>
-				<Extension Name="cs"/>
+				<Extension Name="cs">
+					<Filter Condition="!($(File.Name) : '.Designer.')"/>
+				</Extension>
 				<!-- If your project uses other extensions for C# files add them here-->
 			</SourceExtensions>
 		</SourceHandler>
@@ -18,7 +20,9 @@
 				<Extension Name="vbproj"/>
 			</ProjectExtensions>
 			<SourceExtensions>
-				<Extension Name="vb"/>
+				<Extension Name="vb">
+					<Filter Condition="!($(File.Name) : '.Designer.')"/>
+				</Extension>
 			</SourceExtensions>
 		</SourceHandler>
 	</Handlers>

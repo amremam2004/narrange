@@ -48,7 +48,8 @@ namespace NArrange.Tests.CSharp
 			    Path.Combine(Path.GetTempPath(), "BlahBlahBlah.cs"),
 			    Path.Combine(Path.GetTempPath(), "Folder1\\Class2.cs"),
 			    Path.Combine(Path.GetTempPath(), "Folder1\\Folder2\\Class3.cs"),
-			    Path.Combine(Path.GetTempPath(), "Properties\\AssemblyInfo.cs")
+			    Path.Combine(Path.GetTempPath(), "Properties\\AssemblyInfo.cs"),
+			    Path.Combine(Path.GetTempPath(), "Test.Designer.cs")
 			};
 
 			CSharpProjectParser projectParser = new CSharpProjectParser();

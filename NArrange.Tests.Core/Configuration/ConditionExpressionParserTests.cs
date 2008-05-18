@@ -29,54 +29,46 @@ namespace NArrange.Tests.Core.Configuration
 			        condition);
 			    Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			    OperatorExpression operatorExpression = expression as OperatorExpression;
+			    BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			    Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.And, operatorExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.And, operatorExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // Left
 			    //
-			    OperatorExpression leftExpression = expression.Left as OperatorExpression;
+			    BinaryOperatorExpression leftExpression = expression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(leftExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, leftExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, leftExpression.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression leftAttributeExpression = leftExpression.Left as AttributeExpression;
+			    ElementAttributeExpression leftAttributeExpression = leftExpression.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(leftAttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, leftAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(leftAttributeExpression.Left);
-			    Assert.IsNull(leftAttributeExpression.Right);
 
 			    StringExpression leftStringExpression = leftExpression.Right as StringExpression;
 			    Assert.IsNotNull(leftStringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 1", leftStringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(leftStringExpression.Left);
-			    Assert.IsNull(leftStringExpression.Right);
 
 			    //
 			    // Right
 			    //
-			    OperatorExpression rightExpression = expression.Right as OperatorExpression;
+			    BinaryOperatorExpression rightExpression = expression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(rightExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, rightExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, rightExpression.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression rightAttributeExpression = rightExpression.Left as AttributeExpression;
+			    ElementAttributeExpression rightAttributeExpression = rightExpression.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(rightAttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, rightAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(rightAttributeExpression.Left);
-			    Assert.IsNull(rightAttributeExpression.Right);
 
 			    StringExpression rightStringExpression = rightExpression.Right as StringExpression;
 			    Assert.IsNotNull(rightStringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 2", rightStringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(rightStringExpression.Left);
-			    Assert.IsNull(rightStringExpression.Right);
 			};
 
 			string expressionText;
@@ -99,84 +91,72 @@ namespace NArrange.Tests.Core.Configuration
 			        condition);
 			    Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			    OperatorExpression operatorExpression = expression as OperatorExpression;
+			    BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			    Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.And, operatorExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.And, operatorExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // And left
 			    //
-			    OperatorExpression testExpression3 = operatorExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression testExpression3 = operatorExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression3, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression3.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression3.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
+			    ElementAttributeExpression test3AttributeExpression = testExpression3.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test3AttributeExpression.Left);
-			    Assert.IsNull(test3AttributeExpression.Right);
 
 			    StringExpression test3StringExpression = testExpression3.Right as StringExpression;
 			    Assert.IsNotNull(test3StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 3", test3StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test3StringExpression.Left);
-			    Assert.IsNull(test3StringExpression.Right);
 
 			    //
 			    // And right
 			    //
-			    OperatorExpression orExpression = operatorExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression orExpression = operatorExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(orExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Or, orExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Or, orExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // Or Left
 			    //
-			    OperatorExpression testExpression1 = orExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression testExpression1 = orExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression1, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression1.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression1.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
+			    ElementAttributeExpression test1AttributeExpression = testExpression1.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test1AttributeExpression.Left);
-			    Assert.IsNull(test1AttributeExpression.Right);
 
 			    StringExpression test1StringExpression = testExpression1.Right as StringExpression;
 			    Assert.IsNotNull(test1StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 1", test1StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test1StringExpression.Left);
-			    Assert.IsNull(test1StringExpression.Right);
 
 			    //
 			    // Or Right
 			    //
-			    OperatorExpression testExpression2 = orExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression testExpression2 = orExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression2, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression2.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression2.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
+			    ElementAttributeExpression test2AttributeExpression = testExpression2.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test2AttributeExpression.Left);
-			    Assert.IsNull(test2AttributeExpression.Right);
 
 			    StringExpression test2StringExpression = testExpression2.Right as StringExpression;
 			    Assert.IsNotNull(test2StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 2", test2StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test2StringExpression.Left);
-			    Assert.IsNull(test2StringExpression.Right);
 			};
 
 			string expressionText;
@@ -232,24 +212,83 @@ namespace NArrange.Tests.Core.Configuration
 			    expressionText);
 			Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			OperatorExpression operatorExpression = expression as OperatorExpression;
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			Assert.AreEqual(ExpressionOperator.Equal, operatorExpression.Operator,
+			Assert.AreEqual(BinaryExpressionOperator.Equal, operatorExpression.Operator,
 			    "Unexpected operator.");
 
-			AttributeExpression attributeExpression = operatorExpression.Left as AttributeExpression;
+			ElementAttributeExpression attributeExpression = operatorExpression.Left as ElementAttributeExpression;
 			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
 			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
 			    "Attribute expression was not parsed correctly.");
-			Assert.IsNull(attributeExpression.Left);
-			Assert.IsNull(attributeExpression.Right);
+			Assert.AreEqual(ElementAttributeScope.Element, attributeExpression.Scope,
+			    "Attribute scope was not parsed correctly.");
 
 			StringExpression stringExpression = operatorExpression.Right as StringExpression;
 			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
 			Assert.AreEqual("Test", stringExpression.Text,
 			    "String expression was not parsed correctly.");
-			Assert.IsNull(stringExpression.Left);
-			Assert.IsNull(stringExpression.Right);
+		}
+
+		/// <summary>
+		/// Tests parsing a file name contains expression.
+		/// </summary>
+		[Test]
+		public void ParseFileNameContainsExpressionTest()
+		{
+			string expressionText = "$(File.Name) : '.Designer.'";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Contains, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			FileAttributeExpression attributeExpression = operatorExpression.Left as FileAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(FileAttributeType.Name, attributeExpression.FileAttribute,
+			    "Attribute expression was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
+			Assert.AreEqual(".Designer.", stringExpression.Text,
+			    "String expression was not parsed correctly.");
+		}
+
+		/// <summary>
+		/// Tests parsing a file name doesn't contain expression.
+		/// </summary>
+		[Test]
+		public void ParseFileNotNameContainsExpressionTest()
+		{
+			string expressionText = "!($(File.Name) : '.Designer.')";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			UnaryOperatorExpression negateExpression = expression as UnaryOperatorExpression;
+			Assert.IsNotNull(negateExpression, "Expected a unary operator expression.");
+			Assert.AreEqual(UnaryExpressionOperator.Negate, negateExpression.Operator,
+			    "Unexpected operator.");
+
+			BinaryOperatorExpression operatorExpression = negateExpression.InnerExpression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected a binary operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Contains, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			FileAttributeExpression attributeExpression = operatorExpression.Left as FileAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(FileAttributeType.Name, attributeExpression.FileAttribute,
+			    "Attribute expression was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
+			Assert.AreEqual(".Designer.", stringExpression.Text,
+			    "String expression was not parsed correctly.");
 		}
 
 		/// <summary>
@@ -327,84 +366,72 @@ namespace NArrange.Tests.Core.Configuration
 			        condition);
 			    Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			    OperatorExpression operatorExpression = expression as OperatorExpression;
+			    BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			    Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Or, operatorExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Or, operatorExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // Or left
 			    //
-			    OperatorExpression andExpression = operatorExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression andExpression = operatorExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(andExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.And, andExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.And, andExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // And Left
 			    //
-			    OperatorExpression testExpression1 = andExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression testExpression1 = andExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression1, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression1.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression1.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
+			    ElementAttributeExpression test1AttributeExpression = testExpression1.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test1AttributeExpression.Left);
-			    Assert.IsNull(test1AttributeExpression.Right);
 
 			    StringExpression test1StringExpression = testExpression1.Right as StringExpression;
 			    Assert.IsNotNull(test1StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 1", test1StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test1StringExpression.Left);
-			    Assert.IsNull(test1StringExpression.Right);
 
 			    //
 			    // And Right
 			    //
-			    OperatorExpression testExpression2 = andExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression testExpression2 = andExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression2, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression2.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression2.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
+			    ElementAttributeExpression test2AttributeExpression = testExpression2.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test2AttributeExpression.Left);
-			    Assert.IsNull(test2AttributeExpression.Right);
 
 			    StringExpression test2StringExpression = testExpression2.Right as StringExpression;
 			    Assert.IsNotNull(test2StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 2", test2StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test2StringExpression.Left);
-			    Assert.IsNull(test2StringExpression.Right);
 
 			    //
 			    // Or right
 			    //
-			    OperatorExpression testExpression3 = operatorExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression testExpression3 = operatorExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression3, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression3.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression3.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
+			    ElementAttributeExpression test3AttributeExpression = testExpression3.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test3AttributeExpression.Left);
-			    Assert.IsNull(test3AttributeExpression.Right);
 
 			    StringExpression test3StringExpression = testExpression3.Right as StringExpression;
 			    Assert.IsNotNull(test3StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 3", test3StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test3StringExpression.Left);
-			    Assert.IsNull(test3StringExpression.Right);
 			};
 
 			string expressionText;
@@ -427,84 +454,72 @@ namespace NArrange.Tests.Core.Configuration
 			        condition);
 			    Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			    OperatorExpression operatorExpression = expression as OperatorExpression;
+			    BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			    Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Or, operatorExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Or, operatorExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // Or left
 			    //
-			    OperatorExpression testExpression1 = operatorExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression testExpression1 = operatorExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression1, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression1.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression1.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test1AttributeExpression = testExpression1.Left as AttributeExpression;
+			    ElementAttributeExpression test1AttributeExpression = testExpression1.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test1AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test1AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test1AttributeExpression.Left);
-			    Assert.IsNull(test1AttributeExpression.Right);
 
 			    StringExpression test1StringExpression = testExpression1.Right as StringExpression;
 			    Assert.IsNotNull(test1StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 1", test1StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test1StringExpression.Left);
-			    Assert.IsNull(test1StringExpression.Right);
 
 			    //
 			    // Or right
 			    //
-			    OperatorExpression andExpression = operatorExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression andExpression = operatorExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(andExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.And, andExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.And, andExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // And Left
 			    //
-			    OperatorExpression testExpression2 = andExpression.Left as OperatorExpression;
+			    BinaryOperatorExpression testExpression2 = andExpression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression2, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression2.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression2.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test2AttributeExpression = testExpression2.Left as AttributeExpression;
+			    ElementAttributeExpression test2AttributeExpression = testExpression2.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test2AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test2AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test2AttributeExpression.Left);
-			    Assert.IsNull(test2AttributeExpression.Right);
 
 			    StringExpression test2StringExpression = testExpression2.Right as StringExpression;
 			    Assert.IsNotNull(test2StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 2", test2StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test2StringExpression.Left);
-			    Assert.IsNull(test2StringExpression.Right);
 
 			    //
 			    // And Right
 			    //
-			    OperatorExpression testExpression3 = andExpression.Right as OperatorExpression;
+			    BinaryOperatorExpression testExpression3 = andExpression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(testExpression3, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, testExpression3.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, testExpression3.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression test3AttributeExpression = testExpression3.Left as AttributeExpression;
+			    ElementAttributeExpression test3AttributeExpression = testExpression3.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(test3AttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, test3AttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(test3AttributeExpression.Left);
-			    Assert.IsNull(test3AttributeExpression.Right);
 
 			    StringExpression test3StringExpression = testExpression3.Right as StringExpression;
 			    Assert.IsNotNull(test3StringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 3", test3StringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(test3StringExpression.Left);
-			    Assert.IsNull(test3StringExpression.Right);
 			};
 
 			string expressionText;
@@ -527,54 +542,46 @@ namespace NArrange.Tests.Core.Configuration
 			        condition);
 			    Assert.IsNotNull(expression, "Expected an expression instance.");
 
-			    OperatorExpression operatorExpression = expression as OperatorExpression;
+			    BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
 			    Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Or, operatorExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Or, operatorExpression.Operator,
 			        "Unexpected operator.");
 
 			    //
 			    // Left
 			    //
-			    OperatorExpression leftExpression = expression.Left as OperatorExpression;
+			    BinaryOperatorExpression leftExpression = expression.Left as BinaryOperatorExpression;
 			    Assert.IsNotNull(leftExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, leftExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, leftExpression.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression leftAttributeExpression = leftExpression.Left as AttributeExpression;
+			    ElementAttributeExpression leftAttributeExpression = leftExpression.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(leftAttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, leftAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(leftAttributeExpression.Left);
-			    Assert.IsNull(leftAttributeExpression.Right);
 
 			    StringExpression leftStringExpression = leftExpression.Right as StringExpression;
 			    Assert.IsNotNull(leftStringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 1", leftStringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(leftStringExpression.Left);
-			    Assert.IsNull(leftStringExpression.Right);
 
 			    //
 			    // Right
 			    //
-			    OperatorExpression rightExpression = expression.Right as OperatorExpression;
+			    BinaryOperatorExpression rightExpression = expression.Right as BinaryOperatorExpression;
 			    Assert.IsNotNull(rightExpression, "Expected an operator expression.");
-			    Assert.AreEqual(ExpressionOperator.Equal, rightExpression.Operator,
+			    Assert.AreEqual(BinaryExpressionOperator.Equal, rightExpression.Operator,
 			        "Unexpected operator.");
 
-			    AttributeExpression rightAttributeExpression = rightExpression.Left as AttributeExpression;
+			    ElementAttributeExpression rightAttributeExpression = rightExpression.Left as ElementAttributeExpression;
 			    Assert.IsNotNull(rightAttributeExpression, "Unexpected left node type.");
 			    Assert.AreEqual(ElementAttributeType.Name, rightAttributeExpression.ElementAttribute,
 			        "Attribute expression was not parsed correctly.");
-			    Assert.IsNull(rightAttributeExpression.Left);
-			    Assert.IsNull(rightAttributeExpression.Right);
 
 			    StringExpression rightStringExpression = rightExpression.Right as StringExpression;
 			    Assert.IsNotNull(rightStringExpression, "Unexpected right node type.");
 			    Assert.AreEqual("Test 2", rightStringExpression.Text,
 			        "String expression was not parsed correctly.");
-			    Assert.IsNull(rightStringExpression.Left);
-			    Assert.IsNull(rightStringExpression.Right);
 			};
 
 			string expressionText;
@@ -583,6 +590,36 @@ namespace NArrange.Tests.Core.Configuration
 
 			expressionText = "$(Name) == 'Test 1' Or $(Name) == 'Test 2'";
 			testExpression(expressionText);
+		}
+
+		/// <summary>
+		/// Tests parsing a parent name contains expression.
+		/// </summary>
+		[Test]
+		public void ParseParentNameContainsExpressionTest()
+		{
+			string expressionText = "$(Parent.Name) : 'Converter'";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Contains, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			ElementAttributeExpression attributeExpression = operatorExpression.Left as ElementAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
+			    "Attribute expression was not parsed correctly.");
+			Assert.AreEqual(ElementAttributeScope.Parent, attributeExpression.Scope,
+			    "Attribute scope was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
+			Assert.AreEqual("Converter", stringExpression.Text,
+			    "String expression was not parsed correctly.");
 		}
 
 		#endregion Public Methods

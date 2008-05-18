@@ -67,7 +67,7 @@ namespace NArrange.Tests.Core.CodeElements
 			// Verify default values
 			//
 			Assert.IsNull(element.Target,
-			    "Unexpected defaulf value for Target.");
+			    "Unexpected default value for Target.");
 
 			Assert.IsNotNull(element.Children,
 			    "Children collection should not be null.");

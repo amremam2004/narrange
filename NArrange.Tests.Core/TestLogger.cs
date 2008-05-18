@@ -126,6 +126,21 @@ namespace NArrange.Tests.Core
 			_events.Add(logEvent);
 		}
 
+		/// <summary>
+		/// Gets the text of all events.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			StringBuilder textBuilder = new StringBuilder();
+			foreach (TestLogEvent logEvent in Events)
+			{
+			    textBuilder.AppendLine(logEvent.ToString());
+			}
+
+			return textBuilder.ToString();
+		}
+
 		#endregion Public Methods
 
 		#region Other
@@ -154,6 +169,15 @@ namespace NArrange.Tests.Core
 			{
 				Level = level;
 				Message = message;
+			}
+
+			/// <summary>
+			/// Gets the string representation.
+			/// </summary>
+			/// <returns></returns>
+			public override string ToString()
+			{
+				return string.Format("{0}: {1}", Level, Message);
 			}
 		}
 

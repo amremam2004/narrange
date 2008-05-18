@@ -1,6 +1,6 @@
 #region Header
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                                        
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
  *                                                                             
@@ -33,109 +33,63 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow filter conditions to be specified for file extensions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.IO;
 using System.Text;
-using System.Threading;
-using System.Xml.Serialization;
 
-namespace NArrange.Core.Configuration
+using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
+
+namespace NArrange.Core
 {
 	/// <summary>
-	/// Specifies source code extension
+	/// Class for determining whether or not a file matches 
+	/// filter criteria.
 	/// </summary>
-	[XmlType("Extension")]
-	public class ExtensionConfiguration : ICloneable
+	public class FileFilter : IFileFilter
 	{
 		#region Fields
 
-		private FilterBy _filterBy;
-		private string _name;
+		private IConditionExpression _conditionExpression;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
+		/// Creates a new FileFilter
 		/// </summary>
-		public ExtensionConfiguration()
+		/// <param name="conditionExpression"></param>
+		public FileFilter(string conditionExpression)
 		{
+			_conditionExpression = ConditionExpressionParser.Instance.Parse(conditionExpression);
 		}
 
 		#endregion Constructors
 
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the filter specification
-		/// </summary>
-		[XmlElement("Filter")]
-		public FilterBy FilterBy
-		{
-			get
-			{
-			    return _filterBy;
-			}
-			set
-			{
-			    _filterBy = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the extension name
-		/// </summary>
-		[XmlAttribute("Name")]
-		public string Name
-		{
-			get
-			{
-			    return _name;
-			}
-			set
-			{
-			    _name = value;
-			}
-		}
-
-		#endregion Public Properties
-
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Determines whether or not the specified file matches the
+		/// filter criteria.
 		/// </summary>
+		/// <param name="file"></param>
 		/// <returns></returns>
-		public object Clone()
+		public bool IsMatch(FileInfo file)
 		{
-			ExtensionConfiguration clone = new ExtensionConfiguration();
+			bool isMatch = false;
 
-			clone._name = _name;
-
-			if (_filterBy != null)
+			if (file != null)
 			{
-			    FilterBy filterByClone = _filterBy.Clone() as FilterBy;
-			    clone._filterBy = filterByClone;
+			    isMatch = ConditionExpressionEvaluator.Instance.Evaluate(_conditionExpression, file);
 			}
 
-			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Extension: {0}", this._name);
+			return isMatch;
 		}
 
 		#endregion Public Methods

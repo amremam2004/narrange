@@ -34,6 +34,7 @@
  *      James Nies
  *      - Initial creation
  *      - Allow scoping in element attribute expression evaluation
+ *      - Allow evaluation of file attribute expressions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -100,6 +101,85 @@ namespace NArrange.Core
 
 		#region Private Methods
 
+		/// <summary>
+		/// Evaluates an expression against the specified entity.
+		/// </summary>
+		/// <param name="conditionExpression"></param>
+		/// <param name="entity"></param>
+		/// <typeparam name="TEntity">Entity type</typeparam>
+		/// <returns></returns>
+		private bool Evaluate<TEntity>(IConditionExpression conditionExpression, TEntity entity)
+		{
+			bool result = false;
+
+			BinaryOperatorExpression binaryOperatorExpression = conditionExpression as BinaryOperatorExpression;
+			if (binaryOperatorExpression != null)
+			{
+			    string leftStr, rightStr;
+			    bool leftResult, rightResult;
+
+			    switch (binaryOperatorExpression.Operator)
+			    {
+			        case BinaryExpressionOperator.Equal:
+			            leftStr = GetExpressionValue(binaryOperatorExpression.Left, entity);
+			            rightStr = GetExpressionValue(binaryOperatorExpression.Right, entity);
+			            result = leftStr == rightStr;
+			            break;
+
+			        case BinaryExpressionOperator.NotEqual:
+			            leftStr = GetExpressionValue(binaryOperatorExpression.Left, entity);
+			            rightStr = GetExpressionValue(binaryOperatorExpression.Right, entity);
+			            result = leftStr != rightStr;
+			            break;
+
+			        case BinaryExpressionOperator.Contains:
+			            leftStr = GetExpressionValue(binaryOperatorExpression.Left, entity);
+			            rightStr = GetExpressionValue(binaryOperatorExpression.Right, entity);
+			            result = leftStr.Contains(rightStr);
+			            break;
+
+			        case BinaryExpressionOperator.And:
+			            leftResult = Evaluate<TEntity>(binaryOperatorExpression.Left, entity);
+			            rightResult = Evaluate<TEntity>(binaryOperatorExpression.Right, entity);
+			            result = leftResult && rightResult;
+			            break;
+
+			        case BinaryExpressionOperator.Or:
+			            leftResult = Evaluate<TEntity>(binaryOperatorExpression.Left, entity);
+			            rightResult = Evaluate<TEntity>(binaryOperatorExpression.Right, entity);
+			            result = leftResult || rightResult;
+			            break;
+
+			        default:
+			            throw new ArgumentOutOfRangeException(
+			                string.Format(
+			                Thread.CurrentThread.CurrentCulture,
+			                "Unsupported operator type {0}", binaryOperatorExpression.Operator));
+			    }
+			}
+			else
+			{
+			    UnaryOperatorExpression unaryOperatorExpression = conditionExpression as UnaryOperatorExpression;
+			    if (unaryOperatorExpression != null)
+			    {
+			        switch (unaryOperatorExpression.Operator)
+			        {
+			            case UnaryExpressionOperator.Negate:
+			                result = !Evaluate<TEntity>(unaryOperatorExpression.InnerExpression, entity);
+			                break;
+
+			            default:
+			                throw new ArgumentOutOfRangeException(
+			                    string.Format(
+			                    Thread.CurrentThread.CurrentCulture,
+			                    "Unsupported operator type {0}", unaryOperatorExpression.Operator));
+			        }
+			    }
+			}
+
+			return result;
+		}
+
 		private static string GetExpressionValue(IConditionExpression expression, ICodeElement element)
 		{
 			string value = string.Empty;
@@ -113,7 +193,7 @@ namespace NArrange.Core
 			    }
 			    else
 			    {
-			        AttributeExpression attributeExpression = expression as AttributeExpression;
+			        ElementAttributeExpression attributeExpression = expression as ElementAttributeExpression;
 
 			        if (attributeExpression.Scope == ElementAttributeScope.Parent)
 			        {
@@ -131,9 +211,79 @@ namespace NArrange.Core
 			return value;
 		}
 
+		private static string GetExpressionValue(IConditionExpression expression, object entity)
+		{
+			string expressionValue = string.Empty;
+
+			ICodeElement element = entity as ICodeElement;
+			if (element != null)
+			{
+			    expressionValue = GetExpressionValue(expression, element);
+			}
+			else
+			{
+			    FileInfo file = entity as FileInfo;
+			    if (file != null)
+			    {
+			        expressionValue = GetExpressionValue(expression, file);
+			    }
+			}
+
+			return expressionValue;
+		}
+
+		private static string GetExpressionValue(IConditionExpression expression, FileInfo file)
+		{
+			string value = string.Empty;
+
+			if (expression != null && file != null)
+			{
+			    StringExpression stringExpression = expression as StringExpression;
+			    if (stringExpression != null)
+			    {
+			        value = stringExpression.Text;
+			    }
+			    else
+			    {
+			        FileAttributeExpression attributeExpression = expression as FileAttributeExpression;
+			        if (attributeExpression != null)
+			        {
+			            value = FileUtilities.GetAttribute(attributeExpression.FileAttribute,
+			                file);
+			        }
+			    }
+			}
+
+			return value;
+		}
+
 		#endregion Private Methods
 
 		#region Public Methods
+
+		/// <summary>
+		/// Evaluates an expression against the specified file.
+		/// </summary>
+		/// <param name="conditionExpression"></param>
+		/// <param name="file"></param>
+		/// <returns></returns>
+		public bool Evaluate(IConditionExpression conditionExpression, FileInfo file)
+		{
+			bool result = false;
+
+			if (conditionExpression == null)
+			{
+			    throw new ArgumentNullException("conditionExpression");
+			}
+			else if (file == null)
+			{
+			    throw new ArgumentNullException("file");
+			}
+
+			result = Evaluate<FileInfo>(conditionExpression, file);
+
+			return result;
+		}
 
 		/// <summary>
 		/// Evaluates an expression against the specified element
@@ -154,51 +304,7 @@ namespace NArrange.Core
 			    throw new ArgumentNullException("element");
 			}
 
-			OperatorExpression operatorExpression = conditionExpression as OperatorExpression;
-			if (operatorExpression != null)
-			{
-			    string leftStr, rightStr;
-			    bool leftResult, rightResult;
-
-			    switch (operatorExpression.Operator)
-			    {
-			        case ExpressionOperator.Equal:
-			            leftStr = GetExpressionValue(operatorExpression.Left, element);
-			            rightStr = GetExpressionValue(operatorExpression.Right, element);
-			            result = leftStr == rightStr;
-			            break;
-
-			        case ExpressionOperator.NotEqual:
-			            leftStr = GetExpressionValue(operatorExpression.Left, element);
-			            rightStr = GetExpressionValue(operatorExpression.Right, element);
-			            result = leftStr != rightStr;
-			            break;
-
-			        case ExpressionOperator.Contains:
-			            leftStr = GetExpressionValue(operatorExpression.Left, element);
-			            rightStr = GetExpressionValue(operatorExpression.Right, element);
-			            result = leftStr.Contains(rightStr);
-			            break;
-
-			        case ExpressionOperator.And:
-			            leftResult = Evaluate(operatorExpression.Left, element);
-			            rightResult = Evaluate(operatorExpression.Right, element);
-			            result = leftResult && rightResult;
-			            break;
-
-			        case ExpressionOperator.Or:
-			            leftResult = Evaluate(operatorExpression.Left, element);
-			            rightResult = Evaluate(operatorExpression.Right, element);
-			            result = leftResult || rightResult;
-			            break;
-
-			        default:
-			            throw new ArgumentOutOfRangeException(
-			                string.Format(
-			                Thread.CurrentThread.CurrentCulture,
-			                "Unsupported operator type {0}", operatorExpression.Operator));
-			    }
-			}
+			result = Evaluate<ICodeElement>(conditionExpression, element);
 
 			return result;
 		}

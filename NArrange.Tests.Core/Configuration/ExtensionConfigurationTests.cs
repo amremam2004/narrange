@@ -26,10 +26,16 @@ namespace NArrange.Tests.Core.Configuration
 			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
 			extensionConfiguration.Name = "cs";
 
+			FilterBy filter = new FilterBy();
+			filter.Condition = "$(File.Name) != 'Test.cs'";
+			extensionConfiguration.FilterBy = filter;
+
 			ExtensionConfiguration clone = extensionConfiguration.Clone() as ExtensionConfiguration;
 			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
 
 			Assert.AreEqual(extensionConfiguration.Name, clone.Name);
+			Assert.IsNotNull(clone.FilterBy, "FilterBy was not cloned.");
+			Assert.AreEqual(extensionConfiguration.FilterBy.Condition, clone.FilterBy.Condition);
 		}
 
 		/// <summary>

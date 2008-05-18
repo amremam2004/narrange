@@ -7,6 +7,7 @@ using System.Text;
 using NUnit.Framework;
 
 using NArrange.Core;
+using NArrange.Core.Configuration;
 
 namespace NArrange.Tests.Core
 {
@@ -25,8 +26,10 @@ namespace NArrange.Tests.Core
 		public void CreateTest()
 		{
 			string assemblyName = "NArrange.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+			HandlerConfiguration configuration = new HandlerConfiguration();
+			configuration.AssemblyName = assemblyName;
 
-			SourceHandler handler = new SourceHandler(assemblyName);
+			SourceHandler handler = new SourceHandler(configuration);
 
 			Assert.IsNotNull(handler.CodeParser, "Parser was not created.");
 			Assert.IsNotNull(handler.Writer, "Writer was not created.");
