@@ -344,6 +344,36 @@ namespace NArrange.Tests.Core.Configuration
 		}
 
 		/// <summary>
+		/// Tests parsing a regular expression match expression.
+		/// </summary>
+		[Test]
+		public void ParseMatchesExpressionTest()
+		{
+			string expressionText = "$(Name) =~ '.*\\.Tests\\..*'";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Matches, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			ElementAttributeExpression attributeExpression = operatorExpression.Left as ElementAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
+			    "Attribute expression was not parsed correctly.");
+			Assert.AreEqual(ElementAttributeScope.Element, attributeExpression.Scope,
+			    "Attribute scope was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
+			Assert.AreEqual(".*\\.Tests\\..*", stringExpression.Text,
+			    "String expression was not parsed correctly.");
+		}
+
+		/// <summary>
 		/// Tests parsing a null expression.
 		/// </summary>
 		[Test]
@@ -620,6 +650,64 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(stringExpression, "Unexpected right node type.");
 			Assert.AreEqual("Converter", stringExpression.Text,
 			    "String expression was not parsed correctly.");
+		}
+
+		/// <summary>
+		/// Tests parsing a string expression with an escaped apostrophe.
+		/// </summary>
+		[Test]
+		public void ParseStringExpressionEscapedApostropheEndTest()
+		{
+			string expressionText = "$(Name) == 'Test it'''";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Equal, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			ElementAttributeExpression attributeExpression = operatorExpression.Left as ElementAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
+			    "Attribute expression was not parsed correctly.");
+			Assert.AreEqual(ElementAttributeScope.Element, attributeExpression.Scope,
+			    "Attribute scope was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Expected a string expression.");
+			Assert.AreEqual("Test it'", stringExpression.Text, "Unexpected expression text.");
+		}
+
+		/// <summary>
+		/// Tests parsing a string expression with an escaped apostrophe.
+		/// </summary>
+		[Test]
+		public void ParseStringExpressionEscapedApostropheTest()
+		{
+			string expressionText = "$(Name) == 'Test '' it'";
+
+			IConditionExpression expression = ConditionExpressionParser.Instance.Parse(
+			    expressionText);
+			Assert.IsNotNull(expression, "Expected an expression instance.");
+
+			BinaryOperatorExpression operatorExpression = expression as BinaryOperatorExpression;
+			Assert.IsNotNull(operatorExpression, "Expected an operator expression.");
+			Assert.AreEqual(BinaryExpressionOperator.Equal, operatorExpression.Operator,
+			    "Unexpected operator.");
+
+			ElementAttributeExpression attributeExpression = operatorExpression.Left as ElementAttributeExpression;
+			Assert.IsNotNull(attributeExpression, "Unexpected left node type.");
+			Assert.AreEqual(ElementAttributeType.Name, attributeExpression.ElementAttribute,
+			    "Attribute expression was not parsed correctly.");
+			Assert.AreEqual(ElementAttributeScope.Element, attributeExpression.Scope,
+			    "Attribute scope was not parsed correctly.");
+
+			StringExpression stringExpression = operatorExpression.Right as StringExpression;
+			Assert.IsNotNull(stringExpression, "Expected a string expression.");
+			Assert.AreEqual("Test ' it", stringExpression.Text, "Unexpected expression text.");
 		}
 
 		#endregion Public Methods

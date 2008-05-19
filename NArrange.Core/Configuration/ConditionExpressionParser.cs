@@ -35,6 +35,10 @@
  *      - Initial creation
  *      - Allow scoping in element attribute expression evaluation
  *      - Added parsing for file attribute expressions
+ *      - Added a Matches binary operator for regular expression support in 
+ *        condition expressions
+ *      - Allow apostrophes in string expressions by escaping with another
+ *        apostrophe
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -151,6 +155,7 @@ namespace NArrange.Core.Configuration
 			operatorPrecedence.Enqueue(BinaryExpressionOperator.Equal);
 			operatorPrecedence.Enqueue(BinaryExpressionOperator.NotEqual);
 			operatorPrecedence.Enqueue(BinaryExpressionOperator.Contains);
+			operatorPrecedence.Enqueue(BinaryExpressionOperator.Matches);
 			operatorPrecedence.Enqueue(BinaryExpressionOperator.And);
 			operatorPrecedence.Enqueue(BinaryExpressionOperator.Or);
 
@@ -264,266 +269,282 @@ namespace NArrange.Core.Configuration
 			while (data > 0)
 			{
 			    char ch = (char)data;
+			    char nextCh = (char)reader.Peek();
 
-			    switch (ch)
+			    if (inString && ch != '\'')
 			    {
-			        case ' ':
-			            if (inString)
-			            {
-			                expressionBuilder.Append(ch);
-			            }
-			            break;
+			        expressionBuilder.Append(ch);
+			    }
+			    else
+			    {
+			        switch (ch)
+			        {
+			            case ' ':
+			            case '\t':
+			            case '\r':
+			            case '\n':
+			                // Eat whitespace
+			                break;
 
-			        case ExpressionPrefix:
-			            char nextCh = (char)reader.Peek();
-			            if (nextCh == ExpressionStart)
-			            {
-			                inAttribute = true;
-			                reader.Read();
-			            }
-			            break;
-
-			        case '=':
-			            nextCh = (char)reader.Peek();
-			            if (nextCh == '=')
-			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Equal));
-			                reader.Read();
-			            }
-			            break;
-
-			        case '!':
-			            nextCh = (char)reader.Peek();
-			            if (nextCh == '=')
-			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.NotEqual));
-			                reader.Read();
-			            }
-			            else
-			            {
-			                expressionBuilder.Append(ch);
-			            }
-			            break;
-
-			        case ':':
-			            nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Contains));
-			            reader.Read();
-			            break;
-
-			        case 'O':
-			            nextCh = (char)reader.Peek();
-			            if (nextCh == 'r' && !(inString || inAttribute))
-			            {
-			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Or));
-			                reader.Read();
-			            }
-			            else
-			            {
-			                expressionBuilder.Append(ch);
-			            }
-			            break;
-
-			        case 'A':
-			            nextCh = (char)reader.Peek();
-			            if (nextCh == 'n' && !(inString || inAttribute))
-			            {
-			                reader.Read();
-			                nextCh = (char)reader.Peek();
-			                if (nextCh == 'd')
+			            case ExpressionPrefix:
+			                if (nextCh == ExpressionStart)
 			                {
-			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.And));
+			                    inAttribute = true;
 			                    reader.Read();
 			                }
-			            }
-			            else
-			            {
-			                expressionBuilder.Append(ch);
-			            }
-			            break;
+			                break;
 
-			        case ExpressionEnd:
-			            if (inAttribute)
-			            {
-			                string attribute = expressionBuilder.ToString();
-			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
-			                ElementAttributeScope elementScope = ElementAttributeScope.Element;
-			                bool isFileExpression = false;
-
-			                int separatorIndex = attribute.LastIndexOf(ScopeSeparator);
-			                if (separatorIndex > 0)
+			            case '=':
+			                if (nextCh == '=')
 			                {
-			                    try
-			                    {
-			                        string attributeScope = attribute.Substring(0, separatorIndex);
-			                        attribute = attribute.Substring(separatorIndex + 1);
+			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Equal));
+			                    reader.Read();
+			                }
+			                else if (nextCh == '~')
+			                {
+			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Matches));
+			                    reader.Read();
+			                }
+			                break;
 
-			                        if (attributeScope == FileAttributeScope)
+			            case '!':
+			                if (nextCh == '=')
+			                {
+			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.NotEqual));
+			                    reader.Read();
+			                }
+			                else
+			                {
+			                    expressionBuilder.Append(ch);
+			                }
+			                break;
+
+			            case ':':
+			                nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Contains));
+			                reader.Read();
+			                break;
+
+			            case 'O':
+			                if (nextCh == 'r' && !inAttribute)
+			                {
+			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Or));
+			                    reader.Read();
+			                }
+			                else
+			                {
+			                    expressionBuilder.Append(ch);
+			                }
+			                break;
+
+			            case 'A':
+			                if (nextCh == 'n' && !inAttribute)
+			                {
+			                    reader.Read();
+			                    nextCh = (char)reader.Peek();
+			                    if (nextCh == 'd')
+			                    {
+			                        nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.And));
+			                        reader.Read();
+			                    }
+			                }
+			                else
+			                {
+			                    expressionBuilder.Append(ch);
+			                }
+			                break;
+
+			            case ExpressionEnd:
+			                if (inAttribute)
+			                {
+			                    string attribute = expressionBuilder.ToString();
+			                    expressionBuilder = new StringBuilder(DefaultExpressionLength);
+			                    ElementAttributeScope elementScope = ElementAttributeScope.Element;
+			                    bool isFileExpression = false;
+
+			                    int separatorIndex = attribute.LastIndexOf(ScopeSeparator);
+			                    if (separatorIndex > 0)
+			                    {
+			                        try
 			                        {
-			                            isFileExpression = true;
+			                            string attributeScope = attribute.Substring(0, separatorIndex);
+			                            attribute = attribute.Substring(separatorIndex + 1);
+
+			                            if (attributeScope == FileAttributeScope)
+			                            {
+			                                isFileExpression = true;
+			                            }
+			                            else
+			                            {
+			                                elementScope = (ElementAttributeScope)
+			                                    Enum.Parse(typeof(ElementAttributeScope), attributeScope);
+			                            }
+			                        }
+			                        catch (ArgumentException ex)
+			                        {
+			                            throw new FormatException(
+			                                string.Format(Thread.CurrentThread.CurrentCulture,
+			                                "Unknown element scope: {0}", ex.Message));
+			                        }
+			                    }
+
+			                    if (isFileExpression)
+			                    {
+			                        FileAttributeType fileAttribute;
+
+			                        try
+			                        {
+			                            fileAttribute = (FileAttributeType)
+			                                Enum.Parse(typeof(FileAttributeType), attribute);
+			                        }
+			                        catch (ArgumentException ex)
+			                        {
+			                            throw new FormatException(
+			                                string.Format(Thread.CurrentThread.CurrentCulture,
+			                                "Unknown attribute: {0}", ex.Message));
+			                        }
+
+			                        FileAttributeExpression attributeExpresion = new FileAttributeExpression(
+			                            fileAttribute);
+			                        nodes.Add(attributeExpresion);
+			                    }
+			                    else
+			                    {
+			                        ElementAttributeType elementAttribute;
+
+			                        try
+			                        {
+			                            elementAttribute = (ElementAttributeType)
+			                                Enum.Parse(typeof(ElementAttributeType), attribute);
+			                        }
+			                        catch (ArgumentException ex)
+			                        {
+			                            throw new FormatException(
+			                                string.Format(Thread.CurrentThread.CurrentCulture,
+			                                "Unknown attribute: {0}", ex.Message));
+			                        }
+
+			                        ElementAttributeExpression attributeExpresion = new ElementAttributeExpression(
+			                            elementAttribute, elementScope);
+			                        nodes.Add(attributeExpresion);
+			                    }
+
+			                    inAttribute = false;
+			                }
+			                else if (expressionBuilder.Length > 0 && nodes.Count > 0)
+			                {
+			                    IConditionExpression innerExpression = nodes[nodes.Count - 1];
+			                    nodes.RemoveAt(nodes.Count - 1);
+
+			                    string unaryOperatorString = expressionBuilder.ToString().Trim();
+			                    expressionBuilder = new StringBuilder(DefaultExpressionLength);
+
+			                    UnaryExpressionOperator unaryOperator;
+
+			                    if (unaryOperatorString == "!")
+			                    {
+			                        unaryOperator = UnaryExpressionOperator.Negate;
+			                    }
+			                    else
+			                    {
+			                        throw new FormatException(
+			                        string.Format(Thread.CurrentThread.CurrentCulture,
+			                        "Invalid operator {0}", unaryOperatorString));
+			                    }
+
+			                    UnaryOperatorExpression unaryOperatorExpression = new UnaryOperatorExpression(
+			                        unaryOperator, innerExpression);
+
+			                    nodes.Add(unaryOperatorExpression);
+			                }
+			                else
+			                {
+			                    data = reader.Read();
+			                }
+			                break;
+
+			            case ExpressionStart:
+			                IConditionExpression nestedExpression = null;
+			                StringBuilder childExpressionBuilder = new StringBuilder(DefaultExpressionLength);
+			                data = reader.Read();
+			                int depth = 0;
+			                while (data > 0)
+			                {
+			                    ch = (char)data;
+
+			                    nextCh = (char)reader.Peek();
+			                    if (ch == ExpressionPrefix && nextCh == ExpressionStart)
+			                    {
+			                        inAttribute = true;
+			                        childExpressionBuilder.Append(ExpressionPrefix);
+			                        data = reader.Read();
+			                        childExpressionBuilder.Append(ExpressionStart);
+			                    }
+			                    else if (ch == ExpressionStart && !inAttribute)
+			                    {
+			                        depth++;
+			                        childExpressionBuilder.Append(ExpressionStart);
+			                    }
+			                    else if (nextCh == ExpressionEnd)
+			                    {
+			                        if (inAttribute || depth > 0)
+			                        {
+			                            if (inAttribute)
+			                            {
+			                                inAttribute = false;
+			                            }
+			                            else if (depth > 0)
+			                            {
+			                                depth--;
+			                            }
+
+			                            childExpressionBuilder.Append(ch);
+			                            data = reader.Read();
+			                            childExpressionBuilder.Append(ExpressionEnd);
 			                        }
 			                        else
 			                        {
-			                            elementScope = (ElementAttributeScope)
-			                                Enum.Parse(typeof(ElementAttributeScope), attributeScope);
+			                            childExpressionBuilder.Append(ch);
+			                            break;
 			                        }
-			                    }
-			                    catch (ArgumentException ex)
-			                    {
-			                        throw new FormatException(
-			                            string.Format(Thread.CurrentThread.CurrentCulture,
-			                            "Unknown element scope: {0}", ex.Message));
-			                    }
-			                }
-
-			                if (isFileExpression)
-			                {
-			                    FileAttributeType fileAttribute;
-
-			                    try
-			                    {
-			                        fileAttribute = (FileAttributeType)
-			                            Enum.Parse(typeof(FileAttributeType), attribute);
-			                    }
-			                    catch (ArgumentException ex)
-			                    {
-			                        throw new FormatException(
-			                            string.Format(Thread.CurrentThread.CurrentCulture,
-			                            "Unknown attribute: {0}", ex.Message));
-			                    }
-
-			                    FileAttributeExpression attributeExpresion = new FileAttributeExpression(
-			                        fileAttribute);
-			                    nodes.Add(attributeExpresion);
-			                }
-			                else
-			                {
-			                    ElementAttributeType elementAttribute;
-
-			                    try
-			                    {
-			                        elementAttribute = (ElementAttributeType)
-			                            Enum.Parse(typeof(ElementAttributeType), attribute);
-			                    }
-			                    catch (ArgumentException ex)
-			                    {
-			                        throw new FormatException(
-			                            string.Format(Thread.CurrentThread.CurrentCulture,
-			                            "Unknown attribute: {0}", ex.Message));
-			                    }
-
-			                    ElementAttributeExpression attributeExpresion = new ElementAttributeExpression(
-			                        elementAttribute, elementScope);
-			                    nodes.Add(attributeExpresion);
-			                }
-
-			                inAttribute = false;
-			            }
-			            else if (expressionBuilder.Length > 0 && nodes.Count > 0)
-			            {
-			                IConditionExpression innerExpression = nodes[nodes.Count - 1];
-			                nodes.RemoveAt(nodes.Count - 1);
-
-			                string unaryOperatorString = expressionBuilder.ToString().Trim();
-			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
-
-			                UnaryExpressionOperator unaryOperator;
-
-			                if (unaryOperatorString == "!")
-			                {
-			                    unaryOperator = UnaryExpressionOperator.Negate;
-			                }
-			                else
-			                {
-			                    throw new FormatException(
-			                    string.Format(Thread.CurrentThread.CurrentCulture,
-			                    "Invalid operator {0}", unaryOperatorString));
-			                }
-
-			                UnaryOperatorExpression unaryOperatorExpression = new UnaryOperatorExpression(
-			                    unaryOperator, innerExpression);
-
-			                nodes.Add(unaryOperatorExpression);
-			            }
-			            else
-			            {
-			                data = reader.Read();
-			            }
-			            break;
-
-			        case ExpressionStart:
-			            IConditionExpression nestedExpression = null;
-			            StringBuilder childExpressionBuilder = new StringBuilder(DefaultExpressionLength);
-			            data = reader.Read();
-			            int depth = 0;
-			            while (data > 0)
-			            {
-			                ch = (char)data;
-
-			                nextCh = (char)reader.Peek();
-			                if (ch == ExpressionPrefix && nextCh == ExpressionStart)
-			                {
-			                    inAttribute = true;
-			                    childExpressionBuilder.Append(ExpressionPrefix);
-			                    data = reader.Read();
-			                    childExpressionBuilder.Append(ExpressionStart);
-			                }
-			                else if (ch == ExpressionStart && !inAttribute)
-			                {
-			                    depth++;
-			                    childExpressionBuilder.Append(ExpressionStart);
-			                }
-			                else if (nextCh == ExpressionEnd)
-			                {
-			                    if (inAttribute || depth > 0)
-			                    {
-			                        if (inAttribute)
-			                        {
-			                            inAttribute = false;
-			                        }
-			                        else if (depth > 0)
-			                        {
-			                            depth--;
-			                        }
-
-			                        childExpressionBuilder.Append(ch);
-			                        data = reader.Read();
-			                        childExpressionBuilder.Append(ExpressionEnd);
 			                    }
 			                    else
 			                    {
 			                        childExpressionBuilder.Append(ch);
-			                        break;
+			                    }
+
+			                    data = reader.Read();
+			                }
+			                nestedExpression = Parse(childExpressionBuilder.ToString());
+			                nodes.Add(nestedExpression);
+			                break;
+
+			            case '\'':
+			                if (inString)
+			                {
+			                    if (nextCh == '\'')
+			                    {
+			                        expressionBuilder.Append(ch);
+			                        reader.Read();
+			                    }
+			                    else
+			                    {
+			                        string str = expressionBuilder.ToString();
+			                        expressionBuilder = new StringBuilder(DefaultExpressionLength);
+			                        StringExpression stringExpression = new StringExpression(str);
+			                        nodes.Add(stringExpression);
+			                        inString = false;
 			                    }
 			                }
 			                else
 			                {
-			                    childExpressionBuilder.Append(ch);
+			                    inString = true;
 			                }
+			                break;
 
-			                data = reader.Read();
-			            }
-			            nestedExpression = Parse(childExpressionBuilder.ToString());
-			            nodes.Add(nestedExpression);
-			            break;
-
-			        case '\'':
-			            if (inString)
-			            {
-			                string str = expressionBuilder.ToString();
-			                expressionBuilder = new StringBuilder(DefaultExpressionLength);
-			                StringExpression stringExpression = new StringExpression(str);
-			                nodes.Add(stringExpression);
-			                inString = false;
-			            }
-			            else
-			            {
-			                inString = true;
-			            }
-			            break;
-
-			        default:
-			            expressionBuilder.Append(ch);
-			            break;
+			            default:
+			                expressionBuilder.Append(ch);
+			                break;
+			        }
 			    }
 
 			    data = reader.Read();

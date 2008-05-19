@@ -37,6 +37,8 @@
  *		- Added an enumeration for whitespace characters
  *      - Added an enumeration for interface implementation types
  *      - Added FileAttributeType and UnaryExpressionOperator enumerations
+ *      - Added a Matches binary operator for regular expression support in 
+ *        condition expressions
  *      Everton Elvio Koser
  *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -68,6 +70,11 @@ namespace NArrange.Core
 		/// Contains
 		/// </summary>
 		Contains,
+
+		/// <summary>
+		/// Matches
+		/// </summary>
+		Matches,
 
 		/// <summary>
 		/// And

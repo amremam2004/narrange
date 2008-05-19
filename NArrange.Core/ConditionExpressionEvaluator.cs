@@ -35,6 +35,8 @@
  *      - Initial creation
  *      - Allow scoping in element attribute expression evaluation
  *      - Allow evaluation of file attribute expressions
+ *      - Added a Matches binary operator for regular expression support in 
+ *        condition expressions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -43,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 using NArrange.Core.CodeElements;
@@ -136,6 +139,13 @@ namespace NArrange.Core
 			            leftStr = GetExpressionValue(binaryOperatorExpression.Left, entity);
 			            rightStr = GetExpressionValue(binaryOperatorExpression.Right, entity);
 			            result = leftStr.Contains(rightStr);
+			            break;
+
+			        case BinaryExpressionOperator.Matches:
+			            leftStr = GetExpressionValue(binaryOperatorExpression.Left, entity);
+			            rightStr = GetExpressionValue(binaryOperatorExpression.Right, entity);
+			            Regex regex = new Regex(rightStr);
+			            result = regex.IsMatch(leftStr);
 			            break;
 
 			        case BinaryExpressionOperator.And:

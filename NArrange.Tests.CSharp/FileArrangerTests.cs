@@ -217,10 +217,10 @@ namespace NArrange.Tests.Core
 		{
 			CodeConfiguration filterProjectConfig = CodeConfiguration.Default.Clone() as CodeConfiguration;
 
-            // Set up the filter
-            FilterBy filter = new FilterBy();
-            filter.Condition = "!($(File.Path) : '.Filtered.')";
-            filterProjectConfig.Handlers[0].ProjectExtensions[0].FilterBy = filter;
+			// Set up the filter
+			FilterBy filter = new FilterBy();
+			filter.Condition = "!($(File.Path) : '.Filtered.')";
+			filterProjectConfig.Handlers[0].ProjectExtensions[0].FilterBy = filter;
 
 			string filterProjectConfigFile = Path.Combine(Path.GetTempPath(), "FilterProjectConfig.xml");
 

@@ -115,6 +115,34 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests the Evaluate method with a Matches expression.
+		/// </summary>
+		[Test]
+		public void EvaluateElementNameMatchesTest()
+		{
+			IConditionExpression expression = new BinaryOperatorExpression(
+			   BinaryExpressionOperator.Matches, new ElementAttributeExpression(ElementAttributeType.Name),
+			   new StringExpression("IDisposable\\..*"));
+
+			MethodElement element = new MethodElement();
+			element.Name = "IDisposable.Dispose";
+
+			bool result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			element.Name = "IDisposable.Test";
+			result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsTrue(result, "Unexpected expression evaluation result.");
+
+			element.Name = "IDisposable";
+			result = ConditionExpressionEvaluator.Instance.Evaluate(
+			    expression, element);
+			Assert.IsFalse(result, "Unexpected expression evaluation result.");
+		}
+
+		/// <summary>
 		/// Tests the Evaluate method with a null element
 		/// </summary>
 		[Test]
