@@ -49,7 +49,7 @@
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
                   <p>Version 0.1.9.0<br>
-                    Last Modified: 05/14/2008<br>
+                    Last Modified: 05/19/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -311,26 +311,38 @@ output  For a single source file, specifies the output file
                     or region. Filter expressions can use the element attributes 
                     above using the $(AttributeHere) syntax. Filter expressions 
                     use string comparison and the following operators are available:</p>
-                  <table width="200" border="1" cellspacing="0" cellpadding="5">
+                  <table width="362" border="1" cellspacing="0" cellpadding="5">
                     <tr> 
-                      <td>Equality</td>
-                      <td>=</td>
+                      <td width="186"><b>Operator Name</b></td>
+                      <td width="150"><b>Syntax</b></td>
                     </tr>
                     <tr> 
-                      <td>Inequality</td>
-                      <td>!=</td>
+                      <td width="186">Equality</td>
+                      <td width="150">==</td>
                     </tr>
                     <tr> 
-                      <td>Contains</td>
-                      <td>:</td>
+                      <td width="186">Inequality</td>
+                      <td width="150">!=</td>
                     </tr>
                     <tr> 
-                      <td>Logical Or</td>
-                      <td>Or</td>
+                      <td width="186">Contains</td>
+                      <td width="150">:</td>
                     </tr>
                     <tr> 
-                      <td>Logical And</td>
-                      <td>And</td>
+                      <td width="186">Regular expression match</td>
+                      <td width="150">=~</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Logical Or</td>
+                      <td width="150">Or</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Logical And</td>
+                      <td width="150">And</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Negate</td>
+                      <td width="150">!(<i>inner expression</i>)</td>
                     </tr>
                   </table>
                   <p>Strings in element expressions should be enclosed with single 
