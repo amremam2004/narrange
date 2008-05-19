@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - When creating an arranger for an element reference, use the 
+ *        configuration of the referenced element.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -129,6 +131,16 @@ namespace NArrange.Core
 			if (configuration == null)
 			{
 			    throw new ArgumentNullException("configuration");
+			}
+
+			//
+			// If this is an element reference, build the arranger using the referenced
+			// element configuration instead.
+			//
+			ElementReferenceConfiguration elementReference = configuration as ElementReferenceConfiguration;
+			if (elementReference != null && elementReference.ReferencedElement != null)
+			{
+			    configuration = elementReference.ReferencedElement;
 			}
 
 			RegionConfiguration regionConfiguration = configuration as RegionConfiguration;

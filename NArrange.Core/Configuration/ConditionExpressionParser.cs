@@ -568,7 +568,13 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		private class OperatorExpressionPlaceholder : LeafExpression
 		{
+			#region Fields
+
 			private BinaryExpressionOperator _operatorType;
+
+			#endregion Fields
+
+			#region Constructors
 
 			/// <summary>
 			/// Creates a new operator expression.
@@ -578,6 +584,10 @@ namespace NArrange.Core.Configuration
 			{
 				_operatorType = operatorType;
 			}
+
+			#endregion Constructors
+
+			#region Public Properties
 
 			/// <summary>
 			/// Gets the expression operator
@@ -589,6 +599,8 @@ namespace NArrange.Core.Configuration
 				    return _operatorType;
 				}
 			}
+
+			#endregion Public Properties
 		}
 
 		#endregion Other

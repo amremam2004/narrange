@@ -115,13 +115,23 @@ namespace NArrange.Tests.Core
 
 		private class TestElementArranger : IElementArranger
 		{
-			private bool _canArrange;
+			#region Fields
+
 			private bool _arrangeCalled;
+			private bool _canArrange;
+
+			#endregion Fields
+
+			#region Constructors
 
 			public TestElementArranger(bool canArrange)
 			{
 				_canArrange = canArrange;
 			}
+
+			#endregion Constructors
+
+			#region Public Properties
 
 			public bool ArrangeCalled
 			{
@@ -129,6 +139,15 @@ namespace NArrange.Tests.Core
 				{
 				    return _arrangeCalled;
 				}
+			}
+
+			#endregion Public Properties
+
+			#region Public Methods
+
+			public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
+			{
+				_arrangeCalled = true;
 			}
 
 			public bool CanArrange(ICodeElement codeElement)
@@ -141,10 +160,7 @@ namespace NArrange.Tests.Core
 				return _canArrange;
 			}
 
-			public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
-			{
-				_arrangeCalled = true;
-			}
+			#endregion Public Methods
 		}
 
 		#endregion Other

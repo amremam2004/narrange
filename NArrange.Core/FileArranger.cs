@@ -472,10 +472,16 @@ namespace NArrange.Core
 		/// </summary>
 		private class ArrangeResult
 		{
+			#region Fields
+
 			private readonly string _inputFile;
+			private readonly bool _modified;
 			private readonly string _outputFile;
 			private readonly string _outputFileText;
-			private readonly bool _modified;
+
+			#endregion Fields
+
+			#region Constructors
 
 			/// <summary>
 			/// Creates a new ArrangeResult
@@ -494,6 +500,18 @@ namespace NArrange.Core
 					inputFileText != outputFileText;
 			}
 
+			#endregion Constructors
+
+			#region Public Properties
+
+			public bool Modified
+			{
+				get
+				{
+					return _modified;
+				}
+			}
+
 			public string OutputFile
 			{
 				get
@@ -510,13 +528,7 @@ namespace NArrange.Core
 				}
 			}
 
-			public bool Modified
-			{
-				get
-				{
-					return _modified;
-				}
-			}
+			#endregion Public Properties
 		}
 
 		#endregion Other

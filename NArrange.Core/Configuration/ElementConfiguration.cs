@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *      - Added an Id property so that element configurations can be 
+ *        referenced with ElementRef.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -56,6 +58,7 @@ namespace NArrange.Core.Configuration
 		private ElementType _elementType;
 		private FilterBy _filterBy;
 		private GroupBy _groupBy;
+		private string _id;
 		private SortBy _sortBy;
 
 		#endregion Fields
@@ -111,6 +114,22 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
+		/// Gets or sets the element configuration identifier.
+		/// </summary>
+		[XmlAttribute("Id")]
+		public string Id
+		{
+			get
+			{
+			    return _id;
+			}
+			set
+			{
+			    _id = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the sort specification
 		/// </summary>
 		[XmlElement("Sort")]
@@ -139,6 +158,7 @@ namespace NArrange.Core.Configuration
 			ElementConfiguration clone = new ElementConfiguration();
 
 			clone._elementType = _elementType;
+			clone._id = _id;
 
 			if (_filterBy != null)
 			{

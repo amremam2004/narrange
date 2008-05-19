@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(4, defaultConfig.Elements.Count,
+			Assert.AreEqual(6, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			CodeConfiguration clonedConfig = defaultConfig.Clone() as CodeConfiguration;
@@ -78,7 +78,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(4, defaultConfig.Elements.Count,
+			Assert.AreEqual(6, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			//
@@ -139,9 +139,20 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNull(attributeElement.SortBy, "Expected a sort to not be specified.");
 
 			//
+			// Element references
+			//
+			ElementReferenceConfiguration interfaceReference = defaultConfig.Elements[3] as ElementReferenceConfiguration;
+			Assert.AreEqual("DefaultInterface", interfaceReference.Id, "Unexpected reference Id.");
+			Assert.IsNotNull(interfaceReference.ReferencedElement, "Referenced element should not be null.");
+
+			ElementReferenceConfiguration typeReference = defaultConfig.Elements[4] as ElementReferenceConfiguration;
+			Assert.AreEqual("DefaultType", typeReference.Id, "Unexpected reference Id.");
+			Assert.IsNotNull(typeReference.ReferencedElement, "Referenced element should not be null.");
+
+			//
 			// Namespace elements
 			//
-			ElementConfiguration namespaceElement = defaultConfig.Elements[3] as ElementConfiguration;
+			ElementConfiguration namespaceElement = defaultConfig.Elements[5] as ElementConfiguration;
 			Assert.IsNotNull(namespaceElement, "Expected an ElementConfiguration.");
 			Assert.AreEqual(ElementType.Namespace, namespaceElement.ElementType,
 			    "Unexpected element type.");
@@ -170,15 +181,25 @@ namespace NArrange.Tests.Core.Configuration
 
 			ElementConfiguration elementConfiguration1 = new ElementConfiguration();
 			elementConfiguration1.ElementType = ElementType.Using;
+			elementConfiguration1.Id = "TestId";
 			origConfig.Elements.Add(elementConfiguration1);
 
 			ElementConfiguration elementConfiguration2 = new ElementConfiguration();
 			elementConfiguration2.ElementType = ElementType.Namespace;
 			origConfig.Elements.Add(elementConfiguration2);
 
+			ElementReferenceConfiguration elementReferenceConfiguration = new ElementReferenceConfiguration();
+			elementReferenceConfiguration.Id = "TestId";
+			origConfig.Elements.Add(elementReferenceConfiguration);
+
 			RegionConfiguration regionConfiguration = new RegionConfiguration();
 			regionConfiguration.Name = "Test Region";
 			origConfig.Elements.Add(regionConfiguration);
+
+			origConfig.ResolveReferences();
+			Assert.AreEqual(elementConfiguration1.Elements.Count, 
+			    elementReferenceConfiguration.ReferencedElement.Elements.Count,
+			    "Element reference was not resolved.");
 
 			string tempFile = Path.GetTempFileName();
 			try
@@ -210,7 +231,20 @@ namespace NArrange.Tests.Core.Configuration
 			            Assert.AreEqual(origElement.ElementType, loadedElement.ElementType,
 			                "Unexpected element type.");
 			        }
-			        else
+			        else if (origConfig.Elements[index] is ElementReferenceConfiguration)
+			        {
+			            ElementReferenceConfiguration origElement =
+			                origConfig.Elements[index] as ElementReferenceConfiguration;
+			            ElementReferenceConfiguration loadedElement =
+			                loadedConfig.Elements[index] as ElementReferenceConfiguration;
+
+			            Assert.AreEqual(origElement.Id, loadedElement.Id,
+			                "Unexpected element type.");
+			            Assert.AreEqual(origElement.ReferencedElement.Id,
+			                loadedElement.ReferencedElement.Id,
+			                "Unexpected referenced element.");
+			        }
+			        else if(origConfig.Elements[index] is RegionConfiguration)
 			        {
 			            RegionConfiguration origRegion =
 			                origConfig.Elements[index] as RegionConfiguration;

@@ -99,7 +99,10 @@ namespace NArrange.Core
 			                {
 			                    IElementArranger elementArranger = ElementArrangerFactory.CreateElementArranger(
 			                        configuration, _configuration, null);
-			                    _elementArrangerChain.AddArranger(elementArranger);
+			                    if (elementArranger != null)
+			                    {
+			                        _elementArrangerChain.AddArranger(elementArranger);
+			                    }
 			                }
 			            }
 			        }

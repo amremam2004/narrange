@@ -33,56 +33,70 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Allow ElementReferenceConfiguration elements to be deserialized
- *        into the Elements collection.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Base configuration element class.
+	/// Element reference configuration.
 	/// </summary>
-	public abstract class ConfigurationElement : ICloneable
+	[XmlType("ElementRef")]
+	public class ElementReferenceConfiguration : ConfigurationElement
 	{
 		#region Fields
 
-		private List<ConfigurationElement> _elements;
+		private string _id;
+		private ElementConfiguration _referencedElement;
 
 		#endregion Fields
 
 		#region Public Properties
 
 		/// <summary>
-		/// Elements
+		/// Gets or sets the element reference identifier.
 		/// </summary>
-		[XmlArrayItem(typeof(ElementConfiguration))]
-		[XmlArrayItem(typeof(RegionConfiguration))]
-		[XmlArrayItem(typeof(ElementReferenceConfiguration))]
-		[Description("Element configurations")]
-		public List<ConfigurationElement> Elements
+		[XmlAttribute("Id")]
+		public string Id
 		{
 			get
 			{
-			    if (_elements == null)
-			    {
-			        lock (this)
-			        {
-			            if (_elements == null)
-			            {
-			                _elements = new List<ConfigurationElement>();
-			            }
-			        }
-			    }
+			    return _id;
+			}
+			set
+			{
+			    _id = value;
+			}
+		}
 
-			    return _elements;
+		/// <summary>
+		/// Gets the referenced element configuration.
+		/// </summary>
+		[XmlIgnore]
+		public ElementConfiguration ReferencedElement
+		{
+			get
+			{
+			    return _referencedElement;
+			}
+			internal set
+			{
+			    if (value != null)
+			    {
+			        _referencedElement = value.Clone() as ElementConfiguration;
+			        _referencedElement.Id = null;
+			    }
+			    else
+			    {
+			        _referencedElement = null;
+			    }
 			}
 		}
 
@@ -91,41 +105,36 @@ namespace NArrange.Core.Configuration
 		#region Protected Methods
 
 		/// <summary>
-		/// Creates a new instance and copies state
+		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
-		protected ConfigurationElement BaseClone()
+		protected override ConfigurationElement DoClone()
 		{
-			ConfigurationElement clone = DoClone();
+			ElementReferenceConfiguration clone = new ElementReferenceConfiguration();
 
-			foreach (ConfigurationElement child in this.Elements)
+			clone._id = _id;
+
+			if (_referencedElement != null)
 			{
-			    ConfigurationElement childClone = child.Clone() as ConfigurationElement;
-			    clone.Elements.Add(childClone);
+			    ElementConfiguration referenceClone = _referencedElement.Clone() as ElementConfiguration;
+			    clone._referencedElement = referenceClone;
 			}
 
 			return clone;
 		}
-
-		/// <summary>
-		/// Creates a new instance of this type and copies state
-		/// </summary>
-		/// <returns></returns>
-		protected abstract ConfigurationElement DoClone();
 
 		#endregion Protected Methods
 
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Gets a string representation.
 		/// </summary>
 		/// <returns></returns>
-		public virtual object Clone()
+		public override string ToString()
 		{
-			ConfigurationElement configurationElement = this.BaseClone();
-
-			return configurationElement;
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Element Reference: {0}", this.Id);
 		}
 
 		#endregion Public Methods

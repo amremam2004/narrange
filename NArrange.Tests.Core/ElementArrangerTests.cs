@@ -32,12 +32,16 @@ namespace NArrange.Tests.Core
 
 		private class TestNullInserterArranger : ElementArranger
 		{
+			#region Constructors
+
 			public TestNullInserterArranger()
 				: base(ElementType.Constructor, null,
                 new ElementFilter("$(Access) == 'Public'"),
                 null)
 			{
 			}
+
+			#endregion Constructors
 		}
 
 		#endregion Other

@@ -34,6 +34,8 @@
 			<Sort By="Name"/>
 		</Element>
 		<!-- End Attribute -->
+		<ElementRef Id="DefaultInterface"/>
+		<ElementRef Id="DefaultType"/>
 		<Element Type="Namespace">
 			<Sort By="Name"/>
 			<Elements>
@@ -55,7 +57,7 @@
 						</Element>
 					</Elements>
 				</Region>
-				<Element Type="Type">
+				<Element Id="DefaultInterface" Type="Type">
 					<!-- Interfaces only -->
 					<Sort By="Access">
 						<Sort By="Name"/>
@@ -93,7 +95,7 @@
 					</Elements>
 				</Element>
 				<!-- End Interface -->
-				<Element Type="Type">
+				<Element Id="DefaultType" Type="Type">
 					<!-- Classes and structures -->
 					<Sort By="Access">
 						<Sort By="Name"/>
@@ -203,6 +205,8 @@
 						</Region>
 						<Region Name="Other">
 							<Elements>
+								<ElementRef Id="DefaultInterface"/>
+								<ElementRef Id="DefaultType"/>
 								<Element>
 									<Sort By="Name"/>
 									<Elements>

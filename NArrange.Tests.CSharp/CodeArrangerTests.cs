@@ -39,7 +39,133 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
-		/// Tests arranging a simple
+		/// Tests arranging a nested class.
+		/// </summary>
+		[Test]
+		public void DefaultArrangeNestedClassTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			TypeElement parentClassElement = new TypeElement();
+			parentClassElement.Type = TypeElementType.Class;
+			parentClassElement.Access = CodeAccess.Public;
+			parentClassElement.Name = "ParentClass";
+
+			TypeElement classElement = new TypeElement();
+			classElement.Type = TypeElementType.Class;
+			classElement.Access = CodeAccess.Private;
+			classElement.Name = "NestedClass";
+			parentClassElement.AddChild(classElement);
+
+			NamespaceElement namesspaceElement = new NamespaceElement();
+			namesspaceElement.Name = "TestNamespace";
+			namesspaceElement.AddChild(parentClassElement);
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Type = "void";
+			methodElement.Access = CodeAccess.Public;
+			methodElement.Name = "DoSomething";
+			classElement.AddChild(methodElement);
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Type = "bool";
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.Name = "_val";
+			classElement.AddChild(fieldElement);
+
+			PropertyElement propertyElement = new PropertyElement();
+			propertyElement.Type = "bool";
+			propertyElement.Access = CodeAccess.Public;
+			propertyElement.Name = "Value";
+			propertyElement.BodyText = "return _val";
+			classElement.AddChild(propertyElement);
+
+			codeElements.Add(namesspaceElement);
+
+			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+
+			ReadOnlyCollection<ICodeElement> arranged =
+			    arranger.Arrange(codeElements.AsReadOnly());
+
+			Assert.AreEqual(1, arranged.Count,
+			    "After arranging, an unexpected number of elements were returned.");
+			NamespaceElement namespaceElementTest = arranged[0] as NamespaceElement;
+			Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+
+			Assert.AreEqual(1, namespaceElementTest.Children.Count,
+			    "After arranging, an unexpected number of namespace elements were returned.");
+			TypeElement parentTypeElement = namespaceElementTest.Children[0] as TypeElement;
+			Assert.IsNotNull(parentTypeElement, "Expected a type element.");
+
+			Assert.AreEqual(TypeElementType.Class, parentTypeElement.Type,
+			    "Unexpected type element type.");
+			Assert.AreEqual(parentClassElement.Name, parentTypeElement.Name,
+			    "Unexpected type element name.");
+
+			Assert.AreEqual(1, parentTypeElement.Children.Count,
+			    "After arranging, an unexpected number of parent class elements were returned.");
+			RegionElement regionElement = parentTypeElement.Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Other", regionElement.Name, "Unexpected region name.");
+
+			Assert.AreEqual(1, regionElement.Children.Count,
+			    "After arranging, an unexpected number of parent class region elements were returned.");
+			TypeElement nestedTypeElement = regionElement.Children[0] as TypeElement;
+			Assert.IsNotNull(nestedTypeElement, "Expected a type element.");
+
+			Assert.AreEqual(TypeElementType.Class, nestedTypeElement.Type,
+			    "Unexpected type element type.");
+			Assert.AreEqual(classElement.Name, nestedTypeElement.Name,
+			    "Unexpected type element name.");
+
+			Assert.AreEqual(3, nestedTypeElement.Children.Count,
+			    "An unexpected number of class child elements were returned.");
+			List<RegionElement> nestedRegionElements = new List<RegionElement>();
+			foreach (ICodeElement classChildElement in nestedTypeElement.Children)
+			{
+			    RegionElement nestedRegionElement = classChildElement as RegionElement;
+			    Assert.IsNotNull(nestedRegionElement, "Expected a region element but was {0}.",
+			        classChildElement.ElementType);
+			    nestedRegionElements.Add(nestedRegionElement);
+			}
+
+			Assert.AreEqual("Fields", nestedRegionElements[0].Name,
+			    "Unexpected region element name.");
+			Assert.AreEqual("Public Properties", nestedRegionElements[1].Name,
+			    "Unexpected region element name.");
+			Assert.AreEqual("Public Methods", nestedRegionElements[2].Name,
+			    "Unexpected region element name.");
+
+			GroupElement fieldGroupElement = nestedRegionElements[0].Children[0] as GroupElement;
+			Assert.IsNotNull(fieldGroupElement, "Expected a group element for fields.");
+
+			foreach (ICodeElement codeElement in fieldGroupElement.Children)
+			{
+			    FieldElement fieldElementTest = codeElement as FieldElement;
+			    Assert.IsNotNull(fieldElementTest,
+			        "Expected a field element but was type {0}: {1}",
+			        codeElement.ElementType, codeElement);
+			}
+
+			foreach (ICodeElement codeElement in nestedRegionElements[1].Children)
+			{
+			    PropertyElement propertyElementTest = codeElement as PropertyElement;
+			    Assert.IsNotNull(propertyElementTest,
+			        "Expected a property element but type {0}: {1}",
+			         codeElement.ElementType, codeElement);
+			}
+
+			foreach (ICodeElement codeElement in nestedRegionElements[2].Children)
+			{
+			    MethodElement methodElementTest = codeElement as MethodElement;
+			    Assert.IsNotNull(methodElementTest,
+			        "Expected a method element but type {0}: {1}",
+			         codeElement.ElementType, codeElement);
+			}
+		}
+
+		/// <summary>
+		/// Tests arranging a simple class.
 		/// </summary>
 		[Test]
 		public void DefaultArrangeSimpleClassTest()

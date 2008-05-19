@@ -35,6 +35,10 @@
  *      - Initial creation
  *      - Added configuration for closing comments
  *      - Added configuration for region options
+ *      - Added a ResolveReferences method that gets called whenever a
+ *        configuration is loaded or cloned.  This resolves references
+ *        in ElementReferenceConfiguration config elements by locating 
+ *        the referenced element and attaching a clone to the reference.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -50,7 +54,7 @@ using System.Xml.Serialization;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Code arranger configuration information
+	/// Code arranger configuration information.
 	/// </summary>
 	public class CodeConfiguration : ConfigurationElement
 	{
@@ -231,6 +235,32 @@ namespace NArrange.Core.Configuration
 
 		#endregion Public Properties
 
+		#region Private Methods
+
+		/// <summary>
+		/// Recurses through the configuration tree and executes actions against 
+		/// each configuration element.
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="actions"></param>
+		private void TreeProcess(ConfigurationElement element, Action<ConfigurationElement>[] actions)
+		{
+			if (element != null)
+			{
+			    foreach (ConfigurationElement childElement in element.Elements)
+			    {
+			        foreach (Action<ConfigurationElement> action in actions)
+			        {
+			            action(childElement);
+			        }
+
+			        TreeProcess(childElement, actions);
+			    }
+			}
+		}
+
+		#endregion Private Methods
+
 		#region Protected Methods
 
 		/// <summary>
@@ -258,6 +288,18 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
+		/// Override Clone so that we can force resolution of element references.
+		/// </summary>
+		/// <returns></returns>
+		public override object Clone()
+		{
+			CodeConfiguration clone = base.Clone() as CodeConfiguration;
+			clone.ResolveReferences();
+
+			return clone;
+		}
+
+		/// <summary>
 		/// Loads a configuration from file
 		/// </summary>
 		/// <param name="fileName"></param>
@@ -280,7 +322,62 @@ namespace NArrange.Core.Configuration
 			CodeConfiguration configuration = 
 			    _serializer.Deserialize(stream) as CodeConfiguration;
 
+			configuration.ResolveReferences();
+
 			return configuration;
+		}
+
+		/// <summary>
+		/// Resolves any reference elements in the configuration.
+		/// </summary>
+		public void ResolveReferences()
+		{
+			Dictionary<string, ElementConfiguration> elementMap = new Dictionary<string, ElementConfiguration>();
+			List<ElementReferenceConfiguration> elementReferences = new List<ElementReferenceConfiguration>();
+
+			Action<ConfigurationElement> populateElementMap = delegate(ConfigurationElement element)
+			{
+			    ElementConfiguration elementConfiguration = element as ElementConfiguration;
+			    if (elementConfiguration != null && elementConfiguration.Id != null)
+			    {
+			        elementMap.Add(elementConfiguration.Id, elementConfiguration);
+			    }
+			};
+
+			Action<ConfigurationElement> populateElementReferenceList = delegate(ConfigurationElement element)
+			{
+			    ElementReferenceConfiguration elementReference = element as ElementReferenceConfiguration;
+			    if (elementReference != null && elementReference.Id != null)
+			    {
+			        elementReferences.Add(elementReference);
+			    }
+			};
+
+			TreeProcess(this, 
+			    new Action<ConfigurationElement>[] 
+			    { 
+			        populateElementMap,
+			        populateElementReferenceList
+			    });
+
+			//
+			// Resolve element references
+			//
+			foreach (ElementReferenceConfiguration reference in elementReferences)
+			{
+			    ElementConfiguration referencedElement = null;
+			    elementMap.TryGetValue(reference.Id, out referencedElement);
+			    if (referencedElement != null)
+			    {
+			        reference.ReferencedElement = referencedElement;
+			    }
+			    else
+			    {
+			        throw new InvalidOperationException(
+			            string.Format("Unable to resolve element reference for Id={0}.",
+			            reference.Id));
+			    }
+			}
 		}
 
 		/// <summary>

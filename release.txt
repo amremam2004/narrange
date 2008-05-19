@@ -8,3 +8,5 @@ The following changes were made in this release:
 - By default, exclude Designer classes (e.g. Form1.Designer.cs) from arranging.
 - Allow apostrophes in string expressions by escaping with another apostrophe.
 - Added a Matches binary operator, =~,  for regular expression support in condition expressions.
+- Allow element configurations to be referenced in the XML configuration file.
+- Added type element references to the default config for handling root-level and nested classes.

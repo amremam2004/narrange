@@ -62,6 +62,7 @@
     <Compile Include="ConditionExpressionEvaluatorTests.cs" />
     <Compile Include="Configuration\BinaryOperatorExpressionTests.cs" />
     <Compile Include="Configuration\CodeConfigurationTests.cs" />
+    <Compile Include="Configuration\ElementReferenceConfigurationTests.cs" />
     <Compile Include="Configuration\UnaryOperatorExpressionTests.cs" />
     <Compile Include="Configuration\RegionsConfigurationTests.cs" />
     <Compile Include="Configuration\HandlerConfigurationTests.cs" />

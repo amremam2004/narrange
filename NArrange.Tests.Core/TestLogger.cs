@@ -150,15 +150,21 @@ namespace NArrange.Tests.Core
 		/// </summary>
 		public struct TestLogEvent
 		{
-			/// <summary>
-			/// Log message
-			/// </summary>
-			public readonly string Message;
+			#region Fields
 
 			/// <summary>
 			/// Log level
 			/// </summary>
 			public readonly LogLevel Level;
+
+			/// <summary>
+			/// Log message
+			/// </summary>
+			public readonly string Message;
+
+			#endregion Fields
+
+			#region Constructors
 
 			/// <summary>
 			/// Creates a new test log event
@@ -171,6 +177,10 @@ namespace NArrange.Tests.Core
 				Message = message;
 			}
 
+			#endregion Constructors
+
+			#region Public Methods
+
 			/// <summary>
 			/// Gets the string representation.
 			/// </summary>
@@ -179,6 +189,8 @@ namespace NArrange.Tests.Core
 			{
 				return string.Format("{0}: {1}", Level, Message);
 			}
+
+			#endregion Public Methods
 		}
 
 		#endregion Other
