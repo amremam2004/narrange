@@ -8,7 +8,7 @@
 		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
 		<Major>0</Major>
 		<Minor>2</Minor>
-		<Build>0</Build>
+		<Build>1</Build>
 	</PropertyGroup>
 	<ItemGroup>
 		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>
