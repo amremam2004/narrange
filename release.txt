@@ -1,12 +1,4 @@
 The following changes were made in this release:
 
-0.2.0.0
-- Fixed the version attribute for the NArrange.VisualBasic assembly.
-- Fixed the ordering of new and const for C# and VB fields.
-- Honor the new keyword for nested types in C# and VB.
-- Allow filtering of source and project files by associating filters with handler extensions in the configuration file.
-- By default, exclude Designer classes (e.g. Form1.Designer.cs) from arranging.
-- Allow apostrophes in string expressions by escaping with another apostrophe.
-- Added a Matches binary operator, =~,  for regular expression support in condition expressions.
-- Allow element configurations to be referenced in the XML configuration file.
-- Added type element references to the default config for handling root-level and nested classes.
+0.2.1.0
+- Fixed parsing and writing of VB fields and functions that don't have a type specified.

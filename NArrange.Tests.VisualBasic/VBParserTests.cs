@@ -1567,6 +1567,62 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a field with a constructed initial value.
+		/// </summary>
+		[Test]
+		public void ParseFieldWithConstructedGenericValueTest()
+		{
+			StringReader reader = new StringReader(
+			    "Dim m_myVar as New Nullable(Of Integer)()");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+			    "Element is not a FieldElement.");
+			Assert.AreEqual("m_myVar", fieldElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(true, fieldElement[VBExtendedProperties.Dim]);
+			Assert.AreEqual(CodeAccess.None, fieldElement.Access,
+			    "Unexpected code access.");
+			Assert.AreEqual(null, fieldElement.Type,
+			    "Unexpected member type.");
+			Assert.AreEqual("New Nullable(Of Integer)()", fieldElement.InitialValue,
+			    "Unexpected initial value.");
+		}
+
+		/// <summary>
+		/// Tests parsing a field with a constructed initial value.
+		/// </summary>
+		[Test]
+		public void ParseFieldWithConstructedValueTest()
+		{
+			StringReader reader = new StringReader(
+			    "Dim m_myVar as New MyObject(\"A string parameter\")");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+			    "Element is not a FieldElement.");
+			Assert.AreEqual("m_myVar", fieldElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(true, fieldElement[VBExtendedProperties.Dim]);
+			Assert.AreEqual(CodeAccess.None, fieldElement.Access,
+			    "Unexpected code access.");
+			Assert.AreEqual(null, fieldElement.Type,
+			    "Unexpected member type.");
+			Assert.AreEqual("New MyObject(\"A string parameter\")", fieldElement.InitialValue,
+			    "Unexpected initial value.");
+		}
+
+		/// <summary>
 		/// Tests parsing a field with the WithEvents attribute.
 		/// </summary>
 		[Test]
@@ -2030,6 +2086,33 @@ namespace NArrange.Tests.VisualBasic
 				"Unexpected code access.");
 			Assert.AreEqual("Boolean", methodElement.Type,
 				"Unexpected member type.");
+		}
+
+		/// <summary>
+		/// Tests parsing a function.
+		/// </summary>
+		[Test]
+		public void ParseFunctionUntypedTest()
+		{
+			StringReader reader = new StringReader(
+			    "Private Function GetSomething()\r\n" +
+			    "\tReturn False\r\n" +
+			    "End Function");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			MethodElement methodElement = elements[0] as MethodElement;
+			Assert.IsNotNull(methodElement,
+			    "Element is not a MethodElement.");
+			Assert.AreEqual("GetSomething", methodElement.Name,
+			    "Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
+			    "Unexpected code access.");
+			Assert.AreEqual(string.Empty, methodElement.Type,
+			    "Unexpected member type.");
 		}
 
 		/// <summary>

@@ -39,6 +39,8 @@
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
  *      - Improved handling of unhandled element text
+ *      - Fixed parsing of fields and function that don't have a 
+ *        type specified
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -119,15 +121,12 @@ namespace NArrange.VisualBasic
 			                word.Append(ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
 			                    false, true));
 			                word.Append(VBSymbol.EndParameterList);
-
-			                nextChar = NextChar;
 			            }
 			        }
 			        else if (NextChar == VBSymbol.EndParameterList)
 			        {
 			            TryReadChar();
 			            word.Append(CurrentChar);
-			            nextChar = NextChar;
 			        }
 			    }
 			    else if (IsWhiteSpace(nextChar) || IsAliasBreak(nextChar))
@@ -138,8 +137,9 @@ namespace NArrange.VisualBasic
 			    {
 			        TryReadChar();
 			        word.Append(CurrentChar);
-			        nextChar = NextChar;
 			    }
+
+			    nextChar = NextChar;
 			}
 
 			return word.ToString();
@@ -1004,9 +1004,13 @@ namespace NArrange.VisualBasic
 			    string returnType = CaptureTypeName();
 			    if (returnType.ToUpperInvariant() == VBKeyword.New.ToUpperInvariant())
 			    {
-			        returnType += " " + CaptureTypeName();
+			        EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+			        field.InitialValue = VBKeyword.New + " " + ReadCodeLine();
 			    }
-			    field.Type = returnType;
+			    else
+			    {
+			        field.Type = returnType;
+			    }
 			}
 
 			field.Access = access;
@@ -1142,9 +1146,16 @@ namespace NArrange.VisualBasic
 
 			if (isFunction || isOperator)
 			{
-			    EatWhiteSpace();
-			    EatWord(VBKeyword.As);
-			    method.Type = CaptureTypeName();
+			    EatLineContinuation();
+			    if (char.ToUpper(NextChar) == VBKeyword.As[0])
+			    {
+			        EatWord(VBKeyword.As);
+			        method.Type = CaptureTypeName();
+			    }
+			    else
+			    {
+			        method.Type = string.Empty;
+			    }
 			}
 
 			EatWhiteSpace();

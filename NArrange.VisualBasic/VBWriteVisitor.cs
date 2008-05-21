@@ -39,6 +39,7 @@
  *        vs. entire attribute text
  *      - Fixed ordering of new and const for fields
  *      - Honor the new keyword for nested types
+ *      - Fixed writing of fields that don't have a type specified
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -184,7 +185,7 @@ namespace NArrange.VisualBasic
 			        {
 			            blockName = VBKeyword.Operator;
 			        }
-			        else if (!string.IsNullOrEmpty(memberElement.Type))
+			        else if (memberElement.Type != null)
 			        {
 			            blockName = VBKeyword.Function;
 			        }
@@ -293,7 +294,7 @@ namespace NArrange.VisualBasic
 
 		private void WriteMethodType(string returnType)
 		{
-			if (string.IsNullOrEmpty(returnType))
+			if (returnType == null)
 			{
 			    Writer.Write(VBKeyword.Sub);
 			}
@@ -685,7 +686,10 @@ namespace NArrange.VisualBasic
 			if (element[VBExtendedProperties.Dim] is bool &&
 			    (bool)element[VBExtendedProperties.Dim])
 			{
-			    Writer.Write(' ');
+                if (element.Access != CodeAccess.None)
+                {
+                    Writer.Write(' ');
+                }
 			    Writer.Write(VBKeyword.Dim);
 			    Writer.Write(' ');
 			}
@@ -700,12 +704,29 @@ namespace NArrange.VisualBasic
 
 			Writer.Write(element.Name);
 
-			WriteReturnType(element.Type);
+			if (!string.IsNullOrEmpty(element.Type))
+			{
+			    WriteReturnType(element.Type);
 
-			if (!string.IsNullOrEmpty(element.InitialValue))
+			    if (!string.IsNullOrEmpty(element.InitialValue))
+			    {
+			        Writer.Write(' ');
+			        Writer.Write(VBSymbol.Assignment);
+			        Writer.Write(' ');
+			        Writer.Write(element.InitialValue);
+			    }
+			}
+			else if (!string.IsNullOrEmpty(element.InitialValue))
 			{
 			    Writer.Write(' ');
-			    Writer.Write(VBSymbol.Assignment);
+			    if (element.InitialValue.StartsWith(VBKeyword.New + " "))
+			    {
+			        Writer.Write(VBKeyword.As);
+			    }
+			    else
+			    {
+			        Writer.Write(VBSymbol.Assignment);
+			    }
 			    Writer.Write(' ');
 			    Writer.Write(element.InitialValue);
 			}

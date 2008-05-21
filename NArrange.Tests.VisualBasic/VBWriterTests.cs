@@ -851,6 +851,60 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing an untyped generic field.
+		/// </summary>
+		[Test]
+		public void WriteFieldUntypedGenericTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = null;
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "New Dictionary(Of String, Integer)()";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			VBWriter VBWriter = new VBWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("Private Shared _test As New Dictionary(Of String, Integer)()",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing an untyped, new constant field.
+		/// </summary>
+		[Test]
+		public void WriteFieldUntypedNewConstantTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Public;
+			fieldElement.MemberModifiers = MemberModifiers.Constant | MemberModifiers.New;
+			fieldElement.Type = null;
+			fieldElement.Name = "Test";
+			fieldElement.InitialValue = "\"Test\"";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("Public Shadows Const Test = \"Test\"",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an external function.
 		/// </summary>
 		[Test]
@@ -877,6 +931,36 @@ namespace NArrange.Tests.VisualBasic
 			string text = writer.ToString();
 			Assert.AreEqual(
 			    "Public Declare Ansi Function ExternalFunction Lib \"Some.dll\" Alias \"doit\" (ByVal filename As String) As String",
+			    text,
+			    "Method element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing an untyped function.
+		/// </summary>
+		[Test]
+		public void WriteFunctionUntypedTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Public;
+			methodElement.Type = string.Empty;
+			methodElement.Name = "TestFunction";
+			methodElement.Parameters = "ByVal filename As String";
+			methodElement.BodyText = "Return False";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+
+			VBWriter VBWriter = new VBWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+			    "Public Function TestFunction(ByVal filename As String)\r\n" + 
+			    "\tReturn False\r\n" + 
+			    "End Function",
 			    text,
 			    "Method element was not written correctly.");
 		}
@@ -1132,7 +1216,7 @@ namespace NArrange.Tests.VisualBasic
 			MethodElement methodElement = new MethodElement();
 			methodElement.Access = CodeAccess.Public;
 			methodElement.MemberModifiers = MemberModifiers.Sealed | MemberModifiers.Override;
-			methodElement.Type = string.Empty;
+			methodElement.Type = null;
 			methodElement.Name = "DoSomething";
 
 			StringWriter writer = new StringWriter();
