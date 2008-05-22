@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Improved performance by checking whether or not CanArrange needs
+ *		  to evaluate an expression with a parent scope.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -146,15 +148,17 @@ namespace NArrange.Core
 		public virtual bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			// Clone the instance and assign the parent
-			ICodeElement codeElementClone = codeElement.Clone() as ICodeElement;
-			if (parentElement != null)
+			ICodeElement testCodeElement = codeElement; 
+			if (parentElement != null && 
+				_filter != null && _filter.RequiredScope == ElementAttributeScope.Parent)
 			{
-			    codeElementClone.Parent = parentElement.Clone() as ICodeElement;
+				testCodeElement = codeElement.Clone() as ICodeElement;
+				testCodeElement.Parent = parentElement.Clone() as ICodeElement;
 			}
 
 			return (_elementType == ElementType.NotSpecified ||
 			    codeElement.ElementType == _elementType) &&
-			    (_filter == null || _filter.IsMatch(codeElementClone));
+				(_filter == null || _filter.IsMatch(testCodeElement));
 		}
 
 		#endregion Public Methods

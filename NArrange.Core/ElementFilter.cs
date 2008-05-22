@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added a RequiredScope property that indicates the scope level
+ *		  required to evaluate the expression for an element.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -55,21 +57,77 @@ namespace NArrange.Core
 		#region Fields
 
 		private IConditionExpression _conditionExpression;
+		private ElementAttributeScope _requiredScope;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ElementFilter
+		/// Creates a new ElementFilter.
 		/// </summary>
 		/// <param name="conditionExpression"></param>
 		public ElementFilter(string conditionExpression)
 		{
 			_conditionExpression = ConditionExpressionParser.Instance.Parse(conditionExpression);
+			_requiredScope = GetRequiredScope(_conditionExpression);
 		}
 
 		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the required scope information for evaluating the condition.
+		/// </summary>
+		public ElementAttributeScope RequiredScope
+		{
+			get
+			{
+				return _requiredScope;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the scope required to evaluate the condition.
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		private ElementAttributeScope GetRequiredScope(IConditionExpression expression)
+		{
+			ElementAttributeScope scope = ElementAttributeScope.Element;
+
+			if (expression != null)
+			{
+				ElementAttributeExpression attributeExpression = expression as ElementAttributeExpression;
+				if (attributeExpression != null)
+				{
+					scope = attributeExpression.Scope;
+				}
+				else
+				{
+					ElementAttributeScope leftScope = GetRequiredScope(expression.Left);
+					ElementAttributeScope rightScope = GetRequiredScope(expression.Right);
+
+					if (leftScope > rightScope)
+					{
+						scope = leftScope;
+					}
+					else
+					{
+						scope = rightScope;
+					}
+				}
+			}
+
+			return scope;
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 

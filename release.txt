@@ -3,3 +3,4 @@ The following changes were made in this release:
 0.2.1.0
 - Fixed parsing and writing of VB fields and functions that don't have a type specified.
 - By default, detect file encodings.  Also allow encoding for all files to be specified in the XML config.
+- Arrange performance improvements.

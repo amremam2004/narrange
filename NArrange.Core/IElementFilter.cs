@@ -51,6 +51,18 @@ namespace NArrange.Core
 	/// </summary>
 	public interface IElementFilter
 	{
+		#region Properties
+
+		/// <summary>
+		/// Gets the required scope information for evaluating the condition.
+		/// </summary>
+		ElementAttributeScope RequiredScope
+		{
+			get;
+		}
+
+		#endregion Properties
+
 		#region Methods
 
 		/// <summary>
