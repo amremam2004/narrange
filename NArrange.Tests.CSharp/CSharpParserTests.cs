@@ -3882,6 +3882,48 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a file with alternative encoding.
+		/// </summary>
+		[Test]
+		public void ParseUTF8Test()
+		{
+			CSharpParser parser = new CSharpParser();
+
+			CSharpTestFile testFile = CSharpTestUtilities.GetUTF8File();
+			using (TextReader reader = testFile.GetReader())
+			{
+			    ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			    Assert.IsNotNull(elements, "Code element collection should not be null.");
+
+			    TypeElement classElement = elements[0] as TypeElement;
+			    Assert.IsNotNull(classElement, "Expected a class element.");
+			    Assert.AreEqual("UnicodeClass", classElement.Name,
+			        "Unexpected class name.");
+
+				Assert.AreEqual(1, classElement.Children.Count,
+					"Unexpected number of child elements.");
+				RegionElement regionElement = classElement.Children[0] as RegionElement;
+				Assert.IsNotNull(regionElement,
+					"Element is not a RegionElement.");
+
+				Assert.AreEqual(1, regionElement.Children.Count,
+			        "Unexpected number of child elements.");
+				FieldElement fieldElement = regionElement.Children[0] as FieldElement;
+			    Assert.IsNotNull(fieldElement,
+			        "Element is not a FieldElement.");
+			    Assert.AreEqual("val", fieldElement.Name,
+			        "Unexpected name.");
+			    Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+			        "Unexpected code access.");
+			    Assert.AreEqual("string", fieldElement.Type,
+			        "Unexpected member type.");
+			    Assert.AreEqual(1, fieldElement.HeaderComments.Count,
+			        "Unexpected number of header comments.");
+			}
+		}
+
+		/// <summary>
 		/// Tests parsing an unrecognized keyword.
 		/// </summary>
 		[Test]

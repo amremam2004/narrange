@@ -50,6 +50,7 @@
     <Compile Include="ExtensionHandlerTests.cs" />
     <Compile Include="CSharpProjectParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="TestSourceFiles\UTF8.cs" />
     <EmbeddedResource Include="TestSourceFiles\StructDefinition.cs" />
     <EmbeddedResource Include="TestSourceFiles\SingleNamespace.cs" />
     <EmbeddedResource Include="TestSourceFiles\Operators.cs" />

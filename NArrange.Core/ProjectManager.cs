@@ -312,21 +312,6 @@ namespace NArrange.Core
 		/// Parses code elements from the input file
 		/// </summary>
 		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile)
-		{
-			ReadOnlyCollection<ICodeElement> elements = null;
-
-			string inputFileText = File.ReadAllText(inputFile, Encoding.Default);
-			elements = ParseElements(inputFile, inputFileText);
-
-			return elements;
-		}
-
-		/// <summary>
-		/// Parses code elements from the input file
-		/// </summary>
-		/// <param name="inputFile"></param>
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile, string text)

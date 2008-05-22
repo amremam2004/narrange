@@ -30,6 +30,7 @@ namespace NArrange.Tests.Core
 		private string _testInvalidSourceFile;
 		private string _testProjectFile;
 		private string _testSolutionFile;
+		private string _testUTF8File;
 		private string _testValidSourceFile1;
 		private string _testValidSourceFile2;
 
@@ -37,7 +38,7 @@ namespace NArrange.Tests.Core
 
 		#region Private Methods
 
-		private static string GetTestFileContents(string fileName)
+		private static string GetTestFileContents(string fileName, Encoding encoding)
 		{
 			string contents = null;
 
@@ -46,7 +47,7 @@ namespace NArrange.Tests.Core
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");
 
-			    StreamReader reader = new StreamReader(stream);
+			    StreamReader reader = new StreamReader(stream, encoding);
 			    contents = reader.ReadToEnd();
 			}
 
@@ -322,6 +323,27 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging a UTF8 encoded source file.
+		/// </summary>
+		[Test]
+		public void ArrangeUTF8EncodedSourceFileTest()
+		{
+			TestLogger logger = new TestLogger();
+			FileArranger fileArranger = new FileArranger(null, logger);
+
+			bool success = fileArranger.Arrange(_testUTF8File, null);
+
+			Assert.IsTrue(success, "Expected file to be arranged succesfully. - " + logger.ToString());
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "1 files written."), 
+			    "Expected 1 file to be written. - " + logger.ToString());
+
+			string originalContents = GetTestFileContents("UTF8.cs", Encoding.UTF8);
+			originalContents = originalContents.Replace("#endregion", "#endregion Fields");
+			Assert.AreEqual(originalContents, File.ReadAllText(_testUTF8File, Encoding.UTF8),
+			    "File contents should have been preserved.");
+		}
+
+		/// <summary>
 		/// Performs test setup
 		/// </summary>
 		[SetUp]
@@ -329,13 +351,17 @@ namespace NArrange.Tests.Core
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 
-			string contents = GetTestFileContents("ClassMembers.cs");
+			string contents = GetTestFileContents("ClassMembers.cs", Encoding.Default);
 			_testValidSourceFile1 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile1, contents);
 
-			contents = GetTestFileContents("ClassMembers.cs");
+			contents = GetTestFileContents("ClassMembers.cs", Encoding.Default);
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
+
+			contents = GetTestFileContents("UTF8.cs", Encoding.UTF8);
+			_testUTF8File = Path.Combine(Path.GetTempPath(), "UTF8.cs");
+			File.WriteAllText(_testUTF8File, contents, Encoding.UTF8);
 
 			_testFilteredFile = Path.Combine(Path.GetTempPath(), "Test.Designer.cs");
 			File.WriteAllText(_testFilteredFile, "//This file should be excluded\r\n"  + contents);
@@ -349,15 +375,15 @@ namespace NArrange.Tests.Core
 			_testSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
 			SolutionParserTests.WriteTestSolution(_testSolutionFile);
 
-			contents = GetTestFileContents("ClassDefinition.cs");
+			contents = GetTestFileContents("ClassDefinition.cs", Encoding.Default);
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassDefinition.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
 
-			contents = GetTestFileContents("ExpectedBlockClose.cs");
+			contents = GetTestFileContents("ExpectedBlockClose.cs", Encoding.Default);
 			_testInvalidSourceFile = Path.GetTempFileName() + ".cs";
 			File.WriteAllText(_testInvalidSourceFile, contents);
 
-			contents = GetTestFileContents("ClassMembers.cs");
+			contents = GetTestFileContents("ClassMembers.cs", Encoding.Default);
 			_testInvalidExtensionFile = Path.GetTempFileName() + ".zzz";
 			File.WriteAllText(_testInvalidExtensionFile, contents);
 		}

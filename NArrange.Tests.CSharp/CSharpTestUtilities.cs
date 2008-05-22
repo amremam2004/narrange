@@ -103,6 +103,15 @@ namespace NArrange.Tests.CSharp
 			return new CSharpTestFile("StructDefinition.cs");
 		}
 
+		/// <summary>
+		/// UTF8 test file
+		/// </summary>
+		/// <returns></returns>
+		public static CSharpTestFile GetUTF8File()
+		{
+			return new CSharpTestFile("UTF8.cs");
+		}
+
 		#endregion Public Methods
 	}
 }

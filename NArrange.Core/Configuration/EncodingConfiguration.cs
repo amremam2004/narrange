@@ -33,68 +33,135 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Fixed an issue with parsing of project files from a solution.  
- *        The solution parser was attempting to parse a project name when a 
- *        ProjectSection was encountered.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.ComponentModel;
+using System.Globalization;
 using System.Text;
-using System.Xml;
+using System.Threading;
+using System.Xml.Serialization;
 
-namespace NArrange.Core
+namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Parses a solution for individual project file names
+	/// Specifies encoding configuration.
 	/// </summary>
-	public static class SolutionParser
+	[XmlType("Encoding")]
+	public class EncodingConfiguration : ICloneable
 	{
+		#region Static Fields
+
+		/// <summary>
+		/// CodePage value to indicate the system ANSI default.
+		/// </summary>
+		public static string DefaultCodePage = "Default";
+
+		/// <summary>
+		/// CodePage value to indicate auto-detection.
+		/// </summary>
+		public static string DetectCodePage = "Detect";
+
+		#endregion Static Fields
+
+		#region Fields
+
+		private string _codePage;
+
+		#endregion Fields
+
+		#region Constructors
+
+		/// <summary>
+		/// Creates a new EncodingConfiguration instance.
+		/// </summary>
+		public EncodingConfiguration()
+		{
+			_codePage = DetectCodePage;
+		}
+
+		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets or sets the CodePage.
+		/// </summary>
+		[XmlAttribute("CodePage")]
+		public string CodePage
+		{
+			get
+			{
+			    return _codePage;
+			}
+			set
+			{
+			    _codePage = value;
+			}
+		}
+
+		#endregion Public Properties
+
 		#region Public Methods
 
 		/// <summary>
-		/// Parses project file names from a solution file.
+		/// Creates a clone of this instance
 		/// </summary>
-		/// <param name="solutionFile"></param>
-		/// <returns>A list of project file names</returns>
-		public static ReadOnlyCollection<string> Parse(string solutionFile)
+		/// <returns></returns>
+		public object Clone()
 		{
-			if (solutionFile == null)
+			EncodingConfiguration clone = new EncodingConfiguration();
+
+			clone._codePage = _codePage;
+
+			return clone;
+		}
+
+		/// <summary>
+		/// Gets the encoding (null if Detect) specified by the configuration.
+		/// </summary>
+		/// <returns></returns>
+		public Encoding GetEncoding()
+		{
+			Encoding encoding = null;
+			string codePage = this.CodePage;
+			if (!(string.IsNullOrEmpty(codePage) || codePage.Trim().Length == 0 ||
+				codePage.ToUpperInvariant() == DetectCodePage.ToUpperInvariant()))
 			{
-			    throw new ArgumentNullException("solutionFile");
+				if (codePage.ToUpperInvariant() == DefaultCodePage.ToUpperInvariant())
+				{
+					encoding = Encoding.Default;
+				}
+				else
+				{
+					int codePageInt;
+					if (int.TryParse(codePage, out codePageInt))
+					{
+						encoding = Encoding.GetEncoding(codePageInt);
+					}
+					else
+					{
+						throw new FormatException(
+							string.Format(CultureInfo.CurrentCulture,
+							"Invalid code page '{0}'.", codePage));
+					}
+				}
 			}
 
-			string solutionPath = Path.GetDirectoryName(solutionFile);
+			return encoding;
+		}
 
-			List<string> projectFiles = new List<string>();
-
-			using (StreamReader reader = new StreamReader(solutionFile, true))
-			{
-			    while (!reader.EndOfStream)
-			    {
-			        //
-			        // Find lines like the following:
-			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
-
-			        string line = reader.ReadLine().TrimStart();
-			        if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
-			        {
-			            string[] projectData = line.Split(',');
-			            string projectFile = projectData[1].Trim().Trim('"');
-			            string projectPath = Path.Combine(solutionPath, projectFile);
-			            if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
-			            {
-			                projectFiles.Add(projectPath);
-			            }
-			        }
-			    }
-			}
-
-			return projectFiles.AsReadOnly();
+		/// <summary>
+		/// Gets the string representation of this instance.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Encoding: CodePage - {0}", this.CodePage);
 		}
 
 		#endregion Public Methods

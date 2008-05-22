@@ -36,6 +36,8 @@
  *		- Added a backup and restore feature
  *      - Fixed a bug where the output file override was not being 
  *        acknowledged
+ *		- Use a configured encoding if present, otherwise auto-detect and
+ *		  preserve the encoding withing the arrange result.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -65,6 +67,7 @@ namespace NArrange.Core
 		private CodeArranger _codeArranger;
 		private string _configFile;
 		private CodeConfiguration _configuration;
+		private Encoding _encoding;
 		private int _filesParsed;
 		private int _filesWritten;
 		private ILogger _logger;
@@ -117,6 +120,8 @@ namespace NArrange.Core
 			ReadOnlyCollection<ICodeElement> elements = null;
 			string inputFileText = null;
 
+			Encoding encoding = _encoding;
+
 			try
 			{
 				FileAttributes fileAttributes = File.GetAttributes(inputFile);
@@ -127,7 +132,12 @@ namespace NArrange.Core
 				}
 				else
 				{
-					inputFileText = File.ReadAllText(inputFile, Encoding.Default);
+			        if (encoding == null)
+			        {
+			            encoding = FileUtilities.GetEncoding(inputFile);
+			        }
+
+			        inputFileText = File.ReadAllText(inputFile, encoding);
 					elements = _projectManager.ParseElements(inputFile, inputFileText);
 					LogMessage(LogLevel.Trace, "Parsed {0}", inputFile);
 				}
@@ -197,8 +207,8 @@ namespace NArrange.Core
 				//
 				// Store the arranged elements so that we can create a backup before writing
 				//
-				_arrangeResults.Add(outputFile, new ArrangeResult(
-					inputFile, inputFileText, outputFile, outputFileText));
+				_arrangeResults.Add(outputFile, 
+			        new ArrangeResult(encoding, inputFile, inputFileText, outputFile, outputFileText));
 			}
 		}
 
@@ -261,6 +271,7 @@ namespace NArrange.Core
 			    }
 
 				_projectManager = new ProjectManager(_configuration);
+				_encoding = _configuration.Encoding.GetEncoding();
 			}
 		}
 
@@ -285,7 +296,7 @@ namespace NArrange.Core
 			try
 			{
 				File.WriteAllText(arrangeResult.OutputFile, arrangeResult.OutputFileText,
-					Encoding.Default);
+					arrangeResult.Encoding);
 				LogMessage(LogLevel.Trace, "Wrote {0}", arrangeResult.OutputFile); 
 			}
 			catch (IOException ioEx)
@@ -474,6 +485,7 @@ namespace NArrange.Core
 		{
 			#region Fields
 
+			private Encoding _encoding;
 			private readonly string _inputFile;
 			private readonly bool _modified;
 			private readonly string _outputFile;
@@ -486,13 +498,16 @@ namespace NArrange.Core
 			/// <summary>
 			/// Creates a new ArrangeResult
 			/// </summary>
+			/// <param name="encoding"></param>
 			/// <param name="inputFile"></param>
 			/// <param name="inputFileText"></param>
 			/// <param name="outputFile"></param>
 			/// <param name="outputFileText"></param>
-			public ArrangeResult(string inputFile, string inputFileText, 
+			public ArrangeResult(Encoding encoding, 
+				string inputFile, string inputFileText,
 				string outputFile, string outputFileText)
 			{
+				_encoding = encoding;
 				_inputFile = inputFile;
 				_outputFile = outputFile;
 				_outputFileText = outputFileText;
@@ -503,6 +518,14 @@ namespace NArrange.Core
 			#endregion Constructors
 
 			#region Public Properties
+
+			public Encoding Encoding
+			{
+				get
+				{
+				    return _encoding;
+				}
+			}
 
 			public bool Modified
 			{

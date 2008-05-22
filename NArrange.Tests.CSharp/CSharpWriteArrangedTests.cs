@@ -37,6 +37,7 @@ namespace NArrange.Tests.CSharp
 			        CSharpTestUtilities.GetOperatorsFile(),
 			        CSharpTestUtilities.GetSingleNamespaceFile(),
 			        CSharpTestUtilities.GetStructDefinitionFile(),
+			        CSharpTestUtilities.GetUTF8File()
 			    };
 			}
 		}

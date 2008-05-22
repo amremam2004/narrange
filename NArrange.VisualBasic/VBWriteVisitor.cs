@@ -686,10 +686,10 @@ namespace NArrange.VisualBasic
 			if (element[VBExtendedProperties.Dim] is bool &&
 			    (bool)element[VBExtendedProperties.Dim])
 			{
-                if (element.Access != CodeAccess.None)
-                {
-                    Writer.Write(' ');
-                }
+			    if (element.Access != CodeAccess.None)
+			    {
+			        Writer.Write(' ');
+			    }
 			    Writer.Write(VBKeyword.Dim);
 			    Writer.Write(' ');
 			}

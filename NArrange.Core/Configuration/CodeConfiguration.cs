@@ -39,6 +39,7 @@
  *        configuration is loaded or cloned.  This resolves references
  *        in ElementReferenceConfiguration config elements by locating 
  *        the referenced element and attaching a clone to the reference.
+ *		- Added configuration for encoding
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -69,6 +70,7 @@ namespace NArrange.Core.Configuration
 		#region Fields
 
 		private ClosingCommentConfiguration _closingComments;
+		private EncodingConfiguration _encoding;
 		private List<HandlerConfiguration> _handlers;
 		private RegionsConfiguration _regions;
 		private TabConfiguration _tabs;
@@ -146,6 +148,36 @@ namespace NArrange.Core.Configuration
 			    }
 
 			    return _default;
+			}
+		}
+
+		/// <summary>
+		/// Encoding configuration.
+		/// </summary>
+		[Description("Encoding configuration")]
+		public EncodingConfiguration Encoding
+		{
+			get
+			{
+			    if (_encoding == null)
+			    {
+			        lock (this)
+			        {
+			            if (_encoding == null)
+			            {
+			                //
+			                // Default encoding configuration
+			                //
+			                _encoding = new EncodingConfiguration();
+			            }
+			        }
+			    }
+
+			    return _encoding;
+			}
+			set
+			{
+			    _encoding = value;
 			}
 		}
 
