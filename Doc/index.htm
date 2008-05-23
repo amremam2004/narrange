@@ -48,8 +48,8 @@
               <tr> 
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
-                  <p>Version 0.1.9.0<br>
-                    Last Modified: 05/19/2008<br>
+                  <p>Version 0.2.1.0<br>
+                    Last Modified: 05/22/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -69,6 +69,11 @@
                     - <a href="#configuration">Configuration</a><br>
                     &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#createconfig">Creating 
                     a Custom Configuration File</a><br>
+                    &nbsp;&nbsp;&nbsp; - <a href="#expressions">Sorting and Expressions</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#formatting">Formatting</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#fileextensions">File Extensions 
+                    and Filtering</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#encoding">File Encoding</a><br>
                     - <a href="#limitations">Limitations</a><br>
                     &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#preprocessor">Preprocessor 
                     Directives</a><br>
@@ -165,8 +170,7 @@
                     we're not taking any care in regard to its placement within 
                     the class. In this case, we are adding it as the first member 
                     just inside the class body, before the constructor.</p>
-                  <p><img src="Images/Demo4AddMember.png"> 
-                    <br>
+                  <p><img src="Images/Demo4AddMember.png"> <br>
                     <b>Adding a New Member</b></p>
                   <p>After adding the new member we'll run NArrange again against 
                     the source file or project. The new method will be automatically 
@@ -259,6 +263,7 @@ output  For a single source file, specifies the output file
                     in the output source files.</p>
                   <p><img src="Images/DemoConfig.png" ><br>
                     <b>Sample NArrange Configuration File</b></p>
+                  <h3>Sorting and Expressions<a name="expressions"></a></h3>
                   <p>By defining a sort attribute for elements in a region, NArrange 
                     will sort those elements alphabetically in the region by the 
                     specified attribute. Valid element attributes are:</p>
@@ -329,7 +334,7 @@ output  For a single source file, specifies the output file
                       <td width="150">:</td>
                     </tr>
                     <tr> 
-                      <td width="186">Regular expression match</td>
+                      <td width="186">Regular Expression Match</td>
                       <td width="150">=~</td>
                     </tr>
                     <tr> 
@@ -347,6 +352,70 @@ output  For a single source file, specifies the output file
                   </table>
                   <p>Strings in element expressions should be enclosed with single 
                     quotes.</p>
+                  <h3>Formatting<a name="formatting"></a></h3>
+                  <p>The following formatting options are avilable.</p>
+                  <p><b>Tabs</b> - Allows specification of &quot;Tabs&quot; or 
+                    &quot;Spaces&quot; and the number of spaces per tab </p>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font size="+1">&lt;Tabs Style=&quot;Tabs&quot; SpacesPerTab=&quot;4&quot;/&gt;</font></b><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p><b>Closing Comments</b> - Allows specification of whether 
+                    or not a closing comment should be written after an element 
+                    with body text (e.g. method, constructor). This is off by 
+                    default. The Format string allows accepts element attribute 
+                    parameters. </p>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font size="+1">&lt;ClosingComments Enabled=&quot;false&quot; Format=&quot;End $(ElementType) $(Name)&quot;/&gt;</font></b><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p><b>Regions </b> - Configuration for all regions. The &quot;EndRegionNameEnabled&quot; 
+                    flag allows control over whether the region name is written 
+                    in the closing preprocessor directive.</p>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <font size="+1"><b>&lt;Regions EndRegionNameEnabled=&quot;true&quot;/&gt;</b></font><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p>More formatting options will likely be made available in 
+                    future versions of NArrange. <br>
+                  </p>
+                  <h3>File Extensions and Filtering<a name="fileextensions"></a></h3>
+                  <p>The default NArrange configuration file has standard extension 
+                    names set up for each included language package (C# and Visual 
+                    Basic .NET). Thus, .cs and .vb files will automatically be 
+                    handled. If however, an additional file extension needs to 
+                    be recognized as source code, an extension can be registered 
+                    in the XML configuration file.</p>
+                  <p>The following demonstrates adding an additional file extension, 
+                    .mycs, to be recognized as C# source code:</p>
+                  <pre>&lt;SourceHandler Language=&quot;CSharp&quot; Assembly=&quot;NArrange.CSharp, Version=0.2.1.0, Culture=neutral, PublicKeyToken=null&quot;&gt;<br>    &lt;!-- List of project extensions handled by the handler's IProjectParser --&gt;<br>    &lt;ProjectExtensions&gt;<br>        &lt;Extension Name=&quot;csproj&quot;/&gt;<br>    &lt;/ProjectExtensions&gt;<br>    &lt;!-- List of source file extensions valid for the handler's ICodeParser--&gt;<br>    &lt;SourceExtensions&gt;<br>        &lt;Extension Name=&quot;cs&quot;&gt;<br>            &lt;Filter Condition=&quot;!($(File.Name) : '.Designer.')&quot;/&gt;<br>        &lt;/Extension&gt;<br>        &lt;!-- If your project uses other extensions for C# files add them here--&gt;<br>        <b><font size="+1">&lt;Extension Name=&quot;mycs&quot;/&gt;</font></b><br>    &lt;/SourceExtensions&gt;<br>&lt;/SourceHandler&gt;</pre>
+                  <p>In the configuration snippet above it should also be observed 
+                    that the .cs extension has filtering applied. By default, 
+                    .Designer.cs files will be excluded from arrangement. This 
+                    is done as to not conflict with code generators, visual designers 
+                    and custom tools. If further filtering is required, the following 
+                    attributes are available for files:</p>
+                  <ul>
+                    <li>File.Name - Returns the filename without a path</li>
+                    <li>File.Path - Returns the entire path for the file</li>
+                    <li>File.Attributes - Returns file attributes as a comma separated 
+                      list (for a list of available values, refer to the <i>System.IO.FileAttributes</i> 
+                      enumeration) </li>
+                  </ul>
+                  <h3>File Encoding<a name="encoding"></a></h3>
+                  <p>By default, NArrange will attempt to detect the encoding 
+                    for your source code files. File encodings supported for detection 
+                    include the system Ansi Default (e.g. CodePage 1252 Western-European), 
+                    UTF-8, UTF-16 (big/little endian) and UTF-32 (little endian). 
+                    If the detection process does not properly detect the encoding, 
+                    it is possible to force a particular encoding for reading 
+                    and writing all source code files. </p>
+                  <p>The following setting is used to provide the default encoding 
+                    detection:</p>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <font size="+1"><b>&lt;Encoding CodePage=&quot;Detect&quot;/&gt;</b></font> <br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p>Valid <i>CodePage</i> values include:</p>
+                  <ul>
+                    <li>&quot;Detect&quot; - Detect file encodings (NArrange default) 
+                    </li>
+                    <li>&quot;Default&quot; - Use the system default ANSI encoding 
+                      (e.g. CodePage 1252 Western-European) for all source code 
+                      files </li>
+                    <li>CodePage - e.g. &quot;65001&quot; for UTF-8 for all source 
+                      code files<br>
+                      <br>
+                    </li>
+                  </ul>
                   <h2>Limitations<a name="limitations"></a></h2>
                   <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
                   <p>One of the biggest limitations with the current version of 
