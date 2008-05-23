@@ -247,6 +247,9 @@ namespace NArrange.SourceTester
 			int successCount = 0;
 			int failedCount = 0;
 
+			TestLogger testLogger = new TestLogger();
+			FileArranger fileArranger = new FileArranger(null, testLogger);
+
 			foreach (FileInfo sourceFile in allSourceFiles)
 			{
 			    string initialSource = File.ReadAllText(sourceFile.FullName, Encoding.Default);
@@ -262,8 +265,7 @@ namespace NArrange.SourceTester
 			        //
 			        // Arrange the source code file
 			        //
-			        TestLogger testLogger = new TestLogger();
-			        FileArranger fileArranger = new FileArranger(null, testLogger);
+					testLogger.Clear();
 			        string outputFile = Path.Combine(arrangedDir, sourceFile.Name);
 			        bool success = false;
 			        try

@@ -54,6 +54,7 @@
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
  *      - Improved handling of unhandled element text
+ *		- Fixed parsing of new lines in attributes
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -589,7 +590,7 @@ namespace NArrange.CSharp
 			{
 			    attributeElement.Target = typeName;
 			    typeName = CaptureTypeName(false);
-			    EatWhiteSpace();
+				EatWhiteSpace();
 			}
 
 			attributeElement.Name = typeName;
@@ -597,7 +598,7 @@ namespace NArrange.CSharp
 			if (NextChar == CSharpSymbol.BeginParameterList)
 			{
 			    string attributeText = ParseNestedText(CSharpSymbol.BeginParameterList, CSharpSymbol.EndParameterList,
-			        true, true);
+			        true, false);
 			    attributeElement.BodyText = attributeText;
 			}
 
@@ -1305,17 +1306,25 @@ namespace NArrange.CSharp
 
 		private string ParseNestedText(char beginChar, char endChar, bool beginExpected, bool trim)
 		{
+			StringBuilder blockText = new StringBuilder(DefaultBlockLength);
+
 			if (beginChar != EmptyChar && beginExpected)
 			{
-			    EatWhiteSpace();
+				while (IsWhiteSpace(NextChar))
+				{
+					TryReadChar();
+					if (!trim)
+					{
+						blockText.Append(CurrentChar);
+					}
+				}
+
 			    EatChar(beginChar);
 			}
 
-			StringBuilder blockText = new StringBuilder(DefaultBlockLength);
-
 			int depth = 1;
-
 			char nextChar = NextChar;
+
 			if (nextChar == EmptyChar)
 			{
 			    this.OnParseError("Unexpected end of file. Expected " + endChar);

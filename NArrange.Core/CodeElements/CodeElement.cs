@@ -279,7 +279,7 @@ namespace NArrange.Core.CodeElements
 			        ICodeElement child = Children[childIndex];
 			        ICodeElement childClone = child.Clone() as ICodeElement;
 
-			        clone.AddChild(childClone);
+					childClone.Parent = clone;
 			    }
 			}
 

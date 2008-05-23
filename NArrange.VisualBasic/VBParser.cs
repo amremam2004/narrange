@@ -1226,17 +1226,25 @@ namespace NArrange.VisualBasic
 
 		private string ParseNestedText(char beginChar, char endChar, bool beginExpected, bool trim)
 		{
-			if (beginChar != EmptyChar && beginExpected)
-			{
-			    EatWhiteSpace();
-			    EatChar(beginChar);
-			}
-
 			StringBuilder blockText = new StringBuilder(DefaultBlockLength);
 
-			int depth = 1;
+			if (beginChar != EmptyChar && beginExpected)
+			{
+				while (IsWhiteSpace(NextChar))
+				{
+					TryReadChar();
+					if (!trim)
+					{
+						blockText.Append(CurrentChar);
+					}
+				}
 
+				EatChar(beginChar);
+			}
+
+			int depth = 1;
 			char nextChar = NextChar;
+
 			if (nextChar == EmptyChar)
 			{
 			    this.OnParseError("Unexpected end of file. Expected " + endChar);

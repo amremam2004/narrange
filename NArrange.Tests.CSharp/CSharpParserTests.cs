@@ -456,8 +456,7 @@ namespace NArrange.Tests.CSharp
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException),
-           MatchType = MessageMatch.Contains,
-          ExpectedMessage = "Expected ]")]
+           MatchType = MessageMatch.Contains, ExpectedMessage = "Expected ]")]
 		public void ParseAttributeCloseExpectedTest()
 		{
 			StringReader reader = new StringReader(
@@ -465,6 +464,42 @@ namespace NArrange.Tests.CSharp
 
 			CSharpParser parser = new CSharpParser();
 			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing an attribute with intermixed comments.
+		/// </summary>
+		[Test]
+		public void ParseAttributeCommentedTest()
+		{
+			StringReader reader = new StringReader(
+			    "[assembly: ThemeInfo(\r\n" + 
+				"\tResourceDictionaryLocation.None,\r\n" +
+				"\t//where theme specific resource dictionaries are located\r\n" +
+				"\t//(used if a resource is not found in the page,\r\n" +
+				"\t// or application resource dictionaries)" +
+				"\tResourceDictionaryLocation.SourceAssembly\r\n" +
+				"\t//where the generic resource dictionary is located\r\n" +
+				"\t//(used if a resource is not found in the page,\r\n" +
+				"\t// app, or any theme specific resource dictionaries)\r\n" +
+				"\t)]");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			AttributeElement attributeElement = elements[0] as AttributeElement;
+			Assert.IsNotNull(attributeElement,
+			    "Element is not a AttributeElement.");
+			Assert.AreEqual("assembly", attributeElement.Target,
+			    "Unexpected attribute target.");
+			Assert.AreEqual("ThemeInfo", attributeElement.Name,
+			    "Unexpected attribute name.");
+			Assert.IsTrue(attributeElement.BodyText.StartsWith("\r\n\tResourceDictionaryLocation.None,"), 
+			    "Unexpected attribute text.");
+			Assert.IsTrue(attributeElement.BodyText.EndsWith("specific resource dictionaries)\r\n\t"),
+				"Unexpected attribute text.");
 		}
 
 		/// <summary>

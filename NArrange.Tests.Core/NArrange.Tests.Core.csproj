@@ -64,6 +64,7 @@
     <Compile Include="Configuration\CodeConfigurationTests.cs" />
     <Compile Include="Configuration\EncodingConfigurationTests.cs" />
     <Compile Include="Configuration\ElementReferenceConfigurationTests.cs" />
+    <Compile Include="Configuration\FileAttributeExpressionTests.cs" />
     <Compile Include="Configuration\UnaryOperatorExpressionTests.cs" />
     <Compile Include="Configuration\RegionsConfigurationTests.cs" />
     <Compile Include="Configuration\HandlerConfigurationTests.cs" />

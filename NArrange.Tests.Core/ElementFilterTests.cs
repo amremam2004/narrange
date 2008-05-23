@@ -84,6 +84,30 @@ namespace NArrange.Tests.Core
 			Assert.IsFalse(filter.IsMatch(null), "IsMatch did not return the expected value.");
 		}
 
+		/// <summary>
+		/// Tests the RequiredScope property.
+		/// </summary>
+		[Test]
+		public void RequiredScope()
+		{
+			ElementFilter filter;
+
+			filter = new ElementFilter("$(Name) : 'Style'");
+			Assert.AreEqual(ElementAttributeScope.Element, filter.RequiredScope);
+
+			filter = new ElementFilter("$(Name) : 'Style' Or $(Name) : 'Test'");
+			Assert.AreEqual(ElementAttributeScope.Element, filter.RequiredScope);
+
+			filter = new ElementFilter("$(Parent.Name) : 'Style'");
+			Assert.AreEqual(ElementAttributeScope.Parent, filter.RequiredScope);
+
+			filter = new ElementFilter("$(Parent.Name) : 'Style' Or $(Name) : 'Style'");
+			Assert.AreEqual(ElementAttributeScope.Parent, filter.RequiredScope);
+
+			filter = new ElementFilter("$(Name) : 'Style' Or $(Parent.Name) : 'Style'");
+			Assert.AreEqual(ElementAttributeScope.Parent, filter.RequiredScope);
+		}
+
 		#endregion Public Methods
 	}
 }
