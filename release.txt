@@ -2,4 +2,4 @@ The following changes were made in this release:
 
 0.2.2.0
 - When parsing, preserve element access when "None" (unspecified).
-- Changed the default XML config file to categorize members with an unspecified access as Private.
+- Changed the default XML config file to categorize members with an unspecified access as Private.  Users with custom configuration files should modify private regions/filters to also check for $(Access) == 'None'.
