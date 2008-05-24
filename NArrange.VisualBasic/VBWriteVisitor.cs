@@ -40,6 +40,7 @@
  *      - Fixed ordering of new and const for fields
  *      - Honor the new keyword for nested types
  *      - Fixed writing of fields that don't have a type specified
+ *		- Fixed writing of multiple Handles declarations for methods
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -823,10 +824,15 @@ namespace NArrange.VisualBasic
 			{
 			    Writer.Write(' ');
 			    Writer.Write(VBKeyword.Handles);
-			    foreach (string handleReference in handles)
+				for (int handleIndex = 0; handleIndex < handles.Length; handleIndex++)
 			    {
+					string handleReference = handles[handleIndex];
 			        Writer.Write(' ');
 			        Writer.Write(handleReference);
+					if (handleIndex < handles.Length - 1)
+					{
+						Writer.Write(VBSymbol.AliasSeparator);
+					}
 			    }
 			}
 

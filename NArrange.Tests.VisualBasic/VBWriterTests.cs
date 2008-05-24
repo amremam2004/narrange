@@ -1114,6 +1114,37 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing a method that handles an event.
+		/// </summary>
+		[Test]
+		public void WriteMethodHandlesTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			MethodElement methodElement = new MethodElement();
+			methodElement.Access = CodeAccess.Public;
+			methodElement.Name = "HandleSomething";
+			methodElement.Parameters = "ByVal sender As System.Object, ByVal e As System.EventArgs";
+			methodElement[VBExtendedProperties.Handles] = new string[]{
+				"button1.Click", "menu1.Click" };
+			methodElement.BodyText = "\t'Do something";
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(methodElement);
+
+			VBWriter VBWriter = new VBWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"Public Sub HandleSomething(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles button1.Click, menu1.Click\r\n" +
+				"\t'Do something\r\n" +
+				"End Sub",
+				text,
+				"Method element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a method that implements an interface.
 		/// </summary>
 		[Test]
