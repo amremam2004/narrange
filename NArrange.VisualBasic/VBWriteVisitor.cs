@@ -925,8 +925,7 @@ namespace NArrange.VisualBasic
 
 			WriteChildren(element);
 
-			if (element.Children.Count > 0 &&
-			    !(element.Children.Count == 1 && element.Children[0] is GroupElement))
+			if (element.Children.Count > 0)
 			{
 			    Writer.WriteLine();
 			}

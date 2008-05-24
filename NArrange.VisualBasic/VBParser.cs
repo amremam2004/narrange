@@ -1005,7 +1005,7 @@ namespace NArrange.VisualBasic
 			    if (returnType.ToUpperInvariant() == VBKeyword.New.ToUpperInvariant())
 			    {
 			        EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
-			        field.InitialValue = VBKeyword.New + " " + ReadCodeLine();
+			        field.InitialValue = VBKeyword.New + " " + ReadCodeLine().Trim();
 			    }
 			    else
 			    {
