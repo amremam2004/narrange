@@ -19,7 +19,7 @@ Namespace SampleNamespace
 		#Region "Fields"
 
 		'This field has a regular comment
-		Private _simpleField As Boolean
+		Dim _simpleField As Boolean
 		Private _fieldWithInitialVal As Integer = 1
 		Private Dim _dimField As Boolean
 

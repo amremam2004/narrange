@@ -73,7 +73,7 @@ namespace NArrange.Core.Configuration
 
 		#endregion Constructors
 
-		#region Internal Properties
+		#region Private Properties
 
 		/// <summary>
 		/// Left expression
@@ -97,7 +97,7 @@ namespace NArrange.Core.Configuration
 			}
 		}
 
-		#endregion Internal Properties
+		#endregion Private Properties
 
 		#region Public Properties
 

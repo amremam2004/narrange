@@ -55,6 +55,7 @@
  *        vs. entire attribute text
  *      - Improved handling of unhandled element text
  *		- Fixed parsing of new lines in attributes
+ *		- Preserve element access when None
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -1029,7 +1030,7 @@ namespace NArrange.CSharp
 			                //
 			                // Try to parse a code element
 			                //
-			                ICodeElement element = TryParseElement(
+			                ICodeElement element = TryParseElement(parentElement,
 			                    elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
 			                if (element != null)
 			                {
@@ -1503,13 +1504,6 @@ namespace NArrange.CSharp
 			EatWhiteSpace();
 			string className = CaptureWord();
 			typeElement.Name = className;
-
-			if (access == CodeAccess.None && 
-			    ((typeAttributes & TypeModifiers.Partial) != TypeModifiers.Partial))
-			{
-			    access = CodeAccess.Internal;
-			}
-
 			typeElement.Access = access;
 			typeElement.Type = elementType;
 			typeElement.TypeModifiers = typeAttributes;
@@ -1749,11 +1743,14 @@ namespace NArrange.CSharp
 		/// <summary>
 		/// Tries to parse a code element
 		/// </summary>
+		/// <param name="parentElement"></param>
 		/// <param name="elementBuilder"></param>
 		/// <param name="comments"></param>
 		/// <param name="attributes"></param>
 		/// <returns></returns>
-		private ICodeElement TryParseElement(StringBuilder elementBuilder, 
+		private ICodeElement TryParseElement(
+			ICodeElement parentElement,
+			StringBuilder elementBuilder,
 			ReadOnlyCollection<ICommentElement> comments,
 			ReadOnlyCollection<AttributeElement> attributes)
 		{

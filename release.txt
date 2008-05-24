@@ -1,7 +1,5 @@
 The following changes were made in this release:
 
-0.2.1.0
-- Fixed parsing and writing of VB fields and functions that don't have a type specified.
-- By default, detect file encodings.  Also allow encoding for all files to be specified in the XML config.
-- Arrange performance improvements.
-- Fixed handling of new lines in C# attribute parameters.
+0.2.2.0
+- When parsing, preserve element access when "None" (unspecified).
+- Changed the default XML config file to categorize members with an unspecified access as Private.

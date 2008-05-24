@@ -159,7 +159,7 @@
 						<Region Name="Private Properties">
 							<Elements>
 								<Element Type="Property">
-									<Filter Condition="$(Access) == 'Private'"/>
+									<Filter Condition="$(Access) == 'Private' Or $(Access) == 'None'"/>
 									<Sort By="Name"/>
 								</Element>
 							</Elements>
@@ -191,7 +191,7 @@
 						<Region Name="Private Methods">
 							<Elements>
 								<Element Type="Method">
-									<Filter Condition="$(Access) == 'Private'"/>
+									<Filter Condition="$(Access) == 'Private' Or $(Access) == 'None'"/>
 									<Sort By="Name"/>
 								</Element>
 							</Elements>

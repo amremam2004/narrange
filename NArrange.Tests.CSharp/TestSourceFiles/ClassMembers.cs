@@ -21,7 +21,7 @@ namespace SampleNamespace
         #region Fields
 
         //This field has a regular comment
-        private bool _simpleField;
+        bool _simpleField;
         private int _fieldWithInitialVal = 1;
         
         /// <summary>

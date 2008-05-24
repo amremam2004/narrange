@@ -133,10 +133,6 @@ namespace NArrange.TestSourceFinder
 			return sourceFiles.ToArray();
 		}
 
-		#endregion Private Methods
-
-		#region Internal Methods
-
 		static void Main(string[] args)
 		{
 			if (args.Length != 2)
@@ -157,6 +153,6 @@ namespace NArrange.TestSourceFinder
 			}
 		}
 
-		#endregion Internal Methods
+		#endregion Private Methods
 	}
 }

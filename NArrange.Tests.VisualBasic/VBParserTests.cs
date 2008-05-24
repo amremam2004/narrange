@@ -991,6 +991,46 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a class with unspecified access.
+		/// </summary>
+		[Test]
+		public void ParseClassUnspecifiedAccessTest()
+		{
+			StringReader reader = new StringReader(
+				"class Test\r\n" +
+				"class Nested\r\n" +
+				"end class\r\n" + 
+				"end class");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			TypeElement typeElement = elements[0] as TypeElement;
+			Assert.IsNotNull(typeElement,
+				"Element is not a TypeElement.");
+			Assert.AreEqual("Test", typeElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.None, typeElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+				"Unexpected type element type.");
+
+			Assert.AreEqual(1, typeElement.Children.Count,
+				"An unexpected number of child elements were parsed.");
+			TypeElement nestedtypeElement = typeElement.Children[0] as TypeElement;
+			Assert.IsNotNull(nestedtypeElement,
+				"Element is not a TypeElement.");
+			Assert.AreEqual("Nested", nestedtypeElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.None, nestedtypeElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(TypeElementType.Class, nestedtypeElement.Type,
+				"Unexpected type element type.");
+		}
+
+		/// <summary>
 		/// Tests parsing an invalid comment line.
 		/// </summary>
 		[Test]
@@ -1285,7 +1325,7 @@ namespace NArrange.Tests.VisualBasic
 			    "Element is not a TypeElement.");
 			Assert.AreEqual("TestEnum", typeElement.Name,
 			    "Unexpected name.");
-			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
+			Assert.AreEqual(CodeAccess.None, typeElement.Access,
 			    "Unexpected code access.");
 			Assert.AreEqual(TypeElementType.Enum, typeElement.Type,
 			    "Unexpected type element type.");
@@ -1765,8 +1805,10 @@ namespace NArrange.Tests.VisualBasic
 			        "Unexpected field name.");
 			    Assert.AreEqual("Boolean", field.Type,
 			        "Unexpected field type.");
-			    Assert.AreEqual(CodeAccess.Private, field.Access,
+			    Assert.AreEqual(CodeAccess.None, field.Access,
 			        "Unexpected field access level.");
+				Assert.AreEqual(true, field[VBExtendedProperties.Dim],
+					"Expected field to be declared Dim.");
 			    Assert.IsNull(field.InitialValue,
 			        "Unexpected field initial value.");
 			    Assert.AreEqual(1, field.HeaderComments.Count,
@@ -3239,7 +3281,7 @@ namespace NArrange.Tests.VisualBasic
 			    Assert.IsNotNull(classElement2, "Expected a TypeElement.");
 			    Assert.AreEqual("SampleClass2", classElement2.Name,
 			        "Unexpected class name.");
-			    Assert.AreEqual(CodeAccess.Internal, classElement2.Access,
+			    Assert.AreEqual(CodeAccess.None, classElement2.Access,
 			        "Unexpected class code access level.");
 			    Assert.AreEqual(1, classElement2.Interfaces.Count,
 			        "Unexpected number of implemented interfaces.");

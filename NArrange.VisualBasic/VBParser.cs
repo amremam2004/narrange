@@ -41,6 +41,7 @@
  *      - Improved handling of unhandled element text
  *      - Fixed parsing of fields and function that don't have a 
  *        type specified
+ *		- Preserve element access when None
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -838,9 +839,8 @@ namespace NArrange.VisualBasic
 			                        //
 			                        // Try to parse a code element
 			                        //
-			                        ICodeElement element = TryParseElement(
-			                            elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly(),
-			                            parentElement);
+			                        ICodeElement element = TryParseElement(parentElement,
+			                            elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
 			                        if (element != null)
 			                        {
 			                            if (element is CommentedElement)
@@ -1413,20 +1413,6 @@ namespace NArrange.VisualBasic
 			EatWhiteSpace();
 			string className = CaptureWord();
 			typeElement.Name = className;
-
-			if (access == CodeAccess.None &&
-			    ((typeAttributes & TypeModifiers.Partial) != TypeModifiers.Partial))
-			{
-			    if (elementType == TypeElementType.Enum)
-			    {
-			        access = CodeAccess.Public;
-			    }
-			    else
-			    {
-			        access = CodeAccess.Internal;
-			    }
-			}
-
 			typeElement.Access = access;
 			typeElement.Type = elementType;
 			typeElement.TypeModifiers = typeAttributes;
@@ -1687,10 +1673,11 @@ namespace NArrange.VisualBasic
 		/// <param name="attributes"></param>
 		/// <param name="parentElement"></param>
 		/// <returns></returns>
-		private ICodeElement TryParseElement(StringBuilder elementBuilder,
+		private ICodeElement TryParseElement(
+			ICodeElement parentElement,
+			StringBuilder elementBuilder,
 			ReadOnlyCollection<ICommentElement> comments,
-			ReadOnlyCollection<AttributeElement> attributes,
-			ICodeElement parentElement)
+			ReadOnlyCollection<AttributeElement> attributes)
 		{
 			CodeElement codeElement = null;
 

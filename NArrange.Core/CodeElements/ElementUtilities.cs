@@ -35,6 +35,7 @@
  *      - Initial creation
  *      - Added a Format method for getting a formatted string representation 
  *        of a code element
+ *		- Preserve element access when None 
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -53,30 +54,7 @@ namespace NArrange.Core.CodeElements
 	/// </summary>
 	public static class ElementUtilities
 	{
-		#region Static Fields
-
-		private static Dictionary<Enum, string> _enumStrings = 
-		    new Dictionary<Enum,string>();
-
-		#endregion Static Fields
-
 		#region Private Methods
-
-		private static string EnumToString(Enum enumValue)
-		{
-			string enumString = null;
-
-			if (!(_enumStrings.TryGetValue(enumValue, out enumString)))
-			{
-			    //
-			    // Cache the string representation of the enumeration
-			    //
-			    enumString = enumValue.ToString();
-			    _enumStrings[enumValue] = enumString;
-			}
-
-			return enumString;
-		}
 
 		private static string GetAttributesAttribute(ICodeElement codeElement)
 		{
@@ -232,19 +210,12 @@ namespace NArrange.Core.CodeElements
 			            AttributedElement attributedElement = codeElement as AttributedElement;
 			            if (attributedElement != null)
 			            {
-			                if (attributedElement.Access == CodeAccess.None)
-			                {
-			                    attributeString = EnumToString(CodeAccess.Internal);
-			                }
-			                else
-			                {
-			                    attributeString = EnumToString(attributedElement.Access);
-			                }
+			                attributeString = EnumUtilities.ToString(attributedElement.Access);
 			            }
 			            break;
 
 			        case ElementAttributeType.ElementType:
-			            attributeString = EnumToString(codeElement.ElementType);
+						attributeString = EnumUtilities.ToString(codeElement.ElementType);
 			            break;
 
 			        case ElementAttributeType.Type:
@@ -259,14 +230,14 @@ namespace NArrange.Core.CodeElements
 			            memberElement = codeElement as MemberElement;
 			            if (memberElement != null)
 			            {
-			                attributeString = EnumToString(memberElement.MemberModifiers);
+							attributeString = EnumUtilities.ToString(memberElement.MemberModifiers);
 			            }
 			            else
 			            {
 			                typeElement = codeElement as TypeElement;
 			                if (typeElement != null)
 			                {
-			                    attributeString = EnumToString(typeElement.TypeModifiers);
+								attributeString = EnumUtilities.ToString(typeElement.TypeModifiers);
 			                }
 			            }
 			            break;
