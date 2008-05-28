@@ -24,7 +24,7 @@ To arrange a file just run...
 
 NOTE: If an output file is not specified, the original source file will be overwritten. 
 
-Alternatively, you can run NArrange against a C# or VB project file or solution.  
+Alternatively, you can run NArrange against a C# or VB project file, solution or directory.  
 NOTE: When arranging a project or solution, the original source files will be overwritten.
 
 

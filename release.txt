@@ -5,3 +5,4 @@ The following changes were made in this release:
 - Changed the default XML config file to categorize members with an unspecified access as Private.  Users with custom configuration files should modify private regions/filters to also check for $(Access) == 'None'.
 - Fixed line feeds for VB field groups.
 - Fixed writing of multiple Handles declarations for VB methods.
+- Allow arranging of all source files in a directory.

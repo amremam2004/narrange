@@ -37,6 +37,7 @@
  *		- Added a backup and restore feature
  *      - Fixed parsing of config file name
  *      - Refactored out command argument parsing
+ *		- Allow arranging an entire directory
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -78,7 +79,8 @@ namespace NArrange.ConsoleApplication
 			Console.WriteLine("\t[/b] [/r] [/t]");
 			Console.WriteLine();
 			Console.WriteLine();
-			Console.WriteLine("input\tSpecifies the source code file, project or solution to arrange.");
+			Console.WriteLine("input\tSpecifies the source code file, project, solution or ");
+			Console.WriteLine("\tdirectory to arrange.");
 			Console.WriteLine();
 			Console.WriteLine("output\tFor a single source file, specifies the output file ");
 			Console.WriteLine("\tto write arranged code to.");

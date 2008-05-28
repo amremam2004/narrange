@@ -34,6 +34,7 @@
  *      James Nies
  *      - Initial creation
  *      - Allow filtering of source and project files
+ *		- Allow arranging of an entire directory
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -84,6 +85,24 @@ namespace NArrange.Core
 
 		#region Private Methods
 
+		private ReadOnlyCollection<string> GetDirectorySourceFiles(string fileName)
+		{
+			List<string> sourceFiles = new List<string>();
+
+			DirectoryInfo directoryInfo = new DirectoryInfo(fileName);
+
+			FileInfo[] files = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
+			foreach (FileInfo file in files)
+			{
+				if (IsRecognizedSourceFile(file.FullName))
+				{
+					sourceFiles.Add(file.FullName);
+				}
+			}
+
+			return sourceFiles.AsReadOnly();
+		}
+
 		/// <summary>
 		/// Retrieves an extension handler for a project file
 		/// </summary>
@@ -106,34 +125,31 @@ namespace NArrange.Core
 			SourceHandler handler = GetProjectHandler(fileName);
 			if (handler != null)
 			{
-			    bool isRecognizedProject = IsRecognizedFile(fileName, handler.Configuration.ProjectExtensions);
+				bool isRecognizedProject = IsRecognizedFile(fileName, handler.Configuration.ProjectExtensions);
 
-			    if (isRecognizedProject)
-			    {
-			        IProjectParser projectParser = handler.ProjectParser;
+				if (isRecognizedProject)
+				{
+					IProjectParser projectParser = handler.ProjectParser;
 
-			        List<string> extensions = new List<string>();
-			        foreach (string key in _sourceExtensionHandlers.Keys)
-			        {
-			            SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-			            if (sourceHandler == handler)
-			            {
-			                extensions.Add(key);
-			            }
-			        }
+					List<string> extensions = new List<string>();
+					foreach (string key in _sourceExtensionHandlers.Keys)
+					{
+						SourceHandler sourceHandler = _sourceExtensionHandlers[key];
+						if (sourceHandler == handler)
+						{
+							extensions.Add(key);
+						}
+					}
 
-			        ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
-			        if (fileNames.Count > 0)
-			        {
-			            foreach (string sourceFile in fileNames)
-			            {
-			                if (IsRecognizedSourceFile(sourceFile))
-			                {
-			                    sourceFiles.Add(sourceFile);
-			                }
-			            }
-			        }
-			    }
+					ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
+					foreach (string sourceFile in fileNames)
+					{
+						if (IsRecognizedSourceFile(sourceFile))
+						{
+							sourceFiles.Add(sourceFile);
+						}
+					}
+				}
 			}
 
 			return sourceFiles.AsReadOnly();
@@ -268,6 +284,10 @@ namespace NArrange.Core
 			else if (IsRecognizedSourceFile(fileName))
 			{
 			    sourceFiles.Add(fileName);
+			}
+			else if (Directory.Exists(fileName))
+			{
+				sourceFiles.AddRange(GetDirectorySourceFiles(fileName));
 			}
 
 			return sourceFiles.AsReadOnly();

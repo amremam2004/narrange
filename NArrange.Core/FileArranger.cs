@@ -38,6 +38,7 @@
  *        acknowledged
  *		- Use a configured encoding if present, otherwise auto-detect and
  *		  preserve the encoding withing the arrange result.
+ *		- Allow arranging of an entire directory
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -407,7 +408,7 @@ namespace NArrange.Core
 				bool isProject = _projectManager.IsProject(inputFile);
 				bool isSolution = !isProject && ProjectManager.IsSolution(inputFile);
 
-				if (!(isProject || isSolution))
+				if (!(isProject || isSolution) && !Directory.Exists(inputFile))
 				{
 					if (outputFile == null)
 					{
@@ -458,6 +459,11 @@ namespace NArrange.Core
 						else if (isProject)
 						{
 							LogMessage(LogLevel.Warning, "Project {0} does not contain any supported source files.",
+							   inputFile);
+						}
+						else
+						{
+							LogMessage(LogLevel.Warning, "Directory {0} does not contain any supported source files.",
 							   inputFile);
 						}
 					}
