@@ -78,6 +78,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the extension handler assembly
 		/// </summary>
 		[XmlAttribute("Assembly")]
+		[Description("The full assembly name used for assembly loading.")]
+		[DisplayName("Assembly name")]
 		public string AssemblyName
 		{
 			get
@@ -94,6 +96,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the language name.
 		/// </summary>
 		[XmlAttribute("Language")]
+		[Description("The key for the language.")]
 		public string Language
 		{
 			get
@@ -110,7 +113,8 @@ namespace NArrange.Core.Configuration
 		/// Extensions
 		/// </summary>
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
-		[Description("Project extension configurations")]
+		[Description("The list of project file extensions recognized for the language.")]
+		[DisplayName("Project extensions")]
 		public List<ExtensionConfiguration> ProjectExtensions
 		{
 			get
@@ -134,7 +138,8 @@ namespace NArrange.Core.Configuration
 		/// Extensions
 		/// </summary>
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
-		[Description("Source extension configurations")]
+		[Description("The list of source code file extensions recognized for the language.")]
+		[DisplayName("Source extensions")]
 		public List<ExtensionConfiguration> SourceExtensions
 		{
 			get

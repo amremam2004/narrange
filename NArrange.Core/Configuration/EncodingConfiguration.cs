@@ -91,6 +91,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the CodePage.
 		/// </summary>
 		[XmlAttribute("CodePage")]
+		[Description("The code page identifier for the encoding to use for source code files.  \"Detect\" and \"Default\" are also valid.")]
+		[DisplayName("Code page")]
 		public string CodePage
 		{
 			get

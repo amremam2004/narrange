@@ -73,6 +73,8 @@
     <Compile Include="CodeElements\CommentElement.cs" />
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
+    <Compile Include="Configuration\ConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\HandlerConfigurationCollection.cs" />
     <Compile Include="Configuration\EncodingConfiguration.cs" />
     <Compile Include="Configuration\ElementReferenceConfiguration.cs" />
     <Compile Include="Configuration\UnaryOperatorExpression.cs" />

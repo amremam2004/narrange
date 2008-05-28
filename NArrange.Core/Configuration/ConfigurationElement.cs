@@ -54,7 +54,7 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private List<ConfigurationElement> _elements;
+		private ConfigurationElementCollection _elements;
 
 		#endregion Fields
 
@@ -66,8 +66,8 @@ namespace NArrange.Core.Configuration
 		[XmlArrayItem(typeof(ElementConfiguration))]
 		[XmlArrayItem(typeof(RegionConfiguration))]
 		[XmlArrayItem(typeof(ElementReferenceConfiguration))]
-		[Description("Element configurations")]
-		public List<ConfigurationElement> Elements
+		[Description("The list of child element configurations.")]
+		public virtual ConfigurationElementCollection Elements
 		{
 			get
 			{
@@ -77,7 +77,7 @@ namespace NArrange.Core.Configuration
 			        {
 			            if (_elements == null)
 			            {
-			                _elements = new List<ConfigurationElement>();
+							_elements = new ConfigurationElementCollection();
 			            }
 			        }
 			    }

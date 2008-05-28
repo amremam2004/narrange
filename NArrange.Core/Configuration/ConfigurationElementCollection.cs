@@ -39,82 +39,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
-using System.Threading;
-using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies element filtering 
+	/// Collection of ConfigurationElement instances.
 	/// </summary>
-	[XmlType("Filter")]
-	public class FilterBy : ICloneable
+	public class ConfigurationElementCollection : Collection<ConfigurationElement>
 	{
-		#region Fields
-
-		private string _conditionExpression;
-
-		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new FilterBy instance
-		/// </summary>
-		public FilterBy()
-		{
-		}
-
-		#endregion Constructors
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the filter expression
-		/// </summary>
-		[XmlAttribute("Condition")]
-		[Description("The condition expression, consisting of attribute parameters, operators and strings.")]
-		public string Condition
-		{
-			get
-			{
-			    return _conditionExpression;
-			}
-			set
-			{
-			    _conditionExpression = value;
-			}
-		}
-
-		#endregion Public Properties
-
-		#region Public Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			FilterBy clone = new FilterBy();
-
-			clone._conditionExpression = _conditionExpression;
-
-			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Filter by: {0}", this._conditionExpression);
-		}
-
-		#endregion Public Methods
 	}
 }

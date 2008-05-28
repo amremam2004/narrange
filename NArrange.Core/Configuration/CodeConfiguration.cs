@@ -46,6 +46,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -71,7 +72,7 @@ namespace NArrange.Core.Configuration
 
 		private ClosingCommentConfiguration _closingComments;
 		private EncodingConfiguration _encoding;
-		private List<HandlerConfiguration> _handlers;
+		private HandlerConfigurationCollection _handlers;
 		private RegionsConfiguration _regions;
 		private TabConfiguration _tabs;
 
@@ -94,7 +95,8 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Closing comment configuration
 		/// </summary>
-		[Description("Closing comment configuration")]
+		[Description("The settings for closing comments.")]
+		[DisplayName("Closing comments")]
 		public ClosingCommentConfiguration ClosingComments
 		{
 			get
@@ -154,7 +156,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Encoding configuration.
 		/// </summary>
-		[Description("Encoding configuration")]
+		[Description("The encoding settings used for reading and writing source code files.")]
 		public EncodingConfiguration Encoding
 		{
 			get
@@ -185,8 +187,8 @@ namespace NArrange.Core.Configuration
 		/// Source code handlers
 		/// </summary>
 		[XmlArrayItem(typeof(HandlerConfiguration))]
-		[Description("Handler configurations")]
-		public List<HandlerConfiguration> Handlers
+		[Description("The list of language handlers and their settings.")]
+		public HandlerConfigurationCollection Handlers
 		{
 			get
 			{
@@ -196,7 +198,7 @@ namespace NArrange.Core.Configuration
 			        {
 			            if (_handlers == null)
 			            {
-			                _handlers = new List<HandlerConfiguration>();
+							_handlers = new HandlerConfigurationCollection();
 			            }
 			        }
 			    }
@@ -208,7 +210,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Regions configuration.
 		/// </summary>
-		[Description("Regions configuration")]
+		[Description("The settings for all regions.")]
 		public RegionsConfiguration Regions
 		{
 			get
@@ -238,7 +240,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Tab configuration
 		/// </summary>
-		[Description("Tab configuration")]
+		[Description("The settings for indentation.")]
 		public TabConfiguration Tabs
 		{
 			get
@@ -332,7 +334,6 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
-		/// Loads a configuration from file
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>

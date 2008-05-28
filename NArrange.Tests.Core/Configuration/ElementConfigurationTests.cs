@@ -93,7 +93,7 @@ namespace NArrange.Tests.Core.Configuration
 
 			string str = elementConfiguration.ToString();
 
-			Assert.AreEqual("Type: Method", str,
+			Assert.AreEqual("Element: Type - Method", str,
 			    "Unexpected string representation.");
 		}
 

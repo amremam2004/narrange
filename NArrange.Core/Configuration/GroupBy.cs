@@ -80,6 +80,8 @@ namespace NArrange.Core.Configuration
 		/// of the element attribute should be used for grouping.
 		/// </summary>
 		[XmlAttribute("AttributeCapture")]
+		[Description("The regular expression specifying the text that should be captured from the element attribute.")]
+		[DisplayName("Attribute capture")]
 		public string AttributeCapture
 		{
 			get
@@ -96,6 +98,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the attribute elements should be grouped by
 		/// </summary>
 		[XmlAttribute("By")]
+		[Description("The attribute elements should be grouped by.")]
 		public ElementAttributeType By
 		{
 			get
@@ -113,6 +116,8 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		[XmlAttribute("CustomSeparator")]
 		[DefaultValue(null)]
+		[Description("The text to insert between groups.")]
+		[DisplayName("Display name")]
 		public string CustomSeparator
 		{
 			get
@@ -129,6 +134,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the separator type
 		/// </summary>
 		[XmlAttribute("SeparatorType")]
+		[Description("Specifies how groups should be separated.")]
+		[DisplayName("Separator type")]
 		public GroupSeparatorType SeparatorType
 		{
 			get

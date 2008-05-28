@@ -39,6 +39,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
@@ -61,9 +62,22 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
+		/// Elements
+		/// </summary>
+		[Browsable(false)]
+		public override ConfigurationElementCollection Elements
+		{
+			get
+			{
+				return base.Elements;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the element reference identifier.
 		/// </summary>
 		[XmlAttribute("Id")]
+		[Description("The unique identifier of the referenced element.")]
 		public string Id
 		{
 			get
@@ -80,6 +94,7 @@ namespace NArrange.Core.Configuration
 		/// Gets the referenced element configuration.
 		/// </summary>
 		[XmlIgnore]
+		[Browsable(false)]
 		public ElementConfiguration ReferencedElement
 		{
 			get

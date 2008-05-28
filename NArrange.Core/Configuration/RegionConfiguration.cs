@@ -64,7 +64,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the region name.
 		/// </summary>
 		[XmlAttribute("Name")]
-		[Description("Region name")]
+		[Description("The region name")]
 		public string Name
 		{
 			get

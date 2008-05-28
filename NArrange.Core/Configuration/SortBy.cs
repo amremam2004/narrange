@@ -77,6 +77,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the attribute elements should be sorted by
 		/// </summary>
 		[XmlAttribute("By")]
+		[Description("The attribute elements should be sorted by.")]
 		public ElementAttributeType By
 		{
 			get
@@ -94,6 +95,7 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		[XmlAttribute("Direction")]
 		[DefaultValue(ListSortDirection.Ascending)]
+		[Description("The sort direction for elements.")]
 		public ListSortDirection Direction
 		{
 			get
@@ -110,6 +112,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the inner sort specification
 		/// </summary>
 		[XmlElement("Sort")]
+		[Description("The inner sort that will also apply when sorting elements.")]
+		[DisplayName("Inner sort by")]
 		public SortBy InnerSortBy
 		{
 			get

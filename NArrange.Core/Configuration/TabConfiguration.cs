@@ -78,6 +78,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the number of spaces per tab
 		/// </summary>
 		[XmlAttribute("SpacesPerTab")]
+		[Description("The number of spaces per tab. Used for conversion between spaces and tabs.")]
+		[DisplayName("Spaces per tab")]
 		public int SpacesPerTab
 		{
 			get
@@ -94,6 +96,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the tab style
 		/// </summary>
 		[XmlAttribute("Style")]
+		[Description("The indentation style.")]
 		public TabStyle Style
 		{
 			get

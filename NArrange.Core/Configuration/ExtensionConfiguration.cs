@@ -77,6 +77,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the filter specification
 		/// </summary>
 		[XmlElement("Filter")]
+		[Description("The filter for this file extension.")]
+		[DisplayName("Filter by")]
 		public FilterBy FilterBy
 		{
 			get
@@ -93,6 +95,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the extension name
 		/// </summary>
 		[XmlAttribute("Name")]
+		[Description("The file extension name.")]
 		public string Name
 		{
 			get

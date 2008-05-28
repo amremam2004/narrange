@@ -76,6 +76,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the number of spaces per tab
 		/// </summary>
 		[XmlAttribute("EndRegionNameEnabled")]
+		[DisplayName("End region name enabled")]
+		[Description("Whether or not the region name or region name comment should be included in end region directives.")]
 		public bool EndRegionNameEnabled
 		{
 			get

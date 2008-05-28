@@ -76,6 +76,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets whether closing comments are enabled.
 		/// </summary>
 		[XmlAttribute("Enabled")]
+		[Description("Whether or not comments will be inserted at the end of member blocks.")]
 		public bool Enabled
 		{
 			get
@@ -92,6 +93,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the format string
 		/// </summary>
 		[XmlAttribute("Format")]
+		[Description("The format string for closing comments, consisting of attribute parameters and text.")]
 		public string Format
 		{
 			get

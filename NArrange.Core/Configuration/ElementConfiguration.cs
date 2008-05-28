@@ -41,6 +41,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
@@ -69,6 +70,8 @@ namespace NArrange.Core.Configuration
 		/// Element type
 		/// </summary>
 		[XmlAttribute("Type")]
+		[Description("The element type.")]
+		[DisplayName("Element type")]
 		public ElementType ElementType
 		{
 			get
@@ -85,6 +88,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the filter specification
 		/// </summary>
 		[XmlElement("Filter")]
+		[Description("The filter for this element.")]
+		[DisplayName("Filter by")]
 		public FilterBy FilterBy
 		{
 			get
@@ -101,6 +106,8 @@ namespace NArrange.Core.Configuration
 		/// Specifies grouping of elements
 		/// </summary>
 		[XmlElement("Group")]
+		[Description("The grouping for this element.")]
+		[DisplayName("Group by")]
 		public GroupBy GroupBy
 		{
 			get
@@ -117,6 +124,7 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the element configuration identifier.
 		/// </summary>
 		[XmlAttribute("Id")]
+		[Description("The unique identifier of this element.")]
 		public string Id
 		{
 			get
@@ -133,6 +141,8 @@ namespace NArrange.Core.Configuration
 		/// Gets or sets the sort specification
 		/// </summary>
 		[XmlElement("Sort")]
+		[Description("The sorting for this element.")]
+		[DisplayName("Sort by")]
 		public SortBy SortBy
 		{
 			get
@@ -189,7 +199,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Type: {0}", this.ElementType);
+			    "Element: Type - {0}", this.ElementType);
 		}
 
 		#endregion Public Methods
