@@ -61,6 +61,105 @@ namespace NArrange.Tests.ConsoleApplication
 		#region Public Methods
 
 		/// <summary>
+		/// Tests arranging all files in a directory.
+		/// </summary>
+		[Test]
+		public void ArrangeDirectoryEmptyTest()
+		{
+			string testSourceParentDirectory = Path.Combine(Path.GetTempPath(), "TestSource");
+
+			try
+			{
+
+				try
+				{
+					Directory.CreateDirectory(testSourceParentDirectory);
+				}
+				catch
+				{
+				}
+
+				TestLogger logger = new TestLogger();
+				bool success = Arrange(logger, testSourceParentDirectory);
+
+				string log = logger.ToString();
+				Assert.IsTrue(success, "Expected directory to be arranged succesfully - " + log);
+				Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "0 files written."),
+					"Expected 0 files to be written - " + log);
+			}
+			finally
+			{
+				try
+				{
+					Directory.Delete(testSourceParentDirectory, true);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		/// <summary>
+		/// Tests arranging all files in a directory.
+		/// </summary>
+		[Test]
+		public void ArrangeDirectoryTest()
+		{
+			string testSourceParentDirectory = Path.Combine(Path.GetTempPath(), "TestSource");
+			string testSourceChildDirectory = Path.Combine(testSourceParentDirectory, "Child");
+
+			try
+			{
+
+				try
+				{
+					Directory.CreateDirectory(testSourceParentDirectory);
+				}
+				catch
+				{
+				}
+
+				try
+				{
+					Directory.CreateDirectory(testSourceChildDirectory);
+				}
+				catch
+				{
+				}
+
+				File.Copy(_testValidSourceFile1,
+					Path.Combine(testSourceParentDirectory, Path.GetFileName(_testValidSourceFile1)), true);
+
+				File.Copy(_testValidSourceFile2,
+					Path.Combine(testSourceParentDirectory, Path.GetFileName(_testValidSourceFile2)), true);
+
+				File.Copy(_testValidSourceFile1,
+					Path.Combine(testSourceChildDirectory, Path.GetFileName(_testValidSourceFile1)), true);
+
+				File.Copy(_testValidSourceFile2,
+					Path.Combine(testSourceChildDirectory, Path.GetFileName(_testValidSourceFile2)), true);
+
+				TestLogger logger = new TestLogger();
+				bool success = Arrange(logger, testSourceParentDirectory);
+
+				string log = logger.ToString();
+				Assert.IsTrue(success, "Expected directory to be arranged succesfully - " + log);
+				Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "4 files written."),
+					"Expected 4 files to be written - " + log);
+			}
+			finally
+			{
+				try
+				{
+					Directory.Delete(testSourceParentDirectory, true);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		/// <summary>
 		/// Tests arranging an empty project file
 		/// </summary>
 		[Test]

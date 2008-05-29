@@ -407,8 +407,10 @@ namespace NArrange.Core
 			{
 				bool isProject = _projectManager.IsProject(inputFile);
 				bool isSolution = !isProject && ProjectManager.IsSolution(inputFile);
+				bool isDirectory = !isProject && !isSolution &&
+					string.IsNullOrEmpty(Path.GetExtension(inputFile)) && Directory.Exists(inputFile);
 
-				if (!(isProject || isSolution) && !Directory.Exists(inputFile))
+				if (!(isProject || isSolution || isDirectory))
 				{
 					if (outputFile == null)
 					{
@@ -468,7 +470,7 @@ namespace NArrange.Core
 						}
 					}
 
-					if (_filesParsed == 0 && (sourceFiles.Count <= 1 && !(isProject || isSolution)))
+					if (_filesParsed == 0 && (sourceFiles.Count <= 1 && !(isProject || isSolution || isDirectory)))
 					{
 						success = false;
 					}

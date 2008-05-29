@@ -731,6 +731,80 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a field that's whose intial value has multiple lines.
+		/// </summary>
+		[Test]
+		public void WriteFieldMultilineInitialValueNewLineTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			TypeElement typeElement = new TypeElement();
+			typeElement.Name = "TestClass";
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = "string";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "\r\n\t\t\"This is a string on a single line.\"";
+
+			typeElement.AddChild(fieldElement);
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(typeElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"public class TestClass\r\n" +
+				"{\r\n" +
+				"\tprivate static string _test = \r\n" + 
+				"\t\t\"This is a string on a single line.\";\r\n" +
+				"}",
+				text,
+				"Field element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a field that's whose intial value has multiple lines.
+		/// </summary>
+		[Test]
+		public void WriteFieldMultilineInitialValueSameLineTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			TypeElement typeElement = new TypeElement();
+			typeElement.Name = "TestClass";
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = "string";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "\"This is\" +\r\n\t\t\"string spanning multiple lines.\"";
+
+			typeElement.AddChild(fieldElement);
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(typeElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"public class TestClass\r\n" + 
+				"{\r\n" + 
+				"\tprivate static string _test = \"This is\" +\r\n" + 
+				"\t\t\"string spanning multiple lines.\";\r\n" + 
+				"}",
+				text,
+				"Field element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a new constant field.
 		/// </summary>
 		[Test]

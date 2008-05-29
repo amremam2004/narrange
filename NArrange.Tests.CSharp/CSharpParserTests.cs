@@ -1595,6 +1595,33 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a simple field that instantiates an object.
+		/// </summary>
+		[Test]
+		public void ParseFieldInstanceTest()
+		{
+			StringReader reader = new StringReader(
+				"private Object obj = new Object();");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+				"Element is not a FieldElement.");
+			Assert.AreEqual("obj", fieldElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual("Object", fieldElement.Type,
+				"Unexpected member type.");
+			Assert.AreEqual("new Object()", fieldElement.InitialValue,
+				"Unexpected initial value.");
+		}
+
+		/// <summary>
 		/// Tests parsing a simple field.
 		/// </summary>
 		[Test]

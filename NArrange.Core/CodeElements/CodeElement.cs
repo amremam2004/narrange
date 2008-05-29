@@ -226,7 +226,7 @@ namespace NArrange.Core.CodeElements
 		/// <param name="childElement"></param>
 		public virtual void AddChild(ICodeElement childElement)
 		{
-			if (childElement != null && !BaseChildren.Contains(childElement))
+			if (childElement != null)
 			{
 			    lock (_childrenLock)
 			    {
@@ -246,9 +246,9 @@ namespace NArrange.Core.CodeElements
 		{
 			lock (_childrenLock)
 			{
-			    for (int childIndex = 0; childIndex < Children.Count; childIndex++)
+				for (int childIndex = 0; childIndex < BaseChildren.Count; childIndex++)
 			    {
-			        ICodeElement child = Children[childIndex];
+					ICodeElement child = BaseChildren[childIndex];
 			        if (child != null && child.Parent != null)
 			        {
 			            child.Parent = null;
@@ -274,9 +274,9 @@ namespace NArrange.Core.CodeElements
 			clone._name = _name;
 			lock (_childrenLock)
 			{
-			    for (int childIndex = 0; childIndex < Children.Count; childIndex++)
+			    for (int childIndex = 0; childIndex < BaseChildren.Count; childIndex++)
 			    {
-			        ICodeElement child = Children[childIndex];
+					ICodeElement child = BaseChildren[childIndex];
 			        ICodeElement childClone = child.Clone() as ICodeElement;
 
 					childClone.Parent = clone;

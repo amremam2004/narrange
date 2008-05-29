@@ -45,6 +45,8 @@
  *      - Handle fixed size buffer fields
  *      - Parse attribute names and params to the code element model
  *        vs. entire attribute text
+ *		- Fixed extra space being written before multiline field initial 
+ *		  values.
  *      Everton Elvio Koser
  *      - Fixed ordering of new and const for fields (merged by James Nies)
  *      - Honor the new keyword for nested types (merged by James Nies)
@@ -571,7 +573,17 @@ namespace NArrange.CSharp
 			    Writer.Write(' ');
 			    if (element.InitialValue.IndexOf("\n") >= 0)
 			    {
-			        WriteTextBlock(element.InitialValue);
+					string initialValue = element.InitialValue;
+					int lineFeedIndex = initialValue.IndexOf('\n');
+					if (lineFeedIndex > 0)
+					{
+						string initialValueFirstLine = initialValue.Substring(0, lineFeedIndex + 1);
+						initialValue = initialValue.Substring(lineFeedIndex + 1);
+
+						Writer.Write(initialValueFirstLine);
+					}
+					
+			        WriteTextBlock(initialValue);
 			    }
 			    else
 			    {

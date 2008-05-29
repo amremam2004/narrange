@@ -404,6 +404,8 @@ namespace NArrange.SourceTester
 			ParseArguments(args, ref inputDir);
 			logger.Trace = true;
 
+			DateTime start = DateTime.Now;
+
 			try
 			{
 			    TestFiles(inputDir, logger);
@@ -411,8 +413,14 @@ namespace NArrange.SourceTester
 			catch (Exception ex)
 			{
 			    logger.LogMessage(LogLevel.Error, "Failure: {0}", ex.ToString());
-			    Environment.Exit(Fail);
 			}
+
+			DateTime end = DateTime.Now;
+
+			TimeSpan timeSpan = end - start;
+			logger.LogMessage(LogLevel.Trace, "Running time {0}", timeSpan);
+
+			Environment.Exit(Fail);
 		}
 
 		#endregion Public Methods
