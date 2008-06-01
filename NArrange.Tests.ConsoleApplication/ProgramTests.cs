@@ -443,6 +443,29 @@ namespace NArrange.Tests.ConsoleApplication
 		}
 
 		/// <summary>
+		/// Tests the GetCopyrightText method.
+		/// </summary>
+		[Test]
+		public void GetCopyrightTextTest()
+		{
+			string copyrightText = Program.GetCopyrightText();
+			Assert.IsNotNull(copyrightText, "Copyright text should not be null.");
+			Assert.IsTrue(copyrightText.Contains("(C) 2007"),
+				"Unexpected copyright text.");
+		}
+
+		/// <summary>
+		/// Tests the GetUsageText method.
+		/// </summary>
+		[Test]
+		public void GetUsageTextTest()
+		{
+			string usageText = Program.GetUsageText();
+			Assert.IsNotNull(usageText, "Usage text should not be null.");
+			Assert.IsNotEmpty(usageText, "Usage text should not be empty.");
+		}
+
+		/// <summary>
 		/// Tests restoring an unknown input
 		/// </summary>
 		[Test]

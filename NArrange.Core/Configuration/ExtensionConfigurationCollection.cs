@@ -39,76 +39,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
-using System.Threading;
-using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Configuration element for regions
+	/// Collection of ExtensionConfiguration instances.
 	/// </summary>
-	[XmlType("Region")]
-	[DisplayName("Region")]
-	public class RegionConfiguration : ConfigurationElement
+	public sealed class ExtensionConfigurationCollection : BindingList<ExtensionConfiguration>
 	{
-		#region Fields
-
-		private string _name;
-
-		#endregion Fields
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the region name.
-		/// </summary>
-		[XmlAttribute("Name")]
-		[Description("The region name")]
-		public string Name
-		{
-			get
-			{
-			    return _name;
-			}
-			set
-			{
-			    _name = value;
-			}
-		}
-
-		#endregion Public Properties
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		protected override ConfigurationElement DoClone()
-		{
-			RegionConfiguration clone = new RegionConfiguration();
-
-			clone._name = _name;
-
-			return clone;
-		}
-
-		#endregion Protected Methods
-
-		#region Public Methods
-
-		/// <summary>
-		/// Gets a string representation
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Region: {0}", this.Name);
-		}
-
-		#endregion Public Methods
 	}
 }

@@ -48,7 +48,7 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Collection of ConfigurationElement instances.
 	/// </summary>
-	public class ConfigurationElementCollection : Collection<ConfigurationElement>
+	public sealed class ConfigurationElementCollection : BindingList<ConfigurationElement>
 	{
 	}
 }

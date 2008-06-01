@@ -74,6 +74,7 @@
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\ExtensionConfigurationCollection.cs" />
     <Compile Include="Configuration\HandlerConfigurationCollection.cs" />
     <Compile Include="Configuration\EncodingConfiguration.cs" />
     <Compile Include="Configuration\ElementReferenceConfiguration.cs" />

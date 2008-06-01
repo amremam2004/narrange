@@ -50,6 +50,7 @@ namespace NArrange.Core.Configuration
 	/// Element reference configuration.
 	/// </summary>
 	[XmlType("ElementRef")]
+	[DisplayName("Element Reference")]
 	public class ElementReferenceConfiguration : ConfigurationElement
 	{
 		#region Fields

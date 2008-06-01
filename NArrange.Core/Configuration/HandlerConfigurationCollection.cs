@@ -48,7 +48,7 @@ namespace NArrange.Core.Configuration
 	/// <summary>
 	/// Collection of HandlerConfiguration instances.
 	/// </summary>
-	public class HandlerConfigurationCollection : Collection<HandlerConfiguration>
+	public sealed class HandlerConfigurationCollection : BindingList<HandlerConfiguration>
 	{
 	}
 }

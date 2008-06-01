@@ -70,44 +70,81 @@ namespace NArrange.ConsoleApplication
 		#region Private Methods
 
 		/// <summary>
-		/// Writes usage information to the console
+		/// Writes usage information to the console.
 		/// </summary>
 		private static void WriteUsage()
 		{
-			Console.WriteLine("Usage:");
-			Console.WriteLine("narrange-console <input> [output] [/c:configuration]");
-			Console.WriteLine("\t[/b] [/r] [/t]");
-			Console.WriteLine();
-			Console.WriteLine();
-			Console.WriteLine("input\tSpecifies the source code file, project, solution or ");
-			Console.WriteLine("\tdirectory to arrange.");
-			Console.WriteLine();
-			Console.WriteLine("output\tFor a single source file, specifies the output file ");
-			Console.WriteLine("\tto write arranged code to.");
-			Console.WriteLine("\t[Optional] If not specified the input source");
-			Console.WriteLine("\tfile will be overwritten.");
-			Console.WriteLine();
-			Console.WriteLine("/c\tConfiguration - Specifies the XML configuration file to use.");
-			Console.WriteLine("\t[Optional] If not specified the default ");
-			Console.WriteLine("\tconfiguration will be used.");
-			Console.WriteLine();
-			Console.WriteLine("/b\tBackup - Specifies to create a backup before arranging");
-			Console.WriteLine("\t[Optional] If not specified, no backup will be created.");
-			Console.WriteLine("\tOnly valid if an output file is not specified ");
-			Console.WriteLine("\tand cannot be used in conjunction with Restore.");
-			Console.WriteLine();
-			Console.WriteLine("/r\tRestore - Restores arranged files from the latest backup");
-			Console.WriteLine("\t[Optional] When this flag is provided, no files will be arranged.");
-			Console.WriteLine("\tOnly valid if an output file is not specified ");
-			Console.WriteLine("\tand cannot be used in conjunction with Backup.");
-			Console.WriteLine();
-			Console.WriteLine("/t\tTrace - Detailed logging");
+			string usage = GetUsageText();
+			Console.Write(usage);
 			Console.WriteLine();
 		}
 
 		#endregion Private Methods
 
 		#region Public Methods
+
+		/// <summary>
+		/// Gets the copyright text.
+		/// </summary>
+		/// <returns></returns>
+		public static string GetCopyrightText()
+		{
+			StringBuilder copyrightText = new StringBuilder();
+
+			Assembly assembly = Assembly.GetExecutingAssembly();
+
+			object[] copyrightAttributes = assembly.GetCustomAttributes(
+				typeof(AssemblyCopyrightAttribute), false);
+			if (copyrightAttributes.Length > 0)
+			{
+				AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
+				copyrightText.AppendLine(copyRight.Copyright.Replace("©", "(C)"));
+				copyrightText.AppendLine("All rights reserved.");
+				copyrightText.AppendLine();
+				copyrightText.AppendLine("Zip functionality courtesy of ic#code (Mike Krueger, John Reilly).");
+			}
+
+			return copyrightText.ToString();
+		}
+
+		/// <summary>
+		/// Gets usage information text.
+		/// </summary>
+		public static string GetUsageText()
+		{
+			StringBuilder usage = new StringBuilder();
+
+			usage.AppendLine("Usage:");
+			usage.AppendLine("narrange-console <input> [output] [/c:configuration]");
+			usage.AppendLine("\t[/b] [/r] [/t]");
+			usage.AppendLine();
+			usage.AppendLine();
+			usage.AppendLine("input\tSpecifies the source code file, project, solution or ");
+			usage.AppendLine("\tdirectory to arrange.");
+			usage.AppendLine();
+			usage.AppendLine("output\tFor a single source file, specifies the output file ");
+			usage.AppendLine("\tto write arranged code to.");
+			usage.AppendLine("\t[Optional] If not specified the input source");
+			usage.AppendLine("\tfile will be overwritten.");
+			usage.AppendLine();
+			usage.AppendLine("/c\tConfiguration - Specifies the XML configuration file to use.");
+			usage.AppendLine("\t[Optional] If not specified the default ");
+			usage.AppendLine("\tconfiguration will be used.");
+			usage.AppendLine();
+			usage.AppendLine("/b\tBackup - Specifies to create a backup before arranging");
+			usage.AppendLine("\t[Optional] If not specified, no backup will be created.");
+			usage.AppendLine("\tOnly valid if an output file is not specified ");
+			usage.AppendLine("\tand cannot be used in conjunction with Restore.");
+			usage.AppendLine();
+			usage.AppendLine("/r\tRestore - Restores arranged files from the latest backup");
+			usage.AppendLine("\t[Optional] When this flag is provided, no files will be arranged.");
+			usage.AppendLine("\tOnly valid if an output file is not specified ");
+			usage.AppendLine("\tand cannot be used in conjunction with Backup.");
+			usage.AppendLine();
+			usage.AppendLine("/t\tTrace - Detailed logging");
+
+			return usage.ToString();
+		}
 
 		/// <summary>
 		/// Application entry point
@@ -123,16 +160,11 @@ namespace NArrange.ConsoleApplication
 			ConsoleLogger.WriteMessage(ConsoleColor.Cyan, "NArrange {0}", version);
 			Console.WriteLine(new string('_', 60));
 
-			object[] copyrightAttributes = assembly.GetCustomAttributes(
-			    typeof(AssemblyCopyrightAttribute), false);
-			if(copyrightAttributes.Length > 0)
+			string copyrightText = GetCopyrightText();
+			if (!string.IsNullOrEmpty(copyrightText))
 			{
-			    AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
-			    Console.WriteLine(copyRight.Copyright.Replace("©", "(C)"));
-			    Console.WriteLine("All rights reserved.");
-			    Console.WriteLine();
-			    Console.WriteLine("Zip functionality courtesy of ic#code (Mike Krueger, John Reilly).");
-			    Console.WriteLine();
+				Console.Write(copyrightText);
+				Console.WriteLine();
 			}
 
 			if (args.Length < 1 || args[0] == "?" || args[0] == "/?" || args[0] == "help")

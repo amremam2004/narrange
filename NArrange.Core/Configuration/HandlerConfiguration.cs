@@ -56,8 +56,8 @@ namespace NArrange.Core.Configuration
 
 		private string _assembly;
 		private string _language;
-		private List<ExtensionConfiguration> _projectExtensions;
-		private List<ExtensionConfiguration> _sourceExtensions;
+		private ExtensionConfigurationCollection _projectExtensions;
+		private ExtensionConfigurationCollection _sourceExtensions;
 
 		#endregion Fields
 
@@ -115,7 +115,7 @@ namespace NArrange.Core.Configuration
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
 		[Description("The list of project file extensions recognized for the language.")]
 		[DisplayName("Project extensions")]
-		public List<ExtensionConfiguration> ProjectExtensions
+		public ExtensionConfigurationCollection ProjectExtensions
 		{
 			get
 			{
@@ -125,7 +125,7 @@ namespace NArrange.Core.Configuration
 			        {
 			            if (_projectExtensions == null)
 			            {
-			                _projectExtensions = new List<ExtensionConfiguration>();
+			                _projectExtensions = new ExtensionConfigurationCollection();
 			            }
 			        }
 			    }
@@ -140,7 +140,7 @@ namespace NArrange.Core.Configuration
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
 		[Description("The list of source code file extensions recognized for the language.")]
 		[DisplayName("Source extensions")]
-		public List<ExtensionConfiguration> SourceExtensions
+		public ExtensionConfigurationCollection SourceExtensions
 		{
 			get
 			{
@@ -150,7 +150,7 @@ namespace NArrange.Core.Configuration
 			        {
 			            if (_sourceExtensions == null)
 			            {
-			                _sourceExtensions = new List<ExtensionConfiguration>();
+			                _sourceExtensions = new ExtensionConfigurationCollection();
 			            }
 			        }
 			    }
@@ -172,6 +172,7 @@ namespace NArrange.Core.Configuration
 			HandlerConfiguration clone = new HandlerConfiguration();
 
 			clone._assembly = _assembly;
+			clone._language = _language;
 
 			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
 			{

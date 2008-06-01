@@ -52,6 +52,7 @@ namespace NArrange.Core.Configuration
 	/// Element configuration
 	/// </summary>
 	[XmlType("Element")]
+	[DisplayName("Element")]
 	public class ElementConfiguration : ConfigurationElement
 	{
 		#region Fields

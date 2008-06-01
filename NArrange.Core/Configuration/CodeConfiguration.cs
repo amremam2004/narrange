@@ -97,6 +97,7 @@ namespace NArrange.Core.Configuration
 		/// </summary>
 		[Description("The settings for closing comments.")]
 		[DisplayName("Closing comments")]
+		[ReadOnly(true)]
 		public ClosingCommentConfiguration ClosingComments
 		{
 			get
@@ -157,6 +158,7 @@ namespace NArrange.Core.Configuration
 		/// Encoding configuration.
 		/// </summary>
 		[Description("The encoding settings used for reading and writing source code files.")]
+		[ReadOnly(true)]
 		public EncodingConfiguration Encoding
 		{
 			get
@@ -211,6 +213,7 @@ namespace NArrange.Core.Configuration
 		/// Regions configuration.
 		/// </summary>
 		[Description("The settings for all regions.")]
+		[ReadOnly(true)]
 		public RegionsConfiguration Regions
 		{
 			get
@@ -241,6 +244,7 @@ namespace NArrange.Core.Configuration
 		/// Tab configuration
 		/// </summary>
 		[Description("The settings for indentation.")]
+		[ReadOnly(true)]
 		public TabConfiguration Tabs
 		{
 			get

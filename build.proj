@@ -33,6 +33,7 @@
 						$(MSBuildProjectDirectory)\**\Build\**\*.*;
 						$(MSBuildProjectDirectory)\**\obj\**\*.*;
 						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;
+						$(MSBuildProjectDirectory)\coverage.*;
 						$(MSBuildProjectDirectory)\TestResult.xml;
 						$(MSBuildProjectDirectory)\**\*.suo;;
 						$(MSBuildProjectDirectory)\**\*.user;

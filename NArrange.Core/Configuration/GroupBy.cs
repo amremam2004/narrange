@@ -117,7 +117,7 @@ namespace NArrange.Core.Configuration
 		[XmlAttribute("CustomSeparator")]
 		[DefaultValue(null)]
 		[Description("The text to insert between groups.")]
-		[DisplayName("Display name")]
+		[DisplayName("Custom separator")]
 		public string CustomSeparator
 		{
 			get

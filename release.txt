@@ -7,3 +7,4 @@ The following changes were made in this release:
 - Fixed writing of multiple Handles declarations for VB methods.
 - Allow arranging of all source files in a directory.
 - Fixed extra whitespace being written before multiline C# field initial values.
+- Added a configuration editor.

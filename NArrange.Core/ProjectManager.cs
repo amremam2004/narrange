@@ -198,7 +198,7 @@ namespace NArrange.Core
 			}
 		}
 
-		private static bool IsRecognizedFile(string fileName, List<ExtensionConfiguration> extensions)
+		private static bool IsRecognizedFile(string fileName, ExtensionConfigurationCollection extensions)
 		{
 			bool isRecognizedFile = true;
 
