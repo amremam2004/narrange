@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using NUnit.Framework;
+
 using NArrange.Gui;
 
 namespace NArrange.Tests.Gui
@@ -12,6 +14,8 @@ namespace NArrange.Tests.Gui
 	[TestFixture]
 	public class BaseFormTests
 	{
+		#region Public Methods
+
 		/// <summary>
 		/// Verify that a BaseForm can be created without throwing an exception.
 		/// </summary>
@@ -21,5 +25,7 @@ namespace NArrange.Tests.Gui
 			BaseForm form = new BaseForm();
 			Assert.IsNotNull(form, "Expected a valid base form instance.");
 		}
+
+		#endregion Public Methods
 	}
 }
