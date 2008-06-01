@@ -92,7 +92,7 @@ namespace NArrange.Gui.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void ButtonBrowseClickHandler(object sender, EventArgs e)
+		private void HandleButtonBrowseClick(object sender, EventArgs e)
 		{
 			_openFileDialog.FileName = _textBoxFile.Text;
 			DialogResult result = _openFileDialog.ShowDialog();
@@ -110,7 +110,7 @@ namespace NArrange.Gui.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void ButtonCreateClickHandler(object sender, EventArgs e)
+		private void HandleButtonCreateClick(object sender, EventArgs e)
 		{
 			this.OnCreateClick();
 		}
@@ -120,9 +120,19 @@ namespace NArrange.Gui.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void ButtonEditClickHandler(object sender, EventArgs e)
+		private void HandleButtonEditClick(object sender, EventArgs e)
 		{
 			this.OnEditClick();
+		}
+
+		/// <summary>
+		/// Event handler for the file textbox TextChanged event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleTextBoxFileTextChanged(object sender, EventArgs e)
+		{
+			UpdateButtons();
 		}
 
 		/// <summary>
@@ -147,16 +157,6 @@ namespace NArrange.Gui.Configuration
 			{
 				temp(this, new EventArgs());
 			}
-		}
-
-		/// <summary>
-		/// Event handler for the file textbox TextChanged event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void TextBoxFileTextChangedHandler(object sender, EventArgs e)
-		{
-			UpdateButtons();
 		}
 
 		/// <summary>

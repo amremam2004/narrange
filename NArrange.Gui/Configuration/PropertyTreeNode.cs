@@ -122,16 +122,6 @@ namespace NArrange.Gui.Configuration
 		#region Private Methods
 
 		/// <summary>
-		/// Event handler for the Add menu item click event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void AddMenuItemClickHandler(object sender, EventArgs e)
-		{
-			this.CreateProperty();
-		}
-
-		/// <summary>
 		/// Clears the property value.
 		/// </summary>
 		private void ClearProperty()
@@ -148,6 +138,26 @@ namespace NArrange.Gui.Configuration
 		}
 
 		/// <summary>
+		/// Event handler for the Add menu item click event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void HandleAddMenuItemClick(object sender, EventArgs e)
+		{
+			this.CreateProperty();
+		}
+
+		/// <summary>
+		/// Event handler for the Remove menu item click event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void HandleRemoveMenuItemClick(object sender, EventArgs e)
+		{
+			this.ClearProperty();
+		}
+
+		/// <summary>
 		/// Initializes the node.
 		/// </summary>
 		private void Initialize()
@@ -157,12 +167,12 @@ namespace NArrange.Gui.Configuration
 			if (!_property.IsReadOnly)
 			{
 				_removeMenuItem = new ToolStripMenuItem("&Remove");
-				_removeMenuItem.Click += new EventHandler(RemoveMenuItemClickHandler);
+				_removeMenuItem.Click += new EventHandler(HandleRemoveMenuItemClick);
 				_removeMenuItem.Enabled = this.PropertyValue != null;
 				_contextMenu.Items.Add(_removeMenuItem);
 
 				_addMenuItem = new ToolStripMenuItem("&New");
-				_addMenuItem.Click += new EventHandler(AddMenuItemClickHandler);
+				_addMenuItem.Click += new EventHandler(HandleAddMenuItemClick);
 				_addMenuItem.Enabled = this.PropertyValue == null;
 				_contextMenu.Items.Add(_addMenuItem);
 			}
@@ -180,16 +190,6 @@ namespace NArrange.Gui.Configuration
 			{
 				temp(this, new EventArgs());
 			}
-		}
-
-		/// <summary>
-		/// Event handler for the Remove menu item click event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void RemoveMenuItemClickHandler(object sender, EventArgs e)
-		{
-			this.ClearProperty();
 		}
 
 		#endregion Private Methods

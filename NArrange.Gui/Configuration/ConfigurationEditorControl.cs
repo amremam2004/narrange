@@ -183,46 +183,6 @@ namespace NArrange.Gui.Configuration
 		}
 
 		/// <summary>
-		/// Event handler for the tree view KeyDown event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ConfigurationTreeViewKeyDownHandler(object sender, KeyEventArgs e)
-		{
-			ListItemTreeNode listNode = this._configurationTreeView.SelectedNode as ListItemTreeNode;
-			if (listNode != null)
-			{
-				if (e.Control)
-				{
-					if (e.KeyCode == Keys.Up)
-					{
-						//
-						// Move the list item up
-						//
-						listNode.MoveUp();
-						e.Handled = true;
-					}
-					else if (e.KeyCode == Keys.Down)
-					{
-						//
-						// Move the list item down
-						//
-						listNode.MoveDown();
-						e.Handled = true;
-					}
-				}
-				else if (e.KeyCode == Keys.Delete)
-				{
-					//
-					// Delete the list item
-					//
-					listNode.RemoveItem();
-					e.Handled = true;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Creates a node for a list/collection property.
 		/// </summary>
 		/// <param name="property"></param>
@@ -265,16 +225,80 @@ namespace NArrange.Gui.Configuration
 		}
 
 		/// <summary>
+		/// Event handler for the tree view KeyDown event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleConfigurationTreeViewKeyDown(object sender, KeyEventArgs e)
+		{
+			ListItemTreeNode listNode = this._configurationTreeView.SelectedNode as ListItemTreeNode;
+			if (listNode != null)
+			{
+				if (e.Control)
+				{
+					if (e.KeyCode == Keys.Up)
+					{
+						//
+						// Move the list item up
+						//
+						listNode.MoveUp();
+						e.Handled = true;
+					}
+					else if (e.KeyCode == Keys.Down)
+					{
+						//
+						// Move the list item down
+						//
+						listNode.MoveDown();
+						e.Handled = true;
+					}
+				}
+				else if (e.KeyCode == Keys.Delete)
+				{
+					//
+					// Delete the list item
+					//
+					listNode.RemoveItem();
+					e.Handled = true;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Event handler for the property grid PropertyValueChanged event.
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="e"></param>
-		private void PropertyGridPropertyValueChangedHandler(object s, PropertyValueChangedEventArgs e)
+		private void HandlePropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			ListItemTreeNode listItemTreeNode = this._configurationTreeView.SelectedNode as ListItemTreeNode;
 			if (listItemTreeNode != null)
 			{
 				listItemTreeNode.UpdateText();
+			}
+		}
+
+		/// <summary>
+		/// Event handler for the tree view NodeSelect event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleTreeNodeSelect(object sender, TreeViewEventArgs e)
+		{
+			TreeNode selectedNode = _configurationTreeView.SelectedNode;
+			_propertyGrid.SelectedObject = null;
+
+			if (selectedNode != null)
+			{
+				PropertyTreeNode propertyNode = selectedNode as PropertyTreeNode;
+				if(propertyNode != null && !(propertyNode is ListPropertyTreeNode))
+				{
+					_propertyGrid.SelectedObject = propertyNode.PropertyValue;
+				}
+				else if(selectedNode.Tag != null && !(selectedNode.Tag is IList))
+				{
+					_propertyGrid.SelectedObject = selectedNode.Tag;
+				}
 			}
 		}
 
@@ -357,30 +381,6 @@ namespace NArrange.Gui.Configuration
 				this.AddChildTreeNodes(rootNode, _configuration);
 
 				this._configurationTreeView.Nodes.Add(rootNode);
-			}
-		}
-
-		/// <summary>
-		/// Event handler for the tree view NodeSelect event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void TreeNodeSelectHandler(object sender, TreeViewEventArgs e)
-		{
-			TreeNode selectedNode = _configurationTreeView.SelectedNode;
-			_propertyGrid.SelectedObject = null;
-
-			if (selectedNode != null)
-			{
-				PropertyTreeNode propertyNode = selectedNode as PropertyTreeNode;
-				if(propertyNode != null && !(propertyNode is ListPropertyTreeNode))
-				{
-					_propertyGrid.SelectedObject = propertyNode.PropertyValue;
-				}
-				else if(selectedNode.Tag != null && !(selectedNode.Tag is IList))
-				{
-					_propertyGrid.SelectedObject = selectedNode.Tag;
-				}
 			}
 		}
 

@@ -64,8 +64,8 @@ namespace NArrange.Gui.Configuration
 			this._configurationPicker.SelectedFile = "";
 			this._configurationPicker.Size = new System.Drawing.Size(619, 23);
 			this._configurationPicker.TabIndex = 1;
-			this._configurationPicker.EditClick += new System.EventHandler(this.ConfigurationPickerEditClickHandler);
-			this._configurationPicker.CreateClick += new System.EventHandler(this.ButtonCreateClickHandler);
+			this._configurationPicker.EditClick += new System.EventHandler(this.HandleConfigurationPickerEditClick);
+			this._configurationPicker.CreateClick += new System.EventHandler(this.HandleButtonCreateClick);
 			// 
 			// _buttonSave
 			// 
@@ -77,7 +77,7 @@ namespace NArrange.Gui.Configuration
 			this._buttonSave.TabIndex = 3;
 			this._buttonSave.Text = "&Save";
 			this._buttonSave.UseVisualStyleBackColor = true;
-			this._buttonSave.Click += new System.EventHandler(this.ButtonSaveClickHandler);
+			this._buttonSave.Click += new System.EventHandler(this.HandleButtonSaveClick);
 			// 
 			// _buttonCancel
 			// 
@@ -89,7 +89,7 @@ namespace NArrange.Gui.Configuration
 			this._buttonCancel.TabIndex = 4;
 			this._buttonCancel.Text = "&Cancel";
 			this._buttonCancel.UseVisualStyleBackColor = true;
-			this._buttonCancel.Click += new System.EventHandler(this.ButtonCancelClickHandler);
+			this._buttonCancel.Click += new System.EventHandler(this.HandleButtonCancelClick);
 			// 
 			// ConfigurationEditorForm
 			// 

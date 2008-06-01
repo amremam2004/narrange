@@ -102,40 +102,11 @@ namespace NArrange.Gui.Configuration
 		#region Private Methods
 
 		/// <summary>
-		/// Initializes this tree node.
-		/// </summary>
-		private void Initialize()
-		{
-			this.UpdateText();
-
-			_contextMenu = new ContextMenuStrip();
-
-			_removeMenuItem = new ToolStripMenuItem("&Remove");
-			_removeMenuItem.Click += new EventHandler(RemoveMenuItemClickHandler);
-			_removeMenuItem.ShortcutKeys = Keys.Delete;
-			_contextMenu.Items.Add(_removeMenuItem);
-
-			_moveUpMenuItem = new ToolStripMenuItem("Move &Up");
-			_moveUpMenuItem.Click += new EventHandler(MoveUpMenuItemClickHandler);
-			_moveUpMenuItem.ShortcutKeys = Keys.Control | Keys.Up;
-			_contextMenu.Items.Add(_moveUpMenuItem);
-
-			_moveDownMenuItem = new ToolStripMenuItem("Move &Down");
-			_moveDownMenuItem.Click += new EventHandler(MoveDownMenuItemClickHandler);
-			_moveDownMenuItem.ShortcutKeys = Keys.Control | Keys.Down;
-			_contextMenu.Items.Add(_moveDownMenuItem);
-
-			this.UpdateMenu();
-
-			this.ContextMenuStrip = _contextMenu;
-		}
-
-		/// <summary>
 		/// Event handler for the Move Down menu item click event.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MoveDownMenuItemClickHandler(object sender, EventArgs e)
+		private void HandleMoveDownMenuItemClick(object sender, EventArgs e)
 		{
 			MoveDown();
 		}
@@ -145,7 +116,7 @@ namespace NArrange.Gui.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MoveUpMenuItemClickHandler(object sender, EventArgs e)
+		private void HandleMoveUpMenuItemClick(object sender, EventArgs e)
 		{
 			MoveUp();
 		}
@@ -155,9 +126,38 @@ namespace NArrange.Gui.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void RemoveMenuItemClickHandler(object sender, EventArgs e)
+		private void HandleRemoveMenuItemClick(object sender, EventArgs e)
 		{
 			this.RemoveItem();
+		}
+
+		/// <summary>
+		/// Initializes this tree node.
+		/// </summary>
+		private void Initialize()
+		{
+			this.UpdateText();
+
+			_contextMenu = new ContextMenuStrip();
+
+			_removeMenuItem = new ToolStripMenuItem("&Remove");
+			_removeMenuItem.Click += new EventHandler(HandleRemoveMenuItemClick);
+			_removeMenuItem.ShortcutKeys = Keys.Delete;
+			_contextMenu.Items.Add(_removeMenuItem);
+
+			_moveUpMenuItem = new ToolStripMenuItem("Move &Up");
+			_moveUpMenuItem.Click += new EventHandler(HandleMoveUpMenuItemClick);
+			_moveUpMenuItem.ShortcutKeys = Keys.Control | Keys.Up;
+			_contextMenu.Items.Add(_moveUpMenuItem);
+
+			_moveDownMenuItem = new ToolStripMenuItem("Move &Down");
+			_moveDownMenuItem.Click += new EventHandler(HandleMoveDownMenuItemClick);
+			_moveDownMenuItem.ShortcutKeys = Keys.Control | Keys.Down;
+			_contextMenu.Items.Add(_moveDownMenuItem);
+
+			this.UpdateMenu();
+
+			this.ContextMenuStrip = _contextMenu;
 		}
 
 		/// <summary>

@@ -46,7 +46,7 @@ namespace NArrange.Gui.Configuration
 			this._buttonEdit.Text = "&Edit";
 			this._buttonEdit.UseVisualStyleBackColor = true;
 			this._buttonEdit.Visible = false;
-			this._buttonEdit.Click += new System.EventHandler(this.ButtonEditClickHandler);
+			this._buttonEdit.Click += new System.EventHandler(this.HandleButtonEditClick);
 			// 
 			// _buttonBrowse
 			// 
@@ -57,7 +57,7 @@ namespace NArrange.Gui.Configuration
 			this._buttonBrowse.TabIndex = 1;
 			this._buttonBrowse.Text = "&Browse...";
 			this._buttonBrowse.UseVisualStyleBackColor = true;
-			this._buttonBrowse.Click += new System.EventHandler(this.ButtonBrowseClickHandler);
+			this._buttonBrowse.Click += new System.EventHandler(this.HandleButtonBrowseClick);
 			// 
 			// _textBoxFile
 			// 
@@ -67,7 +67,7 @@ namespace NArrange.Gui.Configuration
 			this._textBoxFile.Name = "_textBoxFile";
 			this._textBoxFile.Size = new System.Drawing.Size(251, 20);
 			this._textBoxFile.TabIndex = 0;
-			this._textBoxFile.TextChanged += new System.EventHandler(this.TextBoxFileTextChangedHandler);
+			this._textBoxFile.TextChanged += new System.EventHandler(this.HandleTextBoxFileTextChanged);
 			// 
 			// _openFileDialog
 			// 
@@ -83,7 +83,7 @@ namespace NArrange.Gui.Configuration
 			this._buttonCreate.TabIndex = 2;
 			this._buttonCreate.Text = "C&reate";
 			this._buttonCreate.UseVisualStyleBackColor = true;
-			this._buttonCreate.Click += new System.EventHandler(this.ButtonCreateClickHandler);
+			this._buttonCreate.Click += new System.EventHandler(this.HandleButtonCreateClick);
 			// 
 			// ConfigurationPicker
 			// 

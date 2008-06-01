@@ -70,8 +70,8 @@ namespace NArrange.Gui.Configuration
 			this._configurationTreeView.Name = "_configurationTreeView";
 			this._configurationTreeView.Size = new System.Drawing.Size(192, 309);
 			this._configurationTreeView.TabIndex = 0;
-			this._configurationTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeNodeSelectHandler);
-			this._configurationTreeView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConfigurationTreeViewKeyDownHandler);
+			this._configurationTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.HandleTreeNodeSelect);
+			this._configurationTreeView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HandleConfigurationTreeViewKeyDown);
 			// 
 			// _propertyGrid
 			// 
@@ -80,7 +80,7 @@ namespace NArrange.Gui.Configuration
 			this._propertyGrid.Name = "_propertyGrid";
 			this._propertyGrid.Size = new System.Drawing.Size(390, 309);
 			this._propertyGrid.TabIndex = 1;
-			this._propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PropertyGridPropertyValueChangedHandler);
+			this._propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.HandlePropertyGridPropertyValueChanged);
 			// 
 			// _elementCollectionContextMenu
 			// 

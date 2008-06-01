@@ -100,50 +100,6 @@ namespace NArrange.Gui.Configuration
 		#region Private Methods
 
 		/// <summary>
-		/// Event handler for the Cancel button click event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ButtonCancelClickHandler(object sender, EventArgs e)
-		{
-			this.CanSelectConfig = true;
-			this._configurationEditorControl.Configuration = null;
-			this._configurationPicker.Refresh();
-		}
-
-		/// <summary>
-		/// Event handler for the Create button click event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ButtonCreateClickHandler(object sender, EventArgs e)
-		{
-			this.CreateConfiguration(_configurationPicker.SelectedFile);
-		}
-
-		/// <summary>
-		/// Event handler for the Save button click event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ButtonSaveClickHandler(object sender, EventArgs e)
-		{
-			this.CanSelectConfig = true;
-			this.SaveConfiguration(_configurationPicker.SelectedFile);
-			this._configurationPicker.Refresh();
-		}
-
-		/// <summary>
-		/// Event handler for the configuration picker EditClick event.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ConfigurationPickerEditClickHandler(object sender, EventArgs e)
-		{
-			this.LoadConfiguration(_configurationPicker.SelectedFile);
-		}
-
-		/// <summary>
 		/// Creates a new configuration using the specified filename and updates 
 		/// the UI.
 		/// </summary>
@@ -164,6 +120,50 @@ namespace NArrange.Gui.Configuration
 					"Unable to create configuration file {0}.", filename),
 					this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
+
+		/// <summary>
+		/// Event handler for the Cancel button click event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleButtonCancelClick(object sender, EventArgs e)
+		{
+			this.CanSelectConfig = true;
+			this._configurationEditorControl.Configuration = null;
+			this._configurationPicker.Refresh();
+		}
+
+		/// <summary>
+		/// Event handler for the Create button click event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleButtonCreateClick(object sender, EventArgs e)
+		{
+			this.CreateConfiguration(_configurationPicker.SelectedFile);
+		}
+
+		/// <summary>
+		/// Event handler for the Save button click event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleButtonSaveClick(object sender, EventArgs e)
+		{
+			this.CanSelectConfig = true;
+			this.SaveConfiguration(_configurationPicker.SelectedFile);
+			this._configurationPicker.Refresh();
+		}
+
+		/// <summary>
+		/// Event handler for the configuration picker EditClick event.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HandleConfigurationPickerEditClick(object sender, EventArgs e)
+		{
+			this.LoadConfiguration(_configurationPicker.SelectedFile);
 		}
 
 		/// <summary>
