@@ -1,10 +1,5 @@
 The following changes were made in this release:
 
-0.2.2.0
-- When parsing, preserve element access when "None" (unspecified).
-- Changed the default XML config file to categorize members with an unspecified access as Private.  Users with custom configuration files should modify private regions/filters to also check for $(Access) == 'None'.
-- Fixed line feeds for VB field groups.
-- Fixed writing of multiple Handles declarations for VB methods.
-- Allow arranging of all source files in a directory.
-- Fixed extra whitespace being written before multiline C# field initial values.
-- Added a configuration editor.
+0.2.3.0
+- Fixed the default configuration for arranging enums into an "Enumerations" region.
+- Fixed an issue with the insertion of region elements.

@@ -39,6 +39,60 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging an enumeration.
+		/// </summary>
+		[Test]
+		public void DefaultArrangeEnumerationTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			UsingElement usingElement = new UsingElement();
+			usingElement.Name = "System";
+
+			TypeElement enumElement = new TypeElement();
+			enumElement.Type = TypeElementType.Enum;
+			enumElement.Access = CodeAccess.Public;
+			enumElement.Name = "TestEnum";
+			enumElement.BodyText = "Value1 = 1,\r\nValue2 = 2";
+
+			NamespaceElement namesspaceElement = new NamespaceElement();
+			namesspaceElement.Name = "TestNamespace";
+			namesspaceElement.AddChild(usingElement);
+			namesspaceElement.AddChild(enumElement);
+
+			codeElements.Add(namesspaceElement);
+
+			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+
+			ReadOnlyCollection<ICodeElement> arranged =
+				arranger.Arrange(codeElements.AsReadOnly());
+
+			Assert.AreEqual(1, arranged.Count,
+				"After arranging, an unexpected number of elements were returned.");
+			NamespaceElement namespaceElementTest = arranged[0] as NamespaceElement;
+			Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+
+			Assert.AreEqual(2, namespaceElementTest.Children.Count,
+				"After arranging, an unexpected number of namespace elements were returned.");
+			Assert.AreEqual(ElementType.Using, namesspaceElement.Children[0].ElementType);
+
+			RegionElement regionElement = namespaceElementTest.Children[1] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Enumerations", regionElement.Name,
+				"Unexpected region name.");
+
+			Assert.AreEqual(1, regionElement.Children.Count,
+				"After arranging, an unexpected number of region elements were returned.");
+			TypeElement typeElement = regionElement.Children[0] as TypeElement;
+			Assert.IsNotNull(typeElement, "Expected a type element.");
+
+			Assert.AreEqual(TypeElementType.Enum, typeElement.Type,
+				"Unexpected type element type.");
+			Assert.AreEqual(enumElement.Name, typeElement.Name,
+				"Unexpected type element name.");
+		}
+
+		/// <summary>
 		/// Tests arranging a nested class.
 		/// </summary>
 		[Test]

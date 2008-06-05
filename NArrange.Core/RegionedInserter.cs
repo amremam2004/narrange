@@ -33,7 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Fixed an ordering issue when inserting region elements.
+ *      - Fixed an ordering issue when inserting region elements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -163,20 +163,24 @@ namespace NArrange.Core
 			            {
 			                RegionElement siblingRegion = parentElement.Children[siblingIndex]
 			                    as RegionElement;
-			                if (siblingRegion != null)
-			                {
-			                    insertIndex = siblingIndex;
+							if (siblingRegion != null)
+							{
+								insertIndex = siblingIndex;
 
-			                    int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
-			                    if (compareIndex <= siblingCompareIndex)
-			                    {
-			                        break;
-			                    }
-			                    else
-			                    {
-			                        insertIndex++;
-			                    }
-			                }
+								int siblingCompareIndex = _levelRegions.IndexOf(siblingRegion.Name);
+								if (compareIndex <= siblingCompareIndex)
+								{
+									break;
+								}
+								else
+								{
+									insertIndex++;
+								}
+							}
+							else
+							{
+								insertIndex++;
+							}
 			            }
 
 			            parentElement.InsertChild(insertIndex, region);

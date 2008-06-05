@@ -48,8 +48,8 @@
               <tr> 
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
-                  <p>Version 0.2.2.0<br>
-                    Last Modified: 06/01/2008<br>
+                  <p>Version 0.2.3.0<br>
+                    Last Modified: 06/04/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -276,9 +276,9 @@ output  For a single source file, specifies the output file
                     specified attribute. Valid element attributes are:</p>
                   <ul>
                     <li>Name - Returns the element name</li>
-                    <li>Access - Returns the element access (&quot;None&quot;, 
+                    <li>Access - Returns the element access: &quot;None&quot;, 
                       &quot;Public&quot;, &quot;Private&quot;, &quot;Protected&quot;, 
-                      &quot;Internal&quot; or &quot;Protected, Internal&quot;).</li>
+                      &quot;Internal&quot; or &quot;Protected, Internal&quot;</li>
                     <li>Modifier - Returns element modifiers as a comma separated 
                       list 
                       <ul>
@@ -307,12 +307,14 @@ output  For a single source file, specifies the output file
                         <li>Property</li>
                         <li>Method</li>
                         <li>Event</li>
-                        <li>Enum</li>
                         <li>Delegate</li>
                         <li>Type</li>
                       </ul>
                     </li>
-                    <li>Type - Returns the return type of the element (e.g. &quot;string&quot;)</li>
+                    <li>Type - Returns the return type of the element (e.g. &quot;string&quot;). 
+                      For Type elements, this returns the sub-type: &quot;Class&quot;, 
+                      &quot;Structure&quot;, &quot;Interface&quot;, &quot;Enum&quot; 
+                      or &quot;Module&quot;(VB)</li>
                     <li>Attributes - Returns a comma separated list of the names 
                       of all attributes associated with an element.</li>
                   </ul>

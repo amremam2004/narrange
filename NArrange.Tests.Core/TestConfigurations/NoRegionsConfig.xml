@@ -43,11 +43,14 @@
 					<Group By="Name" AttributeCapture="^(.*?)(\.|$)" SeparatorType="NewLine"/>
 					<Sort By="Name"/>
 				</Element>
-				<Elements>
-					<Element Type="Enum">
-						<Sort By="Name"/>
-					</Element>
-				</Elements>
+				<Region Name="Enumerations">
+					<Elements>
+						<Element Type="Type">
+							<Sort By="Name"/>
+							<Filter Condition="$(Type) == 'Enum'"/>
+						</Element>
+					</Elements>
+				</Region>
 				<Elements>
 					<Element Type="Delegate">
 						<Sort By="Name"/>

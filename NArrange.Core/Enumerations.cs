@@ -51,6 +51,8 @@ using System.Text;
 
 namespace NArrange.Core
 {
+	#region Enumerations
+
 	/// <summary>
 	/// Binary expression operator
 	/// </summary>
@@ -256,11 +258,6 @@ namespace NArrange.Core
 		/// Event
 		/// </summary>
 		Event,
-
-		/// <summary>
-		/// Enumeration
-		/// </summary>
-		Enum,
 
 		/// <summary>
 		/// Delegate
@@ -602,4 +599,6 @@ namespace NArrange.Core
 		/// </summary>
 		All = SpaceAndTab | CarriageReturnAndLinefeed
 	}
+
+	#endregion Enumerations
 }
