@@ -233,13 +233,14 @@ namespace NArrange.Core
 		}
 
 		/// <summary>
-		/// Reads the current line
+		/// Reads the current line. Does not update PreviousChar.
 		/// </summary>
 		/// <returns></returns>
 		protected string ReadLine()
 		{
 			string line = _reader.ReadLine();
 			_lineNumber++;
+			_position = 1;
 
 			return line;
 		}

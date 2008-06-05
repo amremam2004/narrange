@@ -3,3 +3,4 @@ The following changes were made in this release:
 0.2.3.0
 - Fixed the default configuration for arranging enums into an "Enumerations" region.
 - Fixed an issue with the insertion of region elements.
+- Fixed parsing of VB method/Handles identifiers beginning with an underscore.

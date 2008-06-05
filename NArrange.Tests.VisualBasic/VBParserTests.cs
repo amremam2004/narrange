@@ -1502,6 +1502,34 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a simple field with an underscore at the beginning of the
+		/// name.
+		/// </summary>
+		[Test]
+		public void ParseFieldNameWithUnderscoreTest()
+		{
+			StringReader reader = new StringReader(
+				"Private _val As Integer");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+				"Element is not a FieldElement.");
+			Assert.AreEqual("_val", fieldElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual("Integer", fieldElement.Type,
+				"Unexpected member type.");
+			Assert.IsNull(fieldElement.InitialValue,
+				"Unexpected initial value.");
+		}
+
+		/// <summary>
 		/// Tests parsing a simple field.
 		/// </summary>
 		[Test]
@@ -2754,6 +2782,39 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a method that handles events with a reference whose
+		/// name contains an underscore.
+		/// </summary>
+		[Test]
+		public void ParseMethodHandlesNameWithUnderscoreTest()
+		{
+			StringReader reader = new StringReader(
+			    "Private Sub selectedControl_LocationChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles _currentlySelectedControl.LocationChanged\r\n" + 
+			    "End Sub");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+			    "An unexpected number of elements were parsed.");
+			MethodElement methodElement = elements[0] as MethodElement;
+			Assert.IsNotNull(methodElement, "Expected a method element.");
+			Assert.AreEqual(CodeAccess.Private, methodElement.Access,
+			    "Unexpected access.");
+			Assert.AreEqual("selectedControl_LocationChanged", methodElement.Name,
+			    "Unexpected member name.");
+			Assert.IsNull(methodElement.Type,
+			    "Unexpected return type.");
+
+			string[] handles = methodElement[VBExtendedProperties.Handles] as string[];
+			Assert.IsNotNull(handles, "Handles extended property was not set.");
+			Assert.AreEqual(1, handles.Length,
+			    "Unexpected number of Handles declarations.");
+			Assert.AreEqual("_currentlySelectedControl.LocationChanged", handles[0],
+			    "Unexpected Handles declaration.");
+		}
+
+		/// <summary>
 		/// Tests parsing a method that handles events
 		/// </summary>
 		[Test]
@@ -2835,6 +2896,27 @@ namespace NArrange.Tests.VisualBasic
 			Assert.AreEqual("'Body text line 1\r\n\t'Body text line 2",
 				methodElement.BodyText,
 				"Unexpected body text.");
+		}
+
+		/// <summary>
+		/// Tests parsing a method with an underscore at the beginning of the name.
+		/// </summary>
+		[Test]
+		public void ParseMethodNameWithUnderscoreTest()
+		{
+			StringReader reader = new StringReader(
+				"Public MustOverride Sub _DoSomething()");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			MethodElement methodElement = elements[0] as MethodElement;
+			Assert.IsNotNull(methodElement,
+				"Element is not a MethodElement.");
+			Assert.AreEqual("_DoSomething", methodElement.Name,
+				"Unexpected name.");
 		}
 
 		/// <summary>
@@ -4530,7 +4612,7 @@ namespace NArrange.Tests.VisualBasic
 		[Test]
 		[ExpectedException(typeof(ParseException),
             MatchType = MessageMatch.Contains,
-          ExpectedMessage = "Expected a namepace name")]
+			ExpectedMessage = "Expected a namepace name")]
 		public void ParseUsingEmptyNamespaceTest()
 		{
 			StringReader reader = new StringReader(

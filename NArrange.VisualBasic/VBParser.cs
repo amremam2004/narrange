@@ -42,6 +42,8 @@
  *      - Fixed parsing of fields and function that don't have a 
  *        type specified
  *		- Preserve element access when None
+ *		- Fixed parsing of method/Handles identifiers beginning with 
+ *		  an underscore
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -93,11 +95,21 @@ namespace NArrange.VisualBasic
 		/// <returns></returns>
 		private string CaptureWord(bool captureGeneric)
 		{
-			EatLineContinuation();
+			StringBuilder read = new StringBuilder();
+			EatLineContinuation(read);
 
 			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 
 			StringBuilder word = new StringBuilder(DefaultWordLength);
+
+			if (read.Length > 0 && read[read.Length - 1] == VBSymbol.LineContinuation)
+			{
+				//
+				// This is the scenario where the identifier starts 
+				// with an underscore.
+				//
+				word.Append(VBSymbol.LineContinuation);
+			}
 
 			char nextChar = NextChar;
 			while (nextChar != EmptyChar)
@@ -174,6 +186,41 @@ namespace NArrange.VisualBasic
 			{
 			    TryReadChar();
 			    EatWhiteSpace();
+			}
+		}
+
+		/// <summary>
+		/// Eats a line continuations capturing the text into the specified 
+		/// string builder.
+		/// </summary>
+		/// <param name="builder"></param>
+		private void EatLineContinuation(StringBuilder builder)
+		{
+			while (true)
+			{
+				while (NextChar == ' ' || NextChar == '\t')
+				{
+					TryReadChar();
+					builder.Append(CurrentChar);
+				}
+
+				if (NextChar != VBSymbol.LineContinuation)
+				{
+					break;
+				}
+				TryReadChar();
+				builder.Append(CurrentChar);
+
+				while (IsWhiteSpace(NextChar))
+				{
+					TryReadChar();
+					builder.Append(CurrentChar);
+				}
+
+				if (!IsWhiteSpace(NextChar))
+				{
+					break;
+				}
 			}
 		}
 
@@ -1889,37 +1936,7 @@ namespace NArrange.VisualBasic
 
 			StringBuilder read = new StringBuilder(DefaultBlockLength);
 
-			Action<StringBuilder> eatLineContinuation = delegate(StringBuilder builder)
-			{
-			    while (true)
-			    {
-			        while (IsWhiteSpace(NextChar))
-			        {
-			            TryReadChar();
-			            builder.Append(CurrentChar);
-			        }
-
-			        if (NextChar != VBSymbol.LineContinuation)
-			        {
-			            break;
-			        }
-			        TryReadChar();
-			        builder.Append(CurrentChar);
-
-			        while (IsWhiteSpace(NextChar))
-			        {
-			            TryReadChar();
-			            builder.Append(CurrentChar);
-			        }
-
-			        if (!IsWhiteSpace(NextChar))
-			        {
-			            break;
-			        }
-			    }
-			};
-
-			eatLineContinuation(read);
+			EatLineContinuation(read);
 
 			bool implementsRead = false;
 			bool handlesRead = false;
@@ -1962,19 +1979,17 @@ namespace NArrange.VisualBasic
 			{
 			    do
 			    {
-			        eatLineContinuation(read);
+					EatLineContinuation(read);
 
 			        if (aliasList.Count > 0 && NextChar == VBSymbol.AliasSeparator)
 			        {
 			            TryReadChar();
 			        }
 
-			        eatLineContinuation(read);
-
 			        string alias = CaptureTypeName();
 			        if (string.IsNullOrEmpty(alias))
 			        {
-			            if (implementsRead)
+						if (implementsRead)
 			            {
 			                this.OnParseError("Expected an interface member name.");
 			            }
@@ -1983,10 +1998,18 @@ namespace NArrange.VisualBasic
 			                this.OnParseError("Expected an event name.");
 			            }
 			        }
+					else if (read.Length > 0 && read[read.Length - 1] == VBSymbol.LineContinuation)
+					{
+						//
+						// This is the scenario where the identifier starts 
+						// with an underscore.
+						//
+						alias = VBSymbol.LineContinuation.ToString() + alias;
+					}
 
 			        aliasList.Add(alias);
 			        read = new StringBuilder(DefaultBlockLength);
-			        eatLineContinuation(read);
+			        EatLineContinuation(read);
 			    }
 			    while (NextChar == VBSymbol.AliasSeparator);
 			}
