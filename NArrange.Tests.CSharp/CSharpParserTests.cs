@@ -1649,6 +1649,38 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a field with a trailing block comment.
+		/// </summary>
+		[Test]
+		public void ParseFieldTrailingBlockCommentTest()
+		{
+			StringReader reader = new StringReader(
+				"private int _commented;  /*Comment line 1\r\n" + 
+				"\tComment line 2*/");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			FieldElement fieldElement = elements[0] as FieldElement;
+			Assert.IsNotNull(fieldElement,
+				"Element is not a FieldElement.");
+			Assert.AreEqual("_commented", fieldElement.Name,
+				"Unexpected name.");
+			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual("int", fieldElement.Type,
+				"Unexpected member type.");
+			Assert.IsNull(fieldElement.InitialValue,
+				"Unexpected initial value.");
+			Assert.IsNotNull(fieldElement.TrailingComment,
+				"Expected a trailing comment.");
+			Assert.AreEqual("Comment line 1\r\n\tComment line 2", fieldElement.TrailingComment.Text);
+			Assert.AreEqual(CommentType.Block, fieldElement.TrailingComment.Type);
+		}
+
+		/// <summary>
 		/// Tests parsing a field with a trailing comment.
 		/// </summary>
 		[Test]
@@ -1673,8 +1705,9 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
-			Assert.AreEqual(1, fieldElement.HeaderComments.Count);
-			Assert.AreEqual("This is a comment", fieldElement.HeaderComments[0].Text);
+			Assert.IsNotNull(fieldElement.TrailingComment,
+				"Expected a trailing comment.");
+			Assert.AreEqual("This is a comment", fieldElement.TrailingComment.Text);
 		}
 
 		/// <summary>

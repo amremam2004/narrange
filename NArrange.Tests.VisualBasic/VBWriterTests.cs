@@ -851,6 +851,34 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing a field with a trailing comment.
+		/// </summary>
+		[Test]
+		public void WriteFieldTrailingCommentTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = "Integer";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "1";
+			fieldElement.TrailingComment = new CommentElement("This is a comment");
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			VBWriter VBWriter = new VBWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("Private Shared _test As Integer = 1 'This is a comment",
+				text,
+				"FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an untyped generic field.
 		/// </summary>
 		[Test]

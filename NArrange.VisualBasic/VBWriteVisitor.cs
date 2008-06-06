@@ -41,6 +41,7 @@
  *      - Honor the new keyword for nested types
  *      - Fixed writing of fields that don't have a type specified
  *		- Fixed writing of multiple Handles declarations for methods
+ *		- Preserve trailing comments for fields
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -730,6 +731,15 @@ namespace NArrange.VisualBasic
 			    }
 			    Writer.Write(' ');
 			    Writer.Write(element.InitialValue);
+			}
+
+			if (element.TrailingComment != null)
+			{
+				Writer.Write(' ');
+				int tabCountTemp = this.TabCount;
+				this.TabCount = 0;
+				element.TrailingComment.Accept(this);
+				this.TabCount = tabCountTemp;
 			}
 		}
 

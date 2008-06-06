@@ -38,6 +38,8 @@ namespace NArrange.Tests.Core.CodeElements
 
 			prototype.MemberModifiers = MemberModifiers.Abstract; 
 
+			prototype.TrailingComment = new CommentElement("This is a trailing comment");
+
 			return prototype;
 		}
 
@@ -72,6 +74,12 @@ namespace NArrange.Tests.Core.CodeElements
 			    "InitialValue was not copied correctly.");
 			Assert.AreEqual(original.IsVolatile, clone.IsVolatile,
 			    "IsVolatile was not copied correctly.");
+			Assert.IsNotNull(clone.TrailingComment,
+				"TrailingComment was not copied correctly.");
+			Assert.AreNotSame(original.TrailingComment, clone.TrailingComment,
+				"TrailingComment was not copied correctly.");
+			Assert.AreEqual(original.TrailingComment.Text, clone.TrailingComment.Text,
+				"TrailingComment was not copied correctly.");
 		}
 
 		#endregion Protected Methods

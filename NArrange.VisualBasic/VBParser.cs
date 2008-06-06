@@ -44,6 +44,7 @@
  *		- Preserve element access when None
  *		- Fixed parsing of method/Handles identifiers beginning with 
  *		  an underscore
+ *		- Preserve trailing comments for fields
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -1087,7 +1088,7 @@ namespace NArrange.VisualBasic
 			    if (commentText.Length > 0)
 			    {
 			        CommentElement comment = new CommentElement(commentText);
-			        field.AddHeaderComment(comment);
+					field.TrailingComment = comment;
 			    }
 			}
 

@@ -1581,8 +1581,9 @@ namespace NArrange.Tests.VisualBasic
 			    "Unexpected member type.");
 			Assert.IsNull(fieldElement.InitialValue,
 			    "Unexpected initial value.");
-			Assert.AreEqual(1, fieldElement.HeaderComments.Count);
-			Assert.AreEqual("This is a comment", fieldElement.HeaderComments[0].Text);
+			Assert.IsNotNull(fieldElement.TrailingComment,
+				"Expected a trailing comment.");
+			Assert.AreEqual("This is a comment", fieldElement.TrailingComment.Text);
 
 			reader = new StringReader(
 			    "Private _commented As Integer = 1 'This is a comment");
@@ -1602,8 +1603,9 @@ namespace NArrange.Tests.VisualBasic
 			    "Unexpected member type.");
 			Assert.AreEqual("1", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-			Assert.AreEqual(1, fieldElement.HeaderComments.Count);
-			Assert.AreEqual("This is a comment", fieldElement.HeaderComments[0].Text);
+			Assert.IsNotNull(fieldElement.TrailingComment,
+				"Expected a trailing comment.");
+			Assert.AreEqual("This is a comment", fieldElement.TrailingComment.Text);
 		}
 
 		/// <summary>
@@ -1776,8 +1778,9 @@ namespace NArrange.Tests.VisualBasic
 			    "Unexpected member type.");
 			Assert.AreEqual("\"This\" & \"Is\" & \"a Test\"", fieldElement.InitialValue,
 			    "Unexpected initial value.");
-			Assert.AreEqual(1, fieldElement.HeaderComments.Count);
-			Assert.AreEqual("Comment here", fieldElement.HeaderComments[0].Text);
+			Assert.AreEqual(0, fieldElement.HeaderComments.Count);
+			Assert.IsNotNull(fieldElement.TrailingComment);
+			Assert.AreEqual("Comment here", fieldElement.TrailingComment.Text);
 		}
 
 		/// <summary>

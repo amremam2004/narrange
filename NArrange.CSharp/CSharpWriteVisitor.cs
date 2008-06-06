@@ -47,6 +47,7 @@
  *        vs. entire attribute text
  *		- Fixed extra space being written before multiline field initial 
  *		  values.
+ *		- Preserve trailing comments for fields
  *      Everton Elvio Koser
  *      - Fixed ordering of new and const for fields (merged by James Nies)
  *      - Honor the new keyword for nested types (merged by James Nies)
@@ -592,6 +593,15 @@ namespace NArrange.CSharp
 			}
 
 			Writer.Write(CSharpSymbol.EndOfStatement);
+
+			if (element.TrailingComment != null)
+			{
+				Writer.Write(' ');
+				int tabCountTemp = this.TabCount;
+				this.TabCount = 0;
+				element.TrailingComment.Accept(this);
+				this.TabCount = tabCountTemp;
+			}
 		}
 
 		/// <summary>

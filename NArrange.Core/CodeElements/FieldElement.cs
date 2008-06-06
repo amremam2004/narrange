@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added a Trailing Comment property
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,6 +53,7 @@ namespace NArrange.Core.CodeElements
 
 		private string _initialValue;
 		private bool _isVolatile;
+		private ICommentElement _trailingComment;
 
 		#endregion Fields
 
@@ -120,6 +122,21 @@ namespace NArrange.Core.CodeElements
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the trailing comment.
+		/// </summary>
+		public ICommentElement TrailingComment
+		{
+			get
+			{
+				return _trailingComment;
+			}
+			set
+			{
+				_trailingComment = value;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Protected Methods
@@ -137,6 +154,10 @@ namespace NArrange.Core.CodeElements
 			//
 			fieldElement._initialValue = _initialValue;
 			fieldElement._isVolatile = _isVolatile;
+			if (_trailingComment != null)
+			{
+				fieldElement._trailingComment = _trailingComment.Clone() as ICommentElement;
+			}
 
 			return fieldElement;
 		}

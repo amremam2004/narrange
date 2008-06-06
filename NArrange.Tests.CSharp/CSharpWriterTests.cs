@@ -859,6 +859,63 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a field with a trailing block comment.
+		/// </summary>
+		[Test]
+		public void WriteFieldTrailingBlockCommentTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = "int";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "1";
+			fieldElement.TrailingComment = new CommentElement(
+				"Comment line 1\r\n\tComment line 2", CommentType.Block);
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("private static int _test = 1; /*Comment line 1\r\n\tComment line 2*/",
+				text,
+				"FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a field with a trailing comment.
+		/// </summary>
+		[Test]
+		public void WriteFieldTrailingCommentTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Access = CodeAccess.Private;
+			fieldElement.MemberModifiers = MemberModifiers.Static;
+			fieldElement.Type = "int";
+			fieldElement.Name = "_test";
+			fieldElement.InitialValue = "1";
+			fieldElement.TrailingComment = new CommentElement("This is a comment");
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(fieldElement);
+
+			CSharpWriter csharpWriter = new CSharpWriter();
+			csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual("private static int _test = 1; //This is a comment",
+			    text,
+			    "FieldElement element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a volatile field.
 		/// </summary>
 		[Test]
