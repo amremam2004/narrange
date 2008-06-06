@@ -33,7 +33,6 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Don't apply sorting to region and group elements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -171,8 +170,7 @@ namespace NArrange.Core
 
 			    int insertIndex = 0;
 
-				if (parentElement.Children.Count > 0 && 
-					!(codeElement is RegionElement) && !(codeElement is GroupElement))
+				if (parentElement.Children.Count > 0)
 			    {
 			        for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
 			        {
