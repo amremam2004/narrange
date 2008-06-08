@@ -39,6 +39,7 @@
  *        condition expressions
  *      - Allow apostrophes in string expressions by escaping with another
  *        apostrophe
+ *		- Fixed handling of extra parentheses and improved validation
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -55,34 +56,34 @@ using NArrange.Core.CodeElements;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Class for parsing filter expressions
+	/// Class for parsing filter expressions.
 	/// </summary>
 	public sealed class ConditionExpressionParser
 	{
 		#region Constants
 
 		/// <summary>
-		/// Expression end
+		/// Expression end.
 		/// </summary>
 		public const char ExpressionEnd = ')';
 
 		/// <summary>
-		/// Character that marks the start of an attribute expression
+		/// Character that marks the start of an attribute expression.
 		/// </summary>
 		public const char ExpressionPrefix = '$';
 
 		/// <summary>
-		/// Expression start
+		/// Expression start.
 		/// </summary>
 		public const char ExpressionStart = '(';
 
 		/// <summary>
-		/// File attribute scope
+		/// File attribute scope.
 		/// </summary>
 		public const string FileAttributeScope = "File";
 
 		/// <summary>
-		/// Scope separator
+		/// Scope separator.
 		/// </summary>
 		public const char ScopeSeparator = '.';
 
@@ -98,7 +99,7 @@ namespace NArrange.Core.Configuration
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new FilterExpressionParser
+		/// Creates a new FilterExpressionParser.
 		/// </summary>
 		private ConditionExpressionParser()
 		{
@@ -109,7 +110,7 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets the single instance of the expression parser
+		/// Gets the single instance of the expression parser.
 		/// </summary>
 		public static ConditionExpressionParser Instance
 		{
@@ -180,9 +181,7 @@ namespace NArrange.Core.Configuration
 			                operatorExpressionPlaceHolder.Operator == BinaryExpressionOperator.Contains) &&
 			                !(left is LeafExpression && right is LeafExpression))
 			            {
-			                throw new FormatException(
-			                    string.Format(Thread.CurrentThread.CurrentCulture,
-			                    "Invalid expression {0}", originalExpression));
+							OnInvalidExpression(originalExpression);
 			            }
 
 			            BinaryOperatorExpression operatorExpression = new BinaryOperatorExpression(
@@ -225,12 +224,40 @@ namespace NArrange.Core.Configuration
 
 			if (conditionExpression == null)
 			{
-			    throw new FormatException(
-			    string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Invalid expression {0}", originalExpression));
+				OnInvalidExpression(originalExpression);
 			}
 
 			return conditionExpression;
+		}
+
+		private static void CheckForInvalidOperator(string expression, StringBuilder expressionBuilder)
+		{
+			if (expressionBuilder.Length > 0)
+			{
+				OnInvalidExpression(expression, "Invalid operator {0}", expressionBuilder);
+			}
+		}
+
+		private static void OnInvalidExpression(string expression)
+		{
+			OnInvalidExpression(expression, string.Empty);
+		}
+
+		private static void OnInvalidExpression(string expression, string message, params object[] args)
+		{
+			StringBuilder messageBuilder = new StringBuilder();
+
+			messageBuilder.AppendFormat(Thread.CurrentThread.CurrentCulture,
+				"Invalid expression \"{0}\"", expression);
+
+			if(!string.IsNullOrEmpty(message))
+			{
+				messageBuilder.Append(" - ");
+				messageBuilder.AppendFormat(Thread.CurrentThread.CurrentCulture,
+					message, args);
+			}
+
+			throw new FormatException(messageBuilder.ToString());
 		}
 
 		#endregion Private Methods
@@ -238,7 +265,7 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Parses and expression to an expression tree
+		/// Parses and expression to an expression tree.
 		/// </summary>
 		/// <param name="expression"></param>
 		/// <returns></returns>
@@ -264,6 +291,7 @@ namespace NArrange.Core.Configuration
 
 			bool inString = false;
 			bool inAttribute = false;
+			int depth = 0;
 
 			int data = reader.Read();
 			while (data > 0)
@@ -287,6 +315,7 @@ namespace NArrange.Core.Configuration
 			                break;
 
 			            case ExpressionPrefix:
+							CheckForInvalidOperator(expression, expressionBuilder);
 			                if (nextCh == ExpressionStart)
 			                {
 			                    inAttribute = true;
@@ -325,7 +354,7 @@ namespace NArrange.Core.Configuration
 			                break;
 
 			            case 'O':
-			                if (nextCh == 'r' && !inAttribute)
+			                if (nextCh == 'r' && !inAttribute && !inString)
 			                {
 			                    nodes.Add(new OperatorExpressionPlaceholder(BinaryExpressionOperator.Or));
 			                    reader.Read();
@@ -337,7 +366,7 @@ namespace NArrange.Core.Configuration
 			                break;
 
 			            case 'A':
-			                if (nextCh == 'n' && !inAttribute)
+							if (nextCh == 'n' && !inAttribute && !inString)
 			                {
 			                    reader.Read();
 			                    nextCh = (char)reader.Peek();
@@ -381,15 +410,13 @@ namespace NArrange.Core.Configuration
 			                        }
 			                        catch (ArgumentException ex)
 			                        {
-			                            throw new FormatException(
-			                                string.Format(Thread.CurrentThread.CurrentCulture,
-			                                "Unknown element scope: {0}", ex.Message));
+										OnInvalidExpression(expression, "Unknown attribute scope: {0}", ex.Message);
 			                        }
 			                    }
 
 			                    if (isFileExpression)
 			                    {
-			                        FileAttributeType fileAttribute;
+			                        FileAttributeType fileAttribute = FileAttributeType.None;
 
 			                        try
 			                        {
@@ -398,9 +425,8 @@ namespace NArrange.Core.Configuration
 			                        }
 			                        catch (ArgumentException ex)
 			                        {
-			                            throw new FormatException(
-			                                string.Format(Thread.CurrentThread.CurrentCulture,
-			                                "Unknown attribute: {0}", ex.Message));
+										OnInvalidExpression(expression,
+			                                "Unknown attribute: {0}", ex.Message);
 			                        }
 
 			                        FileAttributeExpression attributeExpresion = new FileAttributeExpression(
@@ -409,7 +435,7 @@ namespace NArrange.Core.Configuration
 			                    }
 			                    else
 			                    {
-			                        ElementAttributeType elementAttribute;
+			                        ElementAttributeType elementAttribute = ElementAttributeType.None;
 
 			                        try
 			                        {
@@ -418,9 +444,8 @@ namespace NArrange.Core.Configuration
 			                        }
 			                        catch (ArgumentException ex)
 			                        {
-			                            throw new FormatException(
-			                                string.Format(Thread.CurrentThread.CurrentCulture,
-			                                "Unknown attribute: {0}", ex.Message));
+										OnInvalidExpression(expression,
+			                                "Unknown attribute: {0}", ex.Message);
 			                        }
 
 			                        ElementAttributeExpression attributeExpresion = new ElementAttributeExpression(
@@ -438,7 +463,7 @@ namespace NArrange.Core.Configuration
 			                    string unaryOperatorString = expressionBuilder.ToString().Trim();
 			                    expressionBuilder = new StringBuilder(DefaultExpressionLength);
 
-			                    UnaryExpressionOperator unaryOperator;
+			                    UnaryExpressionOperator? unaryOperator = null;
 
 			                    if (unaryOperatorString == "!")
 			                    {
@@ -446,19 +471,19 @@ namespace NArrange.Core.Configuration
 			                    }
 			                    else
 			                    {
-			                        throw new FormatException(
-			                        string.Format(Thread.CurrentThread.CurrentCulture,
-			                        "Invalid operator {0}", unaryOperatorString));
+									OnInvalidExpression(expression,
+										"Invalid operator {0}", unaryOperatorString);
 			                    }
 
 			                    UnaryOperatorExpression unaryOperatorExpression = new UnaryOperatorExpression(
-			                        unaryOperator, innerExpression);
+			                        unaryOperator.Value, innerExpression);
 
 			                    nodes.Add(unaryOperatorExpression);
+								depth--;
 			                }
 			                else
 			                {
-			                    data = reader.Read();
+								depth--;
 			                }
 			                break;
 
@@ -466,12 +491,11 @@ namespace NArrange.Core.Configuration
 			                IConditionExpression nestedExpression = null;
 			                StringBuilder childExpressionBuilder = new StringBuilder(DefaultExpressionLength);
 			                data = reader.Read();
-			                int depth = 0;
+							ch = (char)data;
+							nextCh = (char)reader.Peek();
+							depth++;
 			                while (data > 0)
 			                {
-			                    ch = (char)data;
-
-			                    nextCh = (char)reader.Peek();
 			                    if (ch == ExpressionPrefix && nextCh == ExpressionStart)
 			                    {
 			                        inAttribute = true;
@@ -486,24 +510,21 @@ namespace NArrange.Core.Configuration
 			                    }
 			                    else if (nextCh == ExpressionEnd)
 			                    {
-			                        if (inAttribute || depth > 0)
+									childExpressionBuilder.Append(ch);
+
+			                        if (inAttribute || depth > 1)
 			                        {
 			                            if (inAttribute)
 			                            {
 			                                inAttribute = false;
 			                            }
-			                            else if (depth > 0)
+			                            else if (depth > 1)
 			                            {
 			                                depth--;
 			                            }
-
-			                            childExpressionBuilder.Append(ch);
-			                            data = reader.Read();
-			                            childExpressionBuilder.Append(ExpressionEnd);
 			                        }
 			                        else
 			                        {
-			                            childExpressionBuilder.Append(ch);
 			                            break;
 			                        }
 			                    }
@@ -513,8 +534,18 @@ namespace NArrange.Core.Configuration
 			                    }
 
 			                    data = reader.Read();
+								ch = (char)data;
+								nextCh = (char)reader.Peek();
 			                }
-			                nestedExpression = Parse(childExpressionBuilder.ToString());
+
+							try
+							{
+								nestedExpression = Parse(childExpressionBuilder.ToString());
+							}
+							catch(ArgumentException)
+							{
+								OnInvalidExpression(expression);
+							}
 			                nodes.Add(nestedExpression);
 			                break;
 
@@ -537,6 +568,7 @@ namespace NArrange.Core.Configuration
 			                }
 			                else
 			                {
+								CheckForInvalidOperator(expression, expressionBuilder);
 			                    inString = true;
 			                }
 			                break;
@@ -548,6 +580,19 @@ namespace NArrange.Core.Configuration
 			    }
 
 			    data = reader.Read();
+			}
+
+			if (inString)
+			{
+				OnInvalidExpression(expression, "Expected '");
+			}
+			else if (inAttribute || depth > 0)
+			{
+				OnInvalidExpression(expression, "Expected )");
+			}
+			else if (depth < 0)
+			{
+				OnInvalidExpression(expression, "Unmatched )");
 			}
 
 			//
@@ -564,7 +609,7 @@ namespace NArrange.Core.Configuration
 		#region Other
 
 		/// <summary>
-		/// Operator expression
+		/// Operator expression.
 		/// </summary>
 		private class OperatorExpressionPlaceholder : LeafExpression
 		{
@@ -590,7 +635,7 @@ namespace NArrange.Core.Configuration
 			#region Public Properties
 
 			/// <summary>
-			/// Gets the expression operator
+			/// Gets the expression operator.
 			/// </summary>
 			public BinaryExpressionOperator Operator
 			{
