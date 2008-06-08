@@ -6,4 +6,5 @@ The following changes were made in this release:
 - Fixed parsing of VB method/Handles identifiers beginning with an underscore.
 - Preserve trailing comments for fields.
 - Allow the configuration editor to load configuration files with invalid element references.
-- Fixed handling of extra parentheses and improved validation for condition expressions.
+- Fixed handling of extra condition expression parentheses and improved validation for condition expressions.
+- Fixed an issue with the sort direction of inner sorts.

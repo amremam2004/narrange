@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Fixed sort direction for inner sorts
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -139,11 +140,10 @@ namespace NArrange.Core
 			                compareValue = innerComparison(x, y);
 			            }
 			        }
-			    }
-
-			    if (sortBy.Direction == ListSortDirection.Descending)
-			    {
-			        compareValue = -compareValue;
+					else if (sortBy.Direction == ListSortDirection.Descending)
+					{
+						compareValue = -compareValue;
+					}
 			    }
 
 			    return compareValue;
