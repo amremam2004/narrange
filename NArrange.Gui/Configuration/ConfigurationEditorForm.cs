@@ -33,6 +33,7 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//		- Fixed loading of configurations with invalid references
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #endregion Header
@@ -179,7 +180,7 @@ namespace NArrange.Gui.Configuration
 			{
 				try
 				{
-					CodeConfiguration configuration = CodeConfiguration.Load(filename);
+					CodeConfiguration configuration = CodeConfiguration.Load(filename, false);
 					_configurationEditorControl.Configuration = configuration;
 					this.CanSelectConfig = false;
 				}

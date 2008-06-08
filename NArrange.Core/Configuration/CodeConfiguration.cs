@@ -40,6 +40,8 @@
  *        in ElementReferenceConfiguration config elements by locating 
  *        the referenced element and attaching a clone to the reference.
  *		- Added configuration for encoding
+ *		- Allow the configuration to be loaded without resolving
+ *		  references (needed for configuration editor)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -338,28 +340,54 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
+		/// Loads a configuration from the specified file.
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
 		public static CodeConfiguration Load(string fileName)
 		{
+			return Load(fileName, true);
+		}
+
+		/// <summary>
+		/// Loads a configuration from the specified file.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="resolveReferences"></param>
+		/// <returns></returns>
+		public static CodeConfiguration Load(string fileName, bool resolveReferences)
+		{
 			using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
 			{
-			    return Load(fileStream);
+				return Load(fileStream, resolveReferences);
 			}
 		}
 
 		/// <summary>
-		/// Loads a configuration from a stream
+		/// Loads a configuration from a stream.
 		/// </summary>
 		/// <param name="stream"></param>
 		/// <returns></returns>
 		public static CodeConfiguration Load(Stream stream)
 		{
+			return Load(stream, true);
+		}
+
+		/// <summary>
+		/// Loads a configuration from a stream.
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="resolveReferences"></param>
+		/// <returns></returns>
+		public static CodeConfiguration Load(Stream stream, bool resolveReferences)
+		{
 			CodeConfiguration configuration = 
 			    _serializer.Deserialize(stream) as CodeConfiguration;
 
-			configuration.ResolveReferences();
+			if (resolveReferences)
+			{
+				configuration.ResolveReferences();
+			}
 
 			return configuration;
 		}
