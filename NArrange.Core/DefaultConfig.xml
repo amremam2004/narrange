@@ -2,7 +2,7 @@
 <CodeConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<Handlers>
 		<!-- Source handlers are plugins that help NArrange parse and write source files -->
-		<SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.2.3.0, Culture=neutral, PublicKeyToken=null">
+		<SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.2.4.0, Culture=neutral, PublicKeyToken=null">
 			<!-- List of project extensions handled by the handler's IProjectParser -->
 			<ProjectExtensions>
 				<Extension Name="csproj"/>
@@ -15,7 +15,7 @@
 				<!-- If your project uses other extensions for C# files add them here-->
 			</SourceExtensions>
 		</SourceHandler>
-		<SourceHandler Language="VisualBasic" Assembly="NArrange.VisualBasic, Version=0.2.3.0, Culture=neutral, PublicKeyToken=null">
+		<SourceHandler Language="VisualBasic" Assembly="NArrange.VisualBasic, Version=0.2.4.0, Culture=neutral, PublicKeyToken=null">
 			<ProjectExtensions>
 				<Extension Name="vbproj"/>
 			</ProjectExtensions>
