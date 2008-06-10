@@ -49,7 +49,7 @@
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
                   <p>Version 0.2.3.0<br>
-                    Last Modified: 06/04/2008<br>
+                    Last Modified: 06/09/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -198,35 +198,35 @@
         [/b] [/r] [/t]
 
 
-input   Specifies the source code file, project, solution or 
+<b>input</b>   Specifies the source code file, project, solution or 
         directory to arrange.
 
-output  For a single source file, specifies the output file
+<b>output</b>  For a single source file, specifies the output file
         to write arranged code to.
         [Optional] If not specified the input source
         file will be overwritten.
 
-/c      Configuration - Specifies the XML configuration file to use.
+<b>/c</b>      Configuration - Specifies the XML configuration file to use.
         [Optional] If not specified the default
         configuration will be used.
 
-/b      Backup - Specifies to create a backup before arranging
+<b>/b</b>      Backup - Specifies to create a backup before arranging
         [Optional] If not specified, no backup will be created.
         Only valid if an output file is not specified
         and cannot be used in conjunction with Restore.
 
-/r      Restore - Restores arranged files from the latest backup
+<b>/r</b>      Restore - Restores arranged files from the latest backup
         [Optional] When this flag is provided, no files will be arranged.
         Only valid if an output file is not specified
         and cannot be used in conjunction with Backup.
 
-/t      Trace - Detailed logging</pre>
+<b>/t</b>      Trace - Detailed logging</pre>
                   <h3>Microsoft&reg; Visual Studio&reg; Setup<a name="vssetup"></a></h3>
                   <ol>
                     <li>From the Tools menu, select External Tools.</li>
                     <li>Add a new entry for NArrange. 
                       <ul>
-                        <li>For the Command, select the location of narrange-console.exe.</li>
+                        <li>For the Command, select the location of <i>narrange-console.exe</i>.</li>
                         <li> For arguments, pass the solution, project or file 
                           path macro depending on your preference. When choosing 
                           this, you may want to take into consideration your revision 
@@ -275,12 +275,23 @@ output  For a single source file, specifies the output file
                     will sort those elements alphabetically in the region by the 
                     specified attribute. Valid element attributes are:</p>
                   <ul>
-                    <li>Name - Returns the element name</li>
-                    <li>Access - Returns the element access: &quot;None&quot;, 
-                      &quot;Public&quot;, &quot;Private&quot;, &quot;Protected&quot;, 
-                      &quot;Internal&quot; or &quot;Protected, Internal&quot;</li>
-                    <li>Modifier - Returns element modifiers as a comma separated 
-                      list 
+                    <li><b>Name</b> - Returns the code element name.<br>
+                      <br>
+                    </li>
+                    <li><b>Access</b> - Returns the element access. <br>
+                      Valid comparison value strings for this attribute are:</li>
+                    <ul>
+                      <li>None</li>
+                      <li>Public</li>
+                      <li>Protected</li>
+                      <li>Internal</li>
+                      <li>Protected, Internal<br>
+                        <br>
+                      </li>
+                    </ul>
+                    <li><b>Modifier</b> - Returns element modifiers as a comma 
+                      separated list. <br>
+                      Valid comparison value strings for this attribute are: 
                       <ul>
                         <li>Abstract</li>
                         <li>Sealed</li>
@@ -292,10 +303,14 @@ output  For a single source file, specifies the output file
                         <li>ReadOnly</li>
                         <li>Constant</li>
                         <li>External</li>
-                        <li>Partial</li>
+                        <li>Partial<br>
+                          <br>
+                        </li>
                       </ul>
                     </li>
-                    <li>ElementType - Returns the NArrange element type 
+                    <li><b>ElementType</b> - Returns the NArrange element type. 
+                      <br>
+                      Valid comparison value strings for this attribute are: 
                       <ul>
                         <li>Comment</li>
                         <li>Attribute</li>
@@ -308,23 +323,29 @@ output  For a single source file, specifies the output file
                         <li>Method</li>
                         <li>Event</li>
                         <li>Delegate</li>
-                        <li>Type</li>
+                        <li>Type<br>
+                          <br>
+                        </li>
                       </ul>
                     </li>
-                    <li>Type - Returns the return type of the element (e.g. &quot;string&quot;). 
-                      For Type elements, this returns the sub-type: &quot;Class&quot;, 
-                      &quot;Structure&quot;, &quot;Interface&quot;, &quot;Enum&quot; 
-                      or &quot;Module&quot;(VB)</li>
-                    <li>Attributes - Returns a comma separated list of the names 
-                      of all attributes associated with an element.</li>
+                    <li><b>Type</b> - Returns the return type of the element (e.g. 
+                      'string'). <br>
+                      For Type elements, this returns the sub-type: 'Class', 'Structure', 
+                      'Interface', 'Enum' or 'Module' (VB only)<br>
+                      <br>
+                    </li>
+                    <li><b>Attributes</b> - Returns a comma separated list of 
+                      the names of all attributes associated with an element.</li>
                   </ul>
                   <p>Attributes can also be qualified with a scope. For example 
-                    $(Element.Name) or $(Parent.ElementType).</p>
+                    <font face="Courier New, Courier, mono">$(Element.Name)</font> 
+                    or <font face="Courier New, Courier, mono">$(Parent.ElementType)</font>.</p>
                   <p>You may notice that filter conditions can be applied to elements, 
                     which are used to filter elements into the appropriate group 
                     or region. Filter expressions can use the element attributes 
-                    above using the $(AttributeHere) syntax. Filter expressions 
-                    use string comparison and the following operators are available:</p>
+                    above using the <font face="Courier New, Courier, mono">$(AttributeHere)</font> 
+                    syntax. Filter expressions use string comparison and the following 
+                    operators are available:</p>
                   <table width="362" border="1" cellspacing="0" cellpadding="5">
                     <tr> 
                       <td width="186"><b>Operator Name</b></td>
@@ -362,7 +383,7 @@ output  For a single source file, specifies the output file
                   <p>Strings in element expressions should be enclosed with single 
                     quotes.</p>
                   <h3>Formatting<a name="formatting"></a></h3>
-                  <p>The following formatting options are avilable.</p>
+                  <p>The following formatting options are available.</p>
                   <p><b>Tabs</b> - Allows specification of &quot;Tabs&quot; or 
                     &quot;Spaces&quot; and the number of spaces per tab </p>
                   <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font size="+1">&lt;Tabs Style=&quot;Tabs&quot; SpacesPerTab=&quot;4&quot;/&gt;</font></b><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
@@ -429,10 +450,12 @@ output  For a single source file, specifies the output file
                   <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
                   <p>One of the biggest limitations with the current version of 
                     NArrange is that it cannot handle preprocessor directives 
-                    (e.g. #if ). Thus, you will get a warning message indicating 
-                    that files containing preprocessor directives other than #region 
-                    and #endregion cannot be parsed. Note that this is not an 
-                    issue if the preprocessor directive is within a method body.</p>
+                    (e.g. <font face="Courier New, Courier, mono">#if</font> ). 
+                    Thus, you will get a warning message indicating that files 
+                    containing preprocessor directives other than <font face="Courier New, Courier, mono">#region</font> 
+                    and <font face="Courier New, Courier, mono">#endregion</font> 
+                    cannot be parsed. Note that this is not an issue if the preprocessor 
+                    directive is within a method body.</p>
                   <p>&nbsp;</p>
                   <!-- #EndEditable --></td>
               </tr>
