@@ -32,7 +32,7 @@ namespace NArrange.Tests.Core
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ParseNullTest()
 		{
-			SolutionParser.Parse(null);
+			SolutionParser.Instance.Parse(null);
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace NArrange.Tests.Core
 			string[] testProjectFiles = new string[]{
 			    Path.Combine(Path.GetTempPath(), "TestProject.csproj")};
 
-			ReadOnlyCollection<string> projectFiles = SolutionParser.Parse(_testSolutionFile);
+			ReadOnlyCollection<string> projectFiles = SolutionParser.Instance.Parse(_testSolutionFile);
 
 			Assert.AreEqual(testProjectFiles.Length, projectFiles.Count, 
 			    "Unexpected number of source files.");

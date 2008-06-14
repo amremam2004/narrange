@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Fixed parsing of command line switches under Mono
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -41,6 +42,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using NArrange.Core;
+
 namespace NArrange.ConsoleApplication
 {
 	/// <summary>
@@ -48,6 +51,20 @@ namespace NArrange.ConsoleApplication
 	/// </summary>
 	public sealed class CommandArguments
 	{
+		#region Constants
+
+		/// <summary>
+		/// Unix flag/switch prefix character.
+		/// </summary>
+		public const char UnixSwitch = '-';
+
+		/// <summary>
+		/// Windows flag/switch prefix character.
+		/// </summary>
+		public const char WindowsSwitch = '/';
+
+		#endregion Constants
+
 		#region Fields
 
 		private bool _backup;
@@ -212,7 +229,9 @@ namespace NArrange.ConsoleApplication
 			        OnParseError();
 			    }
 
-			    if (arg.Length > 0 && arg[0] == '/')
+			    if (arg.Length > 0 && 
+					((!MonoUtilities.IsMonoRuntime && arg[0] == WindowsSwitch) ||
+					arg[0] == UnixSwitch))
 			    {
 			        string argLower = arg.ToLower();
 			        if (arg.Length >= 2)

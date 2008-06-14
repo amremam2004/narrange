@@ -59,10 +59,10 @@ namespace NArrange.Gui.Configuration
 			// 
 			this._configurationPicker.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._configurationPicker.Location = new System.Drawing.Point(103, 6);
+			this._configurationPicker.Location = new System.Drawing.Point(131, 6);
 			this._configurationPicker.Name = "_configurationPicker";
 			this._configurationPicker.SelectedFile = "";
-			this._configurationPicker.Size = new System.Drawing.Size(619, 23);
+			this._configurationPicker.Size = new System.Drawing.Size(591, 23);
 			this._configurationPicker.TabIndex = 1;
 			this._configurationPicker.EditClick += new System.EventHandler(this.HandleConfigurationPickerEditClick);
 			this._configurationPicker.CreateClick += new System.EventHandler(this.HandleButtonCreateClick);

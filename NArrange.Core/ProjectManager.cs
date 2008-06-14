@@ -159,7 +159,7 @@ namespace NArrange.Core
 		{
 			List<string> sourceFiles = new List<string>();
 
-			ReadOnlyCollection<string> projectFiles = SolutionParser.Parse(fileName);
+			ReadOnlyCollection<string> projectFiles = SolutionParser.Instance.Parse(fileName);
 
 			foreach (string projectFile in projectFiles)
 			{
@@ -325,7 +325,7 @@ namespace NArrange.Core
 		/// <returns></returns>
 		public static bool IsSolution(string inputFile)
 		{
-			return GetExtension(inputFile) == "sln";
+			return SolutionParser.Instance.IsSolution(inputFile);
 		}
 
 		/// <summary>

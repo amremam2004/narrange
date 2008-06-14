@@ -33,6 +33,7 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//		- Fixed the shifting of the Edit button under Mono
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #endregion Header
@@ -45,6 +46,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
+using NArrange.Core;
 
 namespace NArrange.Gui.Configuration
 {
@@ -170,8 +173,16 @@ namespace NArrange.Gui.Configuration
 			_buttonCreate.Enabled = fileEntered;
 
 			bool fileExists = fileEntered && File.Exists(filename);
-			_buttonEdit.Visible = fileExists;
 			_buttonCreate.Visible = !fileExists;
+			_buttonEdit.Visible = fileExists;
+
+			if (MonoUtilities.IsMonoRuntime)
+			{
+				// Not sure why in Mono, but the edit button shifts when it becomes
+				// visible.  Let's just reallign it to the position of the hidden 
+				// create button.
+				_buttonEdit.Location = _buttonCreate.Location;
+			}
 		}
 
 		#endregion Private Methods

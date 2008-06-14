@@ -1,10 +1,5 @@
 The following changes were made in this release:
 
-0.2.3.0
-- Fixed the default configuration for arranging enums into an "Enumerations" region.
-- Fixed an issue with the insertion of region elements.
-- Fixed parsing of VB method/Handles identifiers beginning with an underscore.
-- Preserve trailing comments for fields.
-- Allow the configuration editor to load configuration files with invalid element references.
-- Fixed handling of extra condition expression parentheses and improved validation for condition expressions.
-- Fixed an issue with the sort direction of inner sorts.
+0.2.4.0
+- Fixed command line argument parsing issues under Mono/Linux by using a dash for the switch prefix.
+- Made the Configuration Editor Mono compatible and fixed a button quirk when running under Mono.

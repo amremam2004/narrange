@@ -65,10 +65,12 @@ namespace NArrange.Tests.ConsoleApplication
 			string[][] argsList = 
 			    {
 			        new string[]{"Input.cs", "/b"},
+					new string[]{"Input.cs", "-b"},
 			        new string[]{"Input.cs", "/B"},
 			        new string[]{"Input.cs", "/backup"},
 			        new string[]{"Input.cs", "/Backup"},
-			        new string[]{"Input.cs", "/BACKUP"}
+			        new string[]{"Input.cs", "/BACKUP"},
+					new string[]{"Input.cs", "-BACKUP"}
 			    };
 
 			foreach(string[] args in argsList)
@@ -218,10 +220,12 @@ namespace NArrange.Tests.ConsoleApplication
 			string[][] argsList = 
 			    {
 			        new string[]{"Input.cs", "/r"},
+					new string[]{"Input.cs", "-r"},
 			        new string[]{"Input.cs", "/R"},
 			        new string[]{"Input.cs", "/restore"},
 			        new string[]{"Input.cs", "/Restore"},
-			        new string[]{"Input.cs", "/RESTORE"}
+			        new string[]{"Input.cs", "/RESTORE"},
+					new string[]{"Input.cs", "-RESTORE"}
 			    };
 
 			foreach (string[] args in argsList)

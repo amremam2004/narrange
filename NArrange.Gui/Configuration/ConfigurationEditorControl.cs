@@ -33,6 +33,8 @@
 // Contributors:
 //      James Nies
 //      - Initial creation
+//		- Do not use a custom TypeDescriptor for element collections
+//		  under Mono
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #endregion Header
@@ -46,6 +48,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using NArrange.Core;
 using NArrange.Core.Configuration;
 
 namespace NArrange.Gui.Configuration
@@ -71,9 +74,12 @@ namespace NArrange.Gui.Configuration
 			//
 			// Register the type descriptor provider for configuration elements.
 			//
-			TypeDescriptor.AddProvider(
-				new ConfigurationElementTypeDescriptionProvider(typeof(ConfigurationElement)),
-				typeof(ConfigurationElement));
+			if (!MonoUtilities.IsMonoRuntime)
+			{
+				TypeDescriptor.AddProvider(
+					new ConfigurationElementTypeDescriptionProvider(typeof(ConfigurationElement)),
+					typeof(ConfigurationElement));
+			}
 		}
 
 		/// <summary>

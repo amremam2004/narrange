@@ -100,10 +100,13 @@
     <Compile Include="Configuration\StringExpression.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="IFileFilter.cs" />
+    <Compile Include="ISolutionParser.cs" />
+    <Compile Include="MonoUtilities.cs" />
     <Compile Include="MSBuildProjectParser.cs" />
     <Compile Include="EnumUtilities.cs" />
     <Compile Include="FileArranger.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="MSBuildSolutionParser.cs" />
     <Compile Include="ProjectManager.cs" />
     <Compile Include="SolutionParser.cs" />
     <Compile Include="IProjectParser.cs" />

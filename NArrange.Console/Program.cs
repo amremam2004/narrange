@@ -38,6 +38,7 @@
  *      - Fixed parsing of config file name
  *      - Refactored out command argument parsing
  *		- Allow arranging an entire directory
+ *		- Fixed parsing of command line switches under Mono
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -114,34 +115,62 @@ namespace NArrange.ConsoleApplication
 		{
 			StringBuilder usage = new StringBuilder();
 
+			char switchChar = CommandArguments.WindowsSwitch;
+			string separator = "\t";
+			if (MonoUtilities.IsMonoRuntime)
+			{
+				switchChar = CommandArguments.UnixSwitch;
+				separator = "  ";
+			}
+
 			usage.AppendLine("Usage:");
-			usage.AppendLine("narrange-console <input> [output] [/c:configuration]");
-			usage.AppendLine("\t[/b] [/r] [/t]");
+			usage.AppendFormat("narrange-console <input> [output] [{0}c:configuration]", switchChar);
+			usage.AppendLine();
+			usage.AppendFormat("{0}[{1}b] [{1}r] [{1}t]", separator, switchChar);
 			usage.AppendLine();
 			usage.AppendLine();
-			usage.AppendLine("input\tSpecifies the source code file, project, solution or ");
-			usage.AppendLine("\tdirectory to arrange.");
 			usage.AppendLine();
-			usage.AppendLine("output\tFor a single source file, specifies the output file ");
-			usage.AppendLine("\tto write arranged code to.");
-			usage.AppendLine("\t[Optional] If not specified the input source");
-			usage.AppendLine("\tfile will be overwritten.");
+			usage.AppendFormat("input{0}Specifies the source code file, project, solution or ", separator);
 			usage.AppendLine();
-			usage.AppendLine("/c\tConfiguration - Specifies the XML configuration file to use.");
-			usage.AppendLine("\t[Optional] If not specified the default ");
-			usage.AppendLine("\tconfiguration will be used.");
+			usage.AppendFormat("{0}directory to arrange.", separator);
 			usage.AppendLine();
-			usage.AppendLine("/b\tBackup - Specifies to create a backup before arranging");
-			usage.AppendLine("\t[Optional] If not specified, no backup will be created.");
-			usage.AppendLine("\tOnly valid if an output file is not specified ");
-			usage.AppendLine("\tand cannot be used in conjunction with Restore.");
 			usage.AppendLine();
-			usage.AppendLine("/r\tRestore - Restores arranged files from the latest backup");
-			usage.AppendLine("\t[Optional] When this flag is provided, no files will be arranged.");
-			usage.AppendLine("\tOnly valid if an output file is not specified ");
-			usage.AppendLine("\tand cannot be used in conjunction with Backup.");
+			usage.AppendFormat("output{0}For a single source file, specifies the output file ", separator);
 			usage.AppendLine();
-			usage.AppendLine("/t\tTrace - Detailed logging");
+			usage.AppendFormat("{0}to write arranged code to.", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}[Optional] If not specified the input source", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}file will be overwritten.", separator);
+			usage.AppendLine();
+			usage.AppendLine();
+			usage.AppendFormat("{1}c{0}Configuration - Specifies the XML configuration file to use.", separator, switchChar);
+			usage.AppendLine();
+			usage.AppendFormat("{0}[Optional] If not specified the default ", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}configuration will be used.", separator);
+			usage.AppendLine();
+			usage.AppendLine();
+			usage.AppendFormat("{1}b{0}Backup - Specifies to create a backup before arranging", separator, switchChar);
+			usage.AppendLine();
+			usage.AppendFormat("{0}[Optional] If not specified, no backup will be created.", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}Only valid if an output file is not specified ", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}and cannot be used in conjunction with Restore.", separator);
+			usage.AppendLine();
+			usage.AppendLine();
+			usage.AppendFormat("{1}r{0}Restore - Restores arranged files from the latest backup", separator, switchChar);
+			usage.AppendLine();
+			usage.AppendFormat("{0}[Optional] When this flag is provided, no files will be arranged.", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}Only valid if an output file is not specified ", separator);
+			usage.AppendLine();
+			usage.AppendFormat("{0}and cannot be used in conjunction with Backup.", separator);
+			usage.AppendLine();
+			usage.AppendLine();
+			usage.AppendFormat("{1}t{0}Trace - Detailed logging", separator, switchChar);
+			usage.AppendLine();
 
 			return usage.ToString();
 		}

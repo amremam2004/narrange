@@ -33,8 +33,11 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Refactoring of SolutionParser to allow for additional solution
- *		  types.
+ *      - Fixed an issue with parsing of project files from a solution.  
+ *        The solution parser was attempting to parse a project name when a 
+ *        ProjectSection was encountered.
+ *		- Refactoring of SolutionParser to allow for MonoDevelop solution
+ *		  files.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -44,51 +47,19 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace NArrange.Core
 {
 	/// <summary>
-	/// Parses a solution for individual project file names
+	/// MSBuild solution file parser.
 	/// </summary>
-	public sealed class SolutionParser : ISolutionParser
+	public sealed class MSBuildSolutionParser : ISolutionParser
 	{
-		#region Static Fields
-
-		private static SolutionParser _instance;
-		private static object _instanceLock = new object();
-
-		#endregion Static Fields
-
 		#region Fields
 
-		private List<string> _extensions = new List<string>();
-		private Dictionary<string, ISolutionParser> _parserMap = 
-			new Dictionary<string, ISolutionParser>(StringComparer.OrdinalIgnoreCase);
+		private List<string> _extensions = new List<string>(new string[]{"sln"});
 
 		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new solution parser.
-		/// </summary>
-		private SolutionParser()
-		{
-			List<ISolutionParser> parsers = new List<ISolutionParser>();
-			parsers.Add(new MSBuildSolutionParser());
-
-			foreach (ISolutionParser parser in parsers)
-			{
-				foreach (string extension in parser.Extensions)
-				{
-					_parserMap.Add(extension, parser);
-					_extensions.Add(extension);
-				}
-			}
-		}
-
-		#endregion Constructors
 
 		#region Public Properties
 
@@ -103,51 +74,9 @@ namespace NArrange.Core
 			}
 		}
 
-		/// <summary>
-		/// Gets a solution parser for all solution types.
-		/// </summary>
-		public static SolutionParser Instance
-		{
-			get
-			{
-				if (_instance == null)
-				{
-					lock (_instanceLock)
-					{
-						if (_instance == null)
-						{
-							_instance = new SolutionParser();
-						}
-					}
-				}
-
-				return _instance;
-			}
-		}
-
 		#endregion Public Properties
 
 		#region Public Methods
-
-		/// <summary>
-		/// Gets a value indicating whether or not the specified file
-		/// is a recognized solution file.
-		/// </summary>
-		/// <param name="inputFile"></param>
-		/// <returns></returns>
-		public bool IsSolution(string inputFile)
-		{
-			bool isSolution = false;
-
-			if (!string.IsNullOrEmpty(inputFile))
-			{
-				string extension = Path.GetExtension(inputFile).TrimStart('.').ToUpperInvariant();
-
-				isSolution = _parserMap.ContainsKey(extension);
-			}
-
-			return isSolution;
-		}
 
 		/// <summary>
 		/// Parses project file names from a solution file.
@@ -158,7 +87,7 @@ namespace NArrange.Core
 		{
 			if (solutionFile == null)
 			{
-			    throw new ArgumentNullException("solutionFile");
+				throw new ArgumentNullException("solutionFile");
 			}
 
 			string solutionPath = Path.GetDirectoryName(solutionFile);
@@ -167,24 +96,24 @@ namespace NArrange.Core
 
 			using (StreamReader reader = new StreamReader(solutionFile, true))
 			{
-			    while (!reader.EndOfStream)
-			    {
-			        //
-			        // Find lines like the following:
-			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
+				while (!reader.EndOfStream)
+				{
+					//
+					// Find lines like the following:
+					// Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
 
-			        string line = reader.ReadLine().TrimStart();
-			        if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
-			        {
-			            string[] projectData = line.Split(',');
-			            string projectFile = projectData[1].Trim().Trim('"');
-			            string projectPath = Path.Combine(solutionPath, projectFile);
-			            if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
-			            {
-			                projectFiles.Add(projectPath);
-			            }
-			        }
-			    }
+					string line = reader.ReadLine().TrimStart();
+					if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
+					{
+						string[] projectData = line.Split(',');
+						string projectFile = projectData[1].Trim().Trim('"');
+						string projectPath = Path.Combine(solutionPath, projectFile);
+						if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
+						{
+							projectFiles.Add(projectPath);
+						}
+					}
+				}
 			}
 
 			return projectFiles.AsReadOnly();

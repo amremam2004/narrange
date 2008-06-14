@@ -37,7 +37,7 @@ namespace NArrange.Gui.Configuration
 			// 
 			// _buttonEdit
 			// 
-			this._buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._buttonEdit.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this._buttonEdit.Enabled = false;
 			this._buttonEdit.Location = new System.Drawing.Point(339, -1);
 			this._buttonEdit.Name = "_buttonEdit";
@@ -50,7 +50,7 @@ namespace NArrange.Gui.Configuration
 			// 
 			// _buttonBrowse
 			// 
-			this._buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._buttonBrowse.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this._buttonBrowse.Location = new System.Drawing.Point(258, -1);
 			this._buttonBrowse.Name = "_buttonBrowse";
 			this._buttonBrowse.Size = new System.Drawing.Size(75, 23);
@@ -61,8 +61,7 @@ namespace NArrange.Gui.Configuration
 			// 
 			// _textBoxFile
 			// 
-			this._textBoxFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this._textBoxFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this._textBoxFile.Location = new System.Drawing.Point(1, 1);
 			this._textBoxFile.Name = "_textBoxFile";
 			this._textBoxFile.Size = new System.Drawing.Size(251, 20);
@@ -75,7 +74,7 @@ namespace NArrange.Gui.Configuration
 			// 
 			// _buttonCreate
 			// 
-			this._buttonCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._buttonCreate.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this._buttonCreate.Enabled = false;
 			this._buttonCreate.Location = new System.Drawing.Point(339, -1);
 			this._buttonCreate.Name = "_buttonCreate";
