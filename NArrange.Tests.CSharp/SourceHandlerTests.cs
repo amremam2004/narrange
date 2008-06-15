@@ -12,7 +12,7 @@ using NArrange.Core.Configuration;
 namespace NArrange.Tests.Core
 {
 	/// <summary>
-	/// Test fixture for the SourceHandler class/
+	/// Test fixture for the SourceHandler class.
 	/// </summary>
 	[TestFixture]
 	public class SourceHandlerTests
@@ -20,7 +20,7 @@ namespace NArrange.Tests.Core
 		#region Public Methods
 
 		/// <summary>
-		/// Tests creating a new source handler.
+		/// Tests creating a new extension handler.
 		/// </summary>
 		[Test]
 		public void CreateTest()
@@ -32,7 +32,17 @@ namespace NArrange.Tests.Core
 			SourceHandler handler = new SourceHandler(configuration);
 
 			Assert.IsNotNull(handler.CodeParser, "Parser was not created.");
-			Assert.IsNotNull(handler.Writer, "Writer was not created.");
+			Assert.IsNotNull(handler.CodeWriter, "Writer was not created.");
+		}
+
+		/// <summary>
+		/// Tests creating with a null configuration.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void CreateWithNullConfigurationTest()
+		{
+			new SourceHandler(null);
 		}
 
 		#endregion Public Methods

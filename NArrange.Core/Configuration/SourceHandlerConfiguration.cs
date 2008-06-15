@@ -169,12 +169,6 @@ namespace NArrange.Core.Configuration
 
 			clone._language = _language;
 
-			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
-			{
-			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
-			    clone.ProjectExtensions.Add(extensionClone);
-			}
-
 			foreach (ExtensionConfiguration extension in this.SourceExtensions)
 			{
 			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;

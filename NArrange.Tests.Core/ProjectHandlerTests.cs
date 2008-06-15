@@ -51,6 +51,29 @@ namespace NArrange.Tests.Core
 			Assert.IsInstanceOfType(typeof(MSBuildProjectParser), handler.ProjectParser);
 		}
 
+		/// <summary>
+		/// Tests creating a project handler with a default configuration.
+		/// </summary>
+		[Test]
+		public void CreateWithDefaultConfigurationTest()
+		{
+			ProjectHandlerConfiguration configuration = new ProjectHandlerConfiguration();
+			ProjectHandler projectHandler = new ProjectHandler(configuration);
+
+			Assert.IsNotNull(projectHandler.ProjectParser, "Expected a project parser instance.");
+			Assert.IsInstanceOfType(typeof(MSBuildProjectParser), projectHandler.ProjectParser);
+		}
+
+		/// <summary>
+		/// Tests creating with a null configuration.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void CreateWithNullConfigurationTest()
+		{
+			new ProjectHandler(null);
+		}
+
 		#endregion Public Methods
 	}
 }

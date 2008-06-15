@@ -60,9 +60,8 @@ namespace NArrange.Core
 
 		private Assembly _assembly;
 		private ICodeElementParser _codeParser;
+		private ICodeElementWriter _codeWriter;
 		private SourceHandlerConfiguration _configuration;
-		private IProjectParser _projectParser;
-		private ICodeElementWriter _writer;
 
 		#endregion Fields
 
@@ -100,6 +99,17 @@ namespace NArrange.Core
 		}
 
 		/// <summary>
+		/// Gets the code writer associated with the extension.
+		/// </summary>
+		public ICodeElementWriter CodeWriter
+		{
+			get
+			{
+			    return _codeWriter;
+			}
+		}
+
+		/// <summary>
 		/// Gets the handler configuration used to create this SourceHandler.
 		/// </summary>
 		public SourceHandlerConfiguration Configuration
@@ -110,23 +120,12 @@ namespace NArrange.Core
 			}
 		}
 
-		/// <summary>
-		/// Gets the code writer associated with the extension
-		/// </summary>
-		public ICodeElementWriter Writer
-		{
-			get
-			{
-			    return _writer;
-			}
-		}
-
 		#endregion Public Properties
 
 		#region Private Methods
 
 		/// <summary>
-		/// Initializes the extension handler
+		/// Initializes the extension handler.
 		/// </summary>
 		private void Initialize()
 		{
@@ -139,13 +138,9 @@ namespace NArrange.Core
 			    {
 			        _codeParser = Activator.CreateInstance(type) as ICodeElementParser;
 			    }
-			    else if (_writer == null && type.GetInterface(typeof(ICodeElementWriter).ToString()) != null)
+			    else if (_codeWriter == null && type.GetInterface(typeof(ICodeElementWriter).ToString()) != null)
 			    {
-			        _writer = Activator.CreateInstance(type) as ICodeElementWriter;
-			    }
-			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
-			    {
-			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
+			        _codeWriter = Activator.CreateInstance(type) as ICodeElementWriter;
 			    }
 			}
 		}

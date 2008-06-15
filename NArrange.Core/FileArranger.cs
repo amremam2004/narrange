@@ -186,7 +186,7 @@ namespace NArrange.Core
 			string outputFileText = null;
 			if (elements != null)
 			{
-				ICodeElementWriter codeWriter = _projectManager.GetSourceHandler(inputFile).Writer;
+				ICodeElementWriter codeWriter = _projectManager.GetSourceHandler(inputFile).CodeWriter;
 				codeWriter.Configuration = _configuration;
 
 				StringWriter writer = new StringWriter(CultureInfo.InvariantCulture);
