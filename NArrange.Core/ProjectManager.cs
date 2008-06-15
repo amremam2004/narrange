@@ -35,6 +35,7 @@
  *      - Initial creation
  *      - Allow filtering of source and project files
  *		- Allow arranging of an entire directory
+ *		- Allow multiple types of project parsers
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -42,6 +43,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -58,7 +60,7 @@ namespace NArrange.Core
 		#region Fields
 
 		private CodeConfiguration _configuration;
-		private Dictionary<string, SourceHandler> _projectExtensionHandlers;
+		private Dictionary<string, ProjectHandler> _projectExtensionHandlers;
 		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;
 
 		#endregion Fields
@@ -108,21 +110,21 @@ namespace NArrange.Core
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
-		private SourceHandler GetProjectHandler(string fileName)
+		private ProjectHandler GetProjectHandler(string fileName)
 		{
 			string extension = GetExtension(fileName);
 
-			SourceHandler sourceHandler = null;
-			_projectExtensionHandlers.TryGetValue(extension, out sourceHandler);
+			ProjectHandler projectHandler = null;
+			_projectExtensionHandlers.TryGetValue(extension, out projectHandler);
 
-			return sourceHandler;
+			return projectHandler;
 		}
 
 		private ReadOnlyCollection<string> GetProjectSourceFiles(string fileName)
 		{
 			List<string> sourceFiles = new List<string>();
 
-			SourceHandler handler = GetProjectHandler(fileName);
+			ProjectHandler handler = GetProjectHandler(fileName);
 			if (handler != null)
 			{
 				bool isRecognizedProject = IsRecognizedFile(fileName, handler.Configuration.ProjectExtensions);
@@ -130,17 +132,6 @@ namespace NArrange.Core
 				if (isRecognizedProject)
 				{
 					IProjectParser projectParser = handler.ProjectParser;
-
-					List<string> extensions = new List<string>();
-					foreach (string key in _sourceExtensionHandlers.Keys)
-					{
-						SourceHandler sourceHandler = _sourceExtensionHandlers[key];
-						if (sourceHandler == handler)
-						{
-							extensions.Add(key);
-						}
-					}
-
 					ReadOnlyCollection<string> fileNames = projectParser.Parse(fileName);
 					foreach (string sourceFile in fileNames)
 					{
@@ -178,23 +169,37 @@ namespace NArrange.Core
 			//
 			// Load extension handlers
 			//
-			_projectExtensionHandlers = new Dictionary<string, SourceHandler>(
+			_projectExtensionHandlers = new Dictionary<string, ProjectHandler>(
 			    StringComparer.OrdinalIgnoreCase);
 			_sourceExtensionHandlers = new Dictionary<string, SourceHandler>(
 			    StringComparer.OrdinalIgnoreCase);
 			foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
 			{
-			    SourceHandler handler = new SourceHandler(handlerConfiguration);
+				switch (handlerConfiguration.HandlerType)
+				{
+					case HandlerType.Source:
+						SourceHandlerConfiguration sourceConfiguration = handlerConfiguration as SourceHandlerConfiguration;
+						SourceHandler sourceHandler = new SourceHandler(sourceConfiguration);
+						foreach (ExtensionConfiguration extension in sourceConfiguration.SourceExtensions)
+						{
+							_sourceExtensionHandlers.Add(extension.Name, sourceHandler);
+						}
+						break;
 
-			    foreach (ExtensionConfiguration extension in handlerConfiguration.ProjectExtensions)
-			    {
-			        _projectExtensionHandlers.Add(extension.Name, handler);
-			    }
+					case HandlerType.Project:
+						ProjectHandlerConfiguration projectConfiguration = handlerConfiguration as ProjectHandlerConfiguration; 
+						ProjectHandler projectHandler = new ProjectHandler(projectConfiguration);
+						foreach (ExtensionConfiguration extension in projectConfiguration.ProjectExtensions)
+						{
+							_projectExtensionHandlers.Add(extension.Name, projectHandler);
+						}
+						break;
 
-			    foreach (ExtensionConfiguration extension in handlerConfiguration.SourceExtensions)
-			    {
-			        _sourceExtensionHandlers.Add(extension.Name, handler);
-			    }
+					default:
+						throw new InvalidOperationException(
+							string.Format(CultureInfo.InvariantCulture,
+							"Unrecognized handler configuration {0}", handlerConfiguration));
+				}
 			}
 		}
 

@@ -47,14 +47,14 @@ using System.Xml.Serialization;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies source code extension handler assembly
+	/// Specifies source code extension handler assembly.
 	/// </summary>
 	[XmlType("SourceHandler")]
-	public class HandlerConfiguration : ICloneable
+	[DisplayName("Source Handler")]
+	public class SourceHandlerConfiguration : HandlerConfiguration
 	{
 		#region Fields
 
-		private string _assembly;
 		private string _language;
 		private ExtensionConfigurationCollection _projectExtensions;
 		private ExtensionConfigurationCollection _sourceExtensions;
@@ -66,7 +66,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Creates a new ExtensionConfiguration instance
 		/// </summary>
-		public HandlerConfiguration()
+		public SourceHandlerConfiguration()
 		{
 		}
 
@@ -75,20 +75,13 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the extension handler assembly
+		/// Gets the handler type.
 		/// </summary>
-		[XmlAttribute("Assembly")]
-		[Description("The full assembly name used for assembly loading.")]
-		[DisplayName("Assembly name")]
-		public string AssemblyName
+		public override HandlerType HandlerType
 		{
-			get
+			get 
 			{
-			    return _assembly;
-			}
-			set
-			{
-			    _assembly = value;
+				return HandlerType.Source;
 			}
 		}
 
@@ -110,11 +103,14 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
-		/// Extensions
+		/// Project extensions (Obsolete)
 		/// </summary>
 		[XmlArrayItem(typeof(ExtensionConfiguration))]
-		[Description("The list of project file extensions recognized for the language.")]
-		[DisplayName("Project extensions")]
+		[Description("The list of project file extensions recognized for the language " + 
+			"(Obsolete, this should now be specified in the project handler configuration).")]
+		[DisplayName("Project extensions (Obsolete)")]
+		[ReadOnly(true)]
+		[Browsable(false)]
 		public ExtensionConfigurationCollection ProjectExtensions
 		{
 			get
@@ -161,17 +157,16 @@ namespace NArrange.Core.Configuration
 
 		#endregion Public Properties
 
-		#region Public Methods
+		#region Protected Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
-		public object Clone()
+		protected override HandlerConfiguration DoClone()
 		{
-			HandlerConfiguration clone = new HandlerConfiguration();
+			SourceHandlerConfiguration clone = new SourceHandlerConfiguration();
 
-			clone._assembly = _assembly;
 			clone._language = _language;
 
 			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
@@ -189,6 +184,10 @@ namespace NArrange.Core.Configuration
 			return clone;
 		}
 
+		#endregion Protected Methods
+
+		#region Public Methods
+
 		/// <summary>
 		/// Gets the string representation
 		/// </summary>
@@ -196,7 +195,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Handler: {0}", this._assembly);
+			    "Source Handler: {0}", this._language);
 		}
 
 		#endregion Public Methods

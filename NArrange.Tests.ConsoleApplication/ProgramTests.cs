@@ -25,8 +25,10 @@ namespace NArrange.Tests.ConsoleApplication
 
 		private string _testInvalidExtensionFile;
 		private string _testInvalidSourceFile;
-		private string _testProjectFile;
-		private string _testSolutionFile;
+		private string _testMBBuildProjectFile;
+		private string _testMSBuildSolutionFile;
+		private string _testMonoDevelopProjectFile;
+		private string _testMonoDevelopSolutionFile;
 		private string _testValidSourceFile1;
 		private string _testValidSourceFile2;
 
@@ -160,38 +162,6 @@ namespace NArrange.Tests.ConsoleApplication
 		}
 
 		/// <summary>
-		/// Tests arranging an empty project file
-		/// </summary>
-		[Test]
-		public void ArrangeEmptyProjectTest()
-		{
-			TestLogger logger = new TestLogger();
-
-			string emptyProjectFile = Path.Combine(Path.GetTempPath(), 
-			    Guid.NewGuid().ToString().Replace('-','_') + ".csproj");
-			File.WriteAllText(emptyProjectFile, "<Project></Project>");
-
-			try
-			{
-			    bool success = Arrange(logger, emptyProjectFile);
-
-			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, 
-			        "does not contain any supported source files"));
-			}
-			finally
-			{
-			    try
-			    {
-			        File.Delete(emptyProjectFile);
-			    }
-			    catch
-			    {
-			    }
-			}
-		}
-
-		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
@@ -292,6 +262,126 @@ namespace NArrange.Tests.ConsoleApplication
 		}
 
 		/// <summary>
+		/// Tests arranging an empty project file
+		/// </summary>
+		[Test]
+		public void ArrangeMSBuildEmptyProjectTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			string emptyProjectFile = Path.Combine(Path.GetTempPath(), 
+			    Guid.NewGuid().ToString().Replace('-','_') + ".csproj");
+			File.WriteAllText(emptyProjectFile, "<Project></Project>");
+
+			try
+			{
+			    bool success = Arrange(logger, emptyProjectFile);
+
+			    Assert.IsTrue(success, "Expected file to be arranged succesfully.");
+			    Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning, 
+			        "does not contain any supported source files"));
+			}
+			finally
+			{
+			    try
+			    {
+			        File.Delete(emptyProjectFile);
+			    }
+			    catch
+			    {
+			    }
+			}
+		}
+
+		/// <summary>
+		/// Tests arranging a project file
+		/// </summary>
+		[Test]
+		public void ArrangeMSBuildProjectTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			bool success = Arrange(logger, _testMBBuildProjectFile);
+
+			Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+		}
+
+		/// <summary>
+		/// Tests arranging a solution file
+		/// </summary>
+		[Test]
+		public void ArrangeMSBuildSolutionTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			bool success = Arrange(logger, _testMSBuildSolutionFile);
+
+			Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+		}
+
+		/// <summary>
+		/// Tests arranging an empty project file
+		/// </summary>
+		[Test]
+		public void ArrangeMonoDevelopEmptyProjectTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			string emptyProjectFile = Path.Combine(Path.GetTempPath(),
+				Guid.NewGuid().ToString().Replace('-', '_') + ".mdp");
+			File.WriteAllText(emptyProjectFile, "<Project></Project>");
+
+			try
+			{
+				bool success = Arrange(logger, emptyProjectFile);
+
+				Assert.IsTrue(success, "Expected file to be arranged succesfully.");
+				Assert.IsTrue(logger.HasPartialMessage(LogLevel.Warning,
+					"does not contain any supported source files"));
+			}
+			finally
+			{
+				try
+				{
+					File.Delete(emptyProjectFile);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		/// <summary>
+		/// Tests arranging a project file
+		/// </summary>
+		[Test]
+		public void ArrangeMonoDevelopProjectTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			bool success = Arrange(logger, _testMonoDevelopProjectFile);
+
+			Assert.IsTrue(success, "Expected file to be arranged succesfully. - {0}", logger.ToString());
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+		}
+
+		/// <summary>
+		/// Tests arranging a solution file
+		/// </summary>
+		[Test]
+		public void ArrangeMonoDevelopSolutionTest()
+		{
+			TestLogger logger = new TestLogger();
+
+			bool success = Arrange(logger, _testMonoDevelopSolutionFile);
+
+			Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
+			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+		}
+
+		/// <summary>
 		/// Tests arranging a single source file with an invalid configuration
 		/// </summary>
 		[Test]
@@ -303,20 +393,6 @@ namespace NArrange.Tests.ConsoleApplication
 
 			Assert.IsFalse(success, "Expected file to not be arranged succesfully.");
 			Assert.IsTrue(logger.HasPartialMessage(LogLevel.Error, "Unable to load configuration file"));
-		}
-
-		/// <summary>
-		/// Tests arranging a project file
-		/// </summary>
-		[Test]
-		public void ArrangeProjectTest()
-		{
-			TestLogger logger = new TestLogger();
-
-			bool success = Arrange(logger, _testProjectFile);
-
-			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
 		}
 
 		/// <summary>
@@ -429,20 +505,6 @@ namespace NArrange.Tests.ConsoleApplication
 		}
 
 		/// <summary>
-		/// Tests arranging a solution file
-		/// </summary>
-		[Test]
-		public void ArrangeSolutionTest()
-		{
-			TestLogger logger = new TestLogger();
-
-			bool success = Arrange(logger, _testSolutionFile);
-
-			Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-			Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."));
-		}
-
-		/// <summary>
 		/// Tests the GetCopyrightText method.
 		/// </summary>
 		[Test]
@@ -514,11 +576,17 @@ namespace NArrange.Tests.ConsoleApplication
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassMembers.cs");
 			File.WriteAllText(_testValidSourceFile2, contents);
 
-			_testProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.csproj");
-			CSharpProjectParserTests.WriteTestProject(_testProjectFile);
+			_testMBBuildProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.csproj");
+			MSBuildProjectParserTests.WriteTestProject(_testMBBuildProjectFile);
 
-			_testSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
-			SolutionParserTests.WriteTestSolution(_testSolutionFile);
+			_testMSBuildSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
+			MSBuildSolutionParserTests.WriteTestSolution(_testMSBuildSolutionFile);
+
+			_testMonoDevelopProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.mdp");
+			MonoDevelopProjectParserTests.WriteTestProject(_testMonoDevelopProjectFile);
+
+			_testMonoDevelopSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.mds");
+			MonoDevelopSolutionParserTests.WriteTestSolution(_testMonoDevelopSolutionFile);
 
 			contents = GetTestFileContents("ClassDefinition.cs");
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassDefinition.cs");
@@ -547,8 +615,10 @@ namespace NArrange.Tests.ConsoleApplication
 			        File.Delete(_testInvalidExtensionFile);
 			        File.Delete(_testInvalidSourceFile);
 			        File.Delete(_testValidSourceFile2);
-			        File.Delete(_testProjectFile);
-			        File.Delete(_testSolutionFile);
+			        File.Delete(_testMBBuildProjectFile);
+			        File.Delete(_testMSBuildSolutionFile);
+					File.Delete(_testMonoDevelopProjectFile);
+					File.Delete(_testMonoDevelopSolutionFile);
 			    }
 			}
 			catch

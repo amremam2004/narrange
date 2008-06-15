@@ -78,11 +78,12 @@ namespace NArrange.Core
 			XmlNodeList nodes = xmlDocument.SelectNodes("//ns:Compile", namespaceManager);
 			foreach (XmlNode node in nodes)
 			{
-			    if (node.Attributes["Include"] != null)
+				XmlAttribute includeAttribute = node.Attributes["Include"];
+				if (includeAttribute != null)
 			    {
 			        if (node.SelectSingleNode("ns:Link", namespaceManager) == null)
 			        {
-			            string fileName = node.Attributes["Include"].Value;
+						string fileName = includeAttribute.Value;
 
 			            string sourceFilePath = Path.Combine(projectPath, fileName);
 			            sourceFiles.Add(sourceFilePath);

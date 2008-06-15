@@ -47,8 +47,7 @@
     <Compile Include="CSharpTestFile.cs" />
     <Compile Include="CSharpTestUtilities.cs" />
     <Compile Include="CSharpWriterTests.cs" />
-    <Compile Include="ExtensionHandlerTests.cs" />
-    <Compile Include="CSharpProjectParserTests.cs" />
+    <Compile Include="SourceHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="TestSourceFiles\UTF8.cs" />
     <EmbeddedResource Include="TestSourceFiles\StructDefinition.cs" />
@@ -78,9 +77,6 @@
       <Project>{5053E13A-3D0C-444F-9B39-EFE32076FB50}</Project>
       <Name>NArrange.Tests.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestProject.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

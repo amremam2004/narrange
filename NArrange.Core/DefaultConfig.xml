@@ -1,13 +1,21 @@
 ﻿<?xml version="1.0"?>
 <CodeConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<Handlers>
-		<!-- Source handlers are plugins that help NArrange parse and write source files -->
-		<SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.2.4.0, Culture=neutral, PublicKeyToken=null">
-			<!-- List of project extensions handled by the handler's IProjectParser -->
+		<ProjectHandler Parser="NArrange.Core.MSBuildProjectParser">
+			<!-- List of handled project extensions -->
 			<ProjectExtensions>
 				<Extension Name="csproj"/>
+				<Extension Name="vbproj"/>
 			</ProjectExtensions>
-			<!-- List of source file extensions valid for the handler's ICodeParser-->
+		</ProjectHandler>
+		<ProjectHandler Parser="NArrange.Core.MonoDevelopProjectParser">
+			<ProjectExtensions>
+				<Extension Name="mdp" Parser="NArrange.Core.MonoDevelopProjectParser"/>
+			</ProjectExtensions>
+		</ProjectHandler>
+		<!-- Source handlers are plugins that help NArrange parse and write source files -->
+		<SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.2.4.0, Culture=neutral, PublicKeyToken=null">
+			<!-- List of handled source file extensions -->
 			<SourceExtensions>
 				<Extension Name="cs">
 					<Filter Condition="!($(File.Name) : '.Designer.')"/>
@@ -16,9 +24,6 @@
 			</SourceExtensions>
 		</SourceHandler>
 		<SourceHandler Language="VisualBasic" Assembly="NArrange.VisualBasic, Version=0.2.4.0, Culture=neutral, PublicKeyToken=null">
-			<ProjectExtensions>
-				<Extension Name="vbproj"/>
-			</ProjectExtensions>
 			<SourceExtensions>
 				<Extension Name="vb">
 					<Filter Condition="!($(File.Name) : '.Designer.')"/>

@@ -33,123 +33,84 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Changed constructor to use a handler configuration and expose
- *        the configuration as a property
- *		- Obsoleted the project extensions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Reflection;
 using System.Text;
-
-using NArrange.Core.Configuration;
+using System.Xml;
 
 namespace NArrange.Core
 {
 	/// <summary>
-	/// This class provides instances for handling language specific requests 
-	/// based on file extension.
+	/// MonoDevelop solution file parser.
 	/// </summary>
-	public sealed class SourceHandler
+	public sealed class MonoDevelopSolutionParser : ISolutionParser
 	{
 		#region Fields
 
-		private Assembly _assembly;
-		private ICodeElementParser _codeParser;
-		private SourceHandlerConfiguration _configuration;
-		private IProjectParser _projectParser;
-		private ICodeElementWriter _writer;
+		private List<string> _extensions = new List<string>(new string[]{"mds"});
 
 		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new SourceHandler.
-		/// </summary>
-		/// <param name="configuration"></param>
-		public SourceHandler(SourceHandlerConfiguration configuration)
-		{
-			if (configuration == null)
-			{
-			    throw new ArgumentNullException("configuration");
-			}
-
-			_configuration = configuration;
-
-			Initialize();
-		}
-
-		#endregion Constructors
 
 		#region Public Properties
 
 		/// <summary>
-		/// Gets the code parser associated with the extension
+		/// Gets a list of extensions supported by this solution parser.
 		/// </summary>
-		public ICodeElementParser CodeParser
+		public ReadOnlyCollection<string> Extensions
 		{
 			get
 			{
-			    return _codeParser;
-			}
-		}
-
-		/// <summary>
-		/// Gets the handler configuration used to create this SourceHandler.
-		/// </summary>
-		public SourceHandlerConfiguration Configuration
-		{
-			get
-			{
-			    return _configuration;
-			}
-		}
-
-		/// <summary>
-		/// Gets the code writer associated with the extension
-		/// </summary>
-		public ICodeElementWriter Writer
-		{
-			get
-			{
-			    return _writer;
+				return _extensions.AsReadOnly();
 			}
 		}
 
 		#endregion Public Properties
 
-		#region Private Methods
+		#region Public Methods
 
 		/// <summary>
-		/// Initializes the extension handler
+		/// Parses project file names from a solution file.
 		/// </summary>
-		private void Initialize()
+		/// <param name="solutionFile"></param>
+		/// <returns>A list of project file names</returns>
+		public ReadOnlyCollection<string> Parse(string solutionFile)
 		{
-			_assembly = Assembly.Load(_configuration.AssemblyName);
-
-			Type[] types = _assembly.GetTypes();
-			foreach (Type type in types)
+			if (solutionFile == null)
 			{
-			    if (_codeParser == null && type.GetInterface(typeof(ICodeElementParser).ToString()) != null)
-			    {
-			        _codeParser = Activator.CreateInstance(type) as ICodeElementParser;
-			    }
-			    else if (_writer == null && type.GetInterface(typeof(ICodeElementWriter).ToString()) != null)
-			    {
-			        _writer = Activator.CreateInstance(type) as ICodeElementWriter;
-			    }
-			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
-			    {
-			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
-			    }
+				throw new ArgumentNullException("solutionFile");
 			}
+
+			string solutionPath = Path.GetDirectoryName(solutionFile);
+
+			List<string> projectFiles = new List<string>();
+
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.Load(solutionFile);
+
+			XmlNodeList nodes = xmlDocument.SelectNodes("//Entry");
+			foreach (XmlNode node in nodes)
+			{
+				XmlAttribute nameAttribute = node.Attributes["filename"];
+				if (nameAttribute != null)
+				{
+					string projectFile = nameAttribute.Value;
+					string projectPath = Path.Combine(solutionPath, projectFile);
+					if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
+					{
+						projectFiles.Add(projectPath);
+					}
+				}
+			}
+
+			return projectFiles.AsReadOnly();
 		}
 
-		#endregion Private Methods
+		#endregion Public Methods
 	}
 }

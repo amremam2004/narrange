@@ -283,7 +283,7 @@ namespace NArrange.Tests.Core
 			// Set up the filter
 			FilterBy filter = new FilterBy();
 			filter.Condition = "!($(File.Path) : '.Filtered.')";
-			filterProjectConfig.Handlers[0].ProjectExtensions[0].FilterBy = filter;
+			((ProjectHandlerConfiguration)filterProjectConfig.Handlers[0]).ProjectExtensions[0].FilterBy = filter;
 
 			string filterProjectConfigFile = Path.Combine(Path.GetTempPath(), "FilterProjectConfig.xml");
 
@@ -429,13 +429,13 @@ namespace NArrange.Tests.Core
 			File.WriteAllText(_testFilteredFile, "//This file should be excluded\r\n"  + contents);
 
 			_testProjectFile = Path.Combine(Path.GetTempPath(), "TestProject.csproj");
-			CSharpProjectParserTests.WriteTestProject(_testProjectFile);
+			MSBuildProjectParserTests.WriteTestProject(_testProjectFile);
 
 			_testFilteredProjectFile = Path.Combine(Path.GetTempPath(), "Test.Filtered.csproj");
-			CSharpProjectParserTests.WriteTestProject(_testFilteredProjectFile);
+			MSBuildProjectParserTests.WriteTestProject(_testFilteredProjectFile);
 
 			_testSolutionFile = Path.Combine(Path.GetTempPath(), "TestSolution.sln");
-			SolutionParserTests.WriteTestSolution(_testSolutionFile);
+			MSBuildSolutionParserTests.WriteTestSolution(_testSolutionFile);
 
 			contents = GetTestFileContents("ClassDefinition.cs", Encoding.Default);
 			_testValidSourceFile2 = Path.Combine(Path.GetTempPath(), "ClassDefinition.cs");

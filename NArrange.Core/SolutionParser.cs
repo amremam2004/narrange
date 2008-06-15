@@ -35,6 +35,7 @@
  *      - Initial creation
  *		- Refactoring of SolutionParser to allow for additional solution
  *		  types.
+ *		- Support parsing of MonoDevelop solutions.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -77,6 +78,7 @@ namespace NArrange.Core
 		{
 			List<ISolutionParser> parsers = new List<ISolutionParser>();
 			parsers.Add(new MSBuildSolutionParser());
+			parsers.Add(new MonoDevelopSolutionParser());
 
 			foreach (ISolutionParser parser in parsers)
 			{
@@ -141,8 +143,7 @@ namespace NArrange.Core
 
 			if (!string.IsNullOrEmpty(inputFile))
 			{
-				string extension = Path.GetExtension(inputFile).TrimStart('.').ToUpperInvariant();
-
+				string extension = Path.GetExtension(inputFile).TrimStart('.');
 				isSolution = _parserMap.ContainsKey(extension);
 			}
 
@@ -161,30 +162,15 @@ namespace NArrange.Core
 			    throw new ArgumentNullException("solutionFile");
 			}
 
-			string solutionPath = Path.GetDirectoryName(solutionFile);
-
 			List<string> projectFiles = new List<string>();
 
-			using (StreamReader reader = new StreamReader(solutionFile, true))
-			{
-			    while (!reader.EndOfStream)
-			    {
-			        //
-			        // Find lines like the following:
-			        // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
+			string extension = Path.GetExtension(solutionFile).TrimStart('.');
+			ISolutionParser parser = null;
+			_parserMap.TryGetValue(extension, out parser);
 
-			        string line = reader.ReadLine().TrimStart();
-			        if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
-			        {
-			            string[] projectData = line.Split(',');
-			            string projectFile = projectData[1].Trim().Trim('"');
-			            string projectPath = Path.Combine(solutionPath, projectFile);
-			            if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
-			            {
-			                projectFiles.Add(projectPath);
-			            }
-			        }
-			    }
+			if (parser != null)
+			{
+				projectFiles.AddRange(parser.Parse(solutionFile));
 			}
 
 			return projectFiles.AsReadOnly();

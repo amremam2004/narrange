@@ -39,6 +39,7 @@
  *      - Added FileAttributeType and UnaryExpressionOperator enumerations
  *      - Added a Matches binary operator for regular expression support in 
  *        condition expressions
+ *		- Added a HandlerType enumeration
  *      Everton Elvio Koser
  *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -310,6 +311,22 @@ namespace NArrange.Core
 		/// Custom separator string
 		/// </summary>
 		Custom
+	}
+
+	/// <summary>
+	/// Handler type.
+	/// </summary>
+	public enum HandlerType
+	{
+		/// <summary>
+		/// Source handler.
+		/// </summary>
+		Source,
+
+		/// <summary>
+		/// Project handler.
+		/// </summary>
+		Project
 	}
 
 	/// <summary>

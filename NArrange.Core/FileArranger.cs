@@ -213,6 +213,19 @@ namespace NArrange.Core
 			}
 		}
 
+		private string GetConfigurationLoadError(string filename, Exception ex)
+		{
+			StringBuilder messageBuilder = new StringBuilder(
+				string.Format(CultureInfo.CurrentUICulture,
+				"Unable to load configuration file {0}: {1}", filename, ex.Message));
+			if (ex.InnerException != null)
+			{
+				messageBuilder.AppendFormat(" {0}", ex.InnerException.Message);
+			}
+
+			return messageBuilder.ToString();
+		}
+
 		private bool Initialize()
 		{
 			bool success = true;
@@ -227,20 +240,20 @@ namespace NArrange.Core
 			}
 			catch (InvalidOperationException xmlEx)
 			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, xmlEx.Message);
+				string message = GetConfigurationLoadError(_configFile, xmlEx);
+				LogMessage(LogLevel.Error, message);
 			    success = false;
 			}
 			catch (IOException ioEx)
 			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, ioEx.Message);
+				string message = GetConfigurationLoadError(_configFile, ioEx);
+			    LogMessage(LogLevel.Error, message);
 			    success = false;
 			}
 			catch (UnauthorizedAccessException authEx)
 			{
-			    LogMessage(LogLevel.Error, "Unable to load configuration file {0}: {1}",
-			        _configFile, authEx.Message);
+				string message = GetConfigurationLoadError(_configFile, authEx);
+				LogMessage(LogLevel.Error, message);
 			    success = false;
 			}
 			catch (TargetInvocationException invEx)
@@ -421,7 +434,7 @@ namespace NArrange.Core
 					if (!canParse)
 					{
 						LogMessage(LogLevel.Warning,
-							"No assembly is registered to handle file {0}.  Please update the configuration.",
+							"No assembly is registered to handle file {0}.  Please update the configuration or select a valid file.",
 							inputFile);
 						success = false;
 					}

@@ -74,20 +74,27 @@
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\HandlerConfiguration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProjectHandlerConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfigurationCollection.cs" />
     <Compile Include="Configuration\HandlerConfigurationCollection.cs" />
     <Compile Include="Configuration\EncodingConfiguration.cs" />
     <Compile Include="Configuration\ElementReferenceConfiguration.cs" />
+    <Compile Include="Configuration\SourceHandlerConfiguration.cs" />
     <Compile Include="Configuration\UnaryOperatorExpression.cs" />
     <Compile Include="Configuration\FileAttributeExpression.cs" />
     <Compile Include="Configuration\ElementAttributeExpression.cs" />
+    <Compile Include="ProjectHandler.cs" />
+    <Compile Include="MonoDevelopSolutionParser.cs" />
+    <Compile Include="MonoDevelopProjectParser.cs" />
     <Compile Include="FileUtilities.cs" />
     <Compile Include="FileFilter.cs" />
     <Compile Include="ElementFilter.cs" />
     <Compile Include="Configuration\RegionsConfiguration.cs" />
     <Compile Include="Configuration\TabConfiguration.cs" />
     <Compile Include="Configuration\ExtensionConfiguration.cs" />
-    <Compile Include="Configuration\HandlerConfiguration.cs" />
     <Compile Include="Configuration\LeafExpression.cs" />
     <Compile Include="Configuration\FilterBy.cs" />
     <Compile Include="Configuration\ConditionExpressionParser.cs" />

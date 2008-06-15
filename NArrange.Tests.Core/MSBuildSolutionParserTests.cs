@@ -12,10 +12,10 @@ using NArrange.Core;
 namespace NArrange.Tests.Core
 {
 	/// <summary>
-	/// Test fixture for the SolutionParser class
+	/// Test fixture for the MSBuildSolutionParser class
 	/// </summary>
 	[TestFixture]
-	public class SolutionParserTests
+	public class MSBuildSolutionParserTests
 	{
 		#region Fields
 
@@ -32,7 +32,8 @@ namespace NArrange.Tests.Core
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ParseNullTest()
 		{
-			SolutionParser.Instance.Parse(null);
+			MSBuildSolutionParser solutionParser = new MSBuildSolutionParser();
+			solutionParser.Parse(null);
 		}
 
 		/// <summary>
@@ -44,10 +45,11 @@ namespace NArrange.Tests.Core
 			string[] testProjectFiles = new string[]{
 			    Path.Combine(Path.GetTempPath(), "TestProject.csproj")};
 
-			ReadOnlyCollection<string> projectFiles = SolutionParser.Instance.Parse(_testSolutionFile);
+			MSBuildSolutionParser solutionParser = new MSBuildSolutionParser();
+			ReadOnlyCollection<string> projectFiles = solutionParser.Parse(_testSolutionFile);
 
 			Assert.AreEqual(testProjectFiles.Length, projectFiles.Count, 
-			    "Unexpected number of source files.");
+			    "Unexpected number of project files.");
 
 			foreach (string testProjectFile in testProjectFiles)
 			{
@@ -94,7 +96,7 @@ namespace NArrange.Tests.Core
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			using (Stream stream = assembly.GetManifestResourceStream(
-			   typeof(SolutionParserTests), "TestProject.sln"))
+			   typeof(MSBuildSolutionParserTests), "TestSolution.sln"))
 			{
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");

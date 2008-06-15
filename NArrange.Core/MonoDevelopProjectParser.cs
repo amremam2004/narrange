@@ -44,14 +44,55 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-using NArrange.Core;
-
-namespace NArrange.CSharp
+namespace NArrange.Core
 {
 	/// <summary>
-	/// Parses a C# project for individual source file names.
+	/// Parses an individual MonoDevelop project (e.g. .mdp) for 
+	/// individual source file names.
 	/// </summary>
-	public sealed class CSharpProjectParser : MSBuildProjectParser
+	public class MonoDevelopProjectParser : IProjectParser
 	{
+		#region Public Methods
+
+		/// <summary>
+		/// Parses source file names from a project file.
+		/// </summary>
+		/// <param name="projectFile"></param>
+		/// <returns>A list of source code filenames</returns>
+		public virtual ReadOnlyCollection<string> Parse(string projectFile)
+		{
+			if (projectFile == null)
+			{
+			    throw new ArgumentNullException("projectFile");
+			}
+
+			string projectPath = Path.GetDirectoryName(projectFile);
+			List<string> sourceFiles = new List<string>();
+
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.Load(projectFile);
+
+			XmlNodeList nodes = xmlDocument.SelectNodes("//File");
+			foreach (XmlNode node in nodes)
+			{
+				XmlAttribute nameAttribute = node.Attributes["name"];
+			    if (nameAttribute != null)
+			    {
+					XmlAttribute subTypeAttribute = node.Attributes["subtype"];
+					if (subTypeAttribute != null &&
+						subTypeAttribute.Value.ToUpperInvariant() == "CODE")
+			        {
+						string fileName = nameAttribute.Value;
+
+			            string sourceFilePath = Path.Combine(projectPath, fileName);
+			            sourceFiles.Add(sourceFilePath);
+			        }
+			    }
+			}
+
+			return sourceFiles.AsReadOnly();
+		}
+
+		#endregion Public Methods
 	}
 }

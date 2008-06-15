@@ -22,11 +22,11 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void ToStringTest()
 		{
-			HandlerConfiguration handlerConfiguration = new HandlerConfiguration();
-			handlerConfiguration.AssemblyName = "TestAssembly";
+			SourceHandlerConfiguration handlerConfiguration = new SourceHandlerConfiguration();
+			handlerConfiguration.Language = "TestLanguage";
 
 			string str = handlerConfiguration.ToString();
-			Assert.AreEqual("Handler: TestAssembly", str,
+			Assert.AreEqual("Source Handler: TestLanguage", str,
 			    "Unexpected string representation.");
 		}
 

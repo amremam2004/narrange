@@ -41,7 +41,6 @@
     <Compile Include="CSharpExtendedProperties.cs" />
     <Compile Include="CSharpKeyword.cs" />
     <Compile Include="CSharpParser.cs" />
-    <Compile Include="CSharpProjectParser.cs" />
     <Compile Include="CSharpSymbol.cs" />
     <Compile Include="CSharpWriter.cs" />
     <Compile Include="CSharpWriteVisitor.cs" />

@@ -35,6 +35,7 @@
 //      - Initial creation
 //		- Do not use a custom TypeDescriptor for element collections
 //		  under Mono
+//		- Allow creation of Project Handlers
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #endregion Header
@@ -197,13 +198,16 @@ namespace NArrange.Gui.Configuration
 		private TreeNode CreateListPropertyNode(PropertyDescriptor property, object component)
 		{
 			Type[] newItemTypes = null;
+
 			if (property.PropertyType == typeof(ConfigurationElementCollection))
 			{
 				newItemTypes = ConfigurationElementCollectionEditor.ItemTypes;
 			}
 			else if (property.PropertyType == typeof(HandlerConfigurationCollection))
 			{
-				newItemTypes = new Type[] { typeof(HandlerConfiguration) };
+				newItemTypes = new Type[] { 
+					typeof(SourceHandlerConfiguration),
+					typeof(ProjectHandlerConfiguration)};
 			}
 			else if (property.PropertyType == typeof(ExtensionConfigurationCollection))
 			{

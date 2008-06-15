@@ -42,6 +42,8 @@
  *		- Added configuration for encoding
  *		- Allow the configuration to be loaded without resolving
  *		  references (needed for configuration editor)
+ *		- Upgrade configurations to the new project extension format when
+ *		  loading.
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -188,10 +190,11 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
-		/// Source code handlers
+		/// Source code/project handlers
 		/// </summary>
-		[XmlArrayItem(typeof(HandlerConfiguration))]
-		[Description("The list of language handlers and their settings.")]
+		[XmlArrayItem(typeof(SourceHandlerConfiguration))]
+		[XmlArrayItem(typeof(ProjectHandlerConfiguration))]
+		[Description("The list of project/language handlers and their settings.")]
 		public HandlerConfigurationCollection Handlers
 		{
 			get
@@ -299,6 +302,76 @@ namespace NArrange.Core.Configuration
 			}
 		}
 
+		/// <summary>
+		/// Upgrades the configuration.
+		/// </summary>
+		private void Upgrade()
+		{
+			UpgradeProjectExtensions();
+		}
+
+		/// <summary>
+		/// Moves project extensions to the new format.
+		/// </summary>
+		private void UpgradeProjectExtensions()
+		{
+			//
+			// Migrate project handler configurations
+			//
+			string parserType = typeof(MSBuildProjectParser).FullName;
+			ProjectHandlerConfiguration projectHandlerConfiguration = null;
+			foreach (HandlerConfiguration handlerConfiguration in this.Handlers)
+			{
+				if (handlerConfiguration.HandlerType == HandlerType.Project)
+				{
+					ProjectHandlerConfiguration candidateConfiguration = handlerConfiguration as ProjectHandlerConfiguration;
+					if (candidateConfiguration.ParserType != null &&
+						candidateConfiguration.ParserType.ToUpperInvariant() == parserType.ToUpperInvariant())
+					{
+						projectHandlerConfiguration = candidateConfiguration;
+						break;
+					}
+				}
+			}
+
+			//
+			// Create the new project configuration if necessary
+			// 
+			if (projectHandlerConfiguration == null)
+			{
+				projectHandlerConfiguration = new ProjectHandlerConfiguration();
+				projectHandlerConfiguration.ParserType = parserType;
+				this.Handlers.Insert(0, projectHandlerConfiguration);
+			}
+
+			foreach (HandlerConfiguration handlerConfiguration in this.Handlers)
+			{
+				if (handlerConfiguration.HandlerType == HandlerType.Source)
+				{
+					SourceHandlerConfiguration sourceHandlerConfiguration = handlerConfiguration as SourceHandlerConfiguration;
+					foreach (ExtensionConfiguration projectExtension in sourceHandlerConfiguration.ProjectExtensions)
+					{
+						bool upgraded = false;
+						foreach (ExtensionConfiguration upgradedExtension in projectHandlerConfiguration.ProjectExtensions)
+						{
+							if (string.Compare(upgradedExtension.Name, projectExtension.Name, true) == 0)
+							{
+								upgraded = true;
+								break;
+							}
+						}
+
+						if (!upgraded)
+						{
+							projectHandlerConfiguration.ProjectExtensions.Add(projectExtension);
+						}
+					}
+
+					sourceHandlerConfiguration.ProjectExtensions.Clear();
+				}
+			}
+		}
+
 		#endregion Private Methods
 
 		#region Protected Methods
@@ -313,6 +386,8 @@ namespace NArrange.Core.Configuration
 
 			clone._tabs = Tabs.Clone() as TabConfiguration;
 			clone._closingComments = ClosingComments.Clone() as ClosingCommentConfiguration;
+			clone._regions = Regions.Clone() as RegionsConfiguration;
+			clone._encoding = Encoding.Clone() as EncodingConfiguration;
 
 			foreach (HandlerConfiguration handler in this.Handlers)
 			{
@@ -388,6 +463,8 @@ namespace NArrange.Core.Configuration
 			{
 				configuration.ResolveReferences();
 			}
+
+			configuration.Upgrade();
 
 			return configuration;
 		}

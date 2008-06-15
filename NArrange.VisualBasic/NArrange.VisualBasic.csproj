@@ -38,7 +38,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="VBProjectParser.cs" />
     <Compile Include="VBWriteVisitor.cs" />
     <Compile Include="VBWriter.cs" />
     <Compile Include="VBExtendedProperties.cs" />

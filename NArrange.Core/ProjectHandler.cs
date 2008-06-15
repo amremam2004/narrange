@@ -39,19 +39,105 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 using System.Text;
-using System.Xml;
 
-using NArrange.Core;
+using NArrange.Core.Configuration;
 
-namespace NArrange.VisualBasic
+namespace NArrange.Core
 {
 	/// <summary>
-	/// Parses a Visual Basic project for individual source file names.
+	/// This class provides instances for handling project parsing requests 
+	/// based on file extension.
 	/// </summary>
-	public sealed class VBProjectParser : MSBuildProjectParser
+	public sealed class ProjectHandler
 	{
+		#region Fields
+
+		private Assembly _assembly;
+		private ProjectHandlerConfiguration _configuration;
+		private IProjectParser _projectParser;
+
+		#endregion Fields
+
+		#region Constructors
+
+		/// <summary>
+		/// Creates a new ProjectHandler.
+		/// </summary>
+		/// <param name="configuration"></param>
+		public ProjectHandler(ProjectHandlerConfiguration configuration)
+		{
+			if (configuration == null)
+			{
+			    throw new ArgumentNullException("configuration");
+			}
+
+			_configuration = configuration;
+
+			Initialize();
+		}
+
+		#endregion Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the handler configuration used to create this ProjectHandler.
+		/// </summary>
+		public ProjectHandlerConfiguration Configuration
+		{
+			get
+			{
+			    return _configuration;
+			}
+		}
+
+		/// <summary>
+		/// Gets the project parser associated with the extension.
+		/// </summary>
+		public IProjectParser ProjectParser
+		{
+			get
+			{
+			    return _projectParser;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Private Methods
+
+		/// <summary>
+		/// Initializes the extension handler
+		/// </summary>
+		private void Initialize()
+		{
+			Type projectParserType = null;
+			string assemblyName = _configuration.AssemblyName;
+			if (string.IsNullOrEmpty(assemblyName))
+			{
+				_assembly = this.GetType().Assembly;
+			}
+			else
+			{
+				_assembly = Assembly.Load(assemblyName);
+			}
+
+			string projectParserTypeName = _configuration.ParserType;
+			if (string.IsNullOrEmpty(projectParserTypeName))
+			{
+				projectParserType = typeof(MSBuildProjectParser);
+			}
+			else
+			{
+				projectParserType = _assembly.GetType(projectParserTypeName);
+			}
+
+			_projectParser = Activator.CreateInstance(projectParserType) as IProjectParser;
+		}
+
+		#endregion Private Methods
 	}
 }

@@ -33,55 +33,40 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Changed constructor to use a handler configuration and expose
- *        the configuration as a property
- *		- Obsoleted the project extensions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+using System.ComponentModel;
 using System.Text;
+using System.Threading;
+using System.Xml.Serialization;
 
-using NArrange.Core.Configuration;
-
-namespace NArrange.Core
+namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// This class provides instances for handling language specific requests 
-	/// based on file extension.
+	/// Specifies project extensions.
 	/// </summary>
-	public sealed class SourceHandler
+	[XmlType("ProjectHandler")]
+	[DisplayName("Project Handler")]
+	public class ProjectHandlerConfiguration : HandlerConfiguration
 	{
 		#region Fields
 
-		private Assembly _assembly;
-		private ICodeElementParser _codeParser;
-		private SourceHandlerConfiguration _configuration;
-		private IProjectParser _projectParser;
-		private ICodeElementWriter _writer;
+		private string _parserType;
+		private ExtensionConfigurationCollection _projectExtensions;
 
 		#endregion Fields
 
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new SourceHandler.
+		/// Creates a new ProjectHandlerConfiguration instance.
 		/// </summary>
-		/// <param name="configuration"></param>
-		public SourceHandler(SourceHandlerConfiguration configuration)
+		public ProjectHandlerConfiguration()
 		{
-			if (configuration == null)
-			{
-			    throw new ArgumentNullException("configuration");
-			}
-
-			_configuration = configuration;
-
-			Initialize();
 		}
 
 		#endregion Constructors
@@ -89,67 +74,96 @@ namespace NArrange.Core
 		#region Public Properties
 
 		/// <summary>
-		/// Gets the code parser associated with the extension
+		/// Gets the handler type.
 		/// </summary>
-		public ICodeElementParser CodeParser
+		public override HandlerType HandlerType
 		{
-			get
+			get 
 			{
-			    return _codeParser;
+				return HandlerType.Project;
 			}
 		}
 
 		/// <summary>
-		/// Gets the handler configuration used to create this SourceHandler.
+		/// Gets or sets the parser Type..
 		/// </summary>
-		public SourceHandlerConfiguration Configuration
+		[XmlAttribute("Parser")]
+		[Description("The fully-qualified Type name for the associated parser.")]
+		[DisplayName("Parser")]
+		public string ParserType
 		{
 			get
 			{
-			    return _configuration;
+				return _parserType;
+			}
+			set
+			{
+				_parserType = value;
 			}
 		}
 
 		/// <summary>
-		/// Gets the code writer associated with the extension
+		/// Extensions
 		/// </summary>
-		public ICodeElementWriter Writer
+		[XmlArrayItem(typeof(ExtensionConfiguration))]
+		[Description("The list of project file extensions supported by the project parser.")]
+		[DisplayName("Project extensions")]
+		public ExtensionConfigurationCollection ProjectExtensions
 		{
 			get
 			{
-			    return _writer;
+			    if (_projectExtensions == null)
+			    {
+			        lock (this)
+			        {
+			            if (_projectExtensions == null)
+			            {
+			                _projectExtensions = new ExtensionConfigurationCollection();
+			            }
+			        }
+			    }
+
+			    return _projectExtensions;
 			}
 		}
 
 		#endregion Public Properties
 
-		#region Private Methods
+		#region Protected Methods
 
 		/// <summary>
-		/// Initializes the extension handler
+		/// Creates a clone of this instance.
 		/// </summary>
-		private void Initialize()
+		/// <returns></returns>
+		protected override HandlerConfiguration DoClone()
 		{
-			_assembly = Assembly.Load(_configuration.AssemblyName);
+			ProjectHandlerConfiguration clone = new ProjectHandlerConfiguration();
 
-			Type[] types = _assembly.GetTypes();
-			foreach (Type type in types)
+			clone._parserType = _parserType;
+
+			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
 			{
-			    if (_codeParser == null && type.GetInterface(typeof(ICodeElementParser).ToString()) != null)
-			    {
-			        _codeParser = Activator.CreateInstance(type) as ICodeElementParser;
-			    }
-			    else if (_writer == null && type.GetInterface(typeof(ICodeElementWriter).ToString()) != null)
-			    {
-			        _writer = Activator.CreateInstance(type) as ICodeElementWriter;
-			    }
-			    else if (_projectParser == null && type.GetInterface(typeof(IProjectParser).ToString()) != null)
-			    {
-			        _projectParser = Activator.CreateInstance(type) as IProjectParser;
-			    }
+			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
+			    clone.ProjectExtensions.Add(extensionClone);
 			}
+
+			return clone;
 		}
 
-		#endregion Private Methods
+		#endregion Protected Methods
+
+		#region Public Methods
+
+		/// <summary>
+		/// Gets the string representation
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return string.Format(Thread.CurrentThread.CurrentCulture,
+			    "Project Handler: {0}", this._parserType);
+		}
+
+		#endregion Public Methods
 	}
 }

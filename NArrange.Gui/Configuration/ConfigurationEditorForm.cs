@@ -34,6 +34,7 @@
 //      James Nies
 //      - Initial creation
 //		- Fixed loading of configurations with invalid references
+//		- Improved Load/Save error messages
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #endregion Header
@@ -184,10 +185,17 @@ namespace NArrange.Gui.Configuration
 					_configurationEditorControl.Configuration = configuration;
 					this.CanSelectConfig = false;
 				}
-				catch
+				catch(Exception ex)
 				{
-					MessageBox.Show(this, string.Format(CultureInfo.CurrentUICulture,
-						"Unable to load configuration file {0}.", filename), 
+					StringBuilder messageBuilder = new StringBuilder(
+						 string.Format(CultureInfo.CurrentUICulture,
+						"Unable to load configuration file {0}: {1}", filename, ex.Message));
+					if(ex.InnerException != null)
+					{
+						messageBuilder.AppendFormat(" {0}", ex.InnerException.Message);
+					}
+
+					MessageBox.Show(this, messageBuilder.ToString(), 
 						this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
@@ -206,10 +214,17 @@ namespace NArrange.Gui.Configuration
 				this.CanSelectConfig = true;
 				this._configurationEditorControl.Configuration = null;
 			}
-			catch
+			catch(Exception ex)
 			{
-				MessageBox.Show(this, string.Format(CultureInfo.CurrentUICulture,
-					"Unable to save configuration file {0}.", filename), 
+				StringBuilder messageBuilder = new StringBuilder(
+						 string.Format(CultureInfo.CurrentUICulture,
+						"Unable to save configuration file {0}: {1}", filename, ex.Message));
+				if (ex.InnerException != null)
+				{
+					messageBuilder.AppendFormat(" {0}", ex.InnerException.Message);
+				}
+
+				MessageBox.Show(this, messageBuilder.ToString(), 
 					this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}

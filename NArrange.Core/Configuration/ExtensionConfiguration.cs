@@ -48,7 +48,7 @@ using System.Xml.Serialization;
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies source code extension
+	/// Specifies a source code or project extension.
 	/// </summary>
 	[XmlType("Extension")]
 	public class ExtensionConfiguration : ICloneable
@@ -63,7 +63,7 @@ namespace NArrange.Core.Configuration
 		#region Constructors
 
 		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
+		/// Creates a new ExtensionConfiguration instance.
 		/// </summary>
 		public ExtensionConfiguration()
 		{
@@ -74,7 +74,7 @@ namespace NArrange.Core.Configuration
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the filter specification
+		/// Gets or sets the filter specification.
 		/// </summary>
 		[XmlElement("Filter")]
 		[Description("The filter for this file extension.")]
@@ -92,7 +92,7 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the extension name
+		/// Gets or sets the extension name.
 		/// </summary>
 		[XmlAttribute("Name")]
 		[Description("The file extension name.")]
@@ -113,7 +113,7 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
 		public object Clone()
@@ -132,7 +132,7 @@ namespace NArrange.Core.Configuration
 		}
 
 		/// <summary>
-		/// Gets the string representation
+		/// Gets the string representation.
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()

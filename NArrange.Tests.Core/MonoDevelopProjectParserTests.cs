@@ -7,15 +7,15 @@ using System.Text;
 
 using NUnit.Framework;
 
-using NArrange.CSharp;
+using NArrange.Core;
 
-namespace NArrange.Tests.CSharp
+namespace NArrange.Tests.Core
 {
 	/// <summary>
-	/// Test fixture for the CSharpProjectParser class.
+	/// Test fixture for the MonoDevelopProjectParser class.
 	/// </summary>
 	[TestFixture]
-	public class CSharpProjectParserTests
+	public class MonoDevelopProjectParserTests
 	{
 		#region Fields
 
@@ -32,7 +32,7 @@ namespace NArrange.Tests.CSharp
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ParseNullTest()
 		{
-			CSharpProjectParser projectParser = new CSharpProjectParser();
+			MonoDevelopProjectParser projectParser = new MonoDevelopProjectParser();
 			projectParser.Parse(null);
 		}
 
@@ -46,13 +46,13 @@ namespace NArrange.Tests.CSharp
 			    Path.Combine(Path.GetTempPath(), "ClassMembers.cs"),
 			    Path.Combine(Path.GetTempPath(), "ClassDefinition.cs"),
 			    Path.Combine(Path.GetTempPath(), "BlahBlahBlah.cs"),
-			    Path.Combine(Path.GetTempPath(), "Folder1\\Class2.cs"),
-			    Path.Combine(Path.GetTempPath(), "Folder1\\Folder2\\Class3.cs"),
-			    Path.Combine(Path.GetTempPath(), "Properties\\AssemblyInfo.cs"),
+			    Path.Combine(Path.GetTempPath(), "Folder1/Class2.cs"),
+			    Path.Combine(Path.GetTempPath(), "Folder1/Folder2/Class3.cs"),
+			    Path.Combine(Path.GetTempPath(), "AssemblyInfo.cs"),
 			    Path.Combine(Path.GetTempPath(), "Test.Designer.cs")
 			};
 
-			CSharpProjectParser projectParser = new CSharpProjectParser();
+			MonoDevelopProjectParser projectParser = new MonoDevelopProjectParser();
 
 			ReadOnlyCollection<string> sourceFiles = projectParser.Parse(_testProjectFile);
 
@@ -73,7 +73,7 @@ namespace NArrange.Tests.CSharp
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			_testProjectFile = Path.GetTempFileName() + ".csproj";
+			_testProjectFile = Path.GetTempFileName() + ".mdp";
 
 			WriteTestProject(_testProjectFile);
 		}
@@ -104,7 +104,7 @@ namespace NArrange.Tests.CSharp
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			using (Stream stream = assembly.GetManifestResourceStream(
-			   typeof(CSharpProjectParserTests), "TestProject.csproj"))
+			   typeof(MonoDevelopProjectParserTests), "TestProject.mdp"))
 			{
 			    Assert.IsNotNull(stream,
 			        "Test stream could not be retrieved.");
