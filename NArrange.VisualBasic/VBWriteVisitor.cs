@@ -42,6 +42,7 @@
  *      - Fixed writing of fields that don't have a type specified
  *		- Fixed writing of multiple Handles declarations for methods
  *		- Preserve trailing comments for fields
+ *		- Fixed writing of Implements for events
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -663,6 +664,7 @@ namespace NArrange.VisualBasic
 			    WriteParameterList(element.Parameters);
 			}
 			WriteReturnType(element.Type);
+			WriteImplements(element.Implements);
 
 			if (isCustom)
 			{

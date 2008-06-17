@@ -717,6 +717,35 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing an event that implements an interface.
+		/// </summary>
+		[Test]
+		public void WriteEventImplementsTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			EventElement eventElement = new EventElement();
+			eventElement.Access = CodeAccess.Public;
+			eventElement.Name = "PropertyChanged";
+			eventElement.Parameters = "ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs";
+			eventElement.AddImplementation(new InterfaceReference(
+				"System.ComponentModel.INotifyPropertyChanged.PropertyChanged", InterfaceReferenceType.Interface));
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(eventElement);
+
+			VBWriter VBWriter = new VBWriter();
+			VBWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) " + 
+					"Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged",
+				text,
+				"Method element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing an event.
 		/// </summary>
 		[Test]

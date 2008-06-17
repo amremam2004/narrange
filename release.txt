@@ -1,6 +1,4 @@
 The following changes were made in this release:
 
-0.2.4.0
-- Fixed command line argument parsing issues under Mono/Linux by using a dash for the switch prefix.
-- Made the Configuration Editor Mono compatible and fixed a button quirk when running under Mono.
-- Allow processing of MonoDevelop solution (.mds) and project (.mdp) files.
+0.2.5.0
+- Fixed writing of Implements for VB events.
