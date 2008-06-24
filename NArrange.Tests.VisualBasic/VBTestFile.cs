@@ -1,15 +1,11 @@
-using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-
 using Microsoft.VisualBasic;
-
-using NUnit.Framework;
-
 using NArrange.Tests.Core;
+using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic
 {

@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
-using System.Security.AccessControl;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.ConsoleApplication;
 using NArrange.Core;
-using NArrange.Tests.CSharp;
 using NArrange.Tests.Core;
+using NArrange.Tests.CSharp;
+using NUnit.Framework;
 
 namespace NArrange.Tests.ConsoleApplication
 {

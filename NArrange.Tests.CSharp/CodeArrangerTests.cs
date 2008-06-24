@@ -2,15 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
-
-using NUnit.Framework;
-
-using NArrange.CSharp;
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
+using NArrange.CSharp;
 using NArrange.Tests.CSharp;
+using NUnit.Framework;
 
 namespace NArrange.Tests.Core
 {

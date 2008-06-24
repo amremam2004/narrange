@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing.Design;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.Core.Configuration;
 using NArrange.Gui.Configuration;
+using NUnit.Framework;
 
 namespace NArrange.Tests.Gui.Configuration
 {

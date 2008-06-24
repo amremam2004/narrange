@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.ConsoleApplication;
+using NUnit.Framework;
 
 namespace NArrange.Tests.ConsoleApplication
 {

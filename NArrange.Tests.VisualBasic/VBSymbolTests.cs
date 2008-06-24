@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.VisualBasic;
+using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic
 {

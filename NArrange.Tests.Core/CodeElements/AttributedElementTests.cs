@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using NArrange.Core.CodeElements;
-
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core.CodeElements

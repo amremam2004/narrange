@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.Core;
 using NArrange.Core.Configuration;
+using NUnit.Framework;
 
 namespace NArrange.Tests.Core
 {

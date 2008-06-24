@@ -1,15 +1,10 @@
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.VisualBasic;
+using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic
 {

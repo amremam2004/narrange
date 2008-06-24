@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using NUnit.Framework;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
+using NUnit.Framework;
 
 namespace NArrange.Tests.Core
 {
