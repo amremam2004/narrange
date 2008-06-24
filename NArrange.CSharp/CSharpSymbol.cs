@@ -33,13 +33,11 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NArrange.CSharp
 {
@@ -167,27 +165,27 @@ namespace NArrange.CSharp
 		public static bool IsCSharpSymbol(char character)
 		{
 			return
-			    character == CSharpSymbol.AliasQualifier ||
-			    character == CSharpSymbol.AliasSeparator ||
-			    character == CSharpSymbol.Assignment ||
-			    character == CSharpSymbol.BeginAttribute ||
-			    character == CSharpSymbol.BeginBlock ||
-			    character == CSharpSymbol.BeginCharLiteral ||
-			    character == CSharpSymbol.BeginComment ||
-			    character == CSharpSymbol.BeginFinalizer ||
-			    character == CSharpSymbol.BeginGeneric ||
-			    character == CSharpSymbol.BeginParameterList ||
-			    character == CSharpSymbol.BeginString ||
-			    character == CSharpSymbol.BlockCommentModifier ||
-			    character == CSharpSymbol.EndAttribute ||
-			    character == CSharpSymbol.EndBlock ||
-			    character == CSharpSymbol.EndGeneric ||
-			    character == CSharpSymbol.EndOfStatement ||
-			    character == CSharpSymbol.EndParameterList ||
-			    character == CSharpSymbol.Preprocessor ||
-			    character == CSharpSymbol.TypeImplements ||
-				character == CSharpSymbol.Negate ||
-				character == CSharpSymbol.BeginVerbatimString;
+			    character == AliasQualifier ||
+			    character == AliasSeparator ||
+			    character == Assignment ||
+			    character == BeginAttribute ||
+			    character == BeginBlock ||
+			    character == BeginCharLiteral ||
+			    character == BeginComment ||
+			    character == BeginFinalizer ||
+			    character == BeginGeneric ||
+			    character == BeginParameterList ||
+			    character == BeginString ||
+			    character == BlockCommentModifier ||
+			    character == EndAttribute ||
+			    character == EndBlock ||
+			    character == EndGeneric ||
+			    character == EndOfStatement ||
+			    character == EndParameterList ||
+			    character == Preprocessor ||
+			    character == TypeImplements ||
+				character == Negate ||
+				character == BeginVerbatimString;
 		}
 
 		#endregion Public Methods

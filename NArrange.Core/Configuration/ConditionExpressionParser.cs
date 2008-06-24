@@ -51,8 +51,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-using NArrange.Core.CodeElements;
-
 namespace NArrange.Core.Configuration
 {
 	/// <summary>

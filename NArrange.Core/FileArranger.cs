@@ -50,8 +50,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
-
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 

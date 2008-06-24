@@ -39,14 +39,8 @@
 #endregion Header
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-
 using NArrange.Core;
 
 namespace NArrange.Gui.Configuration

@@ -33,13 +33,11 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NArrange.VisualBasic
 {
@@ -126,19 +124,19 @@ namespace NArrange.VisualBasic
 		/// <returns></returns>
 		public static bool IsVBSymbol(char character)
 		{
-			return character == VBSymbol.AliasSeparator ||
-			    character == VBSymbol.Assignment ||
-			    character == VBSymbol.BeginAttribute ||
-			    character == VBSymbol.BeginComment ||
-			    character == VBSymbol.BeginTypeConstraintList ||
-			    character == VBSymbol.EndTypeConstraintList ||
-			    character == VBSymbol.BeginParameterList ||
-			    character == VBSymbol.BeginString ||
-			    character == VBSymbol.EndAttribute ||
-			    character == VBSymbol.EndParameterList ||
-			    character == VBSymbol.Preprocessor ||
-			    character == VBSymbol.LineContinuation ||
-			    character == VBSymbol.LineDelimiter;
+			return character == AliasSeparator ||
+			    character == Assignment ||
+			    character == BeginAttribute ||
+			    character == BeginComment ||
+			    character == BeginTypeConstraintList ||
+			    character == EndTypeConstraintList ||
+			    character == BeginParameterList ||
+			    character == BeginString ||
+			    character == EndAttribute ||
+			    character == EndParameterList ||
+			    character == Preprocessor ||
+			    character == LineContinuation ||
+			    character == LineDelimiter;
 		}
 
 		#endregion Public Methods

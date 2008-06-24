@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -40,17 +42,13 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml;
-
 using NArrange.Core;
-using NArrange.Core.Configuration;
-using NArrange.Tests.CSharp;
 using NArrange.Tests.Core;
+using NArrange.Tests.CSharp;
 using NArrange.Tests.VisualBasic;
 
 namespace NArrange.SourceTester

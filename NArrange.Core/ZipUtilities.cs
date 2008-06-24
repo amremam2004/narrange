@@ -37,12 +37,6 @@
 
 #endregion Header
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace NArrange.Core

@@ -33,13 +33,14 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NArrange.VisualBasic
 {
@@ -340,15 +341,15 @@ namespace NArrange.VisualBasic
 			Dictionary<string, string> _specialNormalizedKeywords;
 			_specialNormalizedKeywords = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-			_specialNormalizedKeywords[VBKeyword.ReadOnly] = VBKeyword.ReadOnly;
-			_specialNormalizedKeywords[VBKeyword.ReadWrite] = VBKeyword.ReadWrite;
-			_specialNormalizedKeywords[VBKeyword.WriteOnly] = VBKeyword.WriteOnly;
-			_specialNormalizedKeywords[VBKeyword.MustOverride] = VBKeyword.MustOverride;
-			_specialNormalizedKeywords[VBKeyword.MustInherit] = VBKeyword.MustInherit;
-			_specialNormalizedKeywords[VBKeyword.NotInheritable] = VBKeyword.NotInheritable;
-			_specialNormalizedKeywords[VBKeyword.NotOverridable] = VBKeyword.NotOverridable;
-			_specialNormalizedKeywords[VBKeyword.WithEvents] = VBKeyword.WithEvents;
-			_specialNormalizedKeywords[VBKeyword.Rem] = VBKeyword.Rem.ToUpper();
+			_specialNormalizedKeywords[ReadOnly] = ReadOnly;
+			_specialNormalizedKeywords[ReadWrite] = ReadWrite;
+			_specialNormalizedKeywords[WriteOnly] = WriteOnly;
+			_specialNormalizedKeywords[MustOverride] = MustOverride;
+			_specialNormalizedKeywords[MustInherit] = MustInherit;
+			_specialNormalizedKeywords[NotInheritable] = NotInheritable;
+			_specialNormalizedKeywords[NotOverridable] = NotOverridable;
+			_specialNormalizedKeywords[WithEvents] = WithEvents;
+			_specialNormalizedKeywords[Rem] = Rem.ToUpper();
 			return _specialNormalizedKeywords;
 		}
 
@@ -370,59 +371,59 @@ namespace NArrange.VisualBasic
 				string normalized = Normalize(trimmedWord.Trim());
 
 				isKeyword =
-			        normalized == VBKeyword.Alias ||
-			        normalized == VBKeyword.Ansi ||
-			        normalized == VBKeyword.Auto ||
-					normalized == VBKeyword.As ||
-					normalized == VBKeyword.Begin ||
-					normalized == VBKeyword.Class ||
-					normalized == VBKeyword.Constant ||
-					normalized == VBKeyword.Custom ||
-					normalized == VBKeyword.Default ||
-					normalized == VBKeyword.Delegate ||
-			        normalized == VBKeyword.Dim ||
-					normalized == VBKeyword.End ||
-					normalized == VBKeyword.Enumeration ||
-					normalized == VBKeyword.Event ||
-					normalized == VBKeyword.Friend ||
-					normalized == VBKeyword.Function ||
-			        normalized == VBKeyword.Handles ||
-					normalized == VBKeyword.Imports ||
-					normalized == VBKeyword.Implements ||
-					normalized == VBKeyword.Inherits ||
-					normalized == VBKeyword.Interface ||
-			        normalized == VBKeyword.Lib ||
-			        normalized == VBKeyword.Module ||
-					normalized == VBKeyword.MustInherit ||
-					normalized == VBKeyword.MustOverride ||
-					normalized == VBKeyword.Namespace ||
-					normalized == VBKeyword.Narrowing ||
-					normalized == VBKeyword.New ||
-					normalized == VBKeyword.NotInheritable ||
-					normalized == VBKeyword.NotOverridable ||
-					normalized == VBKeyword.Of ||
-					normalized == VBKeyword.Operator ||
-			        normalized == VBKeyword.Option ||
-					normalized == VBKeyword.Overloads ||
-					normalized == VBKeyword.Overridable ||
-					normalized == VBKeyword.Overrides ||
-					normalized == VBKeyword.Partial ||
-					normalized == VBKeyword.Private ||
-					normalized == VBKeyword.Property ||
-					normalized == VBKeyword.Protected ||
-					normalized == VBKeyword.Public ||
-					normalized == VBKeyword.ReadOnly ||
-			        normalized == VBKeyword.ReadWrite ||
-					normalized == VBKeyword.Region ||
-			        normalized == VBKeyword.Rem ||
-					normalized == VBKeyword.Shadows ||
-					normalized == VBKeyword.Shared ||
-					normalized == VBKeyword.Structure ||
-					normalized == VBKeyword.Sub ||
-			        normalized == VBKeyword.Unicode ||
-					normalized == VBKeyword.Widening ||
-			        normalized == VBKeyword.WithEvents ||
-			        normalized == VBKeyword.WriteOnly;
+			        normalized == Alias ||
+			        normalized == Ansi ||
+			        normalized == Auto ||
+					normalized == As ||
+					normalized == Begin ||
+					normalized == Class ||
+					normalized == Constant ||
+					normalized == Custom ||
+					normalized == Default ||
+					normalized == Delegate ||
+			        normalized == Dim ||
+					normalized == End ||
+					normalized == Enumeration ||
+					normalized == Event ||
+					normalized == Friend ||
+					normalized == Function ||
+			        normalized == Handles ||
+					normalized == Imports ||
+					normalized == Implements ||
+					normalized == Inherits ||
+					normalized == Interface ||
+			        normalized == Lib ||
+			        normalized == Module ||
+					normalized == MustInherit ||
+					normalized == MustOverride ||
+					normalized == Namespace ||
+					normalized == Narrowing ||
+					normalized == New ||
+					normalized == NotInheritable ||
+					normalized == NotOverridable ||
+					normalized == Of ||
+					normalized == Operator ||
+			        normalized == Option ||
+					normalized == Overloads ||
+					normalized == Overridable ||
+					normalized == Overrides ||
+					normalized == Partial ||
+					normalized == Private ||
+					normalized == Property ||
+					normalized == Protected ||
+					normalized == Public ||
+					normalized == ReadOnly ||
+			        normalized == ReadWrite ||
+					normalized == Region ||
+			        normalized == Rem ||
+					normalized == Shadows ||
+					normalized == Shared ||
+					normalized == Structure ||
+					normalized == Sub ||
+			        normalized == Unicode ||
+					normalized == Widening ||
+			        normalized == WithEvents ||
+			        normalized == WriteOnly;
 			}
 
 			return isKeyword;

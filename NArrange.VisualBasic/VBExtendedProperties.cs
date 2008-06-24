@@ -33,13 +33,11 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NArrange.VisualBasic
 {

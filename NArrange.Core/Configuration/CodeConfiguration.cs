@@ -50,11 +50,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace NArrange.Core.Configuration

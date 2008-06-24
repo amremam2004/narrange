@@ -45,6 +45,8 @@
  *		- Fixed parsing of method/Handles identifiers beginning with 
  *		  an underscore
  *		- Preserve trailing comments for fields
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -53,14 +55,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Threading;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
-using NArrange.Core.Configuration;
 
 namespace NArrange.VisualBasic
 {

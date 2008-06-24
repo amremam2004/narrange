@@ -51,20 +51,18 @@
  *      Everton Elvio Koser
  *      - Fixed ordering of new and const for fields (merged by James Nies)
  *      - Honor the new keyword for nested types (merged by James Nies)
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;

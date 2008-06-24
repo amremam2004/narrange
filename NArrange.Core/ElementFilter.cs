@@ -39,10 +39,6 @@
 
 #endregion Header
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 

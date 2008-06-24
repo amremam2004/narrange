@@ -34,14 +34,14 @@
  *      James Nies
  *      - Initial creation
  *		- Fixed parsing of command line switches under Mono
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-
 using NArrange.Core;
 
 namespace NArrange.ConsoleApplication

@@ -39,21 +39,16 @@
  *      - Refactored out command argument parsing
  *		- Allow arranging an entire directory
  *		- Fixed parsing of command line switches under Mono
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
-
 using NArrange.Core;
-using NArrange.Core.CodeElements;
-using NArrange.Core.Configuration;
 
 namespace NArrange.ConsoleApplication
 {

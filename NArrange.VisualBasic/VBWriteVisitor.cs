@@ -43,20 +43,17 @@
  *		- Fixed writing of multiple Handles declarations for methods
  *		- Preserve trailing comments for fields
  *		- Fixed writing of Implements for events
+ *		Justin Dearing
+ *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
