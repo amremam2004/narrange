@@ -51,7 +51,7 @@ namespace NArrange.Core.CodeElements
 
 		private CodeAccess _access;
 		private List<IAttributeElement> _attributes;
-		private object _attributesLock = new object();
+		private readonly object _attributesLock = new object();
 
 		#endregion Fields
 

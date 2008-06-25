@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -59,14 +61,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new ProjectHandlerConfiguration instance.
-		/// </summary>
-		public ProjectHandlerConfiguration()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -138,7 +133,7 @@ namespace NArrange.Core.Configuration
 
 			clone._parserType = _parserType;
 
-			foreach (ExtensionConfiguration extension in this.ProjectExtensions)
+			foreach (ExtensionConfiguration extension in ProjectExtensions)
 			{
 			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
 			    clone.ProjectExtensions.Add(extensionClone);
@@ -158,7 +153,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Project Handler: {0}", this._parserType);
+			    "Project Handler: {0}", _parserType);
 		}
 
 		#endregion Public Methods

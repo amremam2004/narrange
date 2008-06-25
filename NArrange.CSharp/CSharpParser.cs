@@ -59,6 +59,7 @@
  *		- Preserve trailing comments for fields
  *		Justin Dearing
  *		- Removed unused using statements
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header

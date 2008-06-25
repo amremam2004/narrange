@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,7 +54,7 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private object _codeArrangeChainLock = new object();
+		private readonly object _codeArrangeChainLock = new object();
 		private readonly CodeConfiguration _configuration;
 		private ChainElementArranger _elementArrangerChain;
 

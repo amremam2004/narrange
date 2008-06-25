@@ -39,6 +39,8 @@
  *		- Use a configured encoding if present, otherwise auto-detect and
  *		  preserve the encoding withing the arrange result.
  *		- Allow arranging of an entire directory
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -64,12 +66,12 @@ namespace NArrange.Core
 
 		private Dictionary<string, ArrangeResult> _arrangeResults;
 		private CodeArranger _codeArranger;
-		private string _configFile;
+		private readonly string _configFile;
 		private CodeConfiguration _configuration;
 		private Encoding _encoding;
 		private int _filesParsed;
 		private int _filesWritten;
-		private ILogger _logger;
+		private readonly ILogger _logger;
 		private ProjectManager _projectManager;
 
 		#endregion Fields
@@ -504,7 +506,7 @@ namespace NArrange.Core
 		{
 			#region Fields
 
-			private Encoding _encoding;
+			private readonly Encoding _encoding;
 			private readonly string _inputFile;
 			private readonly bool _modified;
 			private readonly string _outputFile;

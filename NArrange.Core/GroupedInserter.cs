@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -51,9 +53,9 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Regex _captureRegex;
-		private GroupBy _groupBy;
-		private IElementInserter _innerInserter;
+		private readonly Regex _captureRegex;
+		private readonly GroupBy _groupBy;
+		private readonly IElementInserter _innerInserter;
 
 		#endregion Fields
 

@@ -36,6 +36,8 @@
  *      - Allow filtering of source and project files
  *		- Allow arranging of an entire directory
  *		- Allow multiple types of project parsers
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -57,7 +59,7 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private CodeConfiguration _configuration;
+		private readonly CodeConfiguration _configuration;
 		private Dictionary<string, ProjectHandler> _projectExtensionHandlers;
 		private Dictionary<string, SourceHandler> _sourceExtensionHandlers;
 
@@ -78,7 +80,7 @@ namespace NArrange.Core
 
 			_configuration = configuration;
 
-			this.Initialize();
+			Initialize();
 		}
 
 		#endregion Constructors
@@ -318,7 +320,7 @@ namespace NArrange.Core
 		/// <returns></returns>
 		public bool IsProject(string inputFile)
 		{
-			return this._projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
+			return _projectExtensionHandlers.ContainsKey(GetExtension(inputFile));
 		}
 
 		/// <summary>
@@ -340,7 +342,7 @@ namespace NArrange.Core
 		public ReadOnlyCollection<ICodeElement> ParseElements(string inputFile, string text)
 		{
 			ReadOnlyCollection<ICodeElement> elements = null;
-			SourceHandler sourceHandler = this.GetSourceHandler(inputFile);
+			SourceHandler sourceHandler = GetSourceHandler(inputFile);
 			if (sourceHandler != null)
 			{
 			    ICodeElementParser parser = sourceHandler.CodeParser;

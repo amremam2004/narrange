@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *      - Allow filter conditions to be specified for file extensions
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -60,14 +62,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new ExtensionConfiguration instance.
-		/// </summary>
-		public ExtensionConfiguration()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -136,7 +131,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Extension: {0}", this._name);
+			    "Extension: {0}", _name);
 		}
 
 		#endregion Public Methods

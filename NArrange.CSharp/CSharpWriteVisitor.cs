@@ -53,6 +53,7 @@
  *      - Honor the new keyword for nested types (merged by James Nies)
  *		Justin Dearing
  *		- Removed unused using statements
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header

@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -128,7 +130,7 @@ namespace NArrange.Core.Configuration
 		public Encoding GetEncoding()
 		{
 			Encoding encoding = null;
-			string codePage = this.CodePage;
+			string codePage = CodePage;
 			if (!(string.IsNullOrEmpty(codePage) || codePage.Trim().Length == 0 ||
 				codePage.ToUpperInvariant() == DetectCodePage.ToUpperInvariant()))
 			{
@@ -162,7 +164,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Encoding: CodePage - {0}", this.CodePage);
+			    "Encoding: CodePage - {0}", CodePage);
 		}
 
 		#endregion Public Methods

@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -64,9 +66,9 @@ namespace NArrange.Core
 
 		#region Fields
 
-		private CodeConfiguration _configuration;
+		private readonly CodeConfiguration _configuration;
 		private int _tabCount;
-		private TextWriter _writer;
+		private readonly TextWriter _writer;
 
 		#endregion Fields
 
@@ -187,7 +189,7 @@ namespace NArrange.Core
 			    {
 			        throw new InvalidOperationException(
 			            string.Format(Thread.CurrentThread.CurrentCulture,
-			            "Unknown tab style {0}.", _configuration.Tabs.Style.ToString()));
+			            "Unknown tab style {0}.", _configuration.Tabs.Style));
 			    }
 			}
 

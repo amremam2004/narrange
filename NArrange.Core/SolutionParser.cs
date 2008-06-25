@@ -36,6 +36,8 @@
  *		- Refactoring of SolutionParser to allow for additional solution
  *		  types.
  *		- Support parsing of MonoDevelop solutions.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -55,14 +57,14 @@ namespace NArrange.Core
 		#region Static Fields
 
 		private static SolutionParser _instance;
-		private static object _instanceLock = new object();
+		private static readonly object _instanceLock = new object();
 
 		#endregion Static Fields
 
 		#region Fields
 
-		private List<string> _extensions = new List<string>();
-		private Dictionary<string, ISolutionParser> _parserMap = 
+		private readonly List<string> _extensions = new List<string>();
+		private readonly Dictionary<string, ISolutionParser> _parserMap = 
 			new Dictionary<string, ISolutionParser>(StringComparer.OrdinalIgnoreCase);
 
 		#endregion Fields

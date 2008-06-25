@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *      - Fixed an ordering issue when inserting region elements
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -53,10 +55,10 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IElementInserter _innerInserter;
+		private readonly IElementInserter _innerInserter;
 		private readonly ReadOnlyCollection<string> _levelRegions;
-		private ConfigurationElement _parentConfiguration;
-		private RegionConfiguration _regionConfiguration;
+		private readonly ConfigurationElement _parentConfiguration;
+		private readonly RegionConfiguration _regionConfiguration;
 
 		#endregion Fields
 

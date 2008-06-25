@@ -35,6 +35,8 @@
  *      - Initial creation
  *		- Improved performance by checking whether or not CanArrange needs
  *		  to evaluate an expression with a parent scope.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,10 +54,10 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IElementArranger _childrenArranger;
-		private ElementType _elementType;
-		private IElementFilter _filter;
-		private IElementInserter _inserter;
+		private readonly IElementArranger _childrenArranger;
+		private readonly ElementType _elementType;
+		private readonly IElementFilter _filter;
+		private readonly IElementInserter _inserter;
 
 		#endregion Fields
 

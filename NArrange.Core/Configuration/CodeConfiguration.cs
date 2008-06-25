@@ -44,6 +44,8 @@
  *		  references (needed for configuration editor)
  *		- Upgrade configurations to the new project extension format when
  *		  loading.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -63,9 +65,9 @@ namespace NArrange.Core.Configuration
 	{
 		#region Static Fields
 
-		private static XmlSerializer _serializer = new XmlSerializer(typeof(CodeConfiguration));
+		private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(CodeConfiguration));
 		private static CodeConfiguration _default;
-		private static object _defaultLock = new object();
+		private static readonly object _defaultLock = new object();
 
 		#endregion Static Fields
 
@@ -81,15 +83,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new CodeConfiguration.
-		/// </summary>
-		/// <remarks>Required for XML serialization</remarks>
-		public CodeConfiguration()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -317,7 +311,7 @@ namespace NArrange.Core.Configuration
 			//
 			string parserType = typeof(MSBuildProjectParser).FullName;
 			ProjectHandlerConfiguration projectHandlerConfiguration = null;
-			foreach (HandlerConfiguration handlerConfiguration in this.Handlers)
+			foreach (HandlerConfiguration handlerConfiguration in Handlers)
 			{
 				if (handlerConfiguration.HandlerType == HandlerType.Project)
 				{
@@ -338,10 +332,10 @@ namespace NArrange.Core.Configuration
 			{
 				projectHandlerConfiguration = new ProjectHandlerConfiguration();
 				projectHandlerConfiguration.ParserType = parserType;
-				this.Handlers.Insert(0, projectHandlerConfiguration);
+				Handlers.Insert(0, projectHandlerConfiguration);
 			}
 
-			foreach (HandlerConfiguration handlerConfiguration in this.Handlers)
+			foreach (HandlerConfiguration handlerConfiguration in Handlers)
 			{
 				if (handlerConfiguration.HandlerType == HandlerType.Source)
 				{
@@ -386,7 +380,7 @@ namespace NArrange.Core.Configuration
 			clone._regions = Regions.Clone() as RegionsConfiguration;
 			clone._encoding = Encoding.Clone() as EncodingConfiguration;
 
-			foreach (HandlerConfiguration handler in this.Handlers)
+			foreach (HandlerConfiguration handler in Handlers)
 			{
 			    HandlerConfiguration handlerClone = handler.Clone() as HandlerConfiguration;
 			    clone.Handlers.Add(handlerClone);

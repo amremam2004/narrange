@@ -40,6 +40,8 @@
  *      - Allow apostrophes in string expressions by escaping with another
  *        apostrophe
  *		- Fixed handling of extra parentheses and improved validation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -90,7 +92,7 @@ namespace NArrange.Core.Configuration
 		#region Static Fields
 
 		private static ConditionExpressionParser _instance;
-		private static object _instanceLock = new object();
+		private static readonly object _instanceLock = new object();
 
 		#endregion Static Fields
 
@@ -613,7 +615,7 @@ namespace NArrange.Core.Configuration
 		{
 			#region Fields
 
-			private BinaryExpressionOperator _operatorType;
+			private readonly BinaryExpressionOperator _operatorType;
 
 			#endregion Fields
 

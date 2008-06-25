@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,8 +51,8 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private int _column;
-		private int _lineNumber;
+		private readonly int _column;
+		private readonly int _lineNumber;
 
 		#endregion Fields
 

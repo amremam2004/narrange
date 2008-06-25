@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -103,7 +105,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Region: {0}", this.Name);
+			    "Region: {0}", Name);
 		}
 
 		#endregion Public Methods

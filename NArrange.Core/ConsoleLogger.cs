@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -63,14 +65,7 @@ namespace NArrange.Core
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new ConsoleLogger
-		/// </summary>
-		public ConsoleLogger()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 

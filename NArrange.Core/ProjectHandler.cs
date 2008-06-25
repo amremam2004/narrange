@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,7 +54,7 @@ namespace NArrange.Core
 		#region Fields
 
 		private Assembly _assembly;
-		private ProjectHandlerConfiguration _configuration;
+		private readonly ProjectHandlerConfiguration _configuration;
 		private IProjectParser _projectParser;
 
 		#endregion Fields
@@ -114,7 +116,7 @@ namespace NArrange.Core
 			string assemblyName = _configuration.AssemblyName;
 			if (string.IsNullOrEmpty(assemblyName))
 			{
-				_assembly = this.GetType().Assembly;
+				_assembly = GetType().Assembly;
 			}
 			else
 			{

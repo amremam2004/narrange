@@ -38,6 +38,8 @@
  *        ProjectSection was encountered.
  *		- Refactoring of SolutionParser to allow for MonoDevelop solution
  *		  files.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -56,7 +58,7 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private List<string> _extensions = new List<string>(new string[]{"sln"});
+		private readonly List<string> _extensions = new List<string>(new string[]{"sln"});
 
 		#endregion Fields
 

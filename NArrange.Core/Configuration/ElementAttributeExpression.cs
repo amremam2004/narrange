@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *      - Allow scoping in element attribute expression evaluation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,8 +51,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private ElementAttributeType _elementAttributeType;
-		private ElementAttributeScope _elementScope;
+		private readonly ElementAttributeType _elementAttributeType;
+		private readonly ElementAttributeScope _elementScope;
 
 		#endregion Fields
 

@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,7 +51,7 @@ namespace NArrange.Core
 	{
 		#region Static Fields
 
-		private static Dictionary<Enum, string> _enumStringCache = new Dictionary<Enum, string>();
+		private static readonly Dictionary<Enum, string> _enumStringCache = new Dictionary<Enum, string>();
 
 		#endregion Static Fields
 

@@ -66,7 +66,7 @@ namespace NArrange.Core.CodeElements
 		/// <param name="name"></param>
 		public GroupElement(string name)
 		{
-			this.Name = name;
+			Name = name;
 		}
 
 		#endregion Constructors

@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -48,7 +50,7 @@ namespace NArrange.Core
 	{
 		#region Static Fields
 
-		private static Type _monoRuntime = Type.GetType("Mono.Runtime");
+		private static readonly Type _monoRuntime = Type.GetType("Mono.Runtime");
 
 		#endregion Static Fields
 

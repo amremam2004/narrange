@@ -51,7 +51,7 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private List<string> _constraints;
-		private object _constraintsLock = new object();
+		private readonly object _constraintsLock = new object();
 		private string _name;
 
 		#endregion Fields
@@ -75,7 +75,7 @@ namespace NArrange.Core.CodeElements
 			_name = name;
 			foreach (string constraint in constraints)
 			{
-			    this.AddConstraint(constraint);
+			    AddConstraint(constraint);
 			}
 		}
 

@@ -37,6 +37,8 @@
  *      - Allow evaluation of file attribute expressions
  *      - Added a Matches binary operator for regular expression support in 
  *        condition expressions
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -58,7 +60,7 @@ namespace NArrange.Core
 		#region Static Fields
 
 		private static ConditionExpressionEvaluator _instance;
-		private static object _instanceLock = new object();
+		private static readonly object _instanceLock = new object();
 
 		#endregion Static Fields
 
@@ -146,14 +148,14 @@ namespace NArrange.Core
 			            break;
 
 			        case BinaryExpressionOperator.And:
-			            leftResult = Evaluate<TEntity>(binaryOperatorExpression.Left, entity);
-			            rightResult = Evaluate<TEntity>(binaryOperatorExpression.Right, entity);
+			            leftResult = Evaluate(binaryOperatorExpression.Left, entity);
+			            rightResult = Evaluate(binaryOperatorExpression.Right, entity);
 			            result = leftResult && rightResult;
 			            break;
 
 			        case BinaryExpressionOperator.Or:
-			            leftResult = Evaluate<TEntity>(binaryOperatorExpression.Left, entity);
-			            rightResult = Evaluate<TEntity>(binaryOperatorExpression.Right, entity);
+			            leftResult = Evaluate(binaryOperatorExpression.Left, entity);
+			            rightResult = Evaluate(binaryOperatorExpression.Right, entity);
 			            result = leftResult || rightResult;
 			            break;
 
@@ -172,7 +174,7 @@ namespace NArrange.Core
 			        switch (unaryOperatorExpression.Operator)
 			        {
 			            case UnaryExpressionOperator.Negate:
-			                result = !Evaluate<TEntity>(unaryOperatorExpression.InnerExpression, entity);
+			                result = !Evaluate(unaryOperatorExpression.InnerExpression, entity);
 			                break;
 
 			            default:

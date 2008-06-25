@@ -36,6 +36,8 @@
  *      - Changed constructor to use a handler configuration and expose
  *        the configuration as a property
  *		- Obsoleted the project extensions
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -57,7 +59,7 @@ namespace NArrange.Core
 		private Assembly _assembly;
 		private ICodeElementParser _codeParser;
 		private ICodeElementWriter _codeWriter;
-		private SourceHandlerConfiguration _configuration;
+		private readonly SourceHandlerConfiguration _configuration;
 
 		#endregion Fields
 

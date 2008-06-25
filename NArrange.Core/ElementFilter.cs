@@ -35,6 +35,8 @@
  *      - Initial creation
  *		- Added a RequiredScope property that indicates the scope level
  *		  required to evaluate the expression for an element.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,8 +54,8 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private IConditionExpression _conditionExpression;
-		private ElementAttributeScope _requiredScope;
+		private readonly IConditionExpression _conditionExpression;
+		private readonly ElementAttributeScope _requiredScope;
 
 		#endregion Fields
 

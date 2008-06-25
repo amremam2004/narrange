@@ -35,6 +35,8 @@
  *      - Initial creation
  *      - Added an Id property so that element configurations can be 
  *        referenced with ElementRef.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -197,7 +199,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Element: Type - {0}", this.ElementType);
+			    "Element: Type - {0}", ElementType);
 		}
 
 		#endregion Public Methods

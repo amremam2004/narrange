@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -58,14 +60,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new FilterBy instance
-		/// </summary>
-		public FilterBy()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -110,7 +105,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Filter by: {0}", this._conditionExpression);
+			    "Filter by: {0}", _conditionExpression);
 		}
 
 		#endregion Public Methods

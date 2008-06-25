@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -59,14 +61,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new ClosingCommentConfiguration instance
-		/// </summary>
-		public ClosingCommentConfiguration()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -129,7 +124,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture, 
-			    "Closing comment: {0}, {1}", this.Enabled, this.Format);
+			    "Closing comment: {0}, {1}", Enabled, Format);
 		}
 
 		#endregion Public Methods

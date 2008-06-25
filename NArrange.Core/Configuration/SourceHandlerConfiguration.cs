@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -60,14 +62,7 @@ namespace NArrange.Core.Configuration
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new ExtensionConfiguration instance
-		/// </summary>
-		public SourceHandlerConfiguration()
-		{
-		}
-
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Public Properties
 
@@ -166,7 +161,7 @@ namespace NArrange.Core.Configuration
 
 			clone._language = _language;
 
-			foreach (ExtensionConfiguration extension in this.SourceExtensions)
+			foreach (ExtensionConfiguration extension in SourceExtensions)
 			{
 			    ExtensionConfiguration extensionClone = extension.Clone() as ExtensionConfiguration;
 			    clone.SourceExtensions.Add(extensionClone);
@@ -186,7 +181,7 @@ namespace NArrange.Core.Configuration
 		public override string ToString()
 		{
 			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "Source Handler: {0}", this._language);
+			    "Source Handler: {0}", _language);
 		}
 
 		#endregion Public Methods

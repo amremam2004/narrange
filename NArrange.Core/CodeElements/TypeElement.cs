@@ -53,12 +53,12 @@ namespace NArrange.Core.CodeElements
 	{
 		#region Fields
 
-		private object _interacesLock = new object();
+		private readonly object _interacesLock = new object();
 		private List<InterfaceReference> _interfaces;
 		private TypeElementType _type;
 		private TypeModifiers _typeModifiers;
 		private List<TypeParameter> _typeParameters;
-		private object _typeParametersLock = new object();
+		private readonly object _typeParametersLock = new object();
 
 		#endregion Fields
 

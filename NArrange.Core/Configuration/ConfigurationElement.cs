@@ -35,6 +35,8 @@
  *      - Initial creation
  *      - Allow ElementReferenceConfiguration elements to be deserialized
  *        into the Elements collection.
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -96,7 +98,7 @@ namespace NArrange.Core.Configuration
 		{
 			ConfigurationElement clone = DoClone();
 
-			foreach (ConfigurationElement child in this.Elements)
+			foreach (ConfigurationElement child in Elements)
 			{
 			    ConfigurationElement childClone = child.Clone() as ConfigurationElement;
 			    clone.Elements.Add(childClone);
@@ -121,7 +123,7 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public virtual object Clone()
 		{
-			ConfigurationElement configurationElement = this.BaseClone();
+			ConfigurationElement configurationElement = BaseClone();
 
 			return configurationElement;
 		}

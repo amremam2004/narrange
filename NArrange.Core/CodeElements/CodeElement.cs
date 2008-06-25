@@ -58,8 +58,8 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private List<ICodeElement> _children;
-		private object _childrenLock = new object();
-		private Dictionary<string, object> _extendedProperties;
+		private readonly object _childrenLock = new object();
+		private readonly Dictionary<string, object> _extendedProperties;
 		private string _name;
 		private ICodeElement _parent;
 

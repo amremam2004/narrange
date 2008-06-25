@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *		- Fixed arranging of region-nested using statements
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -53,7 +55,7 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private List<IElementArranger> _arrangers;
+		private readonly List<IElementArranger> _arrangers;
 
 		#endregion Fields
 

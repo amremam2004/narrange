@@ -53,7 +53,7 @@ namespace NArrange.Core.CodeElements
 
 		private string _params;
 		private List<TypeParameter> _typeParameters;
-		private object _typeParametersLock = new object();
+		private readonly object _typeParametersLock = new object();
 
 		#endregion Fields
 

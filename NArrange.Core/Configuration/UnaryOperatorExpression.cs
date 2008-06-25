@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -48,8 +50,8 @@ namespace NArrange.Core.Configuration
 	{
 		#region Fields
 
-		private IConditionExpression _innerExpression;
-		private UnaryExpressionOperator _operatorType;
+		private readonly IConditionExpression _innerExpression;
+		private readonly UnaryExpressionOperator _operatorType;
 
 		#endregion Fields
 

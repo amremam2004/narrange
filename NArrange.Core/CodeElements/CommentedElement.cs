@@ -50,7 +50,7 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private List<ICommentElement> _comments;
-		private object _commentsLock = new object();
+		private readonly object _commentsLock = new object();
 
 		#endregion Fields
 
@@ -137,7 +137,7 @@ namespace NArrange.Core.CodeElements
 		/// </summary>
 		public void ClearHeaderCommentLines()
 		{
-			this.BaseHeaderComments.Clear();
+			BaseHeaderComments.Clear();
 		}
 
 		/// <summary>

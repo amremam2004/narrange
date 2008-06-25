@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *		- Fixed sort direction for inner sorts
+ *		Justin Dearing
+ *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,8 +54,8 @@ namespace NArrange.Core
 	{
 		#region Fields
 
-		private Comparison<ICodeElement> _comparison;
-		private ElementType _elementType;
+		private readonly Comparison<ICodeElement> _comparison;
+		private readonly ElementType _elementType;
 
 		#endregion Fields
 

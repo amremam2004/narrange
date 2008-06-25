@@ -50,7 +50,7 @@ namespace NArrange.Core.CodeElements
 		#region Fields
 
 		private List<InterfaceReference> _implements;
-		private object _implementsLock = new object();
+		private readonly object _implementsLock = new object();
 
 		#endregion Fields
 
@@ -132,7 +132,7 @@ namespace NArrange.Core.CodeElements
 		{
 			if (implementation != null)
 			{
-			    this.ImplementsBase.Add(implementation);
+			    ImplementsBase.Add(implementation);
 			}
 		}
 
