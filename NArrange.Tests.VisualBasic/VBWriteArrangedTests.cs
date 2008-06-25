@@ -1,6 +1,8 @@
 using System.CodeDom.Compiler;
+
 using NArrange.Tests.Core;
 using NArrange.VisualBasic;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic

@@ -37,6 +37,7 @@
 
 #endregion Header
 
+
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>
@@ -51,7 +52,7 @@ namespace NArrange.Core.CodeElements
 		#endregion Fields
 
 		#region Constructors
-		
+
 		/// <summary>
 		/// Default constructor
 		/// </summary>
@@ -59,7 +60,7 @@ namespace NArrange.Core.CodeElements
 		{
 		}
 
-	    #endregion Constructors
+		#endregion Constructors
 
 		#region Public Properties
 
@@ -73,7 +74,7 @@ namespace NArrange.Core.CodeElements
 			    return _bodyText;
 			}
 			set
-		{
+			{
 			    _bodyText = value;
 			}
 		}

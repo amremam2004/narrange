@@ -43,6 +43,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 

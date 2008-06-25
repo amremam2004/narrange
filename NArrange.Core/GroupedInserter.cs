@@ -41,6 +41,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 

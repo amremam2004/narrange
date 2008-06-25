@@ -41,6 +41,7 @@
 
 using System;
 using System.Reflection;
+
 using NArrange.Core.Configuration;
 
 namespace NArrange.Core

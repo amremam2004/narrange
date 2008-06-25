@@ -40,6 +40,7 @@
 #endregion Header
 
 using System;
+
 using NArrange.Core.Configuration;
 
 namespace NArrange.Core

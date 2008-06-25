@@ -1,9 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.VisualBasic;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic

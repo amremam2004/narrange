@@ -43,6 +43,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using NArrange.Core.CodeElements;
 
 namespace NArrange.Core

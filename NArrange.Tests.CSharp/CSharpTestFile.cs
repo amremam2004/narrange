@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+
 using Microsoft.CSharp;
+
 using NArrange.Tests.Core;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.CSharp

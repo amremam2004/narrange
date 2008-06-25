@@ -42,6 +42,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using NArrange.Core;
 
 namespace NArrange.ConsoleApplication

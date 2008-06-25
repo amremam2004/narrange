@@ -1,8 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
+
 using NArrange.Core.Configuration;
 using NArrange.Gui.Configuration;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Gui.Configuration

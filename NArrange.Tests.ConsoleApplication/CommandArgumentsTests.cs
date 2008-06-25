@@ -1,5 +1,7 @@
 using System;
+
 using NArrange.ConsoleApplication;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.ConsoleApplication

@@ -1,5 +1,7 @@
 using System.Reflection;
+
 using NArrange.VisualBasic;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.VisualBasic

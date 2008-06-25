@@ -1,6 +1,8 @@
 using System;
+
 using NArrange.Core;
 using NArrange.Core.Configuration;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core.Configuration

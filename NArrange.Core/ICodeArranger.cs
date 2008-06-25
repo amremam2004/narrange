@@ -38,6 +38,7 @@
 #endregion Header
 
 using System.Collections.ObjectModel;
+
 using NArrange.Core.CodeElements;
 
 namespace NArrange.Core

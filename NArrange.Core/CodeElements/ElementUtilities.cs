@@ -43,6 +43,7 @@
 using System;
 using System.IO;
 using System.Text;
+
 using NArrange.Core.Configuration;
 
 namespace NArrange.Core.CodeElements

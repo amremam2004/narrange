@@ -39,6 +39,7 @@
 
 #endregion Header
 
+
 namespace NArrange.VisualBasic
 {
 	/// <summary>

@@ -1,7 +1,9 @@
 using System;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core

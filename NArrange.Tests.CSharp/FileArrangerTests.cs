@@ -2,9 +2,11 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+
 using NArrange.Core;
 using NArrange.Core.Configuration;
 using NArrange.Tests.CSharp;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core
@@ -187,10 +189,12 @@ namespace NArrange.Tests.Core
 			File.WriteAllText(testConfiguration, 
 			    @"<CodeConfiguration xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
 			        <Handlers>
+			        	<ProjectHandler Parser='NArrange.Core.MSBuildProjectParser'>
+							<ProjectExtensions>
+								<Extension Name='csproj'/>
+							</ProjectExtensions>
+						</ProjectHandler>
 			            <SourceHandler Assembly='NArrange.BlahBlahBlahBlah, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'>
-			                <ProjectExtensions>
-				                <Extension Name='csproj'/>
-			                </ProjectExtensions>
 			                <SourceExtensions>
 				                <Extension Name='cs'/>			 
 			                </SourceExtensions>
@@ -201,6 +205,7 @@ namespace NArrange.Tests.Core
 			try
 			{
 			    TestLogger logger = new TestLogger();
+			    
 			    FileArranger fileArranger = new FileArranger(testConfiguration, logger);
 
 			    bool success = fileArranger.Arrange(_testValidSourceFile1, null);

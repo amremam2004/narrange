@@ -46,9 +46,10 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+
 using NArrange.Core;
-using NArrange.Tests.Core;
 using NArrange.Tests.CSharp;
+using NArrange.Tests.Core;
 using NArrange.Tests.VisualBasic;
 
 namespace NArrange.SourceTester

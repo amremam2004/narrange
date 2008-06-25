@@ -48,6 +48,7 @@
 using System;
 using System.Reflection;
 using System.Text;
+
 using NArrange.Core;
 
 namespace NArrange.ConsoleApplication

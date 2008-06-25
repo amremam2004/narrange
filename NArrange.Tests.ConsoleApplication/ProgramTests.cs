@@ -1,10 +1,12 @@
 using System;
 using System.IO;
 using System.Reflection;
+
 using NArrange.ConsoleApplication;
 using NArrange.Core;
-using NArrange.Tests.Core;
 using NArrange.Tests.CSharp;
+using NArrange.Tests.Core;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.ConsoleApplication

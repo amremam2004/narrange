@@ -42,6 +42,7 @@
 
 using System;
 using System.ComponentModel;
+
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 

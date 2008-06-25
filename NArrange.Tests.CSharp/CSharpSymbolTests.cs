@@ -1,5 +1,7 @@
 using System.Reflection;
+
 using NArrange.CSharp;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.CSharp

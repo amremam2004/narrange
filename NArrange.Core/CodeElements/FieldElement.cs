@@ -38,6 +38,7 @@
 
 #endregion Header
 
+
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>

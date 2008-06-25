@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core

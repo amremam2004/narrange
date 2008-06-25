@@ -2,7 +2,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
+
 using NArrange.Core;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core

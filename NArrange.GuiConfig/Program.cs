@@ -39,6 +39,7 @@
 
 using System;
 using System.Windows.Forms;
+
 using NArrange.Gui.Configuration;
 
 namespace NArrange.GuiConfig

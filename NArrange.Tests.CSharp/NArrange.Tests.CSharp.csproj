@@ -77,6 +77,10 @@
       <Project>{5053E13A-3D0C-444F-9B39-EFE32076FB50}</Project>
       <Name>NArrange.Tests.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NArrange.VisualBasic\NArrange.VisualBasic.csproj">
+      <Project>{33A733CE-7BDD-42D6-ADE6-77B82226F965}</Project>
+      <Name>NArrange.VisualBasic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

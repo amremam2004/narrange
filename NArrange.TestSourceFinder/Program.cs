@@ -43,8 +43,9 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using NArrange.Tests.Core;
+
 using NArrange.Tests.CSharp;
+using NArrange.Tests.Core;
 using NArrange.Tests.VisualBasic;
 
 namespace NArrange.TestSourceFinder

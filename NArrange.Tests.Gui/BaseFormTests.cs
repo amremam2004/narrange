@@ -1,4 +1,5 @@
 using NArrange.Gui;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Gui

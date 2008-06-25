@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+
 using NArrange.Core;
+
 using NUnit.Framework;
 
 namespace NArrange.Tests.Core

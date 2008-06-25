@@ -39,6 +39,7 @@
 
 using System;
 using System.ComponentModel.Design;
+
 using NArrange.Core.Configuration;
 
 namespace NArrange.Gui.Configuration

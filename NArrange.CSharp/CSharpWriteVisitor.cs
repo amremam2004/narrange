@@ -64,6 +64,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
@@ -444,6 +445,15 @@ namespace NArrange.CSharp
 			    builder.Append(comment.Text);
 			    WriteIndented(builder.ToString());
 			}
+		}
+
+		/// <summary>
+		/// Writes a condition directive element.
+		/// </summary>
+		/// <param name="element"></param>
+		public override void VisitConditionDirectiveElement(ConditionDirectiveElement element)
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 
 		/// <summary>

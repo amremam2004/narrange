@@ -62,10 +62,6 @@ namespace NArrange.Core.Configuration
 
 		#endregion Fields
 
-		#region Constructors
-
-	    #endregion Constructors
-
 		#region Public Properties
 
 		/// <summary>
