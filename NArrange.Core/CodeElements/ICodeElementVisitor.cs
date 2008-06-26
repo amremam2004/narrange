@@ -33,11 +33,9 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Allow processing of ConditionDirectiveElements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
-
 
 namespace NArrange.Core.CodeElements
 {
@@ -57,12 +55,6 @@ namespace NArrange.Core.CodeElements
 		/// Visits a CommentLineElement
 		/// </summary>
 		void VisitCommentElement(CommentElement element);
-
-		/// <summary>
-		/// Visits a ConditionDirectiveElement
-		/// </summary>
-		/// <param name="element"></param>
-		void VisitConditionDirectiveElement(ConditionDirectiveElement element);
 
 		/// <summary>
 		/// Visits a ConstructorElement

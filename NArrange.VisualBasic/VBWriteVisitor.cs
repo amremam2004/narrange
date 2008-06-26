@@ -54,7 +54,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading;
-
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
@@ -569,15 +568,6 @@ namespace NArrange.VisualBasic
 		}
 
 		/// <summary>
-		/// Writes a condition directive element.
-		/// </summary>
-		/// <param name="element"></param>
-		public override void VisitConditionDirectiveElement(ConditionDirectiveElement element)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		/// <summary>
 		/// Processes a constructor element
 		/// </summary>
 		/// <param name="element"></param>
@@ -675,7 +665,7 @@ namespace NArrange.VisualBasic
 
 			if (isCustom)
 			{
-				WriteBody(element);
+			    WriteBody(element);
 			}
 		}
 
