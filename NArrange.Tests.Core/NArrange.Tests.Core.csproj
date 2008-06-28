@@ -49,6 +49,7 @@
     <Compile Include="CodeElements\ConstructorElementTests.cs" />
     <Compile Include="CodeElements\AttributeElementTests.cs" />
     <Compile Include="CodeElements\CommentElementTests.cs" />
+    <Compile Include="CodeElements\ConditionDirectiveElementTests.cs" />
     <Compile Include="CodeElements\GroupElementTests.cs" />
     <Compile Include="CodeElements\MethodElementTests.cs" />
     <Compile Include="CodeElements\FieldElementTests.cs" />

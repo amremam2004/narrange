@@ -48,8 +48,8 @@
               <tr> 
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
-                  <p>Version 0.2.3.0<br>
-                    Last Modified: 06/09/2008<br>
+                  <p>Version 0.2.5.0<br>
+                    Last Modified: 06/28/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -317,6 +317,7 @@
                         <li>Using</li>
                         <li>Namespace</li>
                         <li>Region</li>
+                        <li>ConditionDirective</li>
                         <li>Field</li>
                         <li>Constructor</li>
                         <li>Property</li>
@@ -449,13 +450,20 @@
                   <h2>Limitations<a name="limitations"></a></h2>
                   <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
                   <p>One of the biggest limitations with the current version of 
-                    NArrange is that it cannot handle preprocessor directives 
-                    (e.g. <font face="Courier New, Courier, mono">#if</font> ). 
-                    Thus, you will get a warning message indicating that files 
-                    containing preprocessor directives other than <font face="Courier New, Courier, mono">#region</font> 
-                    and <font face="Courier New, Courier, mono">#endregion</font> 
-                    cannot be parsed. Note that this is not an issue if the preprocessor 
-                    directive is within a method body.</p>
+                    NArrange is that it cannot handle many scenarios involving 
+                    preprocessor directives (#pragma, #define, etc.). Thus, you 
+                    will get a warning message indicating that files containing 
+                    unhandled preprocessor directives cannot be parsed. Note that 
+                    this is not an issue if the preprocessor directive is within 
+                    a member body. </p>
+                  <p>For conditional compilation preprocessor directives (#if, 
+                    #else, etc.), basic support is available. So long as the conditional 
+                    compilation preprocessor directive completely encloses types/members 
+                    in their entirety (with all attributes and comments), NArrange 
+                    will preserve the directive and process any enclosed elements. 
+                    However, the scenario where a directive starts at the class 
+                    level and intersects a member declaration in any manner is 
+                    not supported and will result in a parsing error.</p>
                   <p>&nbsp;</p>
                   <!-- #EndEditable --></td>
               </tr>

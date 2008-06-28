@@ -48,6 +48,7 @@
  *		- Fixed extra space being written before multiline field initial 
  *		  values.
  *		- Preserve trailing comments for fields
+ *		- Handle writing of conditional compilation preprocessor directives
  *      Everton Elvio Koser
  *      - Fixed ordering of new and const for fields (merged by James Nies)
  *      - Honor the new keyword for nested types (merged by James Nies)
@@ -64,6 +65,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
@@ -444,6 +446,58 @@ namespace NArrange.CSharp
 			    builder.Append(comment.Text);
 			    WriteIndented(builder.ToString());
 			}
+		}
+
+		/// <summary>
+		/// Writes a condition directive element.
+		/// </summary>
+		/// <param name="element"></param>
+		public override void VisitConditionDirectiveElement(ConditionDirectiveElement element)
+		{
+			const string ConditionFormat = "{0}{1} {2}";
+			ConditionDirectiveElement conditionDirective = element;
+
+			this.WriteIndentedLine(
+				string.Format(CultureInfo.InvariantCulture, ConditionFormat,
+				CSharpSymbol.Preprocessor, CSharpKeyword.If, element.ConditionExpression));
+
+			Writer.WriteLine();
+
+			WriteChildren(element);
+
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+				Writer.WriteLine();
+			}
+
+			while (conditionDirective.ElseCondition != null)
+			{
+				conditionDirective = conditionDirective.ElseCondition;
+
+				if (conditionDirective.ElseCondition == null)
+				{
+					this.WriteIndentedLine(CSharpSymbol.Preprocessor + CSharpKeyword.Else);
+				}
+				else
+				{
+					this.WriteIndentedLine(
+						string.Format(CultureInfo.InvariantCulture, ConditionFormat,
+						CSharpSymbol.Preprocessor, CSharpKeyword.Elif, conditionDirective.ConditionExpression));
+				}
+
+				Writer.WriteLine();
+
+				WriteChildren(conditionDirective);
+
+				if (conditionDirective.Children.Count > 0)
+				{
+					Writer.WriteLine();
+					Writer.WriteLine();
+				}
+			}
+
+			this.WriteIndented(CSharpSymbol.Preprocessor + CSharpKeyword.EndIf);
 		}
 
 		/// <summary>

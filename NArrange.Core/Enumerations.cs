@@ -40,6 +40,7 @@
  *      - Added a Matches binary operator for regular expression support in 
  *        condition expressions
  *		- Added a HandlerType enumeration
+ *		- Added ElementType.ConditionDirective
  *      Everton Elvio Koser
  *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -232,6 +233,11 @@ namespace NArrange.Core
 		/// Region
 		/// </summary>
 		Region,
+
+		/// <summary>
+		/// Condition directive
+		/// </summary>
+		ConditionDirective,
 
 		/// <summary>
 		/// Field

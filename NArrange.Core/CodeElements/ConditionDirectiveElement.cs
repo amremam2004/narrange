@@ -3,21 +3,21 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
- *                                                                             
+ *                                                                            
  * This program and the accompanying materials are made available under       
  * the terms of the Common Public License v1.0 which accompanies this         
  * distribution.							      
- *                                                                             
+ *                                                                            
  * Redistribution and use in source and binary forms, with or                 
  * without modification, are permitted provided that the following            
  * conditions are met:                                                        
- *                                                                             
+ *                                                                            
  * Redistributions of source code must retain the above copyright             
  * notice, this list of conditions and the following disclaimer.              
  * Redistributions in binary form must reproduce the above copyright          
  * notice, this list of conditions and the following disclaimer in            
  * the documentation and/or other materials provided with the distribution.   
- *                                                                             
+ *                                                                            
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
@@ -29,96 +29,109 @@
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ *                                                                            
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Allow processing of ConditionDirectiveElements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace NArrange.Core.CodeElements
 {
 	/// <summary>
-	/// Interface for a code element visitor.
+	/// Code element for conditional preprocessor directives.
 	/// </summary>
-	public interface ICodeElementVisitor
+	public class ConditionDirectiveElement : CommentedElement
 	{
-		#region Methods
+		#region Fields
+
+		private ConditionDirectiveElement _elseCondition;
+
+		#endregion Fields
+
+		#region Public Properties
 
 		/// <summary>
-		/// Visits an AttributeElement
+		/// Gets or sets the condition expression for the directive.
 		/// </summary>
-		void VisitAttributeElement(AttributeElement element);
+		public string ConditionExpression
+		{
+			get
+			{
+				return base.Name;
+			}
+			set
+			{
+				base.Name = value;
+			}
+		}
 
 		/// <summary>
-		/// Visits a CommentLineElement
+		/// Gets the code element type.
 		/// </summary>
-		void VisitCommentElement(CommentElement element);
+		public override ElementType ElementType
+		{
+			get 
+			{
+				return ElementType.ConditionDirective;
+			}
+		}
 
 		/// <summary>
-		/// Visits a ConditionDirectiveElement
+		/// Gets or sets the else condition directive element.
 		/// </summary>
-		/// <param name="element"></param>
-		void VisitConditionDirectiveElement(ConditionDirectiveElement element);
+		public ConditionDirectiveElement ElseCondition
+		{
+			get
+			{
+				return _elseCondition;
+			}
+			set
+			{
+				_elseCondition = value;
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Protected Methods
 
 		/// <summary>
-		/// Visits a ConstructorElement
+		/// Creates an instance for cloning.
 		/// </summary>
-		void VisitConstructorElement(ConstructorElement element);
+		/// <returns></returns>
+		protected override CodeElement DoClone()
+		{
+			ConditionDirectiveElement clone = new ConditionDirectiveElement();
+
+			if (this._elseCondition != null)
+			{
+				ConditionDirectiveElement elseClone = this._elseCondition.Clone() as ConditionDirectiveElement;
+				clone._elseCondition = elseClone;
+			}
+
+			return clone;
+		}
+
+		#endregion Protected Methods
+
+		#region Public Methods
 
 		/// <summary>
-		/// Visits a DelegateElement
+		/// Allows an ICodeElementVisitor to process (or visit) this element.
 		/// </summary>
-		void VisitDelegateElement(DelegateElement element);
+		/// <remarks>See the Gang of Four Visitor design pattern.</remarks>
+		/// <param name="visitor"></param>
+		public override void Accept(ICodeElementVisitor visitor)
+		{
+			visitor.VisitConditionDirectiveElement(this);
+		}
 
-		/// <summary>
-		/// Visits an EventElement
-		/// </summary>
-		void VisitEventElement(EventElement element);
-
-		/// <summary>
-		/// Visits a FieldElement
-		/// </summary>
-		void VisitFieldElement(FieldElement element);
-
-		/// <summary>
-		/// Visits a GroupElement
-		/// </summary>
-		void VisitGroupElement(GroupElement element);
-
-		/// <summary>
-		/// Visits a MethodElement
-		/// </summary>
-		void VisitMethodElement(MethodElement element);
-
-		/// <summary>
-		/// Visits a NamespaceElement
-		/// </summary>
-		void VisitNamespaceElement(NamespaceElement element);
-
-		/// <summary>
-		/// Visits a PropertyElement
-		/// </summary>
-		void VisitPropertyElement(PropertyElement element);
-
-		/// <summary>
-		/// Visits a RegionElement
-		/// </summary>
-		void VisitRegionElement(RegionElement element);
-
-		/// <summary>
-		/// Visits a TypeElement
-		/// </summary>
-		void VisitTypeElement(TypeElement element);
-
-		/// <summary>
-		/// Visits a UsingElement
-		/// </summary>
-		void VisitUsingElement(UsingElement element);
-
-		#endregion Methods
+		#endregion Public Methods
 	}
 }

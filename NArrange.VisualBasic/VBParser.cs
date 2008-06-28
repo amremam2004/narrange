@@ -45,6 +45,7 @@
  *		- Fixed parsing of method/Handles identifiers beginning with 
  *		  an underscore
  *		- Preserve trailing comments for fields
+ *		- Allow parsing of basic conditional compilation directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -55,6 +56,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 
@@ -114,45 +116,45 @@ namespace NArrange.VisualBasic
 			char nextChar = NextChar;
 			while (nextChar != EmptyChar)
 			{
-			    if (captureGeneric && nextChar == VBSymbol.BeginParameterList)
-			    {
-			        TryReadChar();
-			        word.Append(CurrentChar);
-			        EatWhiteSpace();
+				if (captureGeneric && nextChar == VBSymbol.BeginParameterList)
+				{
+					TryReadChar();
+					word.Append(CurrentChar);
+					EatWhiteSpace();
 
-			        if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[0]))
-			        {
-			            TryReadChar();
-			            word.Append(CurrentChar);
+					if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[0]))
+					{
+						TryReadChar();
+						word.Append(CurrentChar);
 
-			            if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[1]))
-			            {
-			                TryReadChar();
-			                word.Append(CurrentChar);
-			                word.Append(' ');
+						if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[1]))
+						{
+							TryReadChar();
+							word.Append(CurrentChar);
+							word.Append(' ');
 
-			                word.Append(ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
-			                    false, true));
-			                word.Append(VBSymbol.EndParameterList);
-			            }
-			        }
-			        else if (NextChar == VBSymbol.EndParameterList)
-			        {
-			            TryReadChar();
-			            word.Append(CurrentChar);
-			        }
-			    }
-			    else if (IsWhiteSpace(nextChar) || IsAliasBreak(nextChar))
-			    {
-			        break;
-			    }
-			    else
-			    {
-			        TryReadChar();
-			        word.Append(CurrentChar);
-			    }
+							word.Append(ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
+								false, true));
+							word.Append(VBSymbol.EndParameterList);
+						}
+					}
+					else if (NextChar == VBSymbol.EndParameterList)
+					{
+						TryReadChar();
+						word.Append(CurrentChar);
+					}
+				}
+				else if (IsWhiteSpace(nextChar) || IsAliasBreak(nextChar))
+				{
+					break;
+				}
+				else
+				{
+					TryReadChar();
+					word.Append(CurrentChar);
+				}
 
-			    nextChar = NextChar;
+				nextChar = NextChar;
 			}
 
 			return word.ToString();
@@ -184,8 +186,8 @@ namespace NArrange.VisualBasic
 			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 			while (IsWhiteSpace(CurrentChar) && NextChar == VBSymbol.LineContinuation)
 			{
-			    TryReadChar();
-			    EatWhiteSpace();
+				TryReadChar();
+				EatWhiteSpace();
 			}
 		}
 
@@ -237,11 +239,11 @@ namespace NArrange.VisualBasic
 
 			foreach (char ch in word.ToCharArray())
 			{
-			    TryReadChar();
-			    if (char.ToLower(CurrentChar) != char.ToLower(ch))
-			    {
-			        this.OnParseError(message);
-			    }
+				TryReadChar();
+				if (char.ToLower(CurrentChar) != char.ToLower(ch))
+				{
+					this.OnParseError(message);
+				}
 			}
 		}
 
@@ -251,23 +253,23 @@ namespace NArrange.VisualBasic
 
 			if (wordList.Contains(VBKeyword.Public))
 			{
-			    access = CodeAccess.Public;
+				access = CodeAccess.Public;
 			}
 			else if (wordList.Contains(VBKeyword.Private))
 			{
-			    access = CodeAccess.Private;
+				access = CodeAccess.Private;
 			}
 			else
 			{
-			    if (wordList.Contains(VBKeyword.Protected))
-			    {
-			        access |= CodeAccess.Protected;
-			    }
+				if (wordList.Contains(VBKeyword.Protected))
+				{
+					access |= CodeAccess.Protected;
+				}
 
-			    if (wordList.Contains(VBKeyword.Friend))
-			    {
-			        access |= CodeAccess.Internal;
-			    }
+				if (wordList.Contains(VBKeyword.Friend))
+				{
+					access |= CodeAccess.Internal;
+				}
 			}
 
 			return access;
@@ -281,62 +283,62 @@ namespace NArrange.VisualBasic
 
 			if (wordList.Contains(VBKeyword.Class))
 			{
-			    elementType = ElementType.Type;
-			    typeElementType = TypeElementType.Class;
-			    return;
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Class;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Structure))
 			{
-			    elementType = ElementType.Type;
-			    typeElementType = TypeElementType.Structure;
-			    return;
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Structure;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Enumeration))
 			{
-			    elementType = ElementType.Type;
-			    typeElementType = TypeElementType.Enum;
-			    return;
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Enum;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Interface))
 			{
-			    elementType = ElementType.Type;
-			    typeElementType = TypeElementType.Interface;
-			    return;
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Interface;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Module))
 			{
-			    elementType = ElementType.Type;
-			    typeElementType = TypeElementType.Module;
-			    return;
+				elementType = ElementType.Type;
+				typeElementType = TypeElementType.Module;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Property))
 			{
-			    elementType = ElementType.Property;
-			    return;
+				elementType = ElementType.Property;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Sub) || wordList.Contains(VBKeyword.Function) ||
-			    wordList.Contains(VBKeyword.Operator))
+				wordList.Contains(VBKeyword.Operator))
 			{
-			    elementType = ElementType.Method;
-			    return;
+				elementType = ElementType.Method;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Event))
 			{
-			    elementType = ElementType.Event;
-			    return;
+				elementType = ElementType.Event;
+				return;
 			}
 
 			if (wordList.Contains(VBKeyword.Delegate))
 			{
-			    elementType = ElementType.Delegate;
-			    return;
+				elementType = ElementType.Delegate;
+				return;
 			}
 		}
 
@@ -346,59 +348,59 @@ namespace NArrange.VisualBasic
 			memberAttributes = MemberModifiers.None;
 
 			bool isSealed = wordList.Contains(VBKeyword.NotOverridable) ||
-			    wordList.Contains(VBKeyword.NotInheritable);
+				wordList.Contains(VBKeyword.NotInheritable);
 			if (isSealed)
 			{
-			    memberAttributes |= MemberModifiers.Sealed;
+				memberAttributes |= MemberModifiers.Sealed;
 			}
 
 			bool isAbstract = wordList.Contains(VBKeyword.MustOverride) ||
-			    wordList.Contains(VBKeyword.MustInherit);
+				wordList.Contains(VBKeyword.MustInherit);
 			if (isAbstract)
 			{
-			    memberAttributes |= MemberModifiers.Abstract;
+				memberAttributes |= MemberModifiers.Abstract;
 			}
 
 			bool isStatic = wordList.Contains(VBKeyword.Shared);
 			if (isStatic)
 			{
-			    memberAttributes |= MemberModifiers.Static;
+				memberAttributes |= MemberModifiers.Static;
 			}
 
 			bool isVirtual = wordList.Contains(VBKeyword.Overridable);
 			if (isVirtual)
 			{
-			    memberAttributes |= MemberModifiers.Virtual;
+				memberAttributes |= MemberModifiers.Virtual;
 			}
 
 			bool isOverride = wordList.Contains(VBKeyword.Overrides);
 			if (isOverride)
 			{
-			    memberAttributes |= MemberModifiers.Override;
+				memberAttributes |= MemberModifiers.Override;
 			}
 
 			bool isNew = wordList.Contains(VBKeyword.Shadows);
 			if (isNew)
 			{
-			    memberAttributes |= MemberModifiers.New;
+				memberAttributes |= MemberModifiers.New;
 			}
 
 			bool isConstant = wordList.Contains(VBKeyword.Constant);
 			if (isConstant)
 			{
-			    memberAttributes |= MemberModifiers.Constant;
+				memberAttributes |= MemberModifiers.Constant;
 			}
 
 			bool isReadOnly = wordList.Contains(VBKeyword.ReadOnly);
 			if (isReadOnly)
 			{
-			    memberAttributes |= MemberModifiers.ReadOnly;
+				memberAttributes |= MemberModifiers.ReadOnly;
 			}
 
 			bool isPartial = wordList.Contains(VBKeyword.Partial);
 			if (isPartial)
 			{
-			    memberAttributes |= MemberModifiers.Partial;
+				memberAttributes |= MemberModifiers.Partial;
 			}
 
 			return memberAttributes;
@@ -410,11 +412,11 @@ namespace NArrange.VisualBasic
 
 			if (wordList.Contains(VBKeyword.Widening))
 			{
-			    operatorType = OperatorType.Implicit;
+				operatorType = OperatorType.Implicit;
 			}
 			else if (wordList.Contains(VBKeyword.Narrowing))
 			{
-			    operatorType = OperatorType.Explicit;
+				operatorType = OperatorType.Explicit;
 			}
 
 			return operatorType;
@@ -429,14 +431,14 @@ namespace NArrange.VisualBasic
 		private static bool IsAliasBreak(char ch)
 		{
 			return ch == VBSymbol.BeginParameterList ||
-			        ch == VBSymbol.EndParameterList ||
-			        ch == VBSymbol.BeginTypeConstraintList ||
-			        ch == VBSymbol.EndTypeConstraintList ||
-			        ch == Environment.NewLine[0] ||
-			        ch == VBSymbol.AliasSeparator ||
-			        ch == VBSymbol.BeginAttribute ||
-			        ch == VBSymbol.EndAttribute ||
-			        ch == VBSymbol.LineDelimiter;
+					ch == VBSymbol.EndParameterList ||
+					ch == VBSymbol.BeginTypeConstraintList ||
+					ch == VBSymbol.EndTypeConstraintList ||
+					ch == Environment.NewLine[0] ||
+					ch == VBSymbol.AliasSeparator ||
+					ch == VBSymbol.BeginAttribute ||
+					ch == VBSymbol.EndAttribute ||
+					ch == VBSymbol.LineDelimiter;
 		}
 
 		/// <summary>
@@ -467,48 +469,48 @@ namespace NArrange.VisualBasic
 			//
 			if (TryReadChar(VBSymbol.LineDelimiter))
 			{
-			    attributeElement.Target = typeName;
-			    typeName = CaptureTypeName(false);
-			    EatLineContinuation();
+				attributeElement.Target = typeName;
+				typeName = CaptureTypeName(false);
+				EatLineContinuation();
 			}
 
 			attributeElement.Name = typeName;
 
 			if (NextChar == VBSymbol.BeginParameterList)
 			{
-			    string attributeText = ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
-			        true, true);
-			    attributeElement.BodyText = attributeText;
+				string attributeText = ParseNestedText(VBSymbol.BeginParameterList, VBSymbol.EndParameterList,
+					true, true);
+				attributeElement.BodyText = attributeText;
 			}
 
 			EatLineContinuation();
 
 			while (!nested && TryReadChar(VBSymbol.AliasSeparator))
 			{
-			    if (NextChar != VBSymbol.AliasSeparator)
-			    {
-			        AttributeElement childAttributeElement = ParseAttribute(null, true);
-			        if (string.IsNullOrEmpty(childAttributeElement.Target))
-			        {
-			            childAttributeElement.Target = attributeElement.Target;
-			        }
-			        attributeElement.AddChild(childAttributeElement);
-			    }
+				if (NextChar != VBSymbol.AliasSeparator)
+				{
+					AttributeElement childAttributeElement = ParseAttribute(null, true);
+					if (string.IsNullOrEmpty(childAttributeElement.Target))
+					{
+						childAttributeElement.Target = attributeElement.Target;
+					}
+					attributeElement.AddChild(childAttributeElement);
+				}
 			}
 
 			EatLineContinuation();
 
 			if (!nested)
 			{
-			    EatChar(VBSymbol.EndAttribute);
+				EatChar(VBSymbol.EndAttribute);
 			}
 
 			if (comments != null && comments.Count > 0)
 			{
-			    foreach (ICommentElement comment in comments)
-			    {
-			        attributeElement.AddHeaderComment(comment);
-			    }
+				foreach (ICommentElement comment in comments)
+				{
+					attributeElement.AddHeaderComment(comment);
+				}
 			}
 
 			return attributeElement;
@@ -524,50 +526,50 @@ namespace NArrange.VisualBasic
 
 			while (!blockRead && NextChar != EmptyChar)
 			{
-			    string line = ReadLine();
-			    string trimmedLine = line.TrimStart();
+				string line = ReadLine();
+				string trimmedLine = line.TrimStart();
 
-			    if (trimmedLine.Length >= VBKeyword.End.Length &&
-			        trimmedLine.Substring(0, VBKeyword.End.Length).ToUpperInvariant() ==
-			        VBKeyword.End.ToUpperInvariant())
-			    {
-			        if (trimmedLine.Length > VBKeyword.End.Length &&
-			            IsWhiteSpace(trimmedLine[VBKeyword.End.Length]))
-			        {
-			            string restOfLine = trimmedLine.Substring(VBKeyword.End.Length).Trim();
+				if (trimmedLine.Length >= VBKeyword.End.Length &&
+					trimmedLine.Substring(0, VBKeyword.End.Length).ToUpperInvariant() ==
+					VBKeyword.End.ToUpperInvariant())
+				{
+					if (trimmedLine.Length > VBKeyword.End.Length &&
+						IsWhiteSpace(trimmedLine[VBKeyword.End.Length]))
+					{
+						string restOfLine = trimmedLine.Substring(VBKeyword.End.Length).Trim();
 
-			            if (restOfLine.ToUpperInvariant().StartsWith(blockName.ToUpperInvariant()) &&
-			                (restOfLine.Length == blockName.Length || 
-			                (restOfLine.Length > blockName.Length && IsWhiteSpace(restOfLine[blockName.Length]))))
-			            {
-			                blockRead = true;
-			            }
-			            else if (restOfLine.Length == 1 && restOfLine[0] == VBSymbol.LineContinuation)
-			            {
-			                string continuationLine = ReadLine();
-			                if (continuationLine.Trim().ToUpperInvariant() == blockName.ToUpperInvariant())
-			                {
-			                    blockRead = true;
-			                }
-			                else
-			                {
-			                    blockText.AppendLine(line);
-			                    blockText.AppendLine(continuationLine);
-			                    line = string.Empty;
-			                }
-			            }
-			        }
-			    }
+						if (restOfLine.ToUpperInvariant().StartsWith(blockName.ToUpperInvariant()) &&
+							(restOfLine.Length == blockName.Length ||
+							(restOfLine.Length > blockName.Length && IsWhiteSpace(restOfLine[blockName.Length]))))
+						{
+							blockRead = true;
+						}
+						else if (restOfLine.Length == 1 && restOfLine[0] == VBSymbol.LineContinuation)
+						{
+							string continuationLine = ReadLine();
+							if (continuationLine.Trim().ToUpperInvariant() == blockName.ToUpperInvariant())
+							{
+								blockRead = true;
+							}
+							else
+							{
+								blockText.AppendLine(line);
+								blockText.AppendLine(continuationLine);
+								line = string.Empty;
+							}
+						}
+					}
+				}
 
-			    if(!blockRead)
-			    {
-			        blockText.AppendLine(line);
-			    }
+				if (!blockRead)
+				{
+					blockText.AppendLine(line);
+				}
 			}
 
 			if (!blockRead)
 			{
-			    this.OnParseError("Unexpected end of file. Expected End " + blockName);
+				this.OnParseError("Unexpected end of file. Expected End " + blockName);
 			}
 
 			return blockText.ToString().Trim();
@@ -586,16 +588,16 @@ namespace NArrange.VisualBasic
 			CommentType commentType = CommentType.Line;
 			if (NextChar == VBSymbol.BeginComment)
 			{
-			    TryReadChar();
-			    if (NextChar == VBSymbol.BeginComment)
-			    {
-			        commentType = CommentType.XmlLine;
-			        TryReadChar();
-			    }
-			    else
-			    {
-			        commentTextBuilder.Append(VBSymbol.BeginComment);
-			    }
+				TryReadChar();
+				if (NextChar == VBSymbol.BeginComment)
+				{
+					commentType = CommentType.XmlLine;
+					TryReadChar();
+				}
+				else
+				{
+					commentTextBuilder.Append(VBSymbol.BeginComment);
+				}
 			}
 
 			commentTextBuilder.Append(ReadLine());
@@ -612,20 +614,74 @@ namespace NArrange.VisualBasic
 			char nextChar = NextChar;
 			while (nextChar == VBSymbol.BeginComment)
 			{
-			    TryReadChar();
+				TryReadChar();
 
 
-			    CommentElement commentLine = ParseCommentLine();
-			    comments.Add(commentLine);
+				CommentElement commentLine = ParseCommentLine();
+				comments.Add(commentLine);
 
-			    EatWhiteSpace();
+				EatWhiteSpace();
 
-			    nextChar = NextChar;
+				nextChar = NextChar;
 			}
 
 			EatWhiteSpace();
 
 			return comments.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Parses a condition directive.
+		/// </summary>
+		/// <returns></returns>
+		private ConditionDirectiveElement ParseConditionDirective(string line, out bool isIf)
+		{
+			int separatorIndex = line.IndexOfAny(WhiteSpaceCharacters);
+
+			string directive = null;
+			if (separatorIndex > 0)
+			{
+				directive = line.Substring(0, separatorIndex);
+			}
+			else
+			{
+				directive = line;
+			}
+
+			directive = VBKeyword.Normalize(directive);
+
+			string condition = null;
+			if (separatorIndex > 0)
+			{
+				condition = line.Substring(separatorIndex + 1).Trim();
+			}
+
+			isIf = directive == VBKeyword.If;
+
+			switch (directive)
+			{
+				case VBKeyword.If:
+				case VBKeyword.ElseIf:
+					if (string.IsNullOrEmpty(condition))
+					{
+						this.OnParseError("Expected a condition expression");
+					}
+					break;
+
+				case VBKeyword.Else:
+					break;
+
+				default:
+					this.OnParseError(
+						string.Format(CultureInfo.InvariantCulture,
+						"Unhandled preprocessor directive '{0}'", directive));
+					break;
+			}
+
+			ConditionDirectiveElement conditionDirective = new ConditionDirectiveElement();
+			conditionDirective.ConditionExpression = condition;
+
+			return conditionDirective;
 		}
 
 		private DelegateElement ParseDelegate(
@@ -636,22 +692,22 @@ namespace NArrange.VisualBasic
 			bool isFunction = false;
 			switch (VBKeyword.Normalize(delegateType))
 			{
-			    case VBKeyword.Sub:
-			        isFunction = false;
-			        break;
+				case VBKeyword.Sub:
+					isFunction = false;
+					break;
 
-			    case VBKeyword.Function:
-			        isFunction = true;
-			        break;
+				case VBKeyword.Function:
+					isFunction = true;
+					break;
 
-			    default:
-			        this.OnParseError(
-			            "Expected Sub or Function for delegate declaration");
-			        break;
+				default:
+					this.OnParseError(
+						"Expected Sub or Function for delegate declaration");
+					break;
 			}
 
 			MethodElement methodElement = ParseMethod(access, memberAttributes,
-			    isFunction, true, false, OperatorType.None, false, false, null);
+				isFunction, true, false, OperatorType.None, false, false, null);
 
 			DelegateElement delegateElement = new DelegateElement();
 			delegateElement.Name = methodElement.Name;
@@ -661,12 +717,12 @@ namespace NArrange.VisualBasic
 			delegateElement.BodyText = methodElement.BodyText;
 			if (isFunction)
 			{
-			    delegateElement.Type = methodElement.Type;
+				delegateElement.Type = methodElement.Type;
 			}
 
 			foreach (TypeParameter typeParameter in methodElement.TypeParameters)
 			{
-			    delegateElement.AddTypeParameter(typeParameter);
+				delegateElement.AddTypeParameter(typeParameter);
 			}
 
 			return delegateElement;
@@ -682,7 +738,7 @@ namespace NArrange.VisualBasic
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			List<ICommentElement> comments = new List<ICommentElement>();
 			List<AttributeElement> attributes = new List<AttributeElement>();
-			Stack<RegionElement> regionStack = new Stack<RegionElement>();
+			Stack<ICodeElement> enclosingElementStack = new Stack<ICodeElement>();
 
 			StringBuilder elementBuilder = new StringBuilder(DefaultBlockLength);
 
@@ -692,282 +748,363 @@ namespace NArrange.VisualBasic
 
 			while (TryReadChar() && !end)
 			{
-			    switch (CurrentChar)
-			    {
-			        //
-			        // Comments
-			        //
-			        case VBSymbol.BeginComment:
-			            CommentElement commentLine = ParseCommentLine();
-			            comments.Add(commentLine);
-			            break;
+				switch (CurrentChar)
+				{
+					//
+					// Comments
+					//
+					case VBSymbol.BeginComment:
+						CommentElement commentLine = ParseCommentLine();
+						comments.Add(commentLine);
+						break;
 
-			        //
-			        // Preprocessor
-			        //
-			        case VBSymbol.Preprocessor:
-			            //
-			            // TODO: Besides regions, parse preprocessor elements so that
-			            // member preprocessor information is preserved.
-			            //
-			            string line = ReadLine().Trim();
-			            string[] words = line.Split(WhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries);
-			            if (words.Length > 0 && VBKeyword.Normalize(words[0]) == VBKeyword.Region)
-			            {
-			                if (comments.Count > 0)
-			                {
-			                    foreach (ICommentElement commentElement in comments)
-			                    {
-			                        codeElements.Add(commentElement);
-			                    }
-			                    comments.Clear();
-			                }
+					//
+					// Preprocessor
+					//
+					case VBSymbol.Preprocessor:
+						//
+						// TODO: Besides regions, parse preprocessor elements so that
+						// member preprocessor information is preserved.
+						//
+						string line = ReadLine().Trim();
+						string[] words = line.Split(WhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries);
+						if (words.Length > 0 && VBKeyword.Normalize(words[0]) == VBKeyword.Region)
+						{
+							if (comments.Count > 0)
+							{
+								foreach (ICommentElement commentElement in comments)
+								{
+									codeElements.Add(commentElement);
+								}
+								comments.Clear();
+							}
 
-			                RegionElement regionElement = ParseRegion(line);
-			                regionStack.Push(regionElement);
-			            }
-			            else if (words.Length > 1 &&
-			                VBKeyword.Normalize(words[0]) == VBKeyword.End &&
-			                VBKeyword.Normalize(words[1]) == VBKeyword.Region)
-			            {
-			                RegionElement regionElement = regionStack.Pop();
+							RegionElement regionElement = ParseRegion(line);
+							enclosingElementStack.Push(regionElement);
+						}
+						else if (words.Length > 0 &&
+							(VBKeyword.Normalize(words[0]) == VBKeyword.If ||
+							VBKeyword.Normalize(words[0]) == VBKeyword.Else ||
+							VBKeyword.Normalize(words[0]) == VBKeyword.ElseIf))
+						{
+							bool isIf;
+							ConditionDirectiveElement conditionDirective = ParseConditionDirective(line.Trim(), out isIf);
 
-			                if (comments.Count > 0)
-			                {
-			                    foreach (ICommentElement commentElement in comments)
-			                    {
-			                        regionElement.AddChild(commentElement);
-			                    }
-			                    comments.Clear();
-			                }
+							if (isIf)
+							{
+								enclosingElementStack.Push(conditionDirective);
+							}
+							else
+							{
+								if (enclosingElementStack.Count == 0 ||
+									enclosingElementStack.Peek().ElementType != ElementType.ConditionDirective)
+								{
+									this.OnParseError("Expected 'If' preprocessor directive.");
+								}
+								else
+								{
+									ConditionDirectiveElement previousCondition =
+										enclosingElementStack.Peek() as ConditionDirectiveElement;
+									while (previousCondition.ElseCondition != null)
+									{
+										previousCondition = previousCondition.ElseCondition;
+									}
 
-			                if (regionStack.Count > 0)
-			                {
-			                    regionStack.Peek().AddChild(regionElement);
-			                }
-			                else
-			                {
-			                    codeElements.Add(regionElement);
-			                }
-			            }
-			            else
-			            {
-			                this.OnParseError(
-			                    "Cannot arrange files with preprocessor directives " +
-			                    "other than #Region and #End Region");
-			            }
-			            break;
+									// Add the condition to the end of the condition linked list
+									previousCondition.ElseCondition = conditionDirective;
+								}
+							}
+						}
+						else if (words.Length > 1 &&
+							VBKeyword.Normalize(words[0]) == VBKeyword.End &&
+							(VBKeyword.Normalize(words[1]) == VBKeyword.Region ||
+							VBKeyword.Normalize(words[1]) == VBKeyword.If))
+						{
+							ICodeElement enclosingElement = null;
 
-			        //
-			        // Attribute
-			        //
-			        case VBSymbol.BeginAttribute:
-			            nextChar = NextChar;
+							if (VBKeyword.Normalize(words[1]) == VBKeyword.Region)
+							{
+								if (enclosingElementStack.Count == 0 ||
+									enclosingElementStack.Peek().ElementType != ElementType.Region)
+								{
+									this.OnParseError("Unmatched #End Region");
+								}
+							}
+							else if (enclosingElementStack.Count == 0 ||
+								enclosingElementStack.Peek().ElementType != ElementType.ConditionDirective)
+							{
+								this.OnParseError("Unmatched #End If");
+							}
 
-			            //
-			            // Parse attribute
-			            //
-			            AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
+							enclosingElement = enclosingElementStack.Pop();
 
-			            attributes.Add(attributeElement);
-			            codeElements.Add(attributeElement);
-			            comments.Clear();
-			            break;
+							//
+							// If there are any attributes not associated with an element (e.g.
+							// a condition directive containing only an attribute, then 
+							// throw an error as this is currently not supported.
+							//
+							if (enclosingElement.ElementType == ElementType.ConditionDirective &&
+								attributes.Count > 0)
+							{
+								this.OnParseError("Cannot arrange files with preprocessor directives containing attributes unassociated to an element");
+							}
 
-			        case VBSymbol.LineContinuation:
-			            if (IsWhiteSpace(PreviousChar) && IsWhiteSpace(NextChar))
-			            {
-			                lineContinuation = true;
-			            }
-			            else
-			            {
-			                elementBuilder.Append(CurrentChar);
-			            }
-			            break;
+							if (comments.Count > 0)
+							{
+								foreach (ICommentElement commentElement in comments)
+								{
+									enclosingElement.AddChild(commentElement);
+								}
+								comments.Clear();
+							}
 
-			        // Eat any unneeded whitespace
-			        case ' ':
-			        case '\n':
-			        case '\r':
-			        case '\t':
-			        case ':':
-			            if (elementBuilder.Length > 0)
-			            {
-			                string processedText = elementBuilder.ToString().Trim();
-			                if (CurrentChar == '\n')
-			                {
-			                    if (!lineContinuation)
-			                    {
-			                        this.OnParseError(
-			                            string.Format(Thread.CurrentThread.CurrentCulture,
-			                            "Unhandled element text '{0}'", processedText));
-			                    }
-			                    else
-			                    {
-			                        lineContinuation = false;
-			                    }
-			                }
+							if (enclosingElementStack.Count > 0)
+							{
+								enclosingElementStack.Peek().AddChild(enclosingElement);
+							}
+							else
+							{
+								codeElements.Add(enclosingElement);
+							}
+						}
+						else
+						{
+							this.OnParseError(
+								"Cannot arrange files with preprocessor directives " +
+								"other than #Region, #End Region and conditional compilation directives");
+						}
+						break;
 
-			                if (elementBuilder[elementBuilder.Length - 1] != ' ')
-			                {
-			                    elementBuilder.Append(' ');
-			                }
-			            }
-			            break;
+					//
+					// Attribute
+					//
+					case VBSymbol.BeginAttribute:
+						nextChar = NextChar;
 
-			        default:
-			            elementBuilder.Append(CurrentChar);
+						//
+						// Parse attribute
+						//
+						AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
 
-			            string upperElementText = elementBuilder.ToString().ToUpperInvariant();
-			            nextChar = NextChar;
+						attributes.Add(attributeElement);
+						codeElements.Add(attributeElement);
+						comments.Clear();
+						break;
 
-			            if (upperElementText == VBKeyword.End.ToUpperInvariant())
-			            {
-			                end = true;
-			                elementBuilder = new StringBuilder(DefaultBlockLength);
-			            }
-			            else if (upperElementText == VBKeyword.Rem.ToUpperInvariant() &&
-			                nextChar == ' ')
-			            {
-			                CommentElement remCommentLine = ParseCommentLine();
-			                comments.Add(remCommentLine);
-			                elementBuilder = new StringBuilder(DefaultBlockLength);
-			            }
-			            else if (upperElementText == VBKeyword.Option.ToUpperInvariant() &&
-			                IsWhiteSpace(nextChar))
-			            {
-			                ICodeElement optionElement = ParseOption(comments.AsReadOnly());
-			                comments.Clear();
-			                codeElements.Add(optionElement);
-			                elementBuilder = new StringBuilder(DefaultBlockLength);
-			            }
-			            else
-			            {
-			                if (char.IsWhiteSpace(nextChar) || VBSymbol.IsVBSymbol(CurrentChar))
-			                {
-			                    string elementText = VBKeyword.Normalize(elementBuilder.ToString());
-			                    bool isImplements = elementText.StartsWith(
-			                        VBKeyword.Implements, StringComparison.OrdinalIgnoreCase);
-			                    bool isInherits = !isImplements && elementText.StartsWith(
-			                        VBKeyword.Inherits, StringComparison.OrdinalIgnoreCase);
-			                    TypeElement typeElement = parentElement as TypeElement;
-			                    if ((isImplements || isInherits) && typeElement != null)
-			                    {
-			                        InterfaceReferenceType referenceType = InterfaceReferenceType.None;
-			                        if (isInherits)
-			                        {
-			                            referenceType = InterfaceReferenceType.Class;
-			                        }
-			                        else if (isImplements)
-			                        {
-			                            referenceType = InterfaceReferenceType.Interface;
-			                        }
+					case VBSymbol.LineContinuation:
+						if (IsWhiteSpace(PreviousChar) && IsWhiteSpace(NextChar))
+						{
+							lineContinuation = true;
+						}
+						else
+						{
+							elementBuilder.Append(CurrentChar);
+						}
+						break;
 
-			                        do
-			                        {
-			                            EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
-			                            if (NextChar == VBSymbol.AliasSeparator)
-			                            {
-			                                EatChar(VBSymbol.AliasSeparator);
-			                            }
+					// Eat any unneeded whitespace
+					case ' ':
+					case '\n':
+					case '\r':
+					case '\t':
+					case ':':
+						if (elementBuilder.Length > 0)
+						{
+							string processedText = elementBuilder.ToString().Trim();
+							if (CurrentChar == '\n')
+							{
+								if (!lineContinuation)
+								{
+									this.OnParseError(
+										string.Format(Thread.CurrentThread.CurrentCulture,
+										"Unhandled element text '{0}'", processedText));
+								}
+								else
+								{
+									lineContinuation = false;
+								}
+							}
 
-			                            string typeName = CaptureTypeName();
-			                            InterfaceReference interfaceReference =
-			                                new InterfaceReference(typeName, referenceType);
-			                            typeElement.AddInterface(interfaceReference);
-			                            EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
-			                        }
-			                        while (NextChar == VBSymbol.AliasSeparator);
+							if (elementBuilder[elementBuilder.Length - 1] != ' ')
+							{
+								elementBuilder.Append(' ');
+							}
+						}
+						break;
 
-			                        elementBuilder = new StringBuilder(DefaultBlockLength);
-			                    }
-			                    else
-			                    {
-			                        //
-			                        // Try to parse a code element
-			                        //
-			                        ICodeElement element = TryParseElement(parentElement,
-			                            elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
-			                        if (element != null)
-			                        {
-			                            if (element is CommentedElement)
-			                            {
-			                                UsingElement usingElement = element as UsingElement;
+					default:
+						elementBuilder.Append(CurrentChar);
 
-			                                //
-			                                // If this is the first using statement, then don't attach
-			                                // header comments to the element.
-			                                //
-			                                if (usingElement != null && parentElement == null && codeElements.Count == 0)
-			                                {
-			                                    foreach (ICommentElement commentElement in usingElement.HeaderComments)
-			                                    {
-			                                        if (regionStack.Count > 0)
-			                                        {
-			                                            regionStack.Peek().AddChild(commentElement);
-			                                        }
-			                                        else
-			                                        {
-			                                            codeElements.Add(commentElement);
-			                                        }
-			                                    }
-			                                    usingElement.ClearHeaderCommentLines();
-			                                }
-			                                comments.Clear();
-			                            }
+						string upperElementText = elementBuilder.ToString().ToUpperInvariant();
+						nextChar = NextChar;
 
-			                            if (regionStack.Count > 0)
-			                            {
-			                                regionStack.Peek().AddChild(element);
-			                            }
-			                            else
-			                            {
-			                                codeElements.Add(element);
-			                            }
-			                            
-			                            elementBuilder = new StringBuilder(DefaultBlockLength);
-			                            
-			                            if (element is IAttributedElement)
-			                            {
-			                                foreach (AttributeElement attribute in attributes)
-			                                {
-			                                    codeElements.Remove(attribute);
-			                                }
+						if (upperElementText == VBKeyword.End.ToUpperInvariant())
+						{
+							end = true;
+							elementBuilder = new StringBuilder(DefaultBlockLength);
+						}
+						else if (upperElementText == VBKeyword.Rem.ToUpperInvariant() &&
+							nextChar == ' ')
+						{
+							CommentElement remCommentLine = ParseCommentLine();
+							comments.Add(remCommentLine);
+							elementBuilder = new StringBuilder(DefaultBlockLength);
+						}
+						else if (upperElementText == VBKeyword.Option.ToUpperInvariant() &&
+							IsWhiteSpace(nextChar))
+						{
+							ICodeElement optionElement = ParseOption(comments.AsReadOnly());
+							comments.Clear();
+							codeElements.Add(optionElement);
+							elementBuilder = new StringBuilder(DefaultBlockLength);
+						}
+						else
+						{
+							if (char.IsWhiteSpace(nextChar) || VBSymbol.IsVBSymbol(CurrentChar))
+							{
+								string elementText = VBKeyword.Normalize(elementBuilder.ToString());
+								bool isImplements = elementText.StartsWith(
+									VBKeyword.Implements, StringComparison.OrdinalIgnoreCase);
+								bool isInherits = !isImplements && elementText.StartsWith(
+									VBKeyword.Inherits, StringComparison.OrdinalIgnoreCase);
+								TypeElement typeElement = parentElement as TypeElement;
+								if ((isImplements || isInherits) && typeElement != null)
+								{
+									InterfaceReferenceType referenceType = InterfaceReferenceType.None;
+									if (isInherits)
+									{
+										referenceType = InterfaceReferenceType.Class;
+									}
+									else if (isImplements)
+									{
+										referenceType = InterfaceReferenceType.Interface;
+									}
 
-			                                attributes = new List<AttributeElement>();
-			                            }
-			                        }
-			                    }
-			                }
-			            }
+									do
+									{
+										EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+										if (NextChar == VBSymbol.AliasSeparator)
+										{
+											EatChar(VBSymbol.AliasSeparator);
+										}
 
-			            break;
-			    }
+										string typeName = CaptureTypeName();
+										InterfaceReference interfaceReference =
+											new InterfaceReference(typeName, referenceType);
+										typeElement.AddInterface(interfaceReference);
+										EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+									}
+									while (NextChar == VBSymbol.AliasSeparator);
 
-			    char nextCh = NextChar;
+									elementBuilder = new StringBuilder(DefaultBlockLength);
+								}
+								else
+								{
+									//
+									// Try to parse a code element
+									//
+									ICodeElement element = TryParseElement(parentElement,
+										elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
+									if (element != null)
+									{
+										if (element is CommentedElement)
+										{
+											UsingElement usingElement = element as UsingElement;
+
+											//
+											// If this is the first using statement, then don't attach
+											// header comments to the element.
+											//
+											if (usingElement != null && parentElement == null && codeElements.Count == 0)
+											{
+												foreach (ICommentElement commentElement in usingElement.HeaderComments)
+												{
+													if (enclosingElementStack.Count > 0)
+													{
+														enclosingElementStack.Peek().AddChild(commentElement);
+													}
+													else
+													{
+														codeElements.Add(commentElement);
+													}
+												}
+												usingElement.ClearHeaderCommentLines();
+											}
+											comments.Clear();
+										}
+
+										if (enclosingElementStack.Count > 0)
+										{
+											ICodeElement enclosingElement = enclosingElementStack.Peek();
+
+											if (enclosingElement.ElementType == ElementType.ConditionDirective)
+											{
+												ConditionDirectiveElement conditionDirective = enclosingElement as ConditionDirectiveElement;
+												while (conditionDirective.ElseCondition != null)
+												{
+													conditionDirective = conditionDirective.ElseCondition;
+												}
+
+												enclosingElement = conditionDirective;
+											}
+
+											enclosingElement.AddChild(element);
+										}
+										else
+										{
+											codeElements.Add(element);
+										}
+
+										elementBuilder = new StringBuilder(DefaultBlockLength);
+
+										if (element is IAttributedElement)
+										{
+											foreach (AttributeElement attribute in attributes)
+											{
+												codeElements.Remove(attribute);
+											}
+
+											attributes = new List<AttributeElement>();
+										}
+									}
+								}
+							}
+						}
+
+						break;
+				}
+
+				char nextCh = NextChar;
 			}
 
 			if (comments.Count > 0)
 			{
-			    foreach (ICommentElement comment in comments)
-			    {
-			        codeElements.Insert(0, comment);
-			    }
+				foreach (ICommentElement comment in comments)
+				{
+					codeElements.Insert(0, comment);
+				}
 			}
 
 			//
 			// Make sure that all region elements have been closed
 			//
-			if (regionStack.Count > 0)
+			if (enclosingElementStack.Count > 0)
 			{
-			    this.OnParseError("Expected #End Region");
+				if (enclosingElementStack.Peek().ElementType == ElementType.Region)
+				{
+					this.OnParseError("Expected #End Region");
+				}
+				else
+				{
+					this.OnParseError("Expected #End If");
+				}
 			}
 
 			if (elementBuilder.Length > 0)
 			{
-			    this.OnParseError(
-			        string.Format(Thread.CurrentThread.CurrentCulture,
-			        "Unhandled element text '{0}'", elementBuilder));
+				this.OnParseError(
+					string.Format(Thread.CurrentThread.CurrentCulture,
+					"Unhandled element text '{0}'", elementBuilder));
 			}
 
 			return codeElements;
@@ -985,33 +1122,33 @@ namespace NArrange.VisualBasic
 			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 			if (NextChar == VBSymbol.BeginParameterList)
 			{
-			    eventElement.Parameters = ParseNestedText(
-			        VBSymbol.BeginParameterList, VBSymbol.EndParameterList, true, true);
+				eventElement.Parameters = ParseNestedText(
+					VBSymbol.BeginParameterList, VBSymbol.EndParameterList, true, true);
 			}
 			else
 			{
-			    EatWord(VBKeyword.As);
+				EatWord(VBKeyword.As);
 
-			    string eventType = CaptureTypeName();
-			    if (string.IsNullOrEmpty(eventType))
-			    {
-			        this.OnParseError("Expected type identifier");
-			    }
-			    eventElement.Type = eventType;
+				string eventType = CaptureTypeName();
+				if (string.IsNullOrEmpty(eventType))
+				{
+					this.OnParseError("Expected type identifier");
+				}
+				eventElement.Type = eventType;
 			}
 
 			string[] implements;
 			string blockTemp = TryParseImplements(out implements);
 			foreach (string implementation in implements)
 			{
-			    InterfaceReference interfaceReference = 
-			        new InterfaceReference(implementation, InterfaceReferenceType.Interface);
-			    eventElement.AddImplementation(interfaceReference);
+				InterfaceReference interfaceReference =
+					new InterfaceReference(implementation, InterfaceReferenceType.Interface);
+				eventElement.AddImplementation(interfaceReference);
 			}
 
 			if (isCustom)
 			{
-			    eventElement.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Event)).Trim();
+				eventElement.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Event)).Trim();
 			}
 
 			return eventElement;
@@ -1026,20 +1163,20 @@ namespace NArrange.VisualBasic
 
 			foreach (string word in wordList)
 			{
-			    string trimmedWord = word.Trim(' ', VBSymbol.AliasSeparator);
+				string trimmedWord = word.Trim(' ', VBSymbol.AliasSeparator);
 
-			    string upperWord = trimmedWord.ToUpperInvariant();
-			    if ((!VBKeyword.IsVBKeyword(trimmedWord) ||
-			        upperWord == VBKeyword.Custom.ToUpperInvariant() ||
-			        upperWord == VBKeyword.Ansi.ToUpperInvariant() ||
-			        upperWord == VBKeyword.Unicode.ToUpperInvariant() ||
-			        upperWord == VBKeyword.Auto.ToUpperInvariant()) &&
-			        trimmedWord.Length > 0)
-			    {
-			        nameBuilder.Append(trimmedWord);
-			        nameBuilder.Append(VBSymbol.AliasSeparator);
-			        nameBuilder.Append(' ');
-			    }
+				string upperWord = trimmedWord.ToUpperInvariant();
+				if ((!VBKeyword.IsVBKeyword(trimmedWord) ||
+					upperWord == VBKeyword.Custom.ToUpperInvariant() ||
+					upperWord == VBKeyword.Ansi.ToUpperInvariant() ||
+					upperWord == VBKeyword.Unicode.ToUpperInvariant() ||
+					upperWord == VBKeyword.Auto.ToUpperInvariant()) &&
+					trimmedWord.Length > 0)
+				{
+					nameBuilder.Append(trimmedWord);
+					nameBuilder.Append(VBSymbol.AliasSeparator);
+					nameBuilder.Append(' ');
+				}
 			}
 
 			field.Name = nameBuilder.ToString().TrimEnd(VBSymbol.AliasSeparator, ' ');
@@ -1048,16 +1185,16 @@ namespace NArrange.VisualBasic
 
 			if (!untypedAssignment)
 			{
-			    string returnType = CaptureTypeName();
-			    if (returnType.ToUpperInvariant() == VBKeyword.New.ToUpperInvariant())
-			    {
-			        EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
-			        field.InitialValue = VBKeyword.New + " " + ReadCodeLine().Trim();
-			    }
-			    else
-			    {
-			        field.Type = returnType;
-			    }
+				string returnType = CaptureTypeName();
+				if (returnType.ToUpperInvariant() == VBKeyword.New.ToUpperInvariant())
+				{
+					EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
+					field.InitialValue = VBKeyword.New + " " + ReadCodeLine().Trim();
+				}
+				else
+				{
+					field.Type = returnType;
+				}
 			}
 
 			field.Access = access;
@@ -1068,27 +1205,27 @@ namespace NArrange.VisualBasic
 			bool isAssignment = NextChar == VBSymbol.Assignment || untypedAssignment;
 			if (isAssignment)
 			{
-			    if (!untypedAssignment)
-			    {
-			        EatChar(VBSymbol.Assignment);
-			    }
-			    string initialValue = ParseInitialValue();
+				if (!untypedAssignment)
+				{
+					EatChar(VBSymbol.Assignment);
+				}
+				string initialValue = ParseInitialValue();
 
-			    field.InitialValue = initialValue;
+				field.InitialValue = initialValue;
 			}
 
 			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 
 			if (NextChar == VBSymbol.BeginComment)
 			{
-			    EatChar(VBSymbol.BeginComment);
+				EatChar(VBSymbol.BeginComment);
 
-			    string commentText = ReadLine().Trim();
-			    if (commentText.Length > 0)
-			    {
-			        CommentElement comment = new CommentElement(commentText);
+				string commentText = ReadLine().Trim();
+				if (commentText.Length > 0)
+				{
+					CommentElement comment = new CommentElement(commentText);
 					field.TrailingComment = comment;
-			    }
+				}
 			}
 
 			return field;
@@ -1102,7 +1239,7 @@ namespace NArrange.VisualBasic
 
 			if (string.IsNullOrEmpty(initialValue))
 			{
-			    this.OnParseError("Expected an initial value");
+				this.OnParseError("Expected an initial value");
 			}
 			return initialValue;
 		}
@@ -1117,13 +1254,13 @@ namespace NArrange.VisualBasic
 			method.Name = CaptureWord();
 			if (isOperator)
 			{
-			    // Handle greater than/less than for the method name since these will get 
-			    // excluded with < and > being alias breaks (needed by attributes).
-			    while (NextChar == VBSymbol.BeginAttribute || NextChar == VBSymbol.EndAttribute)
-			    {
-			        TryReadChar();
-			        method.Name += CurrentChar + CaptureWord();
-			    }
+				// Handle greater than/less than for the method name since these will get 
+				// excluded with < and > being alias breaks (needed by attributes).
+				while (NextChar == VBSymbol.BeginAttribute || NextChar == VBSymbol.EndAttribute)
+				{
+					TryReadChar();
+					method.Name += CurrentChar + CaptureWord();
+				}
 			}
 
 			method.Access = access;
@@ -1135,34 +1272,34 @@ namespace NArrange.VisualBasic
 
 			if (isExternal)
 			{
-			    method.MemberModifiers = method.MemberModifiers | MemberModifiers.External;
+				method.MemberModifiers = method.MemberModifiers | MemberModifiers.External;
 
-			    EatLineContinuation();
+				EatLineContinuation();
 
-			    EatWord(VBKeyword.Lib);
+				EatWord(VBKeyword.Lib);
 
-			    EatLineContinuation();
+				EatLineContinuation();
 
-			    EatChar(VBSymbol.BeginString);
-			    string library = CaptureWord().TrimEnd(VBSymbol.BeginString);
+				EatChar(VBSymbol.BeginString);
+				string library = CaptureWord().TrimEnd(VBSymbol.BeginString);
 
-			    method[VBExtendedProperties.ExternalLibrary] = library;
+				method[VBExtendedProperties.ExternalLibrary] = library;
 
-			    EatLineContinuation();
+				EatLineContinuation();
 
-			    if (NextChar != VBSymbol.BeginParameterList)
-			    {
-			        EatLineContinuation();
+				if (NextChar != VBSymbol.BeginParameterList)
+				{
+					EatLineContinuation();
 
-			        EatWord(VBKeyword.Alias);
+					EatWord(VBKeyword.Alias);
 
-			        EatLineContinuation();
+					EatLineContinuation();
 
-			        EatChar(VBSymbol.BeginString);
-			        string alias = CaptureWord().TrimEnd(VBSymbol.BeginString);
+					EatChar(VBSymbol.BeginString);
+					string alias = CaptureWord().TrimEnd(VBSymbol.BeginString);
 
-			        method[VBExtendedProperties.ExternalAlias] = alias;
-			    }
+					method[VBExtendedProperties.ExternalAlias] = alias;
+				}
 			}
 
 			EatLineContinuation();
@@ -1173,36 +1310,36 @@ namespace NArrange.VisualBasic
 
 			if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[0]))
 			{
-			    TryReadChar();
-			    paramsTemp += CurrentChar;
+				TryReadChar();
+				paramsTemp += CurrentChar;
 
-			    if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[1]))
-			    {
-			        TryReadChar();
-			        paramsTemp = string.Empty;
+				if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Of[1]))
+				{
+					TryReadChar();
+					paramsTemp = string.Empty;
 
-			        this.ParseTypeParameters(method);
+					this.ParseTypeParameters(method);
 
-			        EatChar(VBSymbol.BeginParameterList);
-			        EatWhiteSpace();
-			    }
+					EatChar(VBSymbol.BeginParameterList);
+					EatWhiteSpace();
+				}
 			}
 
 			method.Parameters = paramsTemp + ParseNestedText(
-			    VBSymbol.BeginParameterList, VBSymbol.EndParameterList, false, false);
+				VBSymbol.BeginParameterList, VBSymbol.EndParameterList, false, false);
 
 			if (isFunction || isOperator)
 			{
-			    EatLineContinuation();
-			    if (char.ToUpper(NextChar) == VBKeyword.As[0])
-			    {
-			        EatWord(VBKeyword.As);
-			        method.Type = CaptureTypeName();
-			    }
-			    else
-			    {
-			        method.Type = string.Empty;
-			    }
+				EatLineContinuation();
+				if (char.ToUpper(NextChar) == VBKeyword.As[0])
+				{
+					EatWord(VBKeyword.As);
+					method.Type = CaptureTypeName();
+				}
+				else
+				{
+					method.Type = string.Empty;
+				}
 			}
 
 			EatWhiteSpace();
@@ -1213,34 +1350,34 @@ namespace NArrange.VisualBasic
 			string blockTemp = TryParseImplementsOrHandles(out implements, out handles, parseHandles);
 			if (parseHandles)
 			{
-			    method[VBExtendedProperties.Handles] = handles;
+				method[VBExtendedProperties.Handles] = handles;
 			}
 
 			foreach (string implementation in implements)
 			{
-			    InterfaceReference interfaceReference =
-			         new InterfaceReference(implementation, InterfaceReferenceType.Interface);
-			    method.AddImplementation(interfaceReference);
+				InterfaceReference interfaceReference =
+					 new InterfaceReference(implementation, InterfaceReferenceType.Interface);
+				method.AddImplementation(interfaceReference);
 			}
 
 			if ((memberAttributes & MemberModifiers.Abstract) != MemberModifiers.Abstract &&
-			    !inInterface && !isExternal)
+				!inInterface && !isExternal)
 			{
-			    if (isFunction || isOperator)
-			    {
-			        if (isOperator)
-			        {
-			            method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Operator)).Trim();
-			        }
-			        else if (!isDelegate)
-			        {
-			            method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Function)).Trim();
-			        }
-			    }
-			    else if (!isDelegate)
-			    {
-			        method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Sub)).Trim();
-			    }
+				if (isFunction || isOperator)
+				{
+					if (isOperator)
+					{
+						method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Operator)).Trim();
+					}
+					else if (!isDelegate)
+					{
+						method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Function)).Trim();
+					}
+				}
+				else if (!isDelegate)
+				{
+					method.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Sub)).Trim();
+				}
 			}
 
 			return method;
@@ -1262,7 +1399,7 @@ namespace NArrange.VisualBasic
 			List<ICodeElement> childElements = ParseElements(namespaceElement);
 			foreach (ICodeElement childElement in childElements)
 			{
-			    namespaceElement.AddChild(childElement);
+				namespaceElement.AddChild(childElement);
 			}
 
 			EatWhiteSpace();
@@ -1294,64 +1431,64 @@ namespace NArrange.VisualBasic
 
 			if (nextChar == EmptyChar)
 			{
-			    this.OnParseError("Unexpected end of file. Expected " + endChar);
+				this.OnParseError("Unexpected end of file. Expected " + endChar);
 			}
 			else if (nextChar == endChar)
 			{
-			    TryReadChar();
+				TryReadChar();
 			}
 			else
 			{
-			    bool inString = false;
+				bool inString = false;
 
-			    while (depth > 0)
-			    {
-			        bool charRead = TryReadChar();
-			        if (!charRead)
-			        {
-			            this.OnParseError("Unexpected end of file. Expected " + endChar);
-			        }
+				while (depth > 0)
+				{
+					bool charRead = TryReadChar();
+					if (!charRead)
+					{
+						this.OnParseError("Unexpected end of file. Expected " + endChar);
+					}
 
-			        nextChar = NextChar;
+					nextChar = NextChar;
 
-			        if (CurrentChar == VBSymbol.BeginString)
-			        {
-			            inString = !inString;
-			        }
+					if (CurrentChar == VBSymbol.BeginString)
+					{
+						inString = !inString;
+					}
 
-			        if (beginChar != EmptyChar && CurrentChar == beginChar &&
-			            !inString)
-			        {
-			            blockText.Append(CurrentChar);
-			            depth++;
-			        }
-			        else
-			        {
-			            blockText.Append(CurrentChar);
-			        }
+					if (beginChar != EmptyChar && CurrentChar == beginChar &&
+						!inString)
+					{
+						blockText.Append(CurrentChar);
+						depth++;
+					}
+					else
+					{
+						blockText.Append(CurrentChar);
+					}
 
-			        if (nextChar == endChar && !inString)
-			        {
-			            if (depth == 1)
-			            {
-			                EatChar(endChar);
-			                break;
-			            }
-			            else
-			            {
-			                depth--;
-			            }
-			        }
-			    }
+					if (nextChar == endChar && !inString)
+					{
+						if (depth == 1)
+						{
+							EatChar(endChar);
+							break;
+						}
+						else
+						{
+							depth--;
+						}
+					}
+				}
 			}
 
 			if (trim)
 			{
-			    return blockText.ToString().Trim();
+				return blockText.ToString().Trim();
 			}
 			else
 			{
-			    return blockText.ToString();
+				return blockText.ToString();
 			}
 		}
 
@@ -1365,7 +1502,7 @@ namespace NArrange.VisualBasic
 
 			foreach (ICommentElement comment in comments)
 			{
-			    optionElement.AddHeaderComment(comment);
+				optionElement.AddHeaderComment(comment);
 			}
 
 			return optionElement;
@@ -1392,11 +1529,11 @@ namespace NArrange.VisualBasic
 
 			if (NextChar == VBSymbol.BeginParameterList)
 			{
-			    string indexParam = this.ParseParams();
-			    if (indexParam.Length > 0)
-			    {
-			        property.IndexParameter = indexParam;
-			    }
+				string indexParam = this.ParseParams();
+				if (indexParam.Length > 0)
+				{
+					property.IndexParameter = indexParam;
+				}
 			}
 
 			EatWord(VBKeyword.As, "Expected As");
@@ -1404,7 +1541,7 @@ namespace NArrange.VisualBasic
 			string type = CaptureTypeName();
 			if (string.IsNullOrEmpty(type))
 			{
-			    this.OnParseError("Expected return type");
+				this.OnParseError("Expected return type");
 			}
 
 			property.Type = type;
@@ -1413,15 +1550,15 @@ namespace NArrange.VisualBasic
 			string blockTemp = TryParseImplements(out implements);
 			foreach (string implementation in implements)
 			{
-			    InterfaceReference interfaceReference =
-			        new InterfaceReference(implementation, InterfaceReferenceType.Interface);
-			    property.AddImplementation(interfaceReference);
+				InterfaceReference interfaceReference =
+					new InterfaceReference(implementation, InterfaceReferenceType.Interface);
+				property.AddImplementation(interfaceReference);
 			}
 
 			if ((memberAttributes & MemberModifiers.Abstract) != MemberModifiers.Abstract &&
-			    !inInterface)
+				!inInterface)
 			{
-			    property.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Property)).Trim();
+				property.BodyText = (blockTemp + this.ParseBlock(VBKeyword.Property)).Trim();
 			}
 
 			return property;
@@ -1439,7 +1576,7 @@ namespace NArrange.VisualBasic
 
 			if (string.IsNullOrEmpty(regionName))
 			{
-			    this.OnParseError("Expected region name");
+				this.OnParseError("Expected region name");
 			}
 
 			regionElement = new RegionElement();
@@ -1466,47 +1603,47 @@ namespace NArrange.VisualBasic
 
 			if (elementType == TypeElementType.Enum)
 			{
-			    EatLineContinuation();
+				EatLineContinuation();
 
-			    if (NextChar == VBKeyword.As[0])
-			    {
-			        EatWord(VBKeyword.As);
-			        string interfaceName = CaptureTypeName();
-			        InterfaceReference interfaceReference =
-			            new InterfaceReference(interfaceName, InterfaceReferenceType.None);
-			        typeElement.AddInterface(interfaceReference);
-			    }
+				if (NextChar == VBKeyword.As[0])
+				{
+					EatWord(VBKeyword.As);
+					string interfaceName = CaptureTypeName();
+					InterfaceReference interfaceReference =
+						new InterfaceReference(interfaceName, InterfaceReferenceType.None);
+					typeElement.AddInterface(interfaceReference);
+				}
 
-			    string enumText = ParseBlock(VBKeyword.Enumeration);
+				string enumText = ParseBlock(VBKeyword.Enumeration);
 
-			    // TODO: Parse enum values as fields
-			    typeElement.BodyText = enumText;
+				// TODO: Parse enum values as fields
+				typeElement.BodyText = enumText;
 			}
 			else
 			{
-			    EatWhiteSpace();
-			    bool isGeneric = TryReadChar(VBSymbol.BeginParameterList);
-			    if (isGeneric)
-			    {
-			        EatWord(VBKeyword.Of, "Expected Of");
+				EatWhiteSpace();
+				bool isGeneric = TryReadChar(VBSymbol.BeginParameterList);
+				if (isGeneric)
+				{
+					EatWord(VBKeyword.Of, "Expected Of");
 
-			        this.ParseTypeParameters(typeElement);
-			    }
+					this.ParseTypeParameters(typeElement);
+				}
 
-			    EatWhiteSpace();
+				EatWhiteSpace();
 
-			    //
-			    // Parse child elements
-			    //
-			    List<ICodeElement> childElements = ParseElements(typeElement);
-			    foreach (ICodeElement childElement in childElements)
-			    {
-			        typeElement.AddChild(childElement);
-			    }
+				//
+				// Parse child elements
+				//
+				List<ICodeElement> childElements = ParseElements(typeElement);
+				foreach (ICodeElement childElement in childElements)
+				{
+					typeElement.AddChild(childElement);
+				}
 
-			    EatWhiteSpace();
-			    string elementTypeString = EnumUtilities.ToString(elementType);
-			    EatWord(elementTypeString, "Expected End " + elementTypeString);
+				EatWhiteSpace();
+				string elementTypeString = EnumUtilities.ToString(elementType);
+				EatWord(elementTypeString, "Expected End " + elementTypeString);
 			}
 
 			return typeElement;
@@ -1519,12 +1656,12 @@ namespace NArrange.VisualBasic
 
 			if (VBKeyword.Normalize(typeParameterConstraint) == VBKeyword.As)
 			{
-			    this.OnParseError("Invalid identifier");
+				this.OnParseError("Invalid identifier");
 			}
 
 			if (NextChar == VBSymbol.AliasSeparator)
 			{
-			    TryReadChar();
+				TryReadChar();
 			}
 
 			EatWhiteSpace();
@@ -1536,78 +1673,78 @@ namespace NArrange.VisualBasic
 			EatWhiteSpace();
 
 			if (NextChar == VBSymbol.EndParameterList ||
-			    NextChar == EmptyChar)
+				NextChar == EmptyChar)
 			{
-			    this.OnParseError("Expected type parameter");
+				this.OnParseError("Expected type parameter");
 			}
 
 			while (NextChar != VBSymbol.EndParameterList &&
-			    NextChar != EmptyChar)
+				NextChar != EmptyChar)
 			{
-			    if (genericElement.TypeParameters.Count > 0 && NextChar == VBSymbol.AliasSeparator)
-			    {
-			        TryReadChar();
-			    }
+				if (genericElement.TypeParameters.Count > 0 && NextChar == VBSymbol.AliasSeparator)
+				{
+					TryReadChar();
+				}
 
-			    string typeParameterName = CaptureWord();
+				string typeParameterName = CaptureWord();
 
-			    EatWhiteSpace();
+				EatWhiteSpace();
 
-			    if (NextChar == EmptyChar)
-			    {
-			        break;
-			    }
+				if (NextChar == EmptyChar)
+				{
+					break;
+				}
 
-			    TypeParameter typeParameter = new TypeParameter();
-			    typeParameter.Name = typeParameterName;
+				TypeParameter typeParameter = new TypeParameter();
+				typeParameter.Name = typeParameterName;
 
-			    if (NextChar != VBSymbol.AliasSeparator &&
-			        NextChar != VBSymbol.EndParameterList)
-			    {
-			        if (char.ToLower(NextChar) == char.ToLower(VBKeyword.As[0]))
-			        {
-			            TryReadChar();
+				if (NextChar != VBSymbol.AliasSeparator &&
+					NextChar != VBSymbol.EndParameterList)
+				{
+					if (char.ToLower(NextChar) == char.ToLower(VBKeyword.As[0]))
+					{
+						TryReadChar();
 
-			            if (char.ToLower(NextChar) == char.ToLower(VBKeyword.As[1]))
-			            {
-			                TryReadChar();
+						if (char.ToLower(NextChar) == char.ToLower(VBKeyword.As[1]))
+						{
+							TryReadChar();
 
-			                EatWhiteSpace();
+							EatWhiteSpace();
 
-			                if (NextChar == VBSymbol.EndParameterList)
-			                {
-			                    this.OnParseError("Expected type parameter constraint");
-			                }
+							if (NextChar == VBSymbol.EndParameterList)
+							{
+								this.OnParseError("Expected type parameter constraint");
+							}
 
-			                if (NextChar == VBSymbol.BeginTypeConstraintList)
-			                {
-			                    TryReadChar();
+							if (NextChar == VBSymbol.BeginTypeConstraintList)
+							{
+								TryReadChar();
 
-			                    while (NextChar != VBSymbol.EndTypeConstraintList &&
-			                        NextChar != EmptyChar)
-			                    {
-			                        string typeParameterConstraint;
-			                        typeParameterConstraint = ParseTypeParameterConstraint();
-			                        typeParameter.AddConstraint(typeParameterConstraint);
-			                    }
+								while (NextChar != VBSymbol.EndTypeConstraintList &&
+									NextChar != EmptyChar)
+								{
+									string typeParameterConstraint;
+									typeParameterConstraint = ParseTypeParameterConstraint();
+									typeParameter.AddConstraint(typeParameterConstraint);
+								}
 
-			                    EatChar(VBSymbol.EndTypeConstraintList);
-			                }
-			                else
-			                {
-			                    while (NextChar != VBSymbol.EndParameterList &&
-			                        NextChar != EmptyChar)
-			                    {
-			                        string typeParameterConstraint;
-			                        typeParameterConstraint = ParseTypeParameterConstraint();
-			                        typeParameter.AddConstraint(typeParameterConstraint);
-			                    }
-			                }
-			            }
-			        }
-			    }
+								EatChar(VBSymbol.EndTypeConstraintList);
+							}
+							else
+							{
+								while (NextChar != VBSymbol.EndParameterList &&
+									NextChar != EmptyChar)
+								{
+									string typeParameterConstraint;
+									typeParameterConstraint = ParseTypeParameterConstraint();
+									typeParameter.AddConstraint(typeParameterConstraint);
+								}
+							}
+						}
+					}
+				}
 
-			    genericElement.AddTypeParameter(typeParameter);
+				genericElement.AddTypeParameter(typeParameter);
 			}
 
 			EatChar(VBSymbol.EndParameterList);
@@ -1619,44 +1756,44 @@ namespace NArrange.VisualBasic
 			string alias = CaptureWord();
 			if (string.IsNullOrEmpty(alias))
 			{
-			    this.OnParseError("Expected a namepace name");
+				this.OnParseError("Expected a namepace name");
 			}
 
 			EatWhiteSpace(WhiteSpaceTypes.SpaceAndTab);
 
-			bool endOfStatement = 
-			    TryReadChar(Environment.NewLine[0]) ||
-			    TryReadChar('\n') ||
-			    TryReadChar(VBSymbol.LineDelimiter);
+			bool endOfStatement =
+				TryReadChar(Environment.NewLine[0]) ||
+				TryReadChar('\n') ||
+				TryReadChar(VBSymbol.LineDelimiter);
 			if (endOfStatement || NextChar == EmptyChar)
 			{
-			    usingElement.Name = alias;
+				usingElement.Name = alias;
 			}
 			else
 			{
-			    EatLineContinuation();
-			    bool assign = TryReadChar(VBSymbol.Assignment);
-			    if (!assign)
-			    {
-			        this.OnParseError(
-			            string.Format(Thread.CurrentThread.CurrentCulture,
-			            "Expected {0} or end of statement.",
-			            VBSymbol.Assignment));
-			    }
-			    else
-			    {
-			        string name = CaptureWord();
-			        if (string.IsNullOrEmpty(name))
-			        {
-			            this.OnParseError("Expected a type or namepace name");
-			        }
-			        else
-			        {
-			            usingElement.Name = name;
-			            usingElement.Redefine = alias;
-			            TryReadChar(Environment.NewLine[0]);
-			        }
-			    }
+				EatLineContinuation();
+				bool assign = TryReadChar(VBSymbol.Assignment);
+				if (!assign)
+				{
+					this.OnParseError(
+						string.Format(Thread.CurrentThread.CurrentCulture,
+						"Expected {0} or end of statement.",
+						VBSymbol.Assignment));
+				}
+				else
+				{
+					string name = CaptureWord();
+					if (string.IsNullOrEmpty(name))
+					{
+						this.OnParseError("Expected a type or namepace name");
+					}
+					else
+					{
+						usingElement.Name = name;
+						usingElement.Redefine = alias;
+						TryReadChar(Environment.NewLine[0]);
+					}
+				}
 			}
 
 			return usingElement;
@@ -1668,45 +1805,45 @@ namespace NArrange.VisualBasic
 			char nextChar = NextChar;
 			bool inString = false;
 			while (!(nextChar == EmptyChar ||
-			    nextChar == Environment.NewLine[0] ||
-			    nextChar == '\n' ||
-			    (!inString && nextChar == VBSymbol.LineDelimiter)))
+				nextChar == Environment.NewLine[0] ||
+				nextChar == '\n' ||
+				(!inString && nextChar == VBSymbol.LineDelimiter)))
 			{
-			    TryReadChar();
-			    lineBuilder.Append(CurrentChar);
-			    if(CurrentChar == VBSymbol.BeginString)
-			    {
-			        inString = !inString;
-			    }
+				TryReadChar();
+				lineBuilder.Append(CurrentChar);
+				if (CurrentChar == VBSymbol.BeginString)
+				{
+					inString = !inString;
+				}
 
-			    nextChar = NextChar;
-			    if (nextChar == VBSymbol.BeginComment && !inString)
-			    {
-			        break;
-			    }
+				nextChar = NextChar;
+				if (nextChar == VBSymbol.BeginComment && !inString)
+				{
+					break;
+				}
 			}
 
 			string line = lineBuilder.ToString();
 
 			if (line != null && line.Trim().Length > 0)
 			{
-			    string startTrimmedLine = line.TrimStart();
-			    string trimmedLine = startTrimmedLine.TrimEnd();
+				string startTrimmedLine = line.TrimStart();
+				string trimmedLine = startTrimmedLine.TrimEnd();
 
-			    bool isComment = 
-			        startTrimmedLine.StartsWith(VBSymbol.BeginComment.ToString(), StringComparison.OrdinalIgnoreCase) ||
-			        (startTrimmedLine.StartsWith(VBKeyword.Rem, StringComparison.OrdinalIgnoreCase) &&
-			        (startTrimmedLine.Length == trimmedLine.Length || startTrimmedLine[VBKeyword.Rem.Length] == ' '));
+				bool isComment =
+					startTrimmedLine.StartsWith(VBSymbol.BeginComment.ToString(), StringComparison.OrdinalIgnoreCase) ||
+					(startTrimmedLine.StartsWith(VBKeyword.Rem, StringComparison.OrdinalIgnoreCase) &&
+					(startTrimmedLine.Length == trimmedLine.Length || startTrimmedLine[VBKeyword.Rem.Length] == ' '));
 
-			    if (!isComment &&
-			        (trimmedLine == VBSymbol.LineContinuation.ToString() ||
-			        (trimmedLine[trimmedLine.Length - 1] == VBSymbol.LineContinuation &&
-			        IsWhiteSpace(trimmedLine[trimmedLine.Length - 2]))))
-			    {
-			        ReadLine();
-			        line = line.TrimEnd(VBSymbol.LineContinuation).TrimEnd(WhiteSpaceCharacters) + " " +
-			             ReadCodeLine();
-			    }
+				if (!isComment &&
+					(trimmedLine == VBSymbol.LineContinuation.ToString() ||
+					(trimmedLine[trimmedLine.Length - 1] == VBSymbol.LineContinuation &&
+					IsWhiteSpace(trimmedLine[trimmedLine.Length - 2]))))
+				{
+					ReadLine();
+					line = line.TrimEnd(VBSymbol.LineContinuation).TrimEnd(WhiteSpaceCharacters) + " " +
+						 ReadCodeLine();
+				}
 			}
 
 			return line;
@@ -1729,193 +1866,193 @@ namespace NArrange.VisualBasic
 			CodeElement codeElement = null;
 
 			string processedElementText =
-			    elementBuilder.ToString().Trim();
+				elementBuilder.ToString().Trim();
 
 			switch (VBKeyword.Normalize(processedElementText))
 			{
-			    case VBKeyword.Namespace:
-			        codeElement = ParseNamespace();
-			        break;
+				case VBKeyword.Namespace:
+					codeElement = ParseNamespace();
+					break;
 
-			    case VBKeyword.Imports:
-			        codeElement = ParseUsing();
-			        break;
+				case VBKeyword.Imports:
+					codeElement = ParseUsing();
+					break;
 			}
 
 			if (codeElement == null)
 			{
-			    string[] words = processedElementText.TrimEnd(
-			        VBSymbol.Assignment,
-			        VBSymbol.BeginParameterList).Split(
-			        WhiteSpaceCharacters,
-			        StringSplitOptions.RemoveEmptyEntries);
+				string[] words = processedElementText.TrimEnd(
+					VBSymbol.Assignment,
+					VBSymbol.BeginParameterList).Split(
+					WhiteSpaceCharacters,
+					StringSplitOptions.RemoveEmptyEntries);
 
-			    if (words.Length > 0)
-			    {
-			        string normalizedKeyWord = VBKeyword.Normalize(words[0]);
+				if (words.Length > 0)
+				{
+					string normalizedKeyWord = VBKeyword.Normalize(words[0]);
 
-			        if (words.Length > 1 ||
-			            normalizedKeyWord == VBKeyword.Class ||
-			            normalizedKeyWord == VBKeyword.Structure ||
-			            normalizedKeyWord == VBKeyword.Interface ||
-			            normalizedKeyWord == VBKeyword.Enumeration ||
-			            normalizedKeyWord == VBKeyword.Module ||
-			            normalizedKeyWord == VBKeyword.Sub ||
-			            normalizedKeyWord == VBKeyword.Function ||
-			            normalizedKeyWord == VBKeyword.Property ||
-			            normalizedKeyWord == VBKeyword.Delegate ||
-			            normalizedKeyWord == VBKeyword.Event)
-			        {
-			            StringCollection wordList = new StringCollection();
-			            wordList.AddRange(words);
+					if (words.Length > 1 ||
+						normalizedKeyWord == VBKeyword.Class ||
+						normalizedKeyWord == VBKeyword.Structure ||
+						normalizedKeyWord == VBKeyword.Interface ||
+						normalizedKeyWord == VBKeyword.Enumeration ||
+						normalizedKeyWord == VBKeyword.Module ||
+						normalizedKeyWord == VBKeyword.Sub ||
+						normalizedKeyWord == VBKeyword.Function ||
+						normalizedKeyWord == VBKeyword.Property ||
+						normalizedKeyWord == VBKeyword.Delegate ||
+						normalizedKeyWord == VBKeyword.Event)
+					{
+						StringCollection wordList = new StringCollection();
+						wordList.AddRange(words);
 
-			            StringCollection normalizedWordList = new StringCollection();
-			            foreach (string word in wordList)
-			            {
-			                normalizedWordList.Add(VBKeyword.Normalize(word));
-			            }
+						StringCollection normalizedWordList = new StringCollection();
+						foreach (string word in wordList)
+						{
+							normalizedWordList.Add(VBKeyword.Normalize(word));
+						}
 
-			            string name = string.Empty;
-			            ElementType elementType;
-			            CodeAccess access = CodeAccess.None;
-			            MemberModifiers memberAttributes = MemberModifiers.None;
-			            TypeElementType? typeElementType = null;
+						string name = string.Empty;
+						ElementType elementType;
+						CodeAccess access = CodeAccess.None;
+						MemberModifiers memberAttributes = MemberModifiers.None;
+						TypeElementType? typeElementType = null;
 
-			            bool isAssignment = processedElementText[processedElementText.Length - 1] == VBSymbol.Assignment;
-			            bool isField = normalizedWordList[normalizedWordList.Count - 1] == VBKeyword.As ||
-			                isAssignment;
-			            if (isField)
-			            {
-			                elementType = ElementType.Field;
-			            }
-			            else
-			            {
-			                GetElementType(normalizedWordList, out elementType, out typeElementType);
-			            }
+						bool isAssignment = processedElementText[processedElementText.Length - 1] == VBSymbol.Assignment;
+						bool isField = normalizedWordList[normalizedWordList.Count - 1] == VBKeyword.As ||
+							isAssignment;
+						if (isField)
+						{
+							elementType = ElementType.Field;
+						}
+						else
+						{
+							GetElementType(normalizedWordList, out elementType, out typeElementType);
+						}
 
-			            if (elementType == ElementType.Method ||
-			                elementType == ElementType.Property ||
-			                elementType == ElementType.Event ||
-			                elementType == ElementType.Delegate ||
-			                elementType == ElementType.Type ||
-			                elementType == ElementType.Field)
-			            {
-			                access = GetAccess(normalizedWordList);
-			                memberAttributes = GetMemberAttributes(normalizedWordList);
-			            }
+						if (elementType == ElementType.Method ||
+							elementType == ElementType.Property ||
+							elementType == ElementType.Event ||
+							elementType == ElementType.Delegate ||
+							elementType == ElementType.Type ||
+							elementType == ElementType.Field)
+						{
+							access = GetAccess(normalizedWordList);
+							memberAttributes = GetMemberAttributes(normalizedWordList);
+						}
 
-			            TypeElement parentTypeElement = parentElement as TypeElement;
-			            bool inInterface = parentTypeElement != null && 
-			                parentTypeElement.Type == TypeElementType.Interface;
-			           
-			            switch (elementType)
-			            {
-			                case ElementType.Type:
-			                    TypeModifiers typeAttributes = (TypeModifiers)memberAttributes;
-			                    if (normalizedWordList.Contains(VBKeyword.Partial))
-			                    {
-			                        typeAttributes |= TypeModifiers.Partial;
-			                    }
+						TypeElement parentTypeElement = parentElement as TypeElement;
+						bool inInterface = parentTypeElement != null &&
+							parentTypeElement.Type == TypeElementType.Interface;
 
-			                    codeElement = ParseType(access, typeAttributes, typeElementType.Value);
-			                    break;
+						switch (elementType)
+						{
+							case ElementType.Type:
+								TypeModifiers typeAttributes = (TypeModifiers)memberAttributes;
+								if (normalizedWordList.Contains(VBKeyword.Partial))
+								{
+									typeAttributes |= TypeModifiers.Partial;
+								}
 
-			                case ElementType.Event:
-			                    codeElement = ParseEvent(access, memberAttributes,
-			                        normalizedWordList.Contains(VBKeyword.Custom));
-			                    break;
+								codeElement = ParseType(access, typeAttributes, typeElementType.Value);
+								break;
 
-			                case ElementType.Field:
-			                    FieldElement fieldElement = ParseField(wordList, access, memberAttributes, isAssignment);
-			                    fieldElement[VBExtendedProperties.WithEvents] =
-			                        normalizedWordList.Contains(VBKeyword.WithEvents);
-			                    fieldElement[VBExtendedProperties.Dim] =
-			                        normalizedWordList.Contains(VBKeyword.Dim);
-			                    codeElement = fieldElement;
-			                    break;
+							case ElementType.Event:
+								codeElement = ParseEvent(access, memberAttributes,
+									normalizedWordList.Contains(VBKeyword.Custom));
+								break;
 
-			                case ElementType.Property:
-			                    string modifyAccess = null;
-			                    if (normalizedWordList.Contains(VBKeyword.ReadOnly))
-			                    {
-			                        modifyAccess = VBKeyword.ReadOnly;
-			                    }
-			                    else if (normalizedWordList.Contains(VBKeyword.ReadWrite))
-			                    {
-			                        modifyAccess = VBKeyword.ReadWrite;
-			                    }
-			                    else if (normalizedWordList.Contains(VBKeyword.WriteOnly))
-			                    {
-			                        modifyAccess = VBKeyword.WriteOnly;
-			                    }
+							case ElementType.Field:
+								FieldElement fieldElement = ParseField(wordList, access, memberAttributes, isAssignment);
+								fieldElement[VBExtendedProperties.WithEvents] =
+									normalizedWordList.Contains(VBKeyword.WithEvents);
+								fieldElement[VBExtendedProperties.Dim] =
+									normalizedWordList.Contains(VBKeyword.Dim);
+								codeElement = fieldElement;
+								break;
 
-			                    bool isDefault = normalizedWordList.Contains(VBKeyword.Default);
-			                    codeElement = ParseProperty(access, memberAttributes, isDefault, modifyAccess, inInterface);
-			                    break;
+							case ElementType.Property:
+								string modifyAccess = null;
+								if (normalizedWordList.Contains(VBKeyword.ReadOnly))
+								{
+									modifyAccess = VBKeyword.ReadOnly;
+								}
+								else if (normalizedWordList.Contains(VBKeyword.ReadWrite))
+								{
+									modifyAccess = VBKeyword.ReadWrite;
+								}
+								else if (normalizedWordList.Contains(VBKeyword.WriteOnly))
+								{
+									modifyAccess = VBKeyword.WriteOnly;
+								}
 
-			                case ElementType.Delegate:
-			                    codeElement = ParseDelegate(access, memberAttributes);
-			                    break;
+								bool isDefault = normalizedWordList.Contains(VBKeyword.Default);
+								codeElement = ParseProperty(access, memberAttributes, isDefault, modifyAccess, inInterface);
+								break;
 
-			                case ElementType.Method:
-			                    bool isOperator = normalizedWordList.Contains(VBKeyword.Operator);
-			                    OperatorType operatorType = OperatorType.None;
-			                    if (isOperator)
-			                    {
-			                        operatorType = GetOperatorType(wordList);
-			                    }
+							case ElementType.Delegate:
+								codeElement = ParseDelegate(access, memberAttributes);
+								break;
 
-			                    bool external = false;
-			                    string externalModifier = null;
-			                    if (normalizedWordList.Contains(VBKeyword.Declare))
-			                    {
-			                        external = true;
-			                        if (normalizedWordList.Contains(VBKeyword.Ansi))
-			                        {
-			                            externalModifier = VBKeyword.Ansi;
-			                        }
-			                        else if (normalizedWordList.Contains(VBKeyword.Unicode))
-			                        {
-			                            externalModifier = VBKeyword.Unicode;
-			                        }
-			                        else if (normalizedWordList.Contains(VBKeyword.Auto))
-			                        {
-			                            externalModifier = VBKeyword.Auto;
-			                        }
-			                    }
+							case ElementType.Method:
+								bool isOperator = normalizedWordList.Contains(VBKeyword.Operator);
+								OperatorType operatorType = OperatorType.None;
+								if (isOperator)
+								{
+									operatorType = GetOperatorType(wordList);
+								}
 
-			                    //
-			                    // Method
-			                    //
-			                    MethodElement methodElement = ParseMethod(
-			                            access, memberAttributes,
-			                            normalizedWordList.Contains(VBKeyword.Function), false,
-			                            isOperator, operatorType, inInterface, external, externalModifier);
-			                    methodElement[VBExtendedProperties.Overloads] =
-			                        normalizedWordList.Contains(VBKeyword.Overloads);
-			                    if (VBKeyword.Normalize(methodElement.Name) == VBKeyword.New)
-			                    {
-			                        codeElement = CreateConstructor(methodElement);
-			                    }
-			                    else
-			                    {
-			                        codeElement = methodElement;
-			                    }
-			                    break;
-			            }
+								bool external = false;
+								string externalModifier = null;
+								if (normalizedWordList.Contains(VBKeyword.Declare))
+								{
+									external = true;
+									if (normalizedWordList.Contains(VBKeyword.Ansi))
+									{
+										externalModifier = VBKeyword.Ansi;
+									}
+									else if (normalizedWordList.Contains(VBKeyword.Unicode))
+									{
+										externalModifier = VBKeyword.Unicode;
+									}
+									else if (normalizedWordList.Contains(VBKeyword.Auto))
+									{
+										externalModifier = VBKeyword.Auto;
+									}
+								}
 
-			            if (codeElement != null)
-			            {
-			                codeElement[VBExtendedProperties.Overloads] =
-			                    normalizedWordList.Contains(VBKeyword.Overloads);
-			            }
-			        }
-			    }
+								//
+								// Method
+								//
+								MethodElement methodElement = ParseMethod(
+										access, memberAttributes,
+										normalizedWordList.Contains(VBKeyword.Function), false,
+										isOperator, operatorType, inInterface, external, externalModifier);
+								methodElement[VBExtendedProperties.Overloads] =
+									normalizedWordList.Contains(VBKeyword.Overloads);
+								if (VBKeyword.Normalize(methodElement.Name) == VBKeyword.New)
+								{
+									codeElement = CreateConstructor(methodElement);
+								}
+								else
+								{
+									codeElement = methodElement;
+								}
+								break;
+						}
+
+						if (codeElement != null)
+						{
+							codeElement[VBExtendedProperties.Overloads] =
+								normalizedWordList.Contains(VBKeyword.Overloads);
+						}
+					}
+				}
 			}
 
 			if (codeElement != null)
 			{
-			    ApplyCommentsAndAttributes(codeElement, comments, attributes);
+				ApplyCommentsAndAttributes(codeElement, comments, attributes);
 			}
 
 			return codeElement;
@@ -1942,62 +2079,62 @@ namespace NArrange.VisualBasic
 			bool handlesRead = false;
 			if (char.ToLower(NextChar) == char.ToLower(VBKeyword.Implements[0]))
 			{
-			    foreach (char ch in VBKeyword.Implements.ToCharArray())
-			    {
-			        if (char.ToLower(NextChar) == char.ToLower(ch))
-			        {
-			            TryReadChar();
-			            read.Append(CurrentChar);
-			            implementsRead = true;
-			        }
-			        else
-			        {
-			            implementsRead = false;
-			            break;
-			        }
-			    }
+				foreach (char ch in VBKeyword.Implements.ToCharArray())
+				{
+					if (char.ToLower(NextChar) == char.ToLower(ch))
+					{
+						TryReadChar();
+						read.Append(CurrentChar);
+						implementsRead = true;
+					}
+					else
+					{
+						implementsRead = false;
+						break;
+					}
+				}
 			}
 			else if (parseHandles && char.ToLower(NextChar) == char.ToLower(VBKeyword.Handles[0]))
 			{
-			    foreach (char ch in VBKeyword.Handles.ToCharArray())
-			    {
-			        if (char.ToLower(NextChar) == char.ToLower(ch))
-			        {
-			            TryReadChar();
-			            read.Append(CurrentChar);
-			            handlesRead = true;
-			        }
-			        else
-			        {
-			            handlesRead = false;
-			            break;
-			        }
-			    }
+				foreach (char ch in VBKeyword.Handles.ToCharArray())
+				{
+					if (char.ToLower(NextChar) == char.ToLower(ch))
+					{
+						TryReadChar();
+						read.Append(CurrentChar);
+						handlesRead = true;
+					}
+					else
+					{
+						handlesRead = false;
+						break;
+					}
+				}
 			}
 
 			if (implementsRead || handlesRead)
 			{
-			    do
-			    {
+				do
+				{
 					EatLineContinuation(read);
 
-			        if (aliasList.Count > 0 && NextChar == VBSymbol.AliasSeparator)
-			        {
-			            TryReadChar();
-			        }
+					if (aliasList.Count > 0 && NextChar == VBSymbol.AliasSeparator)
+					{
+						TryReadChar();
+					}
 
-			        string alias = CaptureTypeName();
-			        if (string.IsNullOrEmpty(alias))
-			        {
+					string alias = CaptureTypeName();
+					if (string.IsNullOrEmpty(alias))
+					{
 						if (implementsRead)
-			            {
-			                this.OnParseError("Expected an interface member name.");
-			            }
-			            else
-			            {
-			                this.OnParseError("Expected an event name.");
-			            }
-			        }
+						{
+							this.OnParseError("Expected an interface member name.");
+						}
+						else
+						{
+							this.OnParseError("Expected an event name.");
+						}
+					}
 					else if (read.Length > 0 && read[read.Length - 1] == VBSymbol.LineContinuation)
 					{
 						//
@@ -2007,22 +2144,22 @@ namespace NArrange.VisualBasic
 						alias = VBSymbol.LineContinuation.ToString() + alias;
 					}
 
-			        aliasList.Add(alias);
-			        read = new StringBuilder(DefaultBlockLength);
-			        EatLineContinuation(read);
-			    }
-			    while (NextChar == VBSymbol.AliasSeparator);
+					aliasList.Add(alias);
+					read = new StringBuilder(DefaultBlockLength);
+					EatLineContinuation(read);
+				}
+				while (NextChar == VBSymbol.AliasSeparator);
 			}
 
 			implements = new string[] { };
 			handles = new string[] { };
 			if (implementsRead)
 			{
-			    implements = aliasList.ToArray();
+				implements = aliasList.ToArray();
 			}
 			else if (handlesRead)
 			{
-			    handles = aliasList.ToArray();
+				handles = aliasList.ToArray();
 			}
 
 			return read.ToString();

@@ -1,4 +1,5 @@
 The following changes were made in this release:
 
 0.2.5.0
+- Added basic handling of conditional compilation preprocessor directives.
 - Fixed writing of Implements for VB events.

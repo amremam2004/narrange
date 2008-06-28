@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Allow processing of ConditionDirectiveElements
  *		Justin Dearing
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -45,6 +46,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
 
@@ -232,6 +234,12 @@ namespace NArrange.Core
 		/// </summary>
 		/// <param name="element"></param>
 		public abstract void VisitCommentElement(CommentElement element);
+
+		/// <summary>
+		/// Processes a condition directive element.
+		/// </summary>
+		/// <param name="element"></param>
+		public abstract void VisitConditionDirectiveElement(ConditionDirectiveElement element);
 
 		/// <summary>
 		/// Processes a constructor element.

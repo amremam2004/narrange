@@ -25,7 +25,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(6, defaultConfig.Elements.Count,
+			Assert.AreEqual(7, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			CodeConfiguration clonedConfig = defaultConfig.Clone() as CodeConfiguration;
@@ -79,7 +79,7 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNotNull(defaultConfig,
 			    "Default configuration should not be null.");
 
-			Assert.AreEqual(6, defaultConfig.Elements.Count,
+			Assert.AreEqual(7, defaultConfig.Elements.Count,
 			    "Unexpected number of root level elements.");
 
 			//
@@ -166,20 +166,28 @@ namespace NArrange.Tests.Core.Configuration
 			Assert.IsNull(attributeElement.SortBy, "Expected a sort to not be specified.");
 
 			//
+			// Conditional directives
+			//
+			ElementConfiguration conditionDirectiveElemement = defaultConfig.Elements[3] as ElementConfiguration;
+			Assert.IsNotNull(attributeElement, "Expected an ElementConfiguration");
+			Assert.AreEqual(ElementType.ConditionDirective, conditionDirectiveElemement.ElementType,
+				"Unexpected element type.");
+
+			//
 			// Element references
 			//
-			ElementReferenceConfiguration interfaceReference = defaultConfig.Elements[3] as ElementReferenceConfiguration;
+			ElementReferenceConfiguration interfaceReference = defaultConfig.Elements[4] as ElementReferenceConfiguration;
 			Assert.AreEqual("DefaultInterface", interfaceReference.Id, "Unexpected reference Id.");
 			Assert.IsNotNull(interfaceReference.ReferencedElement, "Referenced element should not be null.");
 
-			ElementReferenceConfiguration typeReference = defaultConfig.Elements[4] as ElementReferenceConfiguration;
+			ElementReferenceConfiguration typeReference = defaultConfig.Elements[5] as ElementReferenceConfiguration;
 			Assert.AreEqual("DefaultType", typeReference.Id, "Unexpected reference Id.");
 			Assert.IsNotNull(typeReference.ReferencedElement, "Referenced element should not be null.");
 
 			//
 			// Namespace elements
 			//
-			ElementConfiguration namespaceElement = defaultConfig.Elements[5] as ElementConfiguration;
+			ElementConfiguration namespaceElement = defaultConfig.Elements[6] as ElementConfiguration;
 			Assert.IsNotNull(namespaceElement, "Expected an ElementConfiguration.");
 			Assert.AreEqual(ElementType.Namespace, namespaceElement.ElementType,
 			    "Unexpected element type.");

@@ -541,6 +541,72 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests writing a condition directive.
+		/// </summary>
+		[Test]
+		public void WriteConditionDirectiveTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			ConditionDirectiveElement conditionDirectiveElement = new ConditionDirectiveElement();
+			conditionDirectiveElement.ConditionExpression = "DEBUG";
+			conditionDirectiveElement.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ConditionExpression = "TEST";
+			conditionDirectiveElement.ElseCondition.ElseCondition = new ConditionDirectiveElement();
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(conditionDirectiveElement);
+
+			CSharpWriter codeWriter = new CSharpWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"#if DEBUG\r\n\r\n" +
+				"#elif TEST\r\n\r\n" +
+				"#else\r\n\r\n" + 
+				"#endif",
+				text,
+				"Condition directive element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a condition directive.
+		/// </summary>
+		[Test]
+		public void WriteConditionDirectiveWithChildrenTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			ConditionDirectiveElement conditionDirectiveElement = new ConditionDirectiveElement();
+			conditionDirectiveElement.ConditionExpression = "DEBUG";
+			conditionDirectiveElement.AddChild(new CommentElement("Debug"));
+			conditionDirectiveElement.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ConditionExpression = "TEST";
+			conditionDirectiveElement.ElseCondition.AddChild(new CommentElement("Test"));
+			conditionDirectiveElement.ElseCondition.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ElseCondition.AddChild(new CommentElement("Else"));
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(conditionDirectiveElement);
+
+			CSharpWriter codeWriter = new CSharpWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"#if DEBUG\r\n\r\n" +
+				"//Debug\r\n\r\n" + 
+				"#elif TEST\r\n\r\n" +
+				"//Test\r\n\r\n" + 
+				"#else\r\n\r\n" +
+				"//Else\r\n\r\n" + 
+				"#endif",
+				text,
+				"Condition directive element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a constructor with a constructor reference.
 		/// </summary>
 		[Test]

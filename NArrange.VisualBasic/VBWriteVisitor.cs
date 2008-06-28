@@ -43,6 +43,7 @@
  *		- Fixed writing of multiple Handles declarations for methods
  *		- Preserve trailing comments for fields
  *		- Fixed writing of Implements for events
+ *		- Handle writing of conditional compilation preprocessor directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -51,9 +52,11 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+
 using NArrange.Core;
 using NArrange.Core.CodeElements;
 using NArrange.Core.Configuration;
@@ -568,6 +571,62 @@ namespace NArrange.VisualBasic
 		}
 
 		/// <summary>
+		/// Writes a condition directive element.
+		/// </summary>
+		/// <param name="element"></param>
+		public override void VisitConditionDirectiveElement(ConditionDirectiveElement element)
+		{
+			const string ConditionFormat = "{0}{1} {2}";
+			ConditionDirectiveElement conditionDirective = element;
+
+			this.WriteIndentedLine(
+				string.Format(CultureInfo.InvariantCulture, ConditionFormat,
+				VBSymbol.Preprocessor, VBKeyword.If, element.ConditionExpression));
+
+			if (element.Children.Count == 0)
+			{
+				Writer.WriteLine();
+			}
+
+			WriteChildren(element);
+
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+			}
+
+			while (conditionDirective.ElseCondition != null)
+			{
+				conditionDirective = conditionDirective.ElseCondition;
+
+				if (conditionDirective.ElseCondition == null)
+				{
+					this.WriteIndentedLine(VBSymbol.Preprocessor + VBKeyword.Else);
+				}
+				else
+				{
+					this.WriteIndentedLine(
+						string.Format(CultureInfo.InvariantCulture, ConditionFormat,
+						VBSymbol.Preprocessor, VBKeyword.ElseIf, conditionDirective.ConditionExpression));
+				}
+
+				if (conditionDirective.Children.Count == 0)
+				{
+					Writer.WriteLine();
+				}
+
+				WriteChildren(conditionDirective);
+
+				if (conditionDirective.Children.Count > 0)
+				{
+					Writer.WriteLine();
+				}
+			}
+
+			this.WriteIndented(VBSymbol.Preprocessor + VBKeyword.End + " " + VBKeyword.If);
+		}
+
+		/// <summary>
 		/// Processes a constructor element
 		/// </summary>
 		/// <param name="element"></param>
@@ -665,7 +724,7 @@ namespace NArrange.VisualBasic
 
 			if (isCustom)
 			{
-			    WriteBody(element);
+				WriteBody(element);
 			}
 		}
 

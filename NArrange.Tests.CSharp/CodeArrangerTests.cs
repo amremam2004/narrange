@@ -38,6 +38,75 @@ namespace NArrange.Tests.Core
 		}
 
 		/// <summary>
+		/// Tests arranging a condition directive.
+		/// </summary>
+		[Test]
+		public void DefaultArrangeConditionDirectiveTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			ConditionDirectiveElement ifCondition = new ConditionDirectiveElement();
+			ifCondition.ConditionExpression = "DEBUG";
+
+			FieldElement field1 = new FieldElement();
+			field1.Name = "zField";
+			field1.Type = "int";
+
+			FieldElement field2 = new FieldElement();
+			field2.Name = "aField";
+			field2.Type = "int";
+
+			ifCondition.AddChild(field1);
+			ifCondition.AddChild(field2);
+
+			ifCondition.ElseCondition = new ConditionDirectiveElement();
+
+			FieldElement field3 = new FieldElement();
+			field3.Name = "testField";
+			field3.Type = "int";
+
+			FieldElement field1Clone = field1.Clone() as FieldElement;
+			FieldElement field2Clone = field2.Clone() as FieldElement;
+
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "TestClass";
+			classElement.AddChild(field1Clone);
+			classElement.AddChild(field2Clone);
+
+			ifCondition.ElseCondition.AddChild(field3);
+			ifCondition.ElseCondition.AddChild(classElement);
+
+			codeElements.Add(ifCondition);
+
+			CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+
+			ReadOnlyCollection<ICodeElement> arranged =
+				arranger.Arrange(codeElements.AsReadOnly());
+
+			Assert.AreEqual(1, arranged.Count,
+				"After arranging, an unexpected number of elements were returned.");
+			ConditionDirectiveElement ifConditionTest = arranged[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(ifConditionTest, "Expected a condition directive element.");
+
+			Assert.AreEqual(2, ifConditionTest.Children.Count,
+				"After arranging, an unexpected number of nested elements were returned.");
+			Assert.AreEqual(field2.Name, ifConditionTest.Children[0].Name);
+			Assert.AreEqual(field1.Name, ifConditionTest.Children[1].Name);
+
+			ConditionDirectiveElement elseConditionTest = ifConditionTest.ElseCondition;
+			Assert.IsNotNull(elseConditionTest, "Expected a condition directive element.");
+			Assert.AreEqual(2, ifConditionTest.Children.Count,
+				"After arranging, an unexpected number of nested elements were returned.");
+			Assert.AreEqual(field3.Name, elseConditionTest.Children[0].Name);
+			Assert.AreEqual(classElement.Name, elseConditionTest.Children[1].Name);
+
+			TypeElement classElementTest = elseConditionTest.Children[1] as TypeElement;
+			Assert.IsNotNull(classElementTest, "Expected a type element.");
+			Assert.AreEqual(1, classElementTest.Children.Count);
+			Assert.AreEqual("Fields", classElementTest.Children[0].Name);
+		}
+
+		/// <summary>
 		/// Tests arranging an enumeration.
 		/// </summary>
 		[Test]

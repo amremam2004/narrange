@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added keywords for conditional compilation directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -112,6 +113,16 @@ namespace NArrange.VisualBasic
 		public const string Dim = "Dim";
 
 		/// <summary>
+		/// Else
+		/// </summary>
+		public const string Else = "Else";
+
+		/// <summary>
+		/// ElseIf
+		/// </summary>
+		public const string ElseIf = "ElseIf";
+
+		/// <summary>
 		/// End
 		/// </summary>
 		public const string End = "End";
@@ -140,6 +151,11 @@ namespace NArrange.VisualBasic
 		/// Handles
 		/// </summary>
 		public const string Handles = "Handles";
+
+		/// <summary>
+		/// If
+		/// </summary>
+		public const string If = "If";
 
 		/// <summary>
 		/// Implements
@@ -341,6 +357,7 @@ namespace NArrange.VisualBasic
 			Dictionary<string, string> _specialNormalizedKeywords;
 			_specialNormalizedKeywords = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+			_specialNormalizedKeywords[ElseIf] = ElseIf;
 			_specialNormalizedKeywords[ReadOnly] = ReadOnly;
 			_specialNormalizedKeywords[ReadWrite] = ReadWrite;
 			_specialNormalizedKeywords[WriteOnly] = WriteOnly;
@@ -371,9 +388,9 @@ namespace NArrange.VisualBasic
 				string normalized = Normalize(trimmedWord.Trim());
 
 				isKeyword =
-			        normalized == Alias ||
-			        normalized == Ansi ||
-			        normalized == Auto ||
+					normalized == Alias ||
+					normalized == Ansi ||
+					normalized == Auto ||
 					normalized == As ||
 					normalized == Begin ||
 					normalized == Class ||
@@ -381,13 +398,16 @@ namespace NArrange.VisualBasic
 					normalized == Custom ||
 					normalized == Default ||
 					normalized == Delegate ||
-			        normalized == Dim ||
+					normalized == Dim ||
+					normalized == Else ||
+					normalized == ElseIf ||
 					normalized == End ||
 					normalized == Enumeration ||
 					normalized == Event ||
 					normalized == Friend ||
 					normalized == Function ||
-			        normalized == Handles ||
+					normalized == Handles ||
+					normalized == If ||
 					normalized == Imports ||
 					normalized == Implements ||
 					normalized == Inherits ||

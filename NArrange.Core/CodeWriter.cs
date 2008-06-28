@@ -34,6 +34,8 @@
  *      James Nies
  *      - Initial creation
  *      - Code writer refactoring
+ *		- When visiting children, treat condition directive elements in 
+ *		  a similar manner as regions
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -128,7 +130,8 @@ namespace NArrange.Core
 			        CommentedElement commentedElement = codeElement as CommentedElement;
 			        if (index > 0 &&
 			            ((commentedElement != null && commentedElement.HeaderComments.Count > 0) ||
-			            codeElement is NamespaceElement || codeElement is TypeElement || codeElement is RegionElement ||
+			            codeElement is NamespaceElement || codeElement is TypeElement || 
+						codeElement is RegionElement || codeElement is ConditionDirectiveElement ||
 			            (codeElement is MemberElement && !(codeElement is FieldElement)) ||
 			            (!(codeElement is GroupElement) && 
 			            codeElement.ElementType != codeElements[index - 1].ElementType) ||
@@ -142,7 +145,8 @@ namespace NArrange.Core
 			        if (codeElements.Count > 1 && index < codeElements.Count - 1)
 			        {
 			            writer.WriteLine();
-			            if (codeElement is RegionElement && codeElement.Parent == null)
+			            if ((codeElement is RegionElement || codeElement is ConditionDirectiveElement) && 
+							codeElement.Parent == null)
 			            {
 			                writer.WriteLine();
 			            }

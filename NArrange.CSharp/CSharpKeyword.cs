@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added keywords for conditional compilation directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -75,6 +76,21 @@ namespace NArrange.CSharp
 		public const string Delegate = "delegate";
 
 		/// <summary>
+		/// elif
+		/// </summary>
+		public const string Elif = "elif";
+
+		/// <summary>
+		/// else
+		/// </summary>
+		public const string Else = "else";
+
+		/// <summary>
+		/// endif
+		/// </summary>
+		public const string EndIf = "endif";
+
+		/// <summary>
 		/// endregion
 		/// </summary>
 		public const string EndRegion = "endregion";
@@ -108,6 +124,11 @@ namespace NArrange.CSharp
 		/// global
 		/// </summary>
 		public const string Global = "global";
+
+		/// <summary>
+		/// if
+		/// </summary>
+		public const string If = "if";
 
 		/// <summary>
 		/// implicit

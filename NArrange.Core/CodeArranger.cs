@@ -33,6 +33,8 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Added special processing for arranging condition directive
+ *		  elements
  *		Justin Dearing
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

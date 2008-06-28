@@ -1043,7 +1043,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing a single comment line.";
+		/// Tests parsing a single comment line.
 		/// </summary>
 		[Test]
 		public void ParseCommentLineTest()
@@ -1071,6 +1071,427 @@ namespace NArrange.Tests.VisualBasic
 			    Assert.AreEqual(" Imports System.Text", commentElement.Text,
 			        "Unexpected comment text.");
 			}
+		}
+
+		/// <summary>
+		/// Tests parsing an invalid condition directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+		   ExpectedMessage = "Cannot arrange files with preprocessor directives containing attributes unassociated to an element")]
+		public void ParseConditionDirectiveAttributeUnhandledTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"<Obsolete()>\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a condition directive with an else if condition.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveElseIfTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" + 
+				"#ElseIf TEST\r\n" +
+				"Protected Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#Else\r\n" +
+				"Private Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement =
+				elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual("DEBUG", conditionElement.ConditionExpression,
+				"Unexpected condition expression.");
+			Assert.AreEqual(1, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement constructorElement =
+				conditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNotNull(conditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual("TEST", conditionElement.ElseCondition.ConditionExpression,
+				"Unexpected condition expression.");
+			Assert.AreEqual(1, conditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement elseIfConstructorElement =
+				conditionElement.ElseCondition.Children[0] as ConstructorElement;
+			Assert.IsNotNull(elseIfConstructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Protected, elseIfConstructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, elseIfConstructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNotNull(conditionElement.ElseCondition.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, conditionElement.ElseCondition.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement elseConstructorElement =
+				conditionElement.ElseCondition.ElseCondition.Children[0] as ConstructorElement;
+			Assert.IsNotNull(elseConstructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Private, elseConstructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, elseConstructorElement.Parameters,
+				"Unexpected parameter string.");
+		}
+
+		/// <summary>
+		/// Tests parsing a condition directive with an else condition.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveElseTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#Else\r\n" +
+				"Private Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement =
+				elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement constructorElement =
+				conditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNotNull(conditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, conditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement elseConstructorElement =
+				conditionElement.ElseCondition.Children[0] as ConstructorElement;
+			Assert.IsNotNull(elseConstructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Private, elseConstructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, elseConstructorElement.Parameters,
+				"Unexpected parameter string.");
+		}
+
+		/// <summary>
+		/// Tests parsing an invalid condition directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+			ExpectedMessage = "Expected a condition expression")]
+		public void ParseConditionDirectiveMissingConditionTest()
+		{
+			StringReader reader = new StringReader(
+				"#If \r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing an invalid condition directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+			ExpectedMessage = "Expected #End If")]
+		public void ParseConditionDirectiveMissingEndTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"Public Sub New()\r\n" + 
+				"End Sub");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing an invalid condition directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+			ExpectedMessage = "Expected #End If")]
+		public void ParseConditionDirectiveNestedMissingEndTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"#If TEST\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing a condition directive with a nested region.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveNestedRegionTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"#Region \"Constructors\"\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End Region\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement = elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+			Assert.IsNull(conditionElement.ElseCondition);
+
+			RegionElement regionElement = conditionElement.Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, regionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement constructorElement =
+				regionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+		}
+
+		/// <summary>
+		/// Tests parsing a nested condition directive.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveNestedTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"#If TEST\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#Else\r\n" +
+				"Private Sub New()" +
+				"End Sub\r\n" +
+				"#End If\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement = elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+			Assert.IsNull(conditionElement.ElseCondition);
+
+			ConditionDirectiveElement nestedConditionElement = conditionElement.Children[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(nestedConditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, nestedConditionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement constructorElement =
+				nestedConditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNotNull(nestedConditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, nestedConditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			Assert.IsNotNull(nestedConditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, nestedConditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement elseConstructorElement =
+				nestedConditionElement.ElseCondition.Children[0] as ConstructorElement;
+			Assert.IsNotNull(elseConstructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Private, elseConstructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, elseConstructorElement.Parameters,
+				"Unexpected parameter string.");
+		}
+
+		/// <summary>
+		/// Tests parsing a nested condition directive.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveNestedWithChildTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#If TEST\r\n" +
+				"Protected Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#Else\r\n" +
+				"Private Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement = elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(2, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+			Assert.IsNull(conditionElement.ElseCondition);
+
+			ConstructorElement constructorElement =
+				conditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			ConditionDirectiveElement nestedConditionElement = conditionElement.Children[1] as ConditionDirectiveElement;
+			Assert.IsNotNull(nestedConditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual(1, nestedConditionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			constructorElement =
+				nestedConditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Protected, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNotNull(nestedConditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, nestedConditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			Assert.IsNotNull(nestedConditionElement.ElseCondition,
+				"Expected an Else condition.");
+			Assert.AreEqual(1, nestedConditionElement.ElseCondition.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement elseConstructorElement =
+				nestedConditionElement.ElseCondition.Children[0] as ConstructorElement;
+			Assert.IsNotNull(elseConstructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Private, elseConstructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, elseConstructorElement.Parameters,
+				"Unexpected parameter string.");
+		}
+
+		/// <summary>
+		/// Tests parsing a simple condition directive.
+		/// </summary>
+		[Test]
+		public void ParseConditionDirectiveSimpleTest()
+		{
+			StringReader reader = new StringReader(
+				"#If DEBUG\r\n" +
+				"Public Sub New()\r\n" +
+				"End Sub\r\n" +
+				"#End If");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			ConditionDirectiveElement conditionElement = elements[0] as ConditionDirectiveElement;
+			Assert.IsNotNull(conditionElement,
+				"Element is not a ConditionDirectiveElement");
+			Assert.AreEqual("DEBUG", conditionElement.ConditionExpression,
+				"Unexpected condition expression.");
+			Assert.AreEqual(1, conditionElement.Children.Count,
+				"Unexpected number of child elements.");
+
+			ConstructorElement constructorElement = conditionElement.Children[0] as ConstructorElement;
+			Assert.IsNotNull(constructorElement,
+				"Element is not a ConstructorElement.");
+			Assert.AreEqual(CodeAccess.Public, constructorElement.Access,
+				"Unexpected code access.");
+			Assert.AreEqual(string.Empty, constructorElement.Parameters,
+				"Unexpected parameter string.");
+
+			Assert.IsNull(conditionElement.ElseCondition);
 		}
 
 		/// <summary>
@@ -3765,26 +4186,6 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing a non-region preprocessor directive.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ParseException),
-            MatchType = MessageMatch.Contains,
-          ExpectedMessage = "Cannot arrange files with preprocessor directives")]
-		public void ParseNonRegionPreprocessorTest()
-		{
-			StringReader reader = new StringReader(
-			    "Public Class Test\r\n" + 
-			    "#If DEBUG Then\r\n" + 
-			    "\tprivate _test As Boolean = false\r\n" +
-			    "#End If\r\n" + 
-			    "End Class");
-
-			VBParser parser = new VBParser();
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-		}
-
-		/// <summary>
 		/// Tests parsing a null stream.
 		/// </summary>
 		[Test]
@@ -4032,7 +4433,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing an option statement.";
+		/// Tests parsing an option statement.
 		/// </summary>
 		[Test]
 		public void ParseOptionTest()
@@ -4321,6 +4722,40 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests comment scenarios with region preprocessor directives. 
+		/// </summary>
+		[Test]
+		public void ParseRegionCommentsTest()
+		{
+			StringReader reader = new StringReader(
+				"'Leading\r\n" +
+				"#Region \"Comments\"\r\n" +
+				"'Enclosed\r\n" +
+				"#End Region");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(2, elements.Count,
+				"An unexpected number of elements were parsed.");
+
+			CommentElement leadingComment = elements[0] as CommentElement;
+			Assert.IsNotNull(leadingComment, "Expected a comment element.");
+			Assert.AreEqual("Leading", leadingComment.Text);
+
+			RegionElement regionElement = elements[1] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Comments", regionElement.Name,
+				"Unexpected region name.");
+			Assert.AreEqual(1, regionElement.Children.Count,
+				"Unexpected number of region child elements.");
+
+			CommentElement enclosedComment = regionElement.Children[0] as CommentElement;
+			Assert.IsNotNull(enclosedComment, "Expected a comment element.");
+			Assert.AreEqual("Enclosed", enclosedComment.Text);
+		}
+
+		/// <summary>
 		/// Tests parsing nested regions.  
 		/// </summary>
 		[Test]
@@ -4592,6 +5027,24 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing an unhandled preprocessor directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+            MatchType = MessageMatch.Contains,
+          ExpectedMessage = "Cannot arrange files with preprocessor directives")]
+		public void ParseUnhandledPreprocessorTest()
+		{
+			StringReader reader = new StringReader(
+			    "Public Class Test\r\n" + 
+			    "#Const TEST = 1\r\n" + 
+			    "End Class");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
 		/// Tests parsing an unrecognized keyword.
 		/// </summary>
 		[Test]
@@ -4607,7 +5060,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing an empty using statement.";
+		/// Tests parsing an empty using statement.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException),
@@ -4624,7 +5077,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing an empty using statement with a redefine.";
+		/// Tests parsing an empty using statement with a redefine.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException),
@@ -4640,7 +5093,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing an invalid using statement.";
+		/// Tests parsing an invalid using statement.
 		/// </summary>
 		[Test]
 		[ExpectedException(typeof(ParseException),
@@ -4693,7 +5146,7 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
-		/// Tests parsing a simple using statement.";
+		/// Tests parsing a simple using statement.
 		/// </summary>
 		[Test]
 		public void ParseUsingTest()

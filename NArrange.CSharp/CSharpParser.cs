@@ -57,6 +57,7 @@
  *		- Fixed parsing of new lines in attributes
  *		- Preserve element access when None
  *		- Preserve trailing comments for fields
+ *		- Allow parsing of basic conditional compilation directives
  *		Justin Dearing
  *		- Removed unused using statements
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -68,6 +69,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 
@@ -173,6 +175,25 @@ namespace NArrange.CSharp
 			if (NextChar == CSharpSymbol.EndOfStatement)
 			{
 			    EatChar(CSharpSymbol.EndOfStatement);
+			}
+		}
+
+		private void EatWord(string word)
+		{
+			this.EatWord(word, "Expected " + word);
+		}
+
+		private void EatWord(string word, string message)
+		{
+			EatWhiteSpace();
+
+			foreach (char ch in word.ToCharArray())
+			{
+				TryReadChar();
+				if(CurrentChar != ch)
+				{
+					this.OnParseError(message);
+				}
 			}
 		}
 
@@ -741,6 +762,58 @@ namespace NArrange.CSharp
 		}
 
 		/// <summary>
+		/// Parses a condition directive.
+		/// </summary>
+		/// <returns></returns>
+		private ConditionDirectiveElement ParseConditionDirective(string line, out bool isIf)
+		{
+			int separatorIndex = line.IndexOfAny(WhiteSpaceCharacters);
+
+			string directive = null;
+			if (separatorIndex > 0)
+			{
+				directive = line.Substring(0, separatorIndex);
+			}
+			else
+			{
+				directive = line;
+			}
+
+			string condition = null;
+			if (separatorIndex > 0)
+			{
+				condition = line.Substring(separatorIndex + 1).Trim();
+			}
+
+			isIf = directive == CSharpKeyword.If;
+
+			switch (directive)
+			{
+				case CSharpKeyword.If:
+				case CSharpKeyword.Elif:
+					if (string.IsNullOrEmpty(condition))
+					{
+						this.OnParseError("Expected a condition expression");
+					}
+					break;
+
+				case CSharpKeyword.Else:
+					break;
+
+				default:
+					this.OnParseError(
+						string.Format(CultureInfo.InvariantCulture,
+						"Unhandled preprocessor directive '{0}'", directive));
+					break;
+			}
+
+			ConditionDirectiveElement conditionDirective = new ConditionDirectiveElement();
+			conditionDirective.ConditionExpression = condition;
+
+			return conditionDirective;
+		}
+
+		/// <summary>
 		/// Parses a constructor
 		/// </summary>
 		/// <param name="memberName"></param>
@@ -852,7 +925,7 @@ namespace NArrange.CSharp
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 			List<ICommentElement> comments = new List<ICommentElement>();
 			List<AttributeElement> attributes = new List<AttributeElement>();
-			Stack<RegionElement> regionStack = new Stack<RegionElement>();
+			Stack<ICodeElement> enclosingElementStack = new Stack<ICodeElement>();
 
 			StringBuilder elementBuilder = new StringBuilder(DefaultBlockLength);
 
@@ -860,232 +933,316 @@ namespace NArrange.CSharp
 
 			while (TryReadChar())
 			{
-			    switch (CurrentChar)
-			    {
-			        //
-			        // Comments
-			        //
-			        case CSharpSymbol.BeginComment:
-			            nextChar = NextChar;
-			            if (nextChar == CSharpSymbol.BeginComment)
-			            {
-			                CommentElement commentLine = ParseCommentLine();
-			                comments.Add(commentLine);
-			            }
-			            else if (nextChar == CSharpSymbol.BlockCommentModifier)
-			            {
-			                CommentElement commentBlock = ParseCommentBlock();
-			                comments.Add(commentBlock);
-			            }
-			            else
-			            {
-			                elementBuilder.Append(CurrentChar);
-			            }
-			            break;
+				switch (CurrentChar)
+				{
+					//
+					// Comments
+					//
+					case CSharpSymbol.BeginComment:
+						nextChar = NextChar;
+						if (nextChar == CSharpSymbol.BeginComment)
+						{
+							CommentElement commentLine = ParseCommentLine();
+							comments.Add(commentLine);
+						}
+						else if (nextChar == CSharpSymbol.BlockCommentModifier)
+						{
+							CommentElement commentBlock = ParseCommentBlock();
+							comments.Add(commentBlock);
+						}
+						else
+						{
+							elementBuilder.Append(CurrentChar);
+						}
+						break;
 
-			        //
-			        // Preprocessor
-			        //
-			        case CSharpSymbol.Preprocessor:
-			            //
-			            // TODO: Besides regions, parse preprocessor elements so that
-			            // member preprocessor information is preserved.
-			            //
-			            string line = ReadLine().Trim();
-			            if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
-			            {
-			                if (comments.Count > 0)
-			                {
-			                    foreach (ICommentElement commentElement in comments)
-			                    {
-			                        codeElements.Add(commentElement);
-			                    }
-			                    comments.Clear();
-			                }
+					//
+					// Preprocessor
+					//
+					case CSharpSymbol.Preprocessor:
+						//
+						// TODO: Parse pragma directives
+						//
+						string line = ReadLine().Trim();
+							if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
+							{
+								if (comments.Count > 0)
+								{
+									foreach (ICommentElement commentElement in comments)
+									{
+										codeElements.Add(commentElement);
+									}
+									comments.Clear();
+								}
 
-			                RegionElement regionElement = ParseRegion(line);
-			                regionStack.Push(regionElement);
-			            }
-			            else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal)
-			                && regionStack.Count > 0)
-			            {
-			                RegionElement regionElement = regionStack.Pop();
+								RegionElement regionElement = ParseRegion(line);
+								enclosingElementStack.Push(regionElement);
+							}
+							else if (line.StartsWith(CSharpKeyword.If, StringComparison.Ordinal) ||
+								line.StartsWith(CSharpKeyword.Else, StringComparison.Ordinal) ||
+								line.StartsWith(CSharpKeyword.Elif, StringComparison.Ordinal))
+							{
+								bool isIf;
+								ConditionDirectiveElement conditionDirective = ParseConditionDirective(line.Trim(), out isIf);
 
-			                if (comments.Count > 0)
-			                {
-			                    foreach (ICommentElement commentElement in comments)
-			                    {
-			                        regionElement.AddChild(commentElement);
-			                    }
-			                    comments.Clear();
-			                }
+								//
+								if (isIf)
+								{
+									enclosingElementStack.Push(conditionDirective);
+								}
+								else
+								{
+									if (enclosingElementStack.Count == 0 ||
+										enclosingElementStack.Peek().ElementType != ElementType.ConditionDirective)
+									{
+										this.OnParseError("Expected 'if' preprocessor directive.");
+									}
+									else
+									{
+										ConditionDirectiveElement previousCondition = 
+											enclosingElementStack.Peek() as ConditionDirectiveElement;
+										while (previousCondition.ElseCondition != null)
+										{
+											previousCondition = previousCondition.ElseCondition;
+										}
 
-			                if (regionStack.Count > 0)
-			                {
-			                    regionStack.Peek().AddChild(regionElement);
-			                }
-			                else
-			                {
-			                    codeElements.Add(regionElement);
-			                }
-			            }
-			            else
-			            {
-			                this.OnParseError(
-			                    "Cannot arrange files with preprocessor directives " +
-			                    "other than #region and #endregion");
-			            }
-			            break;
+										//
+										// Add the condition to the end of the condition linked list
+										//
+										previousCondition.ElseCondition = conditionDirective;
+									}
+								}
+							}
+							else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal) ||
+						   line.StartsWith(CSharpKeyword.EndIf, StringComparison.Ordinal))
+							{
+								ICodeElement enclosingElement = null;
 
-			        //
-			        // Attribute
-			        //
-			        case CSharpSymbol.BeginAttribute:
-			            nextChar = NextChar;
+								//
+								// If we don't have an element of the same type on the stack, then
+								// we've got a mismatch for the closing directive.
+								//
+								if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal))
+								{
+									if (enclosingElementStack.Count == 0 || 
+										enclosingElementStack.Peek().ElementType != ElementType.Region)
+									{
+										this.OnParseError("Unmatched #endregion");
+									}
+								}
+								else if (enclosingElementStack.Count == 0 ||
+									enclosingElementStack.Peek().ElementType != ElementType.ConditionDirective)
+								{
+									this.OnParseError("Unmatched #endif");
+								}
+								
+								enclosingElement = enclosingElementStack.Pop();
 
-			            //
-			            // Parse array definition
-			            //
-			            if (elementBuilder.Length > 0)
-			            {
-			                EatWhiteSpace();
-			                nextChar = NextChar;
+								//
+								// Add any processed comments to the region or condition directive.
+								//
+								if (comments.Count > 0)
+								{
+									foreach (ICommentElement commentElement in comments)
+									{
+										enclosingElement.AddChild(commentElement);
+									}
+									comments.Clear();
+								}
 
-			                if (nextChar == CSharpSymbol.EndAttribute)
-			                {
-			                    // Array type
-			                    EatChar(CSharpSymbol.EndAttribute);
+								//
+								// If there are any attributes not associated with an element (e.g.
+								// a condition directive containing only an attribute, then 
+								// throw an error as this is currently not supported.
+								//
+								if (enclosingElement.ElementType == ElementType.ConditionDirective &&
+									attributes.Count > 0)
+								{
+									this.OnParseError("Cannot arrange files with preprocessor directives containing attributes unassociated to an element");
+								}
 
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
-			                    elementBuilder.Append(' ');
-			                }
-			                else
-			                {
-			                    string nestedText = ParseNestedText(
-			                        CSharpSymbol.BeginAttribute,
-			                        CSharpSymbol.EndAttribute,
-			                        false,
-			                        true);
+								//
+								// Are we processing a nested region or condition directive?
+								//
+								if (enclosingElementStack.Count > 0)
+								{
+									enclosingElementStack.Peek().AddChild(enclosingElement);
+								}
+								else
+								{
+									codeElements.Add(enclosingElement);
+								}
+							}
+							else
+							{
+								this.OnParseError(
+									"Cannot arrange files with preprocessor directives " +
+									"other than #region, #endregion and conditional compilation directives");
+							}
+						break;
 
-			                    elementBuilder.Append(CSharpSymbol.BeginAttribute);
-			                    elementBuilder.Append(nestedText);
-			                    elementBuilder.Append(CSharpSymbol.EndAttribute);
-			                }
-			            }
-			            else
-			            {
-			                //
-			                // Parse attribute
-			                //
-			                AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
+					//
+					// Attribute
+					//
+					case CSharpSymbol.BeginAttribute:
+						nextChar = NextChar;
 
-			                attributes.Add(attributeElement);
-			                codeElements.Add(attributeElement);
-			                comments.Clear();
-			            }
-			            break;
+						//
+						// Parse array definition
+						//
+						if (elementBuilder.Length > 0)
+						{
+							EatWhiteSpace();
+							nextChar = NextChar;
 
-			        //
-			        // Trim generics
-			        //
-			        case CSharpSymbol.BeginGeneric:
-			            string elementText = elementBuilder.ToString();
-			            if (elementBuilder.Length > 0 &&
-			                !(elementText.Trim().EndsWith(CSharpKeyword.Operator, StringComparison.Ordinal)))
-			            {
-			                string nestedText = ParseNestedText(
-			                    CSharpSymbol.BeginGeneric,
-			                    CSharpSymbol.EndGeneric,
-			                    false,
-			                    true);
+							if (nextChar == CSharpSymbol.EndAttribute)
+							{
+								// Array type
+								EatChar(CSharpSymbol.EndAttribute);
 
-			                elementBuilder.Append(CSharpSymbol.BeginGeneric);
-			                elementBuilder.Append(nestedText);
-			                elementBuilder.Append(CSharpSymbol.EndGeneric);
-			            }
-			            else
-			            {
-			                elementBuilder.Append(CurrentChar);
-			            }
-			            break;
+								elementBuilder.Append(CSharpSymbol.BeginAttribute);
+								elementBuilder.Append(CSharpSymbol.EndAttribute);
+								elementBuilder.Append(' ');
+							}
+							else
+							{
+								string nestedText = ParseNestedText(
+									CSharpSymbol.BeginAttribute,
+									CSharpSymbol.EndAttribute,
+									false,
+									true);
 
-			        // Eat any unneeded whitespace
-			        case ' ':
-			        case '\n':
-			        case '\r':
-			        case '\t':
-			            if (elementBuilder.Length > 0 &&
-			                elementBuilder[elementBuilder.Length - 1] != ' ')
-			            {
-			                elementBuilder.Append(' ');
-			            }
-			            break;
+								elementBuilder.Append(CSharpSymbol.BeginAttribute);
+								elementBuilder.Append(nestedText);
+								elementBuilder.Append(CSharpSymbol.EndAttribute);
+							}
+						}
+						else
+						{
+							//
+							// Parse attribute
+							//
+							AttributeElement attributeElement = ParseAttribute(comments.AsReadOnly());
 
-			        default:
-			            elementBuilder.Append(CurrentChar);
-			            nextChar = NextChar;
+							attributes.Add(attributeElement);
+							codeElements.Add(attributeElement);
+							comments.Clear();
+						}
+						break;
 
-			            if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
-			            {
-			                //
-			                // Try to parse a code element
-			                //
-			                ICodeElement element = TryParseElement(parentElement,
-			                    elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
-			                if (element != null)
-			                {
-			                    if (element is CommentedElement)
-			                    {
-			                        UsingElement usingElement = element as UsingElement;
+					//
+					// Trim generics
+					//
+					case CSharpSymbol.BeginGeneric:
+						string elementText = elementBuilder.ToString();
+						if (elementBuilder.Length > 0 &&
+							!(elementText.Trim().EndsWith(CSharpKeyword.Operator, StringComparison.Ordinal)))
+						{
+							string nestedText = ParseNestedText(
+								CSharpSymbol.BeginGeneric,
+								CSharpSymbol.EndGeneric,
+								false,
+								true);
 
-			                        //
-			                        // If this is the first using statement, then don't attach
-			                        // header comments to the element.
-			                        //
-			                        if (usingElement != null && parentElement == null && codeElements.Count == 0)
-			                        {
-			                            foreach (ICommentElement commentElement in usingElement.HeaderComments)
-			                            {
-			                                if (regionStack.Count > 0)
-			                                {
-			                                    regionStack.Peek().AddChild(commentElement);
-			                                }
-			                                else
-			                                {
-			                                    codeElements.Add(commentElement);
-			                                }
-			                            }
-			                            usingElement.ClearHeaderCommentLines();
-			                        }
-			                        comments.Clear();
-			                    }
+							elementBuilder.Append(CSharpSymbol.BeginGeneric);
+							elementBuilder.Append(nestedText);
+							elementBuilder.Append(CSharpSymbol.EndGeneric);
+						}
+						else
+						{
+							elementBuilder.Append(CurrentChar);
+						}
+						break;
 
-			                    if (regionStack.Count > 0)
-			                    {
-			                        regionStack.Peek().AddChild(element);
-			                    }
-			                    else
-			                    {
-			                        codeElements.Add(element);
-			                    }
-			                    
-			                    elementBuilder = new StringBuilder(DefaultBlockLength);
-			                    
-			                    if (element is IAttributedElement)
-			                    {
-			                        foreach (AttributeElement attribute in attributes)
-			                        {
-			                            codeElements.Remove(attribute);
-			                        }
+					// Eat any unneeded whitespace
+					case ' ':
+					case '\n':
+					case '\r':
+					case '\t':
+						if (elementBuilder.Length > 0 &&
+							elementBuilder[elementBuilder.Length - 1] != ' ')
+						{
+							elementBuilder.Append(' ');
+						}
+						break;
 
-			                        attributes = new List<AttributeElement>();
-			                    }
-			                }
-			            }
+					default:
+						elementBuilder.Append(CurrentChar);
+						nextChar = NextChar;
 
-			            break;
-			    }
+						if (char.IsWhiteSpace(nextChar) || CSharpSymbol.IsCSharpSymbol(CurrentChar))
+						{
+							//
+							// Try to parse a code element
+							//
+							ICodeElement element = TryParseElement(parentElement,
+								elementBuilder, comments.AsReadOnly(), attributes.AsReadOnly());
+							if (element != null)
+							{
+								if (element is CommentedElement)
+								{
+									UsingElement usingElement = element as UsingElement;
+
+									//
+									// If this is the first using statement, then don't attach
+									// header comments to the element.
+									//
+									if (usingElement != null && parentElement == null && codeElements.Count == 0)
+									{
+										foreach (ICommentElement commentElement in usingElement.HeaderComments)
+										{
+											if (enclosingElementStack.Count > 0)
+											{
+												enclosingElementStack.Peek().AddChild(commentElement);
+											}
+											else
+											{
+												codeElements.Add(commentElement);
+											}
+										}
+										usingElement.ClearHeaderCommentLines();
+									}
+									comments.Clear();
+								}
+
+								if (enclosingElementStack.Count > 0)
+								{
+									ICodeElement enclosingElement = enclosingElementStack.Peek();
+
+									if (enclosingElement.ElementType == ElementType.ConditionDirective)
+									{
+										ConditionDirectiveElement conditionDirective = enclosingElement as ConditionDirectiveElement;
+										while (conditionDirective.ElseCondition != null)
+										{
+											conditionDirective = conditionDirective.ElseCondition;
+										}
+
+										enclosingElement = conditionDirective;
+									}
+
+									enclosingElement.AddChild(element);
+								}
+								else
+								{
+									codeElements.Add(element);
+								}
+
+								elementBuilder = new StringBuilder(DefaultBlockLength);
+
+								if (element is IAttributedElement)
+								{
+									foreach (AttributeElement attribute in attributes)
+									{
+										codeElements.Remove(attribute);
+									}
+
+									attributes = new List<AttributeElement>();
+								}
+							}
+						}
+
+						break;
+				}
 
 			    char nextCh = NextChar;
 
@@ -1107,11 +1264,18 @@ namespace NArrange.CSharp
 			}
 
 			//
-			// Make sure that all region elements have been closed
+			// Make sure that all region elements and preprocessor directives have been closed
 			//
-			if (regionStack.Count > 0)
+			if (enclosingElementStack.Count > 0)
 			{
-			    this.OnParseError("Expected #endregion");
+				if (enclosingElementStack.Peek().ElementType == ElementType.Region)
+				{
+					this.OnParseError("Expected #endregion");
+				}
+				else
+				{
+					this.OnParseError("Expected #endif");
+				}
 			}
 
 			if (elementBuilder.Length > 0)

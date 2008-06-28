@@ -606,6 +606,72 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests writing a condition directive.
+		/// </summary>
+		[Test]
+		public void WriteConditionDirectiveTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			ConditionDirectiveElement conditionDirectiveElement = new ConditionDirectiveElement();
+			conditionDirectiveElement.ConditionExpression = "DEBUG";
+			conditionDirectiveElement.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ConditionExpression = "TEST";
+			conditionDirectiveElement.ElseCondition.ElseCondition = new ConditionDirectiveElement();
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(conditionDirectiveElement);
+
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"#If DEBUG\r\n\r\n" +
+				"#ElseIf TEST\r\n\r\n" +
+				"#Else\r\n\r\n" +
+				"#End If",
+				text,
+				"Condition directive element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a condition directive.
+		/// </summary>
+		[Test]
+		public void WriteConditionDirectiveWithChildrenTest()
+		{
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			ConditionDirectiveElement conditionDirectiveElement = new ConditionDirectiveElement();
+			conditionDirectiveElement.ConditionExpression = "DEBUG";
+			conditionDirectiveElement.AddChild(new CommentElement("Debug"));
+			conditionDirectiveElement.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ConditionExpression = "TEST";
+			conditionDirectiveElement.ElseCondition.AddChild(new CommentElement("Test"));
+			conditionDirectiveElement.ElseCondition.ElseCondition = new ConditionDirectiveElement();
+			conditionDirectiveElement.ElseCondition.ElseCondition.AddChild(new CommentElement("Else"));
+
+			StringWriter writer = new StringWriter();
+			codeElements.Add(conditionDirectiveElement);
+
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"#If DEBUG\r\n\r\n" +
+				"'Debug\r\n\r\n" +
+				"#ElseIf TEST\r\n\r\n" +
+				"'Test\r\n\r\n" +
+				"#Else\r\n\r\n" +
+				"'Else\r\n\r\n" +
+				"#End If",
+				text,
+				"Condition directive element was not written correctly.");
+		}
+
+		/// <summary>
 		/// Tests writing a constructor with a constructor reference.
 		/// </summary>
 		[Test]

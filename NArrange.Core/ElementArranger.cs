@@ -76,7 +76,7 @@ namespace NArrange.Core
 		{
 			if (inserter == null)
 			{
-			    throw new ArgumentNullException("inserter");
+				throw new ArgumentNullException("inserter");
 			}
 
 			_elementType = elementType;
@@ -86,6 +86,32 @@ namespace NArrange.Core
 		}
 
 		#endregion Constructors
+
+		#region Private Methods
+
+		private void ArrangeChildElement(ICodeElement codeElement, ICodeElement childElement)
+		{
+			//
+			// Region elements are ignored.  Only process their children.
+			//
+			RegionElement regionElement = childElement as RegionElement;
+			if (regionElement != null)
+			{
+				List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
+				regionElement.ClearChildren();
+
+				foreach (ICodeElement regionChildElement in regionChildren)
+				{
+					_childrenArranger.ArrangeElement(codeElement, regionChildElement);
+				}
+			}
+			else
+			{
+				_childrenArranger.ArrangeElement(codeElement, childElement);
+			}
+		}
+
+		#endregion Private Methods
 
 		#region Public Methods
 
@@ -99,30 +125,36 @@ namespace NArrange.Core
 		{
 			if (_childrenArranger != null)
 			{
-			    List<ICodeElement> children = new List<ICodeElement>(codeElement.Children);
-			    codeElement.ClearChildren();
+				List<ICodeElement> children = new List<ICodeElement>(codeElement.Children);
+				codeElement.ClearChildren();
 
-			    foreach (ICodeElement childElement in children)
-			    {
-					//
-					// Region elements are ignored.  Only process their children.
-					//
-			        RegionElement regionElement = childElement as RegionElement;
-			        if (regionElement != null)
-			        {
-			            List<ICodeElement> regionChildren = new List<ICodeElement>(regionElement.Children);
-			            regionElement.ClearChildren();
+				foreach (ICodeElement childElement in children)
+				{
+					ArrangeChildElement(codeElement, childElement);
+				}
 
-			            foreach (ICodeElement regionChildElement in regionChildren)
-			            {
-			                _childrenArranger.ArrangeElement(codeElement, regionChildElement);
-			            }
-			        }
-			        else
-			        {
-			            _childrenArranger.ArrangeElement(codeElement, childElement);
-			        }
-			    }
+				//
+				// For condition directives, arrange the children of each node in the list.
+				//
+				ConditionDirectiveElement conditionDirective = codeElement as ConditionDirectiveElement;
+				if (conditionDirective != null)
+				{
+					//
+					// Skip the first instance since we've already arranged those child elements.
+					//
+					conditionDirective = conditionDirective.ElseCondition;
+				}
+				while(conditionDirective != null)
+				{
+					children = new List<ICodeElement>(conditionDirective.Children);
+					conditionDirective.ClearChildren();
+
+					foreach (ICodeElement childElement in children)
+					{
+						ArrangeChildElement(conditionDirective, childElement);
+					}
+					conditionDirective = conditionDirective.ElseCondition;
+				}
 			}
 
 			_inserter.InsertElement(parentElement, codeElement);
@@ -149,8 +181,8 @@ namespace NArrange.Core
 		public virtual bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
 		{
 			// Clone the instance and assign the parent
-			ICodeElement testCodeElement = codeElement; 
-			if (parentElement != null && 
+			ICodeElement testCodeElement = codeElement;
+			if (parentElement != null &&
 				_filter != null && _filter.RequiredScope == ElementAttributeScope.Parent)
 			{
 				testCodeElement = codeElement.Clone() as ICodeElement;
@@ -158,7 +190,7 @@ namespace NArrange.Core
 			}
 
 			return (_elementType == ElementType.NotSpecified ||
-			    codeElement.ElementType == _elementType) &&
+				codeElement.ElementType == _elementType) &&
 				(_filter == null || _filter.IsMatch(testCodeElement));
 		}
 
