@@ -57,7 +57,7 @@
 	<Target Name="Build">
 		<MakeDir Directories="$(BinDirectory)"/>  
 		
-		<CreateItem Include="$(MSBuildProjectDirectory)\Dependencies\*.*">
+		<CreateItem Include="$(MSBuildProjectDirectory)\Dependencies\**\*.dll">
 			<Output ItemName="Dependencies" TaskParameter="Include" />
 		</CreateItem>
 		<Copy SourceFiles="@(Dependencies)" DestinationFolder="$(BinDirectory)"/>
@@ -104,6 +104,7 @@
 					$(BuildDirectory)\NArrange\*.rtf"
 					Exclude="$(BinDirectory)\**\narrange-*test*.exe;
 						$(BinDirectory)\**\NArrange.Tests*.*;
+						$(BinDirectory)\**\nunit.*;
 						$(BinDirectory)\**\NArrange.Console.xml;">
 			<Output ItemName="ZipBinFiles" TaskParameter="Include"/>
 		</CreateItem>
