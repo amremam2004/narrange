@@ -738,27 +738,34 @@ namespace NArrange.Tests.CSharp
 		[Test]
 		public void ParseClassImplementsGenericTest()
 		{
-			StringReader reader = new StringReader(
-			    "public class Test : IEnumerable<string>{}");
+			string[] variations = new string[]{
+				"public class Test : IEnumerable<string>{}",
+				"public class Test : IEnumerable <string>{}"
+			};
 
-			CSharpParser parser = new CSharpParser();
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			foreach (string variation in variations)
+			{
+				StringReader reader = new StringReader(variation);
 
-			Assert.AreEqual(1, elements.Count,
-			    "An unexpected number of elements were parsed.");
-			TypeElement typeElement = elements[0] as TypeElement;
-			Assert.IsNotNull(typeElement,
-			    "Element is not a TypeElement.");
-			Assert.AreEqual("Test", typeElement.Name,
-			    "Unexpected name.");
-			Assert.AreEqual(CodeAccess.Public, typeElement.Access,
-			    "Unexpected code access.");
-			Assert.AreEqual(TypeElementType.Class, typeElement.Type,
-			    "Unexpected type element type.");
-			Assert.AreEqual(1, typeElement.Interfaces.Count,
-			    "Unexpected number of interface implementations.");
-			Assert.AreEqual("IEnumerable<string>", typeElement.Interfaces[0].Name,
-			    "Unexpected interface implementation name.");
+				CSharpParser parser = new CSharpParser();
+				ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+				Assert.AreEqual(1, elements.Count,
+					"An unexpected number of elements were parsed.");
+				TypeElement typeElement = elements[0] as TypeElement;
+				Assert.IsNotNull(typeElement,
+					"Element is not a TypeElement.");
+				Assert.AreEqual("Test", typeElement.Name,
+					"Unexpected name.");
+				Assert.AreEqual(CodeAccess.Public, typeElement.Access,
+					"Unexpected code access.");
+				Assert.AreEqual(TypeElementType.Class, typeElement.Type,
+					"Unexpected type element type.");
+				Assert.AreEqual(1, typeElement.Interfaces.Count,
+					"Unexpected number of interface implementations.");
+				Assert.AreEqual("IEnumerable<string>", typeElement.Interfaces[0].Name,
+					"Unexpected interface implementation name.");
+			}
 		}
 
 		/// <summary>
@@ -1714,6 +1721,55 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a generic delegate.
+		/// </summary>
+		[Test]
+		public void ParseDelegateGenericTest()
+		{
+			string[] variations = 
+			    {
+			        "public delegate void Action<T>(T value);",
+			        "public delegate void Action<T> (T value);",
+			        "public delegate void Action <T> (T value);",
+					"public delegate void Action\t<T>\t(T value);",
+					"public delegate void Action\r\n<T>(T value);"
+			    };
+
+			foreach (string variation in variations)
+			{
+				try
+				{
+					StringReader reader = new StringReader(variation);
+
+					CSharpParser parser = new CSharpParser();
+					ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+					Assert.AreEqual(1, elements.Count,
+						"An unexpected number of elements were parsed.");
+					DelegateElement delegateElement = elements[0] as DelegateElement;
+					Assert.IsNotNull(delegateElement,
+						"Element is not a DelegateElement.");
+					Assert.AreEqual("Action", delegateElement.Name,
+						"Unexpected name: {0}", variation);
+					Assert.AreEqual(1, delegateElement.TypeParameters.Count,
+						"Unexpected number of type parameters: {0}", variation);
+					Assert.AreEqual("T", delegateElement.TypeParameters[0].Name,
+						"Unexpected type parameter name: {0}", variation);
+					Assert.AreEqual(CodeAccess.Public, delegateElement.Access,
+						"Unexpected code access: {0}", variation);
+					Assert.AreEqual("void", delegateElement.Type,
+						"Unexpected delegate return type: {0}", variation);
+					Assert.AreEqual("T value", delegateElement.Parameters,
+						"Unexpected parameters: {0}", variation);
+				}
+				catch (ParseException ex)
+				{
+					Assert.Fail(ex.Message + ": " + variation);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Verifies the parsing of delegates from the 
 		/// sample class.
 		/// </summary>
@@ -1999,27 +2055,43 @@ namespace NArrange.Tests.CSharp
 		[Test]
 		public void ParseFieldGenericTest()
 		{
-			StringReader reader = new StringReader(
-			    "private static Dictionary<string, int> _dictionary = new Dictionary<string, int>();");
+			string[] variations = new string[]{
+				"private static Dictionary<string, int> _dictionary = new Dictionary<string, int>();",
+				"private static Dictionary< string, int> _dictionary = new Dictionary<string, int>();",
+				"private static Dictionary <string, int> _dictionary = new Dictionary<string, int>();",
+				"private static Dictionary < string, int > _dictionary = new Dictionary<string, int>();"
+			};
 
-			CSharpParser parser = new CSharpParser();
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+			foreach (string variation in variations)
+			{
+				try
+				{
+					StringReader reader = new StringReader(variation);
 
-			Assert.AreEqual(1, elements.Count,
-			    "An unexpected number of elements were parsed.");
-			FieldElement fieldElement = elements[0] as FieldElement;
-			Assert.IsNotNull(fieldElement,
-			    "Element is not a FieldElement.");
-			Assert.AreEqual("_dictionary", fieldElement.Name,
-			    "Unexpected name.");
-			Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
-			    "Unexpected code access.");
-			Assert.IsTrue(fieldElement.IsStatic,
-			    "Unexpected value for IsStatic.");
-			Assert.AreEqual("Dictionary<string, int>", fieldElement.Type,
-			    "Unexpected member type.");
-			Assert.AreEqual("new Dictionary<string, int>()", fieldElement.InitialValue,
-			    "Unexpected initial value.");
+					CSharpParser parser = new CSharpParser();
+					ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+					Assert.AreEqual(1, elements.Count,
+						"An unexpected number of elements were parsed.");
+					FieldElement fieldElement = elements[0] as FieldElement;
+					Assert.IsNotNull(fieldElement,
+						"Element is not a FieldElement.");
+					Assert.AreEqual("_dictionary", fieldElement.Name,
+						"Unexpected name.");
+					Assert.AreEqual(CodeAccess.Private, fieldElement.Access,
+						"Unexpected code access.");
+					Assert.IsTrue(fieldElement.IsStatic,
+						"Unexpected value for IsStatic.");
+					Assert.AreEqual("Dictionary<string, int>", fieldElement.Type,
+						"Unexpected member type.");
+					Assert.AreEqual("new Dictionary<string, int>()", fieldElement.InitialValue,
+						"Unexpected initial value.");
+				}
+				catch (ParseException ex)
+				{
+					Assert.Fail(ex.Message + ": " + variation);
+				}
+			}
 		}
 
 		/// <summary>
@@ -2786,26 +2858,44 @@ namespace NArrange.Tests.CSharp
 		[Test]
 		public void ParseMethodGenericReturnTypeTest()
 		{
-			StringReader reader = new StringReader(
-			    "IEnumerator<T> IEnumerable<T>.GetEnumerator()\r\n" +
+			string[] variations = new string[]{
+				"IEnumerator<T> IEnumerable<T>.GetEnumerator()\r\n" +
 			    "{\r\n" +
 			    "\treturn null;\r\n" +
-			    "}");
+			    "}",
 
-			CSharpParser parser = new CSharpParser();
-			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+				"IEnumerator<T> IEnumerable <T>.GetEnumerator()\r\n" +
+			    "{\r\n" +
+			    "\treturn null;\r\n" +
+			    "}"
+			};
 
-			Assert.AreEqual(1, elements.Count,
-			    "An unexpected number of elements were parsed.");
-			MethodElement methodElement = elements[0] as MethodElement;
-			Assert.IsNotNull(methodElement,
-			    "Element is not a MethodElement.");
-			Assert.AreEqual("IEnumerable<T>.GetEnumerator", methodElement.Name,
-			    "Unexpected name.");
-			Assert.AreEqual(CodeAccess.None, methodElement.Access,
-			    "Unexpected code access.");
-			Assert.AreEqual("IEnumerator<T>", methodElement.Type,
-			    "Unexpected member type.");
+			foreach (string variation in variations)
+			{
+				try
+				{
+					StringReader reader = new StringReader(variation);
+
+					CSharpParser parser = new CSharpParser();
+					ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+					Assert.AreEqual(1, elements.Count,
+						"An unexpected number of elements were parsed.");
+					MethodElement methodElement = elements[0] as MethodElement;
+					Assert.IsNotNull(methodElement,
+						"Element is not a MethodElement.");
+					Assert.AreEqual("IEnumerable<T>.GetEnumerator", methodElement.Name,
+						"Unexpected name.");
+					Assert.AreEqual(CodeAccess.None, methodElement.Access,
+						"Unexpected code access.");
+					Assert.AreEqual("IEnumerator<T>", methodElement.Type,
+						"Unexpected member type.");
+				}
+				catch (ParseException ex)
+				{
+					Assert.Fail(ex.Message + ": " + variation);
+				}
+			}
 		}
 
 		/// <summary>

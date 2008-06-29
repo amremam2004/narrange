@@ -58,6 +58,7 @@
  *		- Preserve element access when None
  *		- Preserve trailing comments for fields
  *		- Allow parsing of basic conditional compilation directives
+ *		- Fixed parsing of generic type references containing whitespace
  *		Justin Dearing
  *		- Removed unused using statements
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -1143,6 +1144,15 @@ namespace NArrange.CSharp
 								CSharpSymbol.EndGeneric,
 								false,
 								true);
+
+							//
+							// Trim whitespace preceding type parameters
+							//
+							while (elementBuilder.Length > 0 &&
+								IsWhiteSpace(elementBuilder[elementBuilder.Length - 1]))
+							{
+								elementBuilder.Remove(elementBuilder.Length - 1, 1);
+							}
 
 							elementBuilder.Append(CSharpSymbol.BeginGeneric);
 							elementBuilder.Append(nestedText);
