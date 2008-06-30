@@ -1074,6 +1074,27 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing a commented member.
+		/// </summary>
+		[Test]
+		public void ParseCommentedMemberTest()
+		{
+			StringReader reader = new StringReader(
+				"'Private Sub DoSomething()\r\n" +
+				"'End Sub");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(2, elements.Count,
+				"An unexpected number of elements were parsed.");
+			Assert.AreEqual("Private Sub DoSomething()", ((ICommentElement)elements[0]).Text,
+				"Unexpected comment text.");
+			Assert.AreEqual("End Sub", ((ICommentElement)elements[1]).Text,
+				"Unexpected comment text.");
+		}
+
+		/// <summary>
 		/// Tests parsing an invalid condition directive.
 		/// </summary>
 		[Test]

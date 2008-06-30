@@ -46,6 +46,8 @@
  *		  an underscore
  *		- Preserve trailing comments for fields
  *		- Allow parsing of basic conditional compilation directives
+ *		- Fixed a bug where in certain scenarios, the text of commented out
+ *		  elements was being reversed
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -1079,9 +1081,10 @@ namespace NArrange.VisualBasic
 
 			if (comments.Count > 0)
 			{
-				foreach (ICommentElement comment in comments)
+				for (int commentIndex = 0; commentIndex < comments.Count; commentIndex++)
 				{
-					codeElements.Insert(0, comment);
+					ICommentElement comment = comments[commentIndex];
+					codeElements.Insert(commentIndex, comment);
 				}
 			}
 

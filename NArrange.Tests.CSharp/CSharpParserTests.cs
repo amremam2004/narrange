@@ -1072,7 +1072,7 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
-		/// Tests parsing a single comment line.";
+		/// Tests parsing a single comment line.
 		/// </summary>
 		[Test]
 		public void ParseCommentLineTest()
@@ -1092,6 +1092,30 @@ namespace NArrange.Tests.CSharp
 			    "Unexpected comment type.");
 			Assert.AreEqual("using System.Text;", commentElement.Text,
 			    "Unexpected comment text.");
+		}
+
+		/// <summary>
+		/// Tests parsing a commented member.
+		/// </summary>
+		[Test]
+		public void ParseCommentedMemberTest()
+		{
+			StringReader reader = new StringReader(
+				"//private void DoSomething()\r\n" +
+				"//{\r\n" + 
+				"//}");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(3, elements.Count,
+				"An unexpected number of elements were parsed.");
+			Assert.AreEqual("private void DoSomething()", ((ICommentElement)elements[0]).Text,
+				"Unexpected comment text.");
+			Assert.AreEqual("{", ((ICommentElement)elements[1]).Text,
+				"Unexpected comment text.");
+			Assert.AreEqual("}", ((ICommentElement)elements[2]).Text,
+				"Unexpected comment text.");
 		}
 
 		/// <summary>

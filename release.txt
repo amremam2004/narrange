@@ -1,6 +1,4 @@
 The following changes were made in this release:
 
-0.2.5.0
-- Added basic handling of conditional compilation preprocessor directives.
-- Fixed writing of Implements for VB events.
-- Fixed parsing of C# generic type references containing whitespace.
+0.2.6.0
+- Fixed a bug where in certain scenarios, the text of commented out elements was being reversed.
