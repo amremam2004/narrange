@@ -2,3 +2,4 @@ The following changes were made in this release:
 
 0.2.6.0
 - Fixed a bug where in certain scenarios, the text of commented out elements was being reversed.
+- Fixed parsing of nullable type references containing whitespace.

@@ -145,6 +145,11 @@ namespace NArrange.CSharp
 		public const char Negate = '!';
 
 		/// <summary>
+		/// Nullable
+		/// </summary>
+		public const char Nullable = '?';
+
+		/// <summary>
 		/// Preprocessor
 		/// </summary>
 		public const char Preprocessor = '#';
@@ -186,6 +191,7 @@ namespace NArrange.CSharp
 			    character == Preprocessor ||
 			    character == TypeImplements ||
 				character == Negate ||
+				character == Nullable ||
 				character == BeginVerbatimString;
 		}
 

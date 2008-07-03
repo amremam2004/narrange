@@ -61,6 +61,7 @@
  *		- Fixed parsing of generic type references containing whitespace
  *		- Fixed a bug where in certain scenarios, the text of commented out
  *		  elements was being reversed
+ *		- Fixed parsing of nullable type references containing whitespace
  *		Justin Dearing
  *		- Removed unused using statements
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -988,7 +989,6 @@ namespace NArrange.CSharp
 								bool isIf;
 								ConditionDirectiveElement conditionDirective = ParseConditionDirective(line.Trim(), out isIf);
 
-								//
 								if (isIf)
 								{
 									enclosingElementStack.Push(conditionDirective);
@@ -1150,11 +1150,7 @@ namespace NArrange.CSharp
 							//
 							// Trim whitespace preceding type parameters
 							//
-							while (elementBuilder.Length > 0 &&
-								IsWhiteSpace(elementBuilder[elementBuilder.Length - 1]))
-							{
-								elementBuilder.Remove(elementBuilder.Length - 1, 1);
-							}
+							TrimTrailingWhiteSpace(elementBuilder);
 
 							elementBuilder.Append(CSharpSymbol.BeginGeneric);
 							elementBuilder.Append(nestedText);
@@ -1164,6 +1160,11 @@ namespace NArrange.CSharp
 						{
 							elementBuilder.Append(CurrentChar);
 						}
+						break;
+
+					case CSharpSymbol.Nullable:
+						TrimTrailingWhiteSpace(elementBuilder);
+						elementBuilder.Append(CurrentChar);
 						break;
 
 					// Eat any unneeded whitespace
@@ -1617,13 +1618,17 @@ namespace NArrange.CSharp
 			}
 		}
 
+		/// <summary>
+		/// Parses a parameter list.
+		/// </summary>
+		/// <returns></returns>
 		private string ParseParams()
 		{
 			return ParseNestedText(CSharpSymbol.BeginParameterList, CSharpSymbol.EndParameterList, false, false);
 		}
 
 		/// <summary>
-		/// Parses a property
+		/// Parses a property.
 		/// </summary>
 		/// <param name="memberName"></param>
 		/// <param name="returnType"></param>
@@ -1903,6 +1908,15 @@ namespace NArrange.CSharp
 			}
 
 			return usingElement;
+		}
+
+		private static void TrimTrailingWhiteSpace(StringBuilder elementBuilder)
+		{
+			while (elementBuilder.Length > 0 &&
+									 IsWhiteSpace(elementBuilder[elementBuilder.Length - 1]))
+			{
+				elementBuilder.Remove(elementBuilder.Length - 1, 1);
+			}
 		}
 
 		private static bool TryFindAndRemoveWord(StringCollection wordList, string word)

@@ -2923,6 +2923,52 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a method with a nullable return type.
+		/// </summary>
+		[Test]
+		public void ParseMethodNullableReturnTypeTest()
+		{
+			string[] variations = new string[]{
+				"int? GetValue()\r\n" +
+			    "{\r\n" +
+			    "\treturn null;\r\n" +
+			    "}",
+
+				"int ? GetValue()\r\n" +
+			    "{\r\n" +
+			    "\treturn null;\r\n" +
+			    "}"
+			};
+
+			foreach (string variation in variations)
+			{
+				try
+				{
+					StringReader reader = new StringReader(variation);
+
+					CSharpParser parser = new CSharpParser();
+					ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+					Assert.AreEqual(1, elements.Count,
+						"An unexpected number of elements were parsed.");
+					MethodElement methodElement = elements[0] as MethodElement;
+					Assert.IsNotNull(methodElement,
+						"Element is not a MethodElement.");
+					Assert.AreEqual("GetValue", methodElement.Name,
+						"Unexpected name.");
+					Assert.AreEqual(CodeAccess.None, methodElement.Access,
+						"Unexpected code access.");
+					Assert.AreEqual("int?", methodElement.Type,
+						"Unexpected member type.");
+				}
+				catch (ParseException ex)
+				{
+					Assert.Fail(ex.Message + ": " + variation);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Tests parsing a partial method declaration.
 		/// </summary>
 		[Test]
