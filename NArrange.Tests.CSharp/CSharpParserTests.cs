@@ -610,6 +610,32 @@ namespace NArrange.Tests.CSharp
 		}
 
 		/// <summary>
+		/// Tests parsing a member body that has complex escaped strings.
+		/// </summary>
+		[Test]
+		public void ParseBodyEscapedStringTest()
+		{
+			StringReader reader = new StringReader(
+				"public void DoSomething()\r\n" + 
+				"{\r\n" + 
+				"\tstring v = string.Empty;\r\n" + 
+				"\tv = v.Replace(\"\\\\\\\"\", \"\\\"\"\r\n" + 
+				"}");
+
+			CSharpParser parser = new CSharpParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"Unexpected number of elements were parsed.");
+			MethodElement methodElement = elements[0] as MethodElement;
+			Assert.IsNotNull(methodElement);
+
+			Assert.IsTrue(methodElement.BodyText.Contains(
+				"v = v.Replace(\"\\\\\\\"\", \"\\\"\""),
+				"Escaped string line was not found in the member body.");
+		}
+
+		/// <summary>
 		/// Tests the parsing of a single namespace with a single class
 		/// definition.
 		/// </summary>

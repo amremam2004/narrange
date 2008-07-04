@@ -62,6 +62,7 @@
  *		- Fixed a bug where in certain scenarios, the text of commented out
  *		  elements was being reversed
  *		- Fixed parsing of nullable type references containing whitespace
+ *		- Fixed an issue parsing escaped strings in member bodies
  *		Justin Dearing
  *		- Removed unused using statements
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -1521,6 +1522,7 @@ namespace NArrange.CSharp
 			    bool inLineComment = false;
 			    bool inBlockComment = false;
 				bool inVerbatimString = false;
+				bool escaped = false;
 
 			    while (depth > 0)
 			    {
@@ -1538,19 +1540,26 @@ namespace NArrange.CSharp
 
 			        if(!inComment)
 			        {
+						escaped = !escaped && PreviousChar == EscapeChar;
+
 			            if (!inCharLiteral && CurrentChar == CSharpSymbol.BeginString 
-							&& (inVerbatimString || 
-							(PreviousChar != EscapeChar || 
-							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar))))
+							&& (inVerbatimString || !escaped))
 			            {
 			                inString = !inString;
+							if (!inString)
+							{
+								escaped = false;
+							}
 							inVerbatimString = inString && PreviousChar == CSharpSymbol.BeginVerbatimString;
 			            }
 						else if (!inString && CurrentChar == CSharpSymbol.BeginCharLiteral
-							&& (PreviousChar != EscapeChar ||
-							(PreviousChar == EscapeChar && previousPreviousChar == EscapeChar)))
+							&& !escaped)
 			            {
 			                inCharLiteral = !inCharLiteral;
+							if (!inCharLiteral)
+							{
+								escaped = false;
+							}
 			            }
 			        }
 
