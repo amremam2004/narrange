@@ -10,7 +10,7 @@
 		</ProjectHandler>
 		<ProjectHandler Parser="NArrange.Core.MonoDevelopProjectParser">
 			<ProjectExtensions>
-				<Extension Name="mdp" Parser="NArrange.Core.MonoDevelopProjectParser"/>
+				<Extension Name="mdp"/>
 			</ProjectExtensions>
 		</ProjectHandler>
 		<!-- Source handlers are plugins that help NArrange parse and write source files -->
@@ -31,8 +31,8 @@
 			</SourceExtensions>
 		</SourceHandler>
 	</Handlers>
-	<!-- For encoding, Codepage can be any of the following:
-	    "Detect"  - Detect file encodings (NArrange default) 
+	<!--For encoding, Codepage can be any of the following:
+		"Detect"  - Detect file encodings (NArrange default) 
 		"Default" - Use the system default ANSI encoding (e.g. CodePage 1252 Western-European)
 		CodePage  - e.g. "65001" for UTF-8
 	 -->
