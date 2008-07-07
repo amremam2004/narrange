@@ -34,7 +34,12 @@
 						$(MSBuildProjectDirectory)\**\obj\**\*.*;
 						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;
 						$(MSBuildProjectDirectory)\coverage.*;
+						$(MSBuildProjectDirectory)\*.nprof;
 						$(MSBuildProjectDirectory)\TestResult.xml;
+						$(MSBuildProjectDirectory)\UnitTests.*;
+						$(MSBuildProjectDirectory)\authors.xml;
+						$(MSBuildProjectDirectory)\svn2cl.*;
+						$(MSBuildProjectDirectory)\changelog.bat;
 						$(MSBuildProjectDirectory)\**\*.suo;;
 						$(MSBuildProjectDirectory)\**\*.user;
 						$(MSBuildProjectDirectory)\**\Doc\Templates\*.*;
@@ -105,7 +110,9 @@
 					Exclude="$(BinDirectory)\**\narrange-*test*.exe;
 						$(BinDirectory)\**\NArrange.Tests*.*;
 						$(BinDirectory)\**\nunit.*;
-						$(BinDirectory)\**\NArrange.Console.xml;">
+						$(BinDirectory)\**\NArrange.Console.xml;
+						$(BuildDirectory)\NArrange\svn2cl.*;
+						$(BuildDirectory)\NArrange\changelog.txt">
 			<Output ItemName="ZipBinFiles" TaskParameter="Include"/>
 		</CreateItem>
 		
