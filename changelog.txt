@@ -1,5 +1,14 @@
+2008-07-11  James Nies
+
+	* Allow region directives to be written and parsed as comments.
+
+2008-07-07  James Nies
+
+	* Created changelog.txt from the Subversion revision history.
+
 2008-07-05  James Nies
 
+	* Missed a file when normalizing line endings.
 	* Removed an extraneous attribute not processed by the
 	  configuration.
 	* Comment/whitespace clean-up.

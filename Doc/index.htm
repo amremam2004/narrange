@@ -48,8 +48,8 @@
               <tr> 
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
-                  <p>Version 0.2.5.0<br>
-                    Last Modified: 06/28/2008<br>
+                  <p>Version 0.2.6.0<br>
+                    Last Modified: 07/10/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -339,12 +339,12 @@
                       the names of all attributes associated with an element.</li>
                   </ul>
                   <p>Attributes can also be qualified with a scope. For example 
-                    <font face="Courier New, Courier, mono">$(Element.Name)</font> 
-                    or <font face="Courier New, Courier, mono">$(Parent.ElementType)</font>.</p>
+                    <font face="Courier New, Courier, mono" color="#000066">$(Element.Name)</font> 
+                    or <font face="Courier New, Courier, mono" color="#000066">$(Parent.ElementType)</font>.</p>
                   <p>You may notice that filter conditions can be applied to elements, 
                     which are used to filter elements into the appropriate group 
                     or region. Filter expressions can use the element attributes 
-                    above using the <font face="Courier New, Courier, mono">$(AttributeHere)</font> 
+                    above using the <font face="Courier New, Courier, mono" color="#000066">$(AttributeHere)</font> 
                     syntax. Filter expressions use string comparison and the following 
                     operators are available:</p>
                   <table width="362" border="1" cellspacing="0" cellpadding="5">
@@ -387,19 +387,43 @@
                   <p>The following formatting options are available.</p>
                   <p><b>Tabs</b> - Allows specification of &quot;Tabs&quot; or 
                     &quot;Spaces&quot; and the number of spaces per tab </p>
-                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font size="+1">&lt;Tabs Style=&quot;Tabs&quot; SpacesPerTab=&quot;4&quot;/&gt;</font></b><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>        <b><font color="#000066">&lt;Tabs Style=&quot;Tabs&quot; SpacesPerTab=&quot;4&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;</pre>
                   <p><b>Closing Comments</b> - Allows specification of whether 
                     or not a closing comment should be written after an element 
                     with body text (e.g. method, constructor). This is off by 
                     default. The Format string allows accepts element attribute 
                     parameters. </p>
-                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font size="+1">&lt;ClosingComments Enabled=&quot;false&quot; Format=&quot;End $(ElementType) $(Name)&quot;/&gt;</font></b><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
-                  <p><b>Regions </b> - Configuration for all regions. The &quot;EndRegionNameEnabled&quot; 
-                    flag allows control over whether the region name is written 
-                    in the closing preprocessor directive.</p>
-                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <font size="+1"><b>&lt;Regions EndRegionNameEnabled=&quot;true&quot;/&gt;</b></font><br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>    <b><font size="+1">   </font><font color="#000066">&lt;ClosingComments Enabled=&quot;false&quot; Format=&quot;End $(ElementType) $(Name)&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p><b>Regions </b> - Formatting and configuration for all regions. 
+                    The &quot;EndRegionNameEnabled&quot; flag allows control over 
+                    whether the region name is written in the closing preprocessor 
+                    directive.</p>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>        <b><font color="#000066">&lt;Regions EndRegionNameEnabled=&quot;true&quot; Style=&quot;Default&quot;<br>            CommentDirectiveBeginPattern=&quot;^\s?\$\(\s?Begin\s?\)\s?(?&amp;lt;Name&amp;gt;.*)$&quot;<br>            CommentDirectiveEndPattern=&quot;^\s?\$\(\s?End\s?\)\s?(?&amp;lt;Name&amp;gt;.*)?$&quot;<br>            CommentDirectiveBeginFormat=&quot; $(Begin) {0}&quot;<br>            CommentDirectiveEndFormat=&quot; $(End) {0}&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;
+</pre>
+                  <p>Additionally, the Style attribute controls how regions are 
+                    written. If the CommentDirective region style is chosen, then 
+                    regions will be parsed and written according to the comment 
+                    directive regular expression pattern and format properties. 
+                    Note that if the comment directive attributes are modified, 
+                    it is critical that the regular expressions correspond with 
+                    the format strings. If there is a mismatch, then after initial 
+                    arrangement, NArrange will no longer be able to interpret 
+                    the comments as region start and end comments. When the comment 
+                    directive region style is used and the format of the comments 
+                    needs to be changed, it is necessary to change the style to 
+                    the default (Directive), arrange, then modify the patterns 
+                    and format before rearranging the source code. </p>
+                  <p>Another style that is available is NoDirective. With this 
+                    style, members within the configured regions will be written 
+                    without any directives (as a group).</p>
                   <p>More formatting options will likely be made available in 
-                    future versions of NArrange. <br>
+                    future versions of NArrange.<br>
                   </p>
                   <h3>File Extensions and Filtering<a name="fileextensions"></a></h3>
                   <p>The default NArrange configuration file has standard extension 
@@ -410,7 +434,7 @@
                     in the XML configuration file.</p>
                   <p>The following demonstrates adding an additional file extension, 
                     .mycs, to be recognized as C# source code:</p>
-                  <pre>&lt;SourceHandler Language=&quot;CSharp&quot; Assembly=&quot;NArrange.CSharp, Version=0.2.1.0, Culture=neutral, PublicKeyToken=null&quot;&gt;<br>    &lt;!-- List of project extensions handled by the handler's IProjectParser --&gt;<br>    &lt;ProjectExtensions&gt;<br>        &lt;Extension Name=&quot;csproj&quot;/&gt;<br>    &lt;/ProjectExtensions&gt;<br>    &lt;!-- List of source file extensions valid for the handler's ICodeParser--&gt;<br>    &lt;SourceExtensions&gt;<br>        &lt;Extension Name=&quot;cs&quot;&gt;<br>            &lt;Filter Condition=&quot;!($(File.Name) : '.Designer.')&quot;/&gt;<br>        &lt;/Extension&gt;<br>        &lt;!-- If your project uses other extensions for C# files add them here--&gt;<br>        <b><font size="+1">&lt;Extension Name=&quot;mycs&quot;/&gt;</font></b><br>    &lt;/SourceExtensions&gt;<br>&lt;/SourceHandler&gt;</pre>
+                  <pre>&lt;SourceHandler Language=&quot;CSharp&quot; Assembly=&quot;NArrange.CSharp, Version=0.2.1.0, Culture=neutral, PublicKeyToken=null&quot;&gt;<br>    &lt;!-- List of project extensions handled by the handler's IProjectParser --&gt;<br>    &lt;ProjectExtensions&gt;<br>        &lt;Extension Name=&quot;csproj&quot;/&gt;<br>    &lt;/ProjectExtensions&gt;<br>    &lt;!-- List of source file extensions valid for the handler's ICodeParser--&gt;<br>    &lt;SourceExtensions&gt;<br>        &lt;Extension Name=&quot;cs&quot;&gt;<br>            &lt;Filter Condition=&quot;!($(File.Name) : '.Designer.')&quot;/&gt;<br>        &lt;/Extension&gt;<br>        &lt;!-- If your project uses other extensions for C# files add them here--&gt;<br>        <b><font color="#000066">&lt;Extension Name=&quot;mycs&quot;/&gt;</font></b><br>    &lt;/SourceExtensions&gt;<br>&lt;/SourceHandler&gt;</pre>
                   <p>In the configuration snippet above it should also be observed 
                     that the .cs extension has filtering applied. By default, 
                     .Designer.cs files will be excluded from arrangement. This 
@@ -434,7 +458,7 @@
                     and writing all source code files. </p>
                   <p>The following setting is used to provide the default encoding 
                     detection:</p>
-                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <font size="+1"><b>&lt;Encoding CodePage=&quot;Detect&quot;/&gt;</b></font> <br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font color="#000066">&lt;Encoding CodePage=&quot;Detect&quot;/&gt;</font></b> <br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
                   <p>Valid <i>CodePage</i> values include:</p>
                   <ul>
                     <li>&quot;Detect&quot; - Detect file encodings (NArrange default) 
@@ -451,19 +475,22 @@
                   <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
                   <p>One of the biggest limitations with the current version of 
                     NArrange is that it cannot handle many scenarios involving 
-                    preprocessor directives (#pragma, #define, etc.). Thus, you 
-                    will get a warning message indicating that files containing 
-                    unhandled preprocessor directives cannot be parsed. Note that 
-                    this is not an issue if the preprocessor directive is within 
-                    a member body. </p>
-                  <p>For conditional compilation preprocessor directives (#if, 
-                    #else, etc.), basic support is available. So long as the conditional 
-                    compilation preprocessor directive completely encloses types/members 
-                    in their entirety (with all attributes and comments), NArrange 
-                    will preserve the directive and process any enclosed elements. 
-                    However, the scenario where a directive starts at the class 
-                    level and intersects a member declaration in any manner is 
-                    not supported and will result in a parsing error.</p>
+                    preprocessor directives (<font face="Courier New, Courier, mono" color="#000066">#pragma</font>, 
+                    <font color="#000066"> <font face="Courier New, Courier, mono"> 
+                    #define</font></font>, etc.). Thus, you will get a warning 
+                    message indicating that files containing unhandled preprocessor 
+                    directives cannot be parsed. Note that this is not an issue 
+                    if the preprocessor directive is within a member body. </p>
+                  <p>For conditional compilation preprocessor directives (<font face="Courier New, Courier, mono" color="#000066">#if</font>, 
+                    <font color="#000066"> <font face="Courier New, Courier, mono"> 
+                    #else</font></font>, etc.), basic support is available. So 
+                    long as the conditional compilation preprocessor directive 
+                    completely encloses types/members in their entirety (with 
+                    all attributes and comments), NArrange will preserve the directive 
+                    and process any enclosed elements. However, the scenario where 
+                    a directive starts at the class level and intersects a member 
+                    declaration in any manner is not supported and will result 
+                    in a parsing error.</p>
                   <p>&nbsp;</p>
                   <!-- #EndEditable --></td>
               </tr>
