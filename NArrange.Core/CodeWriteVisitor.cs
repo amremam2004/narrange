@@ -34,6 +34,7 @@
  *      James Nies
  *      - Initial creation
  *		- Allow processing of ConditionDirectiveElements
+ *		- Moved formatting configurations to a new config element
  *		Justin Dearing
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -140,15 +141,53 @@ namespace NArrange.Core
 		#region Protected Methods
 
 		/// <summary>
+		/// Writes children for a block element.
+		/// </summary>
+		/// <param name="element"></param>
+		protected virtual void WriteBlockChildren(ICodeElement element)
+		{
+			if (element.Children.Count == 0)
+			{
+				Writer.WriteLine();
+			}
+			else
+			{
+				//
+				// Process all children
+				//
+				WriteChildren(element);
+			}
+		}
+
+		/// <summary>
+		/// Writes child elements.
+		/// </summary>
+		/// <param name="element"></param>
+		protected void WriteChildren(ICodeElement element)
+		{
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+			}
+
+			CodeWriter.WriteVisitElements(element.Children, Writer, this);
+
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+			}
+		}
+
+		/// <summary>
 		/// Writes a closing comment.
 		/// </summary>
 		/// <param name="element"></param>
 		/// <param name="commentPrefix">Comment prefix.</param>
 		protected void WriteClosingComment(TextCodeElement element, string commentPrefix)
 		{
-			if (Configuration.ClosingComments.Enabled)
+			if (Configuration.Formatting.ClosingComments.Enabled)
 			{
-			    string format = Configuration.ClosingComments.Format;
+			    string format = Configuration.Formatting.ClosingComments.Format;
 			    if (!string.IsNullOrEmpty(format))
 			    {
 			        string formatted = element.ToString(format);
@@ -179,19 +218,19 @@ namespace NArrange.Core
 		{
 			for (int tabIndex = 0; tabIndex < _tabCount; tabIndex++)
 			{
-			    if (_configuration.Tabs.Style == TabStyle.Tabs)
+			    if (_configuration.Formatting.Tabs.TabStyle == TabStyle.Tabs)
 			    {
 			        _writer.Write("\t");
 			    }
-			    else if (_configuration.Tabs.Style == TabStyle.Spaces)
+			    else if (_configuration.Formatting.Tabs.TabStyle == TabStyle.Spaces)
 			    {
-			        _writer.Write(new string(' ', _configuration.Tabs.SpacesPerTab));
+			        _writer.Write(new string(' ', _configuration.Formatting.Tabs.SpacesPerTab));
 			    }
 			    else
 			    {
 			        throw new InvalidOperationException(
 			            string.Format(Thread.CurrentThread.CurrentCulture,
-			            "Unknown tab style {0}.", _configuration.Tabs.Style));
+			            "Unknown tab style {0}.", _configuration.Formatting.Tabs.TabStyle));
 			    }
 			}
 
@@ -218,6 +257,18 @@ namespace NArrange.Core
 		{
 			WriteIndentedLine(string.Empty);
 		}
+
+		/// <summary>
+		/// Writes a starting region directive.
+		/// </summary>
+		/// <param name="element"></param>
+		protected abstract void WriteRegionBeginDirective(RegionElement element);
+
+		/// <summary>
+		/// Writes an ending region directive.
+		/// </summary>
+		/// <param name="element"></param>
+		protected abstract void WriteRegionEndDirective(RegionElement element);
 
 		#endregion Protected Methods
 
@@ -323,7 +374,61 @@ namespace NArrange.Core
 		/// Processes a region element.
 		/// </summary>
 		/// <param name="element"></param>
-		public abstract void VisitRegionElement(RegionElement element);
+		public void VisitRegionElement(RegionElement element)
+		{
+			RegionStyle regionStyle = _configuration.Formatting.Regions.Style;
+			if (regionStyle == RegionStyle.Default)
+			{
+				// Use the default region style
+				regionStyle = RegionStyle.Directive;
+			}
+
+			if (regionStyle == RegionStyle.NoDirective)
+			{
+				CodeWriter.WriteVisitElements(element.Children, Writer, this);
+			}
+			else
+			{
+				if (regionStyle == RegionStyle.Directive)
+				{
+					WriteRegionBeginDirective(element);
+				}
+				else if (regionStyle == RegionStyle.CommentDirective)
+				{
+					CommentElement commentDirective = new CommentElement(
+						string.Format(CultureInfo.InvariantCulture,
+						Configuration.Formatting.Regions.CommentDirectiveBeginFormat, element.Name).TrimEnd());
+					this.VisitCommentElement(commentDirective);
+				}
+
+				Writer.WriteLine();
+
+				WriteChildren(element);
+
+				if (element.Children.Count > 0)
+				{
+					Writer.WriteLine();
+				}
+
+				if (regionStyle == RegionStyle.Directive)
+				{
+					WriteRegionEndDirective(element);
+				}
+				else if (regionStyle == RegionStyle.CommentDirective)
+				{
+					string regionName = string.Empty;
+					if (Configuration.Formatting.Regions.EndRegionNameEnabled)
+					{
+						regionName = element.Name;
+					}
+
+					CommentElement commentDirective = new CommentElement(
+						string.Format(CultureInfo.InvariantCulture,
+						Configuration.Formatting.Regions.CommentDirectiveEndFormat, regionName).TrimEnd());
+					this.VisitCommentElement(commentDirective);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Processes a type element.

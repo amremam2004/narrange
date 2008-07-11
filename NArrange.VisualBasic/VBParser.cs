@@ -48,6 +48,7 @@
  *		- Allow parsing of basic conditional compilation directives
  *		- Fixed a bug where in certain scenarios, the text of commented out
  *		  elements was being reversed
+ *		- Added parsing of region comment directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -607,31 +608,6 @@ namespace NArrange.VisualBasic
 			return commentLine;
 		}
 
-		private ReadOnlyCollection<ICommentElement> ParseComments()
-		{
-			EatWhiteSpace();
-
-			List<ICommentElement> comments = new List<ICommentElement>();
-
-			char nextChar = NextChar;
-			while (nextChar == VBSymbol.BeginComment)
-			{
-				TryReadChar();
-
-
-				CommentElement commentLine = ParseCommentLine();
-				comments.Add(commentLine);
-
-				EatWhiteSpace();
-
-				nextChar = NextChar;
-			}
-
-			EatWhiteSpace();
-
-			return comments.AsReadOnly();
-		}
-
 		/// <summary>
 		/// Parses a condition directive.
 		/// </summary>
@@ -757,7 +733,59 @@ namespace NArrange.VisualBasic
 					//
 					case VBSymbol.BeginComment:
 						CommentElement commentLine = ParseCommentLine();
-						comments.Add(commentLine);
+						string commentDirectiveRegionName =
+								GetCommentDirectiveText(commentLine, Configuration.Formatting.Regions.CommentDirectiveBeginPattern, "Name");
+
+						if (commentDirectiveRegionName != null)
+						{
+							PushComments(codeElements, comments);
+
+							RegionElement regionElement = new RegionElement();
+							regionElement.Name = commentDirectiveRegionName;
+							enclosingElementStack.Push(regionElement);
+						}
+						else
+						{
+							commentDirectiveRegionName = GetCommentDirectiveText(commentLine, Configuration.Formatting.Regions.CommentDirectiveEndPattern, "Name");
+							if (commentDirectiveRegionName != null)
+							{
+								if (enclosingElementStack.Count == 0 ||
+								enclosingElementStack.Peek().ElementType != ElementType.Region)
+								{
+									this.OnParseError("Unmatched end region directive");
+								}
+
+								ICodeElement enclosingElement = enclosingElementStack.Pop();
+
+								//
+								// Add any processed comments to the region or condition directive.
+								//
+								if (comments.Count > 0)
+								{
+									foreach (ICommentElement commentElement in comments)
+									{
+										enclosingElement.AddChild(commentElement);
+									}
+									comments.Clear();
+								}
+
+								//
+								// Are we processing a nested region or condition directive?
+								//
+								if (enclosingElementStack.Count > 0)
+								{
+									enclosingElementStack.Peek().AddChild(enclosingElement);
+								}
+								else
+								{
+									codeElements.Add(enclosingElement);
+								}
+							}
+							else
+							{
+								comments.Add(commentLine);
+							}
+						}
 						break;
 
 					//
@@ -765,21 +793,13 @@ namespace NArrange.VisualBasic
 					//
 					case VBSymbol.Preprocessor:
 						//
-						// TODO: Besides regions, parse preprocessor elements so that
-						// member preprocessor information is preserved.
+						// TODO: Parse additional preprocessor directives.
 						//
 						string line = ReadLine().Trim();
 						string[] words = line.Split(WhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries);
 						if (words.Length > 0 && VBKeyword.Normalize(words[0]) == VBKeyword.Region)
 						{
-							if (comments.Count > 0)
-							{
-								foreach (ICommentElement commentElement in comments)
-								{
-									codeElements.Add(commentElement);
-								}
-								comments.Clear();
-							}
+							PushComments(codeElements, comments);
 
 							RegionElement regionElement = ParseRegion(line);
 							enclosingElementStack.Push(regionElement);
@@ -829,7 +849,7 @@ namespace NArrange.VisualBasic
 								if (enclosingElementStack.Count == 0 ||
 									enclosingElementStack.Peek().ElementType != ElementType.Region)
 								{
-									this.OnParseError("Unmatched #End Region");
+									this.OnParseError("Unmatched end region directive");
 								}
 							}
 							else if (enclosingElementStack.Count == 0 ||
@@ -1095,7 +1115,9 @@ namespace NArrange.VisualBasic
 			{
 				if (enclosingElementStack.Peek().ElementType == ElementType.Region)
 				{
-					this.OnParseError("Expected #End Region");
+					this.OnParseError(
+						string.Format(CultureInfo.InvariantCulture,
+						"Missing end region directive for '{0}'", enclosingElementStack.Peek().Name));
 				}
 				else
 				{
@@ -1800,6 +1822,18 @@ namespace NArrange.VisualBasic
 			}
 
 			return usingElement;
+		}
+
+		private static void PushComments(List<ICodeElement> codeElements, List<ICommentElement> comments)
+		{
+			if (comments.Count > 0)
+			{
+				foreach (ICommentElement commentElement in comments)
+				{
+					codeElements.Add(commentElement);
+				}
+				comments.Clear();
+			}
 		}
 
 		private string ReadCodeLine()

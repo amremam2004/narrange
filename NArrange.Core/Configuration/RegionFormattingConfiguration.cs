@@ -50,11 +50,16 @@ namespace NArrange.Core.Configuration
 	/// Specifies region style configuration.
 	/// </summary>
 	[XmlType("Regions")]
-	public class RegionsConfiguration : ICloneable
+	public class RegionFormattingConfiguration : ICloneable
 	{
 		#region Fields
 
+		private string _commentDirectiveBeginFormat = " $(Begin) {0}";
+		private string _commentDirectiveBeginPattern = @"^\s?\$\(\s?Region\.Begin\s?\)\s?(?<Name>.*)$";
+		private string _commentDirectiveEndFormat = " $(End) {0}";
+		private string _commentDirectiveEndPattern = @"^\s?\$\(\s?Region\.End\s?\)\s?(?<Name>.*)?$";
 		private bool _endRegionNameEnabled;
+		private RegionStyle _style;
 
 		#endregion Fields
 
@@ -63,7 +68,7 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Creates a new RegionsConfiguration instance.
 		/// </summary>
-		public RegionsConfiguration()
+		public RegionFormattingConfiguration()
 		{
 			_endRegionNameEnabled = true;
 		}
@@ -71,6 +76,78 @@ namespace NArrange.Core.Configuration
 		#endregion Constructors
 
 		#region Public Properties
+
+		/// <summary>
+		/// Format string when comment region directives are used.
+		/// </summary>
+		[XmlAttribute("CommentDirectiveBeginFormat")]
+		[DisplayName("Comment directive begin format")]
+		[Description("Format string when comment region directives are used.  Should include a {0} parameter for Name.")]
+		public string CommentDirectiveBeginFormat
+		{
+			get
+			{
+				return _commentDirectiveBeginFormat;
+			}
+			set
+			{
+				_commentDirectiveBeginFormat = value;
+			}
+		}
+
+		/// <summary>
+		/// Regular expression for retrieving comment directive region names.
+		/// </summary>
+		[XmlAttribute("CommentDirectiveBeginPattern")]
+		[DisplayName("Comment directive begin pattern")]
+		[Description("Regular expression for retrieving comment directive region names.  Should include the <Name> group.")]
+		public string CommentDirectiveBeginPattern
+		{
+			get
+			{
+				return _commentDirectiveBeginPattern;
+			}
+			set
+			{
+				_commentDirectiveBeginPattern = value;
+			}
+		}
+
+		/// <summary>
+		/// Format string when comment region directives are used.
+		/// </summary>
+		[XmlAttribute("CommentDirectiveEndFormat")]
+		[DisplayName("Comment directive end format")]
+		[Description("Format string when comment region directives are used.")]
+		public string CommentDirectiveEndFormat
+		{
+			get
+			{
+				return _commentDirectiveEndFormat;
+			}
+			set
+			{
+				_commentDirectiveEndFormat = value;
+			}
+		}
+
+		/// <summary>
+		/// Regular expression for retrieving comment directive region names.
+		/// </summary>
+		[XmlAttribute("CommentDirectiveEndPattern")]
+		[DisplayName("Comment directive end pattern")]
+		[Description("Regular expression for retrieving comment directive region names.  Should include the <Name> group.")]
+		public string CommentDirectiveEndPattern
+		{
+			get
+			{
+				return _commentDirectiveEndPattern;
+			}
+			set
+			{
+				_commentDirectiveEndPattern = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the number of spaces per tab
@@ -90,6 +167,24 @@ namespace NArrange.Core.Configuration
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the number of spaces per tab
+		/// </summary>
+		[XmlAttribute("Style")]
+		[DisplayName("Region style")]
+		[Description("Controls how regions and their directives are written.")]
+		public RegionStyle Style
+		{
+			get
+			{
+				return _style;
+			}
+			set
+			{
+				_style = value;
+			}
+		}
+
 		#endregion Public Properties
 
 		#region Public Methods
@@ -100,9 +195,14 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public object Clone()
 		{
-			RegionsConfiguration clone = new RegionsConfiguration();
+			RegionFormattingConfiguration clone = new RegionFormattingConfiguration();
 
+			clone._style = _style;
 			clone._endRegionNameEnabled = _endRegionNameEnabled;
+			clone._commentDirectiveBeginFormat = _commentDirectiveBeginFormat;
+			clone._commentDirectiveBeginPattern = _commentDirectiveBeginPattern;
+			clone._commentDirectiveEndFormat = _commentDirectiveEndFormat;
+			clone._commentDirectiveEndPattern = _commentDirectiveEndPattern;
 
 			return clone;
 		}

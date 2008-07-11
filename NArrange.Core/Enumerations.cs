@@ -41,6 +41,7 @@
  *        condition expressions
  *		- Added a HandlerType enumeration
  *		- Added ElementType.ConditionDirective
+ *		- Added a RegionStyle enumeration
  *      Everton Elvio Koser
  *      - Added TypeModifiers.New (merged by James Nies)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -471,6 +472,32 @@ namespace NArrange.Core
 		/// Implicit
 		/// </summary>
 		Implicit = 2
+	}
+
+	/// <summary>
+	/// Region style.
+	/// </summary>
+	public enum RegionStyle
+	{
+		/// <summary>
+		/// Default
+		/// </summary>
+		Default, 
+
+		/// <summary>
+		/// Use region directives around region members.
+		/// </summary>
+		Directive,
+
+		/// <summary>
+		/// Commented directives around region members.
+		/// </summary>
+		CommentDirective,
+
+		/// <summary>
+		/// No directives around region members, just group.
+		/// </summary>
+		NoDirective
 	}
 
 	/// <summary>

@@ -774,7 +774,7 @@ namespace NArrange.Tests.VisualBasic
 		[Test]
 		[ExpectedException(typeof(ParseException),
            MatchType = MessageMatch.Contains,
-           ExpectedMessage = "Expected #End Region")]
+		  ExpectedMessage = "Missing end region directive for 'Fields'")]
 		public void ParseClassMissingEndregionTest()
 		{
 			StringReader reader = new StringReader(
@@ -4743,6 +4743,68 @@ namespace NArrange.Tests.VisualBasic
 		}
 
 		/// <summary>
+		/// Tests parsing unmatched nested regions that use comment directives.  
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+			ExpectedMessage = "Missing end region directive for 'Fields'")]
+		public void ParseRegionCommentDirectiveMismatchedTest()
+		{
+			StringReader reader = new StringReader(
+				"Public Class Test\r\n" +
+				"\t' $(Begin) Fields\r\n" +
+				"\t'$( Begin )  Private\r\n" +
+				"\tPrivate _test As Boolean = false\r\n" +
+				"\t' $(End) Private\r\n" +
+				"End Class");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+		}
+
+		/// <summary>
+		/// Tests parsing nested regions that use comment directives.  
+		/// </summary>
+		[Test]
+		public void ParseRegionCommentDirectiveTest()
+		{
+			StringReader reader = new StringReader(
+				"Public Class Test\r\n" +
+				"\t' $(Begin) Fields\r\n" +
+				"\t'$( Begin )  Private\r\n" +
+				"\tPrivate _test As Boolean = false\r\n" +
+				"\t' $(End) Private\r\n" +
+				"\t'$(End)\r\n" +
+				"End Class");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+			Assert.AreEqual(1, elements.Count,
+				"An unexpected number of elements were parsed.");
+			Assert.AreEqual(1, elements[0].Children.Count,
+				"An unexpected number of child elements were parsed.");
+
+			RegionElement regionElement = elements[0].Children[0] as RegionElement;
+			Assert.IsNotNull(regionElement, "Expected a region element.");
+			Assert.AreEqual("Fields", regionElement.Name,
+				"Unexpected region name.");
+			Assert.AreEqual(1, regionElement.Children.Count,
+				"Unexpected number of region child elements.");
+
+			RegionElement childRegionElement = regionElement.Children[0] as RegionElement;
+			Assert.IsNotNull(childRegionElement, "Expected a region element.");
+			Assert.AreEqual("Private", childRegionElement.Name,
+				"Unexpected region name.");
+			Assert.AreEqual(1, childRegionElement.Children.Count,
+				"Unexpected number of region child elements.");
+
+			FieldElement fieldElement = childRegionElement.Children[0] as FieldElement;
+			Assert.IsNotNull(fieldElement, "Expected a field element.");
+		}
+
+		/// <summary>
 		/// Tests comment scenarios with region preprocessor directives. 
 		/// </summary>
 		[Test]
@@ -4848,6 +4910,21 @@ namespace NArrange.Tests.VisualBasic
 
 			FieldElement fieldElement = regionElement.Children[0] as FieldElement;
 			Assert.IsNotNull(fieldElement, "Expected a field element.");
+		}
+
+		/// <summary>
+		/// Tests an unmatched end region directive.
+		/// </summary>
+		[Test]
+		[ExpectedException(typeof(ParseException),
+			MatchType = MessageMatch.Contains,
+			ExpectedMessage = "Unmatched end region directive")]
+		public void ParseRegionUnmatchedEndDirectiveTest()
+		{
+			StringReader reader = new StringReader("\t#End Region \"Fields\"");
+
+			VBParser parser = new VBParser();
+			ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
 		}
 
 		/// <summary>

@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Allow the configuration to be supplied to parsers
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -41,6 +42,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.Core
 {
@@ -50,6 +52,19 @@ namespace NArrange.Core
 	/// </summary>
 	public interface ICodeElementParser
 	{
+		#region Properties
+
+		/// <summary>
+		/// Gets or sets the code configuration
+		/// </summary>
+		CodeConfiguration Configuration
+		{
+			get;
+			set;
+		}
+
+		#endregion Properties
+
 		#region Methods
 
 		/// <summary>

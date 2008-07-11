@@ -44,6 +44,7 @@
  *		- Preserve trailing comments for fields
  *		- Fixed writing of Implements for events
  *		- Handle writing of conditional compilation preprocessor directives
+ *		- Added writing of region comment directives
  *		Justin Dearing
  *		- Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -142,10 +143,11 @@ namespace NArrange.VisualBasic
 
 			    WriteBeginBlock();
 
+				Writer.WriteLine();
 			    if (element.BodyText != null && element.BodyText.Trim().Length > 0)
 			    {
-			        Writer.WriteLine();
 			        WriteTextBlock(element.BodyText);
+					Writer.WriteLine();
 			        WriteEndBlock(element);
 			        WriteClosingComment(element, VBSymbol.BeginComment.ToString());
 			    }
@@ -156,24 +158,8 @@ namespace NArrange.VisualBasic
 			}
 		}
 
-		private void WriteChildren(ICodeElement element)
-		{
-			if (element.Children.Count > 0)
-			{
-			    Writer.WriteLine();
-			}
-
-			CodeWriter.WriteVisitElements(element.Children, Writer, this);
-
-			if (element.Children.Count > 0)
-			{
-			    Writer.WriteLine();
-			}
-		}
-
 		private void WriteEndBlock(CodeElement codeElement)
 		{
-			Writer.WriteLine();
 			TabCount--;
 
 			MemberElement memberElement = codeElement as MemberElement;
@@ -380,9 +366,9 @@ namespace NArrange.VisualBasic
 			                        lineBuilder[index] == ' ' && tabIndex < TabCount)
 			                    {
 			                        spaceCount++;
-			                        if (spaceCount == Configuration.Tabs.SpacesPerTab)
+									if (spaceCount == Configuration.Formatting.Tabs.SpacesPerTab)
 			                        {
-			                            lineBuilder.Remove(0, Configuration.Tabs.SpacesPerTab);
+										lineBuilder.Remove(0, Configuration.Formatting.Tabs.SpacesPerTab);
 			                            spaceCount = 0;
 			                            index = 0;
 			                            tabIndex++;
@@ -468,6 +454,53 @@ namespace NArrange.VisualBasic
 		}
 
 		#endregion Private Methods
+
+		#region Protected Methods
+
+		protected override void WriteBlockChildren(ICodeElement element)
+		{
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+			}
+
+			base.WriteBlockChildren(element);
+
+			if (element.Children.Count > 0)
+			{
+				Writer.WriteLine();
+			}
+		}
+
+		protected override void WriteRegionBeginDirective(RegionElement element)
+		{
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
+			builder.Append(VBSymbol.Preprocessor);
+			builder.Append(VBKeyword.Region);
+			builder.Append(" \"");
+			builder.Append(element.Name);
+			builder.Append('"');
+
+			WriteIndented(builder.ToString());
+		}
+
+		protected override void WriteRegionEndDirective(RegionElement element)
+		{
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
+			builder.Append(VBSymbol.Preprocessor);
+			builder.Append(VBKeyword.End);
+			builder.Append(' ');
+			builder.Append(VBKeyword.Region);
+			if (Configuration.Formatting.Regions.EndRegionNameEnabled)
+			{
+				builder.Append(" '");
+				builder.Append(element.Name);
+			}
+
+			WriteIndented(builder.ToString());
+		}
+
+		#endregion Protected Methods
 
 		#region Public Methods
 
@@ -923,14 +956,9 @@ namespace NArrange.VisualBasic
 			builder.Append(' ');
 			builder.Append(element.Name);
 
-			WriteIndentedLine(builder.ToString());
+			WriteIndented(builder.ToString());
 			WriteBeginBlock();
-
-			//
-			// Process all children
-			//
-			WriteChildren(element);
-
+			WriteBlockChildren(element);
 			WriteEndBlock(element);
 			Writer.WriteLine();
 			Writer.WriteLine();
@@ -980,42 +1008,6 @@ namespace NArrange.VisualBasic
 			WriteImplements(element.Implements);
 
 			WriteBody(element);
-		}
-
-		/// <summary>
-		/// Processes a region element
-		/// </summary>
-		/// <param name="element"></param>
-		public override void VisitRegionElement(RegionElement element)
-		{
-			StringBuilder builder = new StringBuilder(DefaultBlockLength);
-			builder.Append(VBSymbol.Preprocessor);
-			builder.Append(VBKeyword.Region);
-			builder.Append(" \"");
-			builder.Append(element.Name);
-			builder.Append('"');
-
-			WriteIndentedLine(builder.ToString());
-
-			WriteChildren(element);
-
-			if (element.Children.Count > 0)
-			{
-			    Writer.WriteLine();
-			}
-
-			builder = new StringBuilder(DefaultBlockLength);
-			builder.Append(VBSymbol.Preprocessor);
-			builder.Append(VBKeyword.End);
-			builder.Append(' ');
-			builder.Append(VBKeyword.Region);
-			if (Configuration.Regions.EndRegionNameEnabled)
-			{
-			    builder.Append(" '");
-			    builder.Append(element.Name);
-			}
-
-			WriteIndented(builder.ToString());
 		}
 
 		/// <summary>
@@ -1144,12 +1136,7 @@ namespace NArrange.VisualBasic
 			else
 			{
 			    WriteBeginBlock();
-
-			    if (element.Children.Count > 0)
-			    {
-			        Writer.WriteLine();
-			        WriteChildren(element);
-			    }
+				WriteBlockChildren(element);
 			    WriteEndBlock(element);
 
 			    WriteClosingComment(element, VBSymbol.BeginComment.ToString());

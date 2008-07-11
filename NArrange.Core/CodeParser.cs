@@ -33,6 +33,7 @@
  * Contributors:
  *      James Nies
  *      - Initial creation
+ *		- Allow region directives to be written as comments.
  *		Justin Dearing
  * 		- Added this header
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -44,8 +45,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using NArrange.Core.CodeElements;
+using NArrange.Core.Configuration;
 
 namespace NArrange.Core
 {
@@ -85,11 +88,13 @@ namespace NArrange.Core
 		#region Fields
 
 		private readonly char[] _charBuffer = new char[1];
+		private CodeConfiguration _configuration;
 		private char _currCh;
 		private int _lineNumber = 1;
 		private int _position = 1;
 		private char _prevCh;
 		private TextReader _reader;
+		private Dictionary<string, Regex> regexCache = new Dictionary<string, Regex>();
 
 		#endregion Fields
 
@@ -139,6 +144,30 @@ namespace NArrange.Core
 		}
 
 		#endregion Protected Properties
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets or sets the code configuration.
+		/// </summary>
+		public CodeConfiguration Configuration
+		{
+			get
+			{
+				if (_configuration == null)
+				{
+					_configuration = CodeConfiguration.Default;
+				}
+
+				return _configuration;
+			}
+			set
+			{
+				_configuration = value;
+			}
+		}
+
+		#endregion Public Properties
 
 		#region Private Methods
 
@@ -251,6 +280,43 @@ namespace NArrange.Core
 
 				data = _reader.Peek();
 			}
+		}
+
+		/// <summary>
+		/// Gets text from a comment directive, if present.
+		/// </summary>
+		/// <param name="comment"></param>
+		/// <param name="pattern"></param>
+		/// <param name="group"></param>
+		/// <returns></returns>
+		protected string GetCommentDirectiveText(CommentElement comment, string pattern, string group)
+		{
+			string text = null;
+
+			if (comment != null && comment.Type == CommentType.Line && !string.IsNullOrEmpty(pattern))
+			{
+				Regex regex = null;
+				if (!regexCache.TryGetValue(pattern, out regex))
+				{
+					regex = new Regex(pattern, RegexOptions.IgnoreCase);
+					regexCache.Add(pattern, regex);
+				}
+
+				string commentText = comment.Text.Trim();
+
+				Match match = regex.Match(commentText);
+
+				if (match != null && match.Length > 0)
+				{
+					Group textGroup = match.Groups[group];
+					if (textGroup != null)
+					{
+						text = textGroup.Value.Trim();
+					}
+				}
+			}
+
+			return text;
 		}
 
 		/// <summary>

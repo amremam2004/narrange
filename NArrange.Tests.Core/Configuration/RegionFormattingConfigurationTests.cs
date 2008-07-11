@@ -5,10 +5,10 @@ using NUnit.Framework;
 namespace NArrange.Tests.Core.Configuration
 {
 	/// <summary>
-	/// Test fixture for the RegionsConfiguration class.
+	/// Test fixture for the RegionFormattingConfiguration class.
 	/// </summary>
 	[TestFixture]
-	public class RegionsConfigurationTests
+	public class RegionFormattingConfigurationTests
 	{
 		#region Public Methods
 
@@ -18,10 +18,10 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void CloneTest()
 		{
-			RegionsConfiguration regionsConfiguration = new RegionsConfiguration();
+			RegionFormattingConfiguration regionsConfiguration = new RegionFormattingConfiguration();
 			regionsConfiguration.EndRegionNameEnabled = true;
 
-			RegionsConfiguration clone = regionsConfiguration.Clone() as RegionsConfiguration;
+			RegionFormattingConfiguration clone = regionsConfiguration.Clone() as RegionFormattingConfiguration;
 			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
 
 			Assert.AreEqual(regionsConfiguration.EndRegionNameEnabled, clone.EndRegionNameEnabled);
@@ -33,7 +33,7 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void CreateTest()
 		{
-			RegionsConfiguration regionsConfiguration = new RegionsConfiguration();
+			RegionFormattingConfiguration regionsConfiguration = new RegionFormattingConfiguration();
 
 			//
 			// Verify default state
@@ -48,7 +48,7 @@ namespace NArrange.Tests.Core.Configuration
 		[Test]
 		public void ToStringTest()
 		{
-			RegionsConfiguration regionsConfiguration = new RegionsConfiguration();
+			RegionFormattingConfiguration regionsConfiguration = new RegionFormattingConfiguration();
 			regionsConfiguration.EndRegionNameEnabled = true;
 
 			string str = regionsConfiguration.ToString();

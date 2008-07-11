@@ -63,6 +63,7 @@
  *		  elements was being reversed
  *		- Fixed parsing of nullable type references containing whitespace
  *		- Fixed an issue parsing escaped strings in member bodies
+ *		- Allow parsing of comment region directives
  *		Justin Dearing
  *		- Removed unused using statements
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
@@ -180,25 +181,6 @@ namespace NArrange.CSharp
 			if (NextChar == CSharpSymbol.EndOfStatement)
 			{
 				EatChar(CSharpSymbol.EndOfStatement);
-			}
-		}
-
-		private void EatWord(string word)
-		{
-			this.EatWord(word, "Expected " + word);
-		}
-
-		private void EatWord(string word, string message)
-		{
-			EatWhiteSpace();
-
-			foreach (char ch in word.ToCharArray())
-			{
-				TryReadChar();
-				if (CurrentChar != ch)
-				{
-					this.OnParseError(message);
-				}
 			}
 		}
 
@@ -948,7 +930,59 @@ namespace NArrange.CSharp
 						if (nextChar == CSharpSymbol.BeginComment)
 						{
 							CommentElement commentLine = ParseCommentLine();
-							comments.Add(commentLine);
+							string commentDirectiveRegionName = 
+								GetCommentDirectiveText(commentLine, Configuration.Formatting.Regions.CommentDirectiveBeginPattern, "Name");
+
+							if (commentDirectiveRegionName != null)
+							{
+								PushComments(codeElements, comments);
+
+								RegionElement regionElement = new RegionElement();
+								regionElement.Name = commentDirectiveRegionName;
+								enclosingElementStack.Push(regionElement);
+							}
+							else
+							{
+								commentDirectiveRegionName = GetCommentDirectiveText(commentLine, Configuration.Formatting.Regions.CommentDirectiveEndPattern, "Name");
+								if (commentDirectiveRegionName != null)
+								{
+									if (enclosingElementStack.Count == 0 ||
+									enclosingElementStack.Peek().ElementType != ElementType.Region)
+									{
+										this.OnParseError("Unmatched end region directive");
+									}
+
+									ICodeElement enclosingElement = enclosingElementStack.Pop();
+
+									//
+									// Add any processed comments to the region or condition directive.
+									//
+									if (comments.Count > 0)
+									{
+										foreach (ICommentElement commentElement in comments)
+										{
+											enclosingElement.AddChild(commentElement);
+										}
+										comments.Clear();
+									}
+
+									//
+									// Are we processing a nested region or condition directive?
+									//
+									if (enclosingElementStack.Count > 0)
+									{
+										enclosingElementStack.Peek().AddChild(enclosingElement);
+									}
+									else
+									{
+										codeElements.Add(enclosingElement);
+									}
+								}
+								else
+								{
+									comments.Add(commentLine);
+								}
+							}
 						}
 						else if (nextChar == CSharpSymbol.BlockCommentModifier)
 						{
@@ -971,14 +1005,7 @@ namespace NArrange.CSharp
 						string line = ReadLine().Trim();
 						if (line.StartsWith(CSharpKeyword.Region, StringComparison.Ordinal))
 						{
-							if (comments.Count > 0)
-							{
-								foreach (ICommentElement commentElement in comments)
-								{
-									codeElements.Add(commentElement);
-								}
-								comments.Clear();
-							}
+							PushComments(codeElements, comments);
 
 							RegionElement regionElement = ParseRegion(line);
 							enclosingElementStack.Push(regionElement);
@@ -1031,7 +1058,7 @@ namespace NArrange.CSharp
 								if (enclosingElementStack.Count == 0 ||
 									enclosingElementStack.Peek().ElementType != ElementType.Region)
 								{
-									this.OnParseError("Unmatched #endregion");
+									this.OnParseError("Unmatched end region directive");
 								}
 							}
 							else if (enclosingElementStack.Count == 0 ||
@@ -1285,7 +1312,9 @@ namespace NArrange.CSharp
 			{
 				if (enclosingElementStack.Peek().ElementType == ElementType.Region)
 				{
-					this.OnParseError("Expected #endregion");
+					this.OnParseError(
+						string.Format(CultureInfo.InvariantCulture,
+						"Missing end region directive for '{0}'", enclosingElementStack.Peek().Name));
 				}
 				else
 				{
@@ -1917,6 +1946,18 @@ namespace NArrange.CSharp
 			}
 
 			return usingElement;
+		}
+
+		private static void PushComments(List<ICodeElement> codeElements, List<ICommentElement> comments)
+		{
+			if (comments.Count > 0)
+			{
+				foreach (ICommentElement commentElement in comments)
+				{
+					codeElements.Add(commentElement);
+				}
+				comments.Clear();
+			}
 		}
 
 		private static void TrimTrailingWhiteSpace(StringBuilder elementBuilder)

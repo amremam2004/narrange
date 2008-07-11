@@ -81,7 +81,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return ElementType.Attribute;
+				return ElementType.Attribute;
 			}
 		}
 
@@ -92,42 +92,42 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return _parent;
+				return _parent;
 			}
 			set
 			{
-			    if (value != _parent)
-			    {
-			        if (_parent != null)
-			        {
-			            AttributedElement attributedElement = _parent as AttributedElement;
-			            if (attributedElement != null)
-			            {
-			                attributedElement.RemoveAttribute(this);
-			            }
-			            else
-			            {
-			                _parent.RemoveChild(this);
-			            }
-			        }
+				if (value != _parent)
+				{
+					if (_parent != null)
+					{
+						AttributedElement attributedElement = _parent as AttributedElement;
+						if (attributedElement != null)
+						{
+							attributedElement.RemoveAttribute(this);
+						}
+						else
+						{
+							_parent.RemoveChild(this);
+						}
+					}
 
-			        _parent = value;
-			        if (_parent != null)
-			        {
-			            AttributedElement attributedElement = _parent as AttributedElement;
-			            if (attributedElement != null)
-			            {
-			                if (!attributedElement.Attributes.Contains(this))
-			                {
-			                    attributedElement.AddAttribute(this);
-			                }
-			            }
-			            else if (!_parent.Children.Contains(this))
-			            {
-			                _parent.AddChild(this);
-			            }
-			        }
-			    }
+					_parent = value;
+					if (_parent != null)
+					{
+						AttributedElement attributedElement = _parent as AttributedElement;
+						if (attributedElement != null)
+						{
+							if (!attributedElement.Attributes.Contains(this))
+							{
+								attributedElement.AddAttribute(this);
+							}
+						}
+						else if (!_parent.Children.Contains(this))
+						{
+							_parent.AddChild(this);
+						}
+					}
+				}
 			}
 		}
 
@@ -138,11 +138,11 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return _target;
+				return _target;
 			}
 			set
 			{
-			    _target = value;
+				_target = value;
 			}
 		}
 

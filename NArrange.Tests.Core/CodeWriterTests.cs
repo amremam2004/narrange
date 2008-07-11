@@ -49,8 +49,8 @@ namespace NArrange.Tests.Core
 			//
 			// Unknown tab style
 			//
-			configuration.Tabs.SpacesPerTab = 4;
-			configuration.Tabs.Style = (TabStyle)int.MinValue;
+			configuration.Formatting.Tabs.SpacesPerTab = 4;
+			configuration.Formatting.Tabs.TabStyle = (TabStyle)int.MinValue;
 
 			writer = new StringWriter();
 			codeWriter.Write(codeElements.AsReadOnly(), writer);

@@ -40,11 +40,7 @@
 	<Formatting>
 		<Tabs Style="Tabs" SpacesPerTab="4"/>
 		<ClosingComments Enabled="false" Format="End $(ElementType) $(Name)"/>
-		<Regions EndRegionNameEnabled="true" Style="Default"
-				 CommentDirectiveBeginPattern="^\s?\$\(\s?Begin\s?\)\s?(?&lt;Name&gt;.*)$"
-				 CommentDirectiveEndPattern="^\s?\$\(\s?End\s?\)\s?(?&lt;Name&gt;.*)?$"
-				 CommentDirectiveBeginFormat=" $(Begin) {0}"
-				 CommentDirectiveEndFormat=" $(End) {0}"/>
+		<Regions EndRegionNameEnabled="true" Style="CommentDirective" />
 	</Formatting>
 	<Elements>
 		<Region Name="Header">

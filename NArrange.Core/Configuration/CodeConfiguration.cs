@@ -44,6 +44,8 @@
  *		  references (needed for configuration editor)
  *		- Upgrade configurations to the new project extension format when
  *		  loading.
+ *		- Moved formatting configurations to a new config element and 
+ *		  upgrade when loading.
  *		Justin Dearing
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -73,11 +75,9 @@ namespace NArrange.Core.Configuration
 
 		#region Fields
 
-		private ClosingCommentConfiguration _closingComments;
 		private EncodingConfiguration _encoding;
+		private FormattingConfiguration _formatting;
 		private HandlerConfigurationCollection _handlers;
-		private RegionsConfiguration _regions;
-		private TabConfiguration _tabs;
 
 		#endregion Fields
 
@@ -86,32 +86,19 @@ namespace NArrange.Core.Configuration
 		/// <summary>
 		/// Closing comment configuration
 		/// </summary>
-		[Description("The settings for closing comments.")]
-		[DisplayName("Closing comments")]
+		[Description("The settings for closing comments (Obsolete - Use Formatting.ClosingComments instead).")]
+		[DisplayName("Closing comments (Obsolete)")]
 		[ReadOnly(true)]
+		[Browsable(false)]
 		public ClosingCommentConfiguration ClosingComments
 		{
 			get
 			{
-			    if (_closingComments == null)
-			    {
-			        lock (this)
-			        {
-			            if (_closingComments == null)
-			            {
-			                //
-			                // Default closing comment configuration
-			                //
-			                _closingComments = new ClosingCommentConfiguration();
-			            }
-			        }
-			    }
-
-			    return _closingComments;
+				return null;
 			}
 			set
 			{
-			    _closingComments = value;
+				Formatting.ClosingComments = value;
 			}
 		}
 
@@ -122,26 +109,26 @@ namespace NArrange.Core.Configuration
 		{
 			get
 			{
-			    if (_default == null)
-			    {
-			        lock (_defaultLock)
-			        {
-			            if (_default == null)
-			            {
-			                //
-			                // Load the default configuration from the embedded resource file.
-			                //
-			                using (Stream resourceStream = 
-			                    typeof(CodeConfiguration).Assembly.GetManifestResourceStream(
-			                    typeof(CodeConfiguration).Assembly.GetName().Name + ".DefaultConfig.xml"))
-			                {
-			                    _default = Load(resourceStream);
-			                }
-			            }
-			        }
-			    }
+				if (_default == null)
+				{
+					lock (_defaultLock)
+					{
+						if (_default == null)
+						{
+							//
+							// Load the default configuration from the embedded resource file.
+							//
+							using (Stream resourceStream =
+								typeof(CodeConfiguration).Assembly.GetManifestResourceStream(
+								typeof(CodeConfiguration).Assembly.GetName().Name + ".DefaultConfig.xml"))
+							{
+								_default = Load(resourceStream);
+							}
+						}
+					}
+				}
 
-			    return _default;
+				return _default;
 			}
 		}
 
@@ -154,30 +141,62 @@ namespace NArrange.Core.Configuration
 		{
 			get
 			{
-			    if (_encoding == null)
-			    {
-			        lock (this)
-			        {
-			            if (_encoding == null)
-			            {
-			                //
-			                // Default encoding configuration
-			                //
-			                _encoding = new EncodingConfiguration();
-			            }
-			        }
-			    }
+				if (_encoding == null)
+				{
+					lock (this)
+					{
+						if (_encoding == null)
+						{
+							//
+							// Default encoding configuration
+							//
+							_encoding = new EncodingConfiguration();
+						}
+					}
+				}
 
-			    return _encoding;
+				return _encoding;
 			}
 			set
 			{
-			    _encoding = value;
+				_encoding = value;
 			}
 		}
 
 		/// <summary>
-		/// Source code/project handlers
+		/// Formatting configuration.
+		/// </summary>
+		[Description("Formatting settings.")]
+		[DisplayName("Formatting")]
+		[ReadOnly(true)]
+		public FormattingConfiguration Formatting
+		{
+			get
+			{
+				if (_formatting == null)
+				{
+					lock (this)
+					{
+						if (_formatting == null)
+						{
+							//
+							// Default style configuration
+							//
+							_formatting = new FormattingConfiguration();
+						}
+					}
+				}
+
+				return _formatting;
+			}
+			set
+			{
+				_formatting = value;
+			}
+		}
+
+		/// <summary>
+		/// Source code/project handlers.
 		/// </summary>
 		[XmlArrayItem(typeof(SourceHandlerConfiguration))]
 		[XmlArrayItem(typeof(ProjectHandlerConfiguration))]
@@ -186,80 +205,54 @@ namespace NArrange.Core.Configuration
 		{
 			get
 			{
-			    if (_handlers == null)
-			    {
-			        lock (this)
-			        {
-			            if (_handlers == null)
-			            {
+				if (_handlers == null)
+				{
+					lock (this)
+					{
+						if (_handlers == null)
+						{
 							_handlers = new HandlerConfigurationCollection();
-			            }
-			        }
-			    }
+						}
+					}
+				}
 
-			    return _handlers;
+				return _handlers;
 			}
 		}
 
 		/// <summary>
 		/// Regions configuration.
 		/// </summary>
-		[Description("The settings for all regions.")]
+		[Description("The settings for all regions (Obsolete - Use Formatting.Regions instead).")]
 		[ReadOnly(true)]
-		public RegionsConfiguration Regions
+		[Browsable(false)]
+		public RegionFormattingConfiguration Regions
 		{
 			get
 			{
-			    if (_regions == null)
-			    {
-			        lock (this)
-			        {
-			            if (_regions == null)
-			            {
-			                //
-			                // Default regions configuration
-			                //
-			                _regions = new RegionsConfiguration();
-			            }
-			        }
-			    }
-
-			    return _regions;
+				return null;
 			}
 			set
 			{
-			    _regions = value;
+				Formatting.Regions = value;
 			}
 		}
 
 		/// <summary>
-		/// Tab configuration
+		/// Tab configuration.
 		/// </summary>
-		[Description("The settings for indentation.")]
+		[Description("The settings for indentation (Obsolete - Use Formatting.Tabs instead).")]
 		[ReadOnly(true)]
+		[Browsable(false)]
 		public TabConfiguration Tabs
 		{
 			get
 			{
-			    if (_tabs == null)
-			    {
-			        lock (this)
-			        {
-			            if (_tabs == null)
-			            {
-			                //
-			                // Default tab configuration
-			                //
-			                _tabs = new TabConfiguration();
-			            }
-			        }
-			    }
-
-			    return _tabs;
+				return null;
 			}
 			set
 			{
-			    _tabs = value;
+				Formatting.Tabs = value;
 			}
 		}
 
@@ -277,15 +270,15 @@ namespace NArrange.Core.Configuration
 		{
 			if (element != null)
 			{
-			    foreach (ConfigurationElement childElement in element.Elements)
-			    {
-			        foreach (Action<ConfigurationElement> action in actions)
-			        {
-			            action(childElement);
-			        }
+				foreach (ConfigurationElement childElement in element.Elements)
+				{
+					foreach (Action<ConfigurationElement> action in actions)
+					{
+						action(childElement);
+					}
 
-			        TreeProcess(childElement, actions);
-			    }
+					TreeProcess(childElement, actions);
+				}
 			}
 		}
 
@@ -371,15 +364,13 @@ namespace NArrange.Core.Configuration
 		{
 			CodeConfiguration clone = new CodeConfiguration();
 
-			clone._tabs = Tabs.Clone() as TabConfiguration;
-			clone._closingComments = ClosingComments.Clone() as ClosingCommentConfiguration;
-			clone._regions = Regions.Clone() as RegionsConfiguration;
 			clone._encoding = Encoding.Clone() as EncodingConfiguration;
+			clone._formatting = Formatting.Clone() as FormattingConfiguration;
 
 			foreach (HandlerConfiguration handler in Handlers)
 			{
-			    HandlerConfiguration handlerClone = handler.Clone() as HandlerConfiguration;
-			    clone.Handlers.Add(handlerClone);
+				HandlerConfiguration handlerClone = handler.Clone() as HandlerConfiguration;
+				clone.Handlers.Add(handlerClone);
 			}
 
 			return clone;
@@ -443,8 +434,8 @@ namespace NArrange.Core.Configuration
 		/// <returns></returns>
 		public static CodeConfiguration Load(Stream stream, bool resolveReferences)
 		{
-			CodeConfiguration configuration = 
-			    _serializer.Deserialize(stream) as CodeConfiguration;
+			CodeConfiguration configuration =
+				_serializer.Deserialize(stream) as CodeConfiguration;
 
 			if (resolveReferences)
 			{
@@ -466,24 +457,24 @@ namespace NArrange.Core.Configuration
 
 			Action<ConfigurationElement> populateElementMap = delegate(ConfigurationElement element)
 			{
-			    ElementConfiguration elementConfiguration = element as ElementConfiguration;
-			    if (elementConfiguration != null && elementConfiguration.Id != null)
-			    {
-			        elementMap.Add(elementConfiguration.Id, elementConfiguration);
-			    }
+				ElementConfiguration elementConfiguration = element as ElementConfiguration;
+				if (elementConfiguration != null && elementConfiguration.Id != null)
+				{
+					elementMap.Add(elementConfiguration.Id, elementConfiguration);
+				}
 			};
 
 			Action<ConfigurationElement> populateElementReferenceList = delegate(ConfigurationElement element)
 			{
-			    ElementReferenceConfiguration elementReference = element as ElementReferenceConfiguration;
-			    if (elementReference != null && elementReference.Id != null)
-			    {
-			        elementReferences.Add(elementReference);
-			    }
+				ElementReferenceConfiguration elementReference = element as ElementReferenceConfiguration;
+				if (elementReference != null && elementReference.Id != null)
+				{
+					elementReferences.Add(elementReference);
+				}
 			};
 
-			TreeProcess(this, 
-			    new Action<ConfigurationElement>[] 
+			TreeProcess(this,
+				new Action<ConfigurationElement>[] 
 			    { 
 			        populateElementMap,
 			        populateElementReferenceList
@@ -494,18 +485,18 @@ namespace NArrange.Core.Configuration
 			//
 			foreach (ElementReferenceConfiguration reference in elementReferences)
 			{
-			    ElementConfiguration referencedElement = null;
-			    elementMap.TryGetValue(reference.Id, out referencedElement);
-			    if (referencedElement != null)
-			    {
-			        reference.ReferencedElement = referencedElement;
-			    }
-			    else
-			    {
-			        throw new InvalidOperationException(
-			            string.Format("Unable to resolve element reference for Id={0}.",
-			            reference.Id));
-			    }
+				ElementConfiguration referencedElement = null;
+				elementMap.TryGetValue(reference.Id, out referencedElement);
+				if (referencedElement != null)
+				{
+					reference.ReferencedElement = referencedElement;
+				}
+				else
+				{
+					throw new InvalidOperationException(
+						string.Format("Unable to resolve element reference for Id={0}.",
+						reference.Id));
+				}
 			}
 		}
 
@@ -517,7 +508,7 @@ namespace NArrange.Core.Configuration
 		{
 			using (FileStream stream = new FileStream(fileName, FileMode.Create))
 			{
-			    _serializer.Serialize(stream, this);
+				_serializer.Serialize(stream, this);
 			}
 		}
 

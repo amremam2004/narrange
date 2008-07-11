@@ -3,21 +3,21 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
  * 	    All rights reserved.                   				      
- *                                                                             
+ *                                                                            
  * This program and the accompanying materials are made available under       
  * the terms of the Common Public License v1.0 which accompanies this         
  * distribution.							      
- *                                                                             
+ *                                                                            
  * Redistribution and use in source and binary forms, with or                 
  * without modification, are permitted provided that the following            
  * conditions are met:                                                        
- *                                                                             
+ *                                                                            
  * Redistributions of source code must retain the above copyright             
  * notice, this list of conditions and the following disclaimer.              
  * Redistributions in binary form must reproduce the above copyright          
  * notice, this list of conditions and the following disclaimer in            
  * the documentation and/or other materials provided with the distribution.   
- *                                                                             
+ *                                                                            
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
@@ -29,83 +29,127 @@
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ *                                                                            
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		Justin Dearing
- *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
-using System.Xml.Serialization;
+using System.Text;
 
 namespace NArrange.Core.Configuration
 {
 	/// <summary>
-	/// Specifies tab style configuration
+	/// Formatting configuration.
 	/// </summary>
-	[XmlType("Tabs")]
-	public class TabConfiguration : ICloneable
+	public class FormattingConfiguration : ICloneable
 	{
 		#region Fields
 
-		private int _spacesPerTab;
-		private TabStyle _tabStyle;
+		private ClosingCommentConfiguration _closingComments;
+		private RegionFormattingConfiguration _regions;
+		private TabConfiguration _tabs;
 
 		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Creates a new TabConfiguration instance
-		/// </summary>
-		public TabConfiguration()
-		{
-			_tabStyle = TabStyle.Tabs;
-			_spacesPerTab = 4;
-		}
-
-		#endregion Constructors
 
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the number of spaces per tab
+		/// Closing comment configuration
 		/// </summary>
-		[XmlAttribute("SpacesPerTab")]
-		[Description("The number of spaces per tab. Used for conversion between spaces and tabs.")]
-		[DisplayName("Spaces per tab")]
-		public int SpacesPerTab
+		[Description("The settings for closing comments.")]
+		[DisplayName("Closing comments")]
+		[ReadOnly(true)]
+		public ClosingCommentConfiguration ClosingComments
 		{
 			get
 			{
-				return _spacesPerTab;
+				if (_closingComments == null)
+				{
+					lock (this)
+					{
+						if (_closingComments == null)
+						{
+							//
+							// Default closing comment configuration
+							//
+							_closingComments = new ClosingCommentConfiguration();
+						}
+					}
+				}
+
+				return _closingComments;
 			}
 			set
 			{
-				_spacesPerTab = value;
+				_closingComments = value;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the tab style
+		/// Regions configuration.
 		/// </summary>
-		[XmlAttribute("Style")]
-		[Description("The indentation style.")]
-		public TabStyle TabStyle
+		[Description("The settings for all regions.")]
+		[ReadOnly(true)]
+		public RegionFormattingConfiguration Regions
 		{
 			get
 			{
-				return _tabStyle;
+				if (_regions == null)
+				{
+					lock (this)
+					{
+						if (_regions == null)
+						{
+							//
+							// Default regions configuration
+							//
+							_regions = new RegionFormattingConfiguration();
+						}
+					}
+				}
+
+				return _regions;
 			}
 			set
 			{
-				_tabStyle = value;
+				_regions = value;
+			}
+		}
+
+		/// <summary>
+		/// Tab configuration
+		/// </summary>
+		[Description("The settings for indentation.")]
+		[ReadOnly(true)]
+		public TabConfiguration Tabs
+		{
+			get
+			{
+				if (_tabs == null)
+				{
+					lock (this)
+					{
+						if (_tabs == null)
+						{
+							//
+							// Default tab configuration
+							//
+							_tabs = new TabConfiguration();
+						}
+					}
+				}
+
+				return _tabs;
+			}
+			set
+			{
+				_tabs = value;
 			}
 		}
 
@@ -114,27 +158,29 @@ namespace NArrange.Core.Configuration
 		#region Public Methods
 
 		/// <summary>
-		/// Creates a clone of this instance
+		/// Creates a clone of this instance.
 		/// </summary>
 		/// <returns></returns>
 		public object Clone()
 		{
-			TabConfiguration clone = new TabConfiguration();
+			FormattingConfiguration clone = new FormattingConfiguration();
 
-			clone._tabStyle = _tabStyle;
-			clone._spacesPerTab = _spacesPerTab;
+			if (_closingComments != null)
+			{
+				clone._closingComments = _closingComments.Clone() as ClosingCommentConfiguration;
+			}
+
+			if (_regions != null)
+			{
+				clone._regions = _regions.Clone() as RegionFormattingConfiguration;
+			}
+
+			if (_tabs != null)
+			{
+				clone._tabs = _tabs.Clone() as TabConfiguration;
+			}
 
 			return clone;
-		}
-
-		/// <summary>
-		/// Gets the string representation
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-				"Tabs: {0}, {1}", TabStyle, SpacesPerTab);
 		}
 
 		#endregion Public Methods

@@ -49,63 +49,22 @@ namespace NArrange.Tests.VisualBasic
 			VBWriter VBWriter = new VBWriter();
 			VBWriter.Configuration = configuration;
 
-			configuration.ClosingComments.Enabled = true;
-			configuration.ClosingComments.Format = "$(Name)";
+			configuration.Formatting.ClosingComments.Enabled = true;
+			configuration.Formatting.ClosingComments.Format = "$(Name)";
 
 			writer = new StringWriter();
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\r\n" +
-			    "\tPublic Function DoSomething() As Boolean\r\n" +
-			    "\t\tReturn False\r\n" +
-			    "\tEnd Function 'DoSomething\r\n" +
-			    "\r\n" + 
-			    "End Class 'TestClass", text,
-			    "Unexpected element text.");
-		}
-
-		/// <summary>
-		/// Tests writing a region with and without end region names enabled.
-		/// </summary>
-		[Test]
-		public void EndRegionNameTest()
-		{
-			RegionElement regionElement = new RegionElement();
-			regionElement.Name = "TestRegion";
-
-			List<ICodeElement> codeElements = new List<ICodeElement>();
-
-			StringWriter writer;
-			codeElements.Add(regionElement);
-
-			CodeConfiguration configuration = new CodeConfiguration();
-			VBWriter codeWriter = new VBWriter();
-			codeWriter.Configuration = configuration;
-
-			configuration.Regions.EndRegionNameEnabled = true;
-
-			writer = new StringWriter();
-			codeWriter.Write(codeElements.AsReadOnly(), writer);
-
-			string text = writer.ToString();
-			Assert.AreEqual(
-			    "#Region \"TestRegion\"\r\n" + 
-			    "#End Region 'TestRegion", text,
-			    "Unexpected element text.");
-
-			configuration.Regions.EndRegionNameEnabled = false;
-
-			writer = new StringWriter();
-			codeWriter.Write(codeElements.AsReadOnly(), writer);
-
-			text = writer.ToString();
-			Assert.AreEqual(
-			    "#Region \"TestRegion\"\r\n" +
-			    "#End Region", text,
-			    "Unexpected element text.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"\tPublic Function DoSomething() As Boolean\r\n" +
+				"\t\tReturn False\r\n" +
+				"\tEnd Function 'DoSomething\r\n" +
+				"\r\n" +
+				"End Class 'TestClass", text,
+				"Unexpected element text.");
 		}
 
 		/// <summary>
@@ -129,7 +88,7 @@ namespace NArrange.Tests.VisualBasic
 
 			List<ICodeElement> codeElements = new List<ICodeElement>();
 
-			StringWriter writer; 
+			StringWriter writer;
 			codeElements.Add(classElement);
 
 			CodeConfiguration configuration = new CodeConfiguration();
@@ -139,68 +98,68 @@ namespace NArrange.Tests.VisualBasic
 			//
 			// Tabs
 			//
-			configuration.Tabs.SpacesPerTab = 4;
-			configuration.Tabs.Style = TabStyle.Tabs;
+			configuration.Formatting.Tabs.SpacesPerTab = 4;
+			configuration.Formatting.Tabs.TabStyle = TabStyle.Tabs;
 
 			writer = new StringWriter();
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\r\n" +
-			    "\tPublic Function DoSomething() As Boolean\r\n" +
-			    "\t\tReturn False\r\n" +
-			    "\tEnd Function\r\n" + 
-			    "\r\n" + 
-			    "End Class", text,
-			    "Unexpected element text.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"\tPublic Function DoSomething() As Boolean\r\n" +
+				"\t\tReturn False\r\n" +
+				"\tEnd Function\r\n" +
+				"\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
 
 			//
 			// Spaces(4)
 			//
-			configuration.Tabs.SpacesPerTab = 4;
-			configuration.Tabs.Style = TabStyle.Spaces;
+			configuration.Formatting.Tabs.SpacesPerTab = 4;
+			configuration.Formatting.Tabs.TabStyle = TabStyle.Spaces;
 
 			writer = new StringWriter();
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\r\n" +
-			    "    Public Function DoSomething() As Boolean\r\n" +
-			    "        Return False\r\n" +
-			    "    End Function\r\n" +
-			    "\r\n" +
-			    "End Class", text,
-			    "Unexpected element text.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"    Public Function DoSomething() As Boolean\r\n" +
+				"        Return False\r\n" +
+				"    End Function\r\n" +
+				"\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
 
 			//
 			// Spaces(8)
 			//
-			configuration.Tabs.SpacesPerTab = 8;
-			configuration.Tabs.Style = TabStyle.Spaces;
+			configuration.Formatting.Tabs.SpacesPerTab = 8;
+			configuration.Formatting.Tabs.TabStyle = TabStyle.Spaces;
 
 			writer = new StringWriter();
 			VBWriter.Write(codeElements.AsReadOnly(), writer);
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\r\n" +
-			    "        Public Function DoSomething() As Boolean\r\n" +
-			    "                Return False\r\n" +
-			    "        End Function\r\n" +
-			    "\r\n" +
-			    "End Class", text,
-			    "Unexpected element text.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"        Public Function DoSomething() As Boolean\r\n" +
+				"                Return False\r\n" +
+				"        End Function\r\n" +
+				"\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
 
 			//
 			// Parse spaces
 			//
-			configuration.Tabs.SpacesPerTab = 4;
-			configuration.Tabs.Style = TabStyle.Tabs;
+			configuration.Formatting.Tabs.SpacesPerTab = 4;
+			configuration.Formatting.Tabs.TabStyle = TabStyle.Tabs;
 			methodElement.BodyText = "    Return False";
 
 			writer = new StringWriter();
@@ -208,14 +167,14 @@ namespace NArrange.Tests.VisualBasic
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\r\n" +
-			    "\tPublic Function DoSomething() As Boolean\r\n" +
-			    "\t\tReturn False\r\n" +
-			    "\tEnd Function\r\n" +
-			    "\r\n" +
-			    "End Class", text,
-			    "Unexpected element text.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"\tPublic Function DoSomething() As Boolean\r\n" +
+				"\t\tReturn False\r\n" +
+				"\tEnd Function\r\n" +
+				"\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
 		}
 
 		/// <summary>
@@ -231,11 +190,11 @@ namespace NArrange.Tests.VisualBasic
 			VBTestFile testFile = VBTestUtilities.GetClassMembersFile();
 			using (TextReader reader = testFile.GetReader())
 			{
-			    VBParser parser = new VBParser();
-			    testElements = parser.Parse(reader);
+				VBParser parser = new VBParser();
+				testElements = parser.Parse(reader);
 
-			    Assert.IsTrue(testElements.Count > 0,
-			        "Test file does not contain any elements.");
+				Assert.IsTrue(testElements.Count > 0,
+					"Test file does not contain any elements.");
 			}
 
 			ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
@@ -256,10 +215,10 @@ namespace NArrange.Tests.VisualBasic
 			CompilerError error = TestUtilities.GetCompilerError(results);
 			if (error != null)
 			{
-			    Assert.Fail("Arranged source code should not produce compiler errors. " +
-			        "Error: {0} - {1}, line {2}, column {3} ",
-			        error.ErrorText, "ArrangedClassMembers.vb",
-			        error.Line, error.Column);
+				Assert.Fail("Arranged source code should not produce compiler errors. " +
+					"Error: {0} - {1}, line {2}, column {3} ",
+					error.ErrorText, "ArrangedClassMembers.vb",
+					error.Line, error.Column);
 			}
 		}
 
@@ -276,7 +235,7 @@ namespace NArrange.Tests.VisualBasic
 			attributeElement.Target = "property";
 			attributeElement.BodyText = "\"This is obsolete\"";
 			attributeElement.AddHeaderCommentLine(
-			    "<summary>We no longer need this...</summary>", true);
+				"<summary>We no longer need this...</summary>", true);
 
 			AttributeElement childAttributeElement = new AttributeElement();
 			childAttributeElement.Name = "Description";
@@ -291,10 +250,10 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "'''<summary>We no longer need this...</summary>\r\n" +
-			    "<property: Obsolete(\"This is obsolete\"), _\r\nDescription(\"This is a description.\")>",
-			    text,
-			    "Attribute element was not written correctly.");
+				"'''<summary>We no longer need this...</summary>\r\n" +
+				"<property: Obsolete(\"This is obsolete\"), _\r\nDescription(\"This is a description.\")>",
+				text,
+				"Attribute element was not written correctly.");
 		}
 
 		/// <summary>
@@ -309,7 +268,7 @@ namespace NArrange.Tests.VisualBasic
 			attributeElement.Name = "Obsolete";
 			attributeElement.BodyText = "\"This is obsolete\"";
 			attributeElement.AddHeaderCommentLine(
-			    "<summary>We no longer need this...</summary>", true);
+				"<summary>We no longer need this...</summary>", true);
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(attributeElement);
@@ -319,10 +278,10 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "'''<summary>We no longer need this...</summary>\r\n" +
-			    "<Obsolete(\"This is obsolete\")>",
-			    text,
-			    "Attribute element was not written correctly.");
+				"'''<summary>We no longer need this...</summary>\r\n" +
+				"<Obsolete(\"This is obsolete\")>",
+				text,
+				"Attribute element was not written correctly.");
 		}
 
 		/// <summary>
@@ -339,7 +298,7 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 			classElement.AddTypeParameter(new TypeParameter("T"));
 
 			codeElements.Add(classElement);
@@ -350,11 +309,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public NotInheritable Class TestClass(Of T)\r\n" + 
-			    "\tImplements IDisposable\r\n" + 
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public NotInheritable Class TestClass(Of T)\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 
 			classElement = new TypeElement();
 			classElement.Access = CodeAccess.Public;
@@ -362,9 +321,9 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 			classElement.AddTypeParameter(
-			    new TypeParameter("T", "IDisposable", "New"));
+				new TypeParameter("T", "IDisposable", "New"));
 
 			codeElements[0] = classElement;
 
@@ -374,11 +333,11 @@ namespace NArrange.Tests.VisualBasic
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public NotInheritable Class TestClass(Of T As {IDisposable, New})\r\n" + 
-			    "\tImplements IDisposable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public NotInheritable Class TestClass(Of T As {IDisposable, New})\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -395,9 +354,9 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddTypeParameter(
-			    new TypeParameter("T", "IDisposable", "New"));
+				new TypeParameter("T", "IDisposable", "New"));
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
@@ -407,11 +366,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public NotInheritable Partial Class TestClass(Of T As {IDisposable, New})\r\n" + 
-			    "\tImplements IDisposable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public NotInheritable Partial Class TestClass(Of T As {IDisposable, New})\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -428,11 +387,11 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 			classElement.AddInterface(
-			    new InterfaceReference("IEnumerable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IEnumerable", InterfaceReferenceType.Interface));
 
-			StringWriter writer; 
+			StringWriter writer;
 			codeElements.Add(classElement);
 
 			VBWriter VBWriter = new VBWriter();
@@ -441,12 +400,12 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public NotInheritable Class TestClass\r\n" + 
-			    "\tImplements IDisposable\r\n" + 
-			    "\tImplements IEnumerable\r\n" + 
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public NotInheritable Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\tImplements IEnumerable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 
 			classElement.TypeModifiers = TypeModifiers.Abstract;
 			VBWriter = new VBWriter();
@@ -455,12 +414,12 @@ namespace NArrange.Tests.VisualBasic
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public MustInherit Class TestClass\r\n" +
-			    "\tImplements IDisposable\r\n" +
-			    "\tImplements IEnumerable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public MustInherit Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\tImplements IEnumerable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 
 			classElement.TypeModifiers = TypeModifiers.Static;
 			VBWriter = new VBWriter();
@@ -470,12 +429,12 @@ namespace NArrange.Tests.VisualBasic
 			text = writer.ToString();
 			// Static doesn't apply to VB
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\tImplements IDisposable\r\n" +
-			    "\tImplements IEnumerable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\tImplements IEnumerable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 
 			classElement.TypeModifiers = TypeModifiers.Unsafe;
 			VBWriter = new VBWriter();
@@ -485,12 +444,12 @@ namespace NArrange.Tests.VisualBasic
 			text = writer.ToString();
 			// Unsafe doesn't apply to VB
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" +
-			    "\tImplements IDisposable\r\n" +
-			    "\tImplements IEnumerable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\tImplements IEnumerable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 
 			classElement.TypeModifiers = TypeModifiers.New;
 			VBWriter = new VBWriter();
@@ -499,12 +458,12 @@ namespace NArrange.Tests.VisualBasic
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shadows Class TestClass\r\n" +
-			    "\tImplements IDisposable\r\n" +
-			    "\tImplements IEnumerable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public Shadows Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\tImplements IEnumerable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -558,20 +517,20 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Class TestClass\r\n" + 
-			    "\r\n" +
-			    "\t#Region \"Fields\"\r\n\r\n" + 
-			    "\tPrivate _val1 As Integer\r\n" +
-			    "\tPrivate _val2 As Integer\r\n\r\n" + 
-			    "\t#End Region 'Fields\r\n\r\n" + 
-			    "\t#Region \"Methods\"\r\n\r\n" + 
-			    "\tPublic Sub DoSomething()\r\n" + 
-			    "\tEnd Sub\r\n\r\n" + 
-			    "\t#End Region 'Methods\r\n" +
-			    "\r\n" + 
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Public Class TestClass\r\n" +
+				"\r\n" +
+				"\t#Region \"Fields\"\r\n\r\n" +
+				"\tPrivate _val1 As Integer\r\n" +
+				"\tPrivate _val2 As Integer\r\n\r\n" +
+				"\t#End Region 'Fields\r\n\r\n" +
+				"\t#Region \"Methods\"\r\n\r\n" +
+				"\tPublic Sub DoSomething()\r\n" +
+				"\tEnd Sub\r\n\r\n" +
+				"\t#End Region 'Methods\r\n" +
+				"\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -588,7 +547,7 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Class;
 			classElement.Name = "TestClass";
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			StringWriter writer = new StringWriter();
 			codeElements.Add(classElement);
@@ -598,11 +557,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Partial Class TestClass\r\n" + 
-			    "\tImplements IDisposable\r\n" +
-			    "End Class",
-			    text,
-			    "Class element was not written correctly.");
+				"Partial Class TestClass\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"End Class",
+				text,
+				"Class element was not written correctly.");
 		}
 
 		/// <summary>
@@ -693,9 +652,9 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Sub New(ByVal value As Integer)\r\n\tMyBase.New(value)\r\n" +
-			    "End Sub",
-			    text,
-			    "Constructor element was not written correctly.");
+				"End Sub",
+				text,
+				"Constructor element was not written correctly.");
 		}
 
 		/// <summary>
@@ -719,8 +678,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Sub New(ByVal value As Integer)\r\nEnd Sub",
-			    text,
-			    "Constructor element was not written correctly.");
+				text,
+				"Constructor element was not written correctly.");
 		}
 
 		/// <summary>
@@ -802,7 +761,7 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-				"Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) " + 
+				"Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) " +
 					"Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged",
 				text,
 				"Method element was not written correctly.");
@@ -857,8 +816,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Event TestEvent(ByVal args As EventArgs)",
-			    text,
-			    "Event element was not written correctly.");
+				text,
+				"Event element was not written correctly.");
 		}
 
 		/// <summary>
@@ -884,8 +843,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As Dictionary(Of String, Integer) = New Dictionary(Of String, Integer)()",
-			    text,
-			    "FieldElement element was not written correctly.");
+				text,
+				"FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -911,8 +870,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Shadows Const Test As String = \"Test\"",
-			    text,
-			    "FieldElement element was not written correctly.");
+				text,
+				"FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -938,8 +897,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As Integer = 1",
-			    text,
-			    "FieldElement element was not written correctly.");
+				text,
+				"FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -993,8 +952,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Private Shared _test As New Dictionary(Of String, Integer)()",
-			    text,
-			    "FieldElement element was not written correctly.");
+				text,
+				"FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1020,8 +979,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Shadows Const Test = \"Test\"",
-			    text,
-			    "FieldElement element was not written correctly.");
+				text,
+				"FieldElement element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1050,9 +1009,9 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Declare Ansi Function ExternalFunction Lib \"Some.dll\" Alias \"doit\" (ByVal filename As String) As String",
-			    text,
-			    "Method element was not written correctly.");
+				"Public Declare Ansi Function ExternalFunction Lib \"Some.dll\" Alias \"doit\" (ByVal filename As String) As String",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1078,11 +1037,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Function TestFunction(ByVal filename As String)\r\n" + 
-			    "\tReturn False\r\n" + 
-			    "End Function",
-			    text,
-			    "Method element was not written correctly.");
+				"Public Function TestFunction(ByVal filename As String)\r\n" +
+				"\tReturn False\r\n" +
+				"End Function",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1102,9 +1061,9 @@ namespace NArrange.Tests.VisualBasic
 
 			foreach (string nameSpace in nameSpaces)
 			{
-			    UsingElement usingElement = new UsingElement();
-			    usingElement.Name = nameSpace;
-			    group.AddChild(usingElement);
+				UsingElement usingElement = new UsingElement();
+				usingElement.Name = nameSpace;
+				group.AddChild(usingElement);
 			}
 
 			List<ICodeElement> codeElements = new List<ICodeElement>();
@@ -1118,11 +1077,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Imports System\r\n" +
-			    "Imports System.IO\r\n" +
-			    "Imports System.Text",
-			    text,
-			    "Group was not written correctly.");
+				"Imports System\r\n" +
+				"Imports System.IO\r\n" +
+				"Imports System.Text",
+				text,
+				"Group was not written correctly.");
 
 			group.SeparatorType = GroupSeparatorType.Custom;
 			group.CustomSeparator = "\r\n";
@@ -1132,11 +1091,11 @@ namespace NArrange.Tests.VisualBasic
 
 			text = writer.ToString();
 			Assert.AreEqual(
-			    "Imports System\r\n\r\n" +
-			    "Imports System.IO\r\n\r\n" +
-			    "Imports System.Text",
-			    text,
-			    "Group was not written correctly.");
+				"Imports System\r\n\r\n" +
+				"Imports System.IO\r\n\r\n" +
+				"Imports System.Text",
+				text,
+				"Group was not written correctly.");
 		}
 
 		/// <summary>
@@ -1152,7 +1111,7 @@ namespace NArrange.Tests.VisualBasic
 			classElement.Type = TypeElementType.Interface;
 			classElement.Name = "TestInterface";
 			classElement.AddInterface(
-			    new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
+				new InterfaceReference("IDisposable", InterfaceReferenceType.Interface));
 
 			MethodElement methodElement = new MethodElement();
 			methodElement.Name = "DoSomething";
@@ -1167,14 +1126,14 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Interface TestInterface\r\n" + 
-			    "\tImplements IDisposable\r\n" +
-			    "\r\n" + 
-			    "\tSub DoSomething()\r\n" +
-			    "\r\n" + 
-			    "End Interface",
-			    text,
-			    "Interface element was not written correctly.");
+				"Public Interface TestInterface\r\n" +
+				"\tImplements IDisposable\r\n" +
+				"\r\n" +
+				"\tSub DoSomething()\r\n" +
+				"\r\n" +
+				"End Interface",
+				text,
+				"Interface element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1199,8 +1158,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Protected MustOverride Sub DoSomething()",
-			    text,
-			    "Method element was not written correctly.");
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1225,12 +1184,12 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Function IEnumerable(Of T).GetEnumerator() As IEnumerator(Of T)\r\n" +
-			    "\tReturn Nothing\r\n" +
-			    "End Function"
-			    ,
-			    text,
-			    "Method element was not written correctly.");
+				"Function IEnumerable(Of T).GetEnumerator() As IEnumerator(Of T)\r\n" +
+				"\tReturn Nothing\r\n" +
+				"End Function"
+				,
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1290,11 +1249,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shared Function DoSomething(ByVal flag As Boolean) As Integer Implements ISomething.DoSomething, ISomethingElse.DoSomething\r\n" +
-			    "\tReturn 0\r\n" +
-			    "End Function",
-			    text,
-			    "Method element was not written correctly.");
+				"Public Shared Function DoSomething(ByVal flag As Boolean) As Integer Implements ISomething.DoSomething, ISomethingElse.DoSomething\r\n" +
+				"\tReturn 0\r\n" +
+				"End Function",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1321,9 +1280,9 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Partial Private Sub DoSomething(ByVal flag As Boolean)\r\nEnd Sub",
-			    text,
-			    "Method element was not written correctly.");
+				"Partial Private Sub DoSomething(ByVal flag As Boolean)\r\nEnd Sub",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1350,10 +1309,10 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Partial Private Sub DoSomething(ByVal flag As Boolean)\r\n" +
-			    "End Sub",
-			    text,
-			    "Method element was not written correctly.");
+				"Partial Private Sub DoSomething(ByVal flag As Boolean)\r\n" +
+				"End Sub",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1378,8 +1337,8 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual("Public Overrides NotOverridable Sub DoSomething()\r\nEnd Sub",
-			    text,
-			    "Method element was not written correctly.");
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1406,11 +1365,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shared Function DoSomething(ByVal flag As Boolean) As Integer\r\n" + 
-			    "\tReturn 0\r\n" + 
-			    "End Function",
-			    text,
-			    "Method element was not written correctly.");
+				"Public Shared Function DoSomething(ByVal flag As Boolean) As Integer\r\n" +
+				"\tReturn 0\r\n" +
+				"End Function",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1439,11 +1398,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shared Narrowing Operator CType(ByVal f As Fraction) As Decimal\r\n" + 
-			    "\tReturn CDec(f.num) / f.den\r\n" + 
-			    "End Operator",
-			    text,
-			    "Operator element was not written correctly.");
+				"Public Shared Narrowing Operator CType(ByVal f As Fraction) As Decimal\r\n" +
+				"\tReturn CDec(f.num) / f.den\r\n" +
+				"End Operator",
+				text,
+				"Operator element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1472,11 +1431,11 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shared Widening Operator CType(ByVal f As Fraction) As Double\r\n" +
-			    "\tReturn CDbl(f.num) / f.den\r\n" +
-			    "End Operator",
-			    text,
-			    "Operator element was not written correctly.");
+				"Public Shared Widening Operator CType(ByVal f As Fraction) As Double\r\n" +
+				"\tReturn CDbl(f.num) / f.den\r\n" +
+				"End Operator",
+				text,
+				"Operator element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1504,11 +1463,142 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Shared Operator +(ByVal a As Fraction, ByVal b As Fraction) As Fraction\r\n" +
-			    "\tReturn New Fraction(a.num * b.den + b.num * a.den, a.den * b.den)\r\n" +
-			    "End Operator",
-			    text,
-			    "Operator element was not written correctly.");
+				"Public Shared Operator +(ByVal a As Fraction, ByVal b As Fraction) As Fraction\r\n" +
+				"\tReturn New Fraction(a.num * b.den + b.num * a.den, a.den * b.den)\r\n" +
+				"End Operator",
+				text,
+				"Operator element was not written correctly.");
+		}
+
+		/// <summary>
+		/// Tests writing a region with comment directives.
+		/// </summary>
+		[Test]
+		public void WriteRegionCommentDirectiveTest()
+		{
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "Test";
+
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "TestRegion";
+			classElement.AddChild(regionElement);
+
+			FieldElement fieldElement = new FieldElement();
+			fieldElement.Name = "val";
+			fieldElement.Type = "Integer";
+			regionElement.AddChild(fieldElement);
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(classElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Configuration = configuration;
+
+			configuration.Formatting.Regions.EndRegionNameEnabled = true;
+			configuration.Formatting.Regions.Style = RegionStyle.CommentDirective;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"Public Class Test\r\n\r\n" +
+				"\t' $(Begin) TestRegion\r\n\r\n" +
+				"\tPublic val As Integer\r\n\r\n" +
+				"\t' $(End) TestRegion\r\n\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
+		}
+
+		/// <summary>
+		/// Tests writing a region with and without end region names enabled.
+		/// </summary>
+		[Test]
+		public void WriteRegionEndRegionNameTest()
+		{
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "TestRegion";
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(regionElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Configuration = configuration;
+
+			configuration.Formatting.Regions.EndRegionNameEnabled = true;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"#Region \"TestRegion\"\r\n" +
+				"#End Region 'TestRegion", text,
+				"Unexpected element text.");
+
+			configuration.Formatting.Regions.EndRegionNameEnabled = false;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			text = writer.ToString();
+			Assert.AreEqual(
+				"#Region \"TestRegion\"\r\n" +
+				"#End Region", text,
+				"Unexpected element text.");
+		}
+
+		/// <summary>
+		/// Tests writing a region with no directives.
+		/// </summary>
+		[Test]
+		public void WriteRegionNoDirectiveTest()
+		{
+			TypeElement classElement = new TypeElement();
+			classElement.Name = "Test";
+
+			RegionElement regionElement = new RegionElement();
+			regionElement.Name = "TestRegion";
+			classElement.AddChild(regionElement);
+
+			FieldElement fieldElement1 = new FieldElement();
+			fieldElement1.Name = "val1";
+			fieldElement1.Type = "Integer";
+			regionElement.AddChild(fieldElement1);
+
+			FieldElement fieldElement2 = new FieldElement();
+			fieldElement2.Name = "val2";
+			fieldElement2.Type = "Integer";
+			regionElement.AddChild(fieldElement2);
+
+			List<ICodeElement> codeElements = new List<ICodeElement>();
+
+			StringWriter writer;
+			codeElements.Add(classElement);
+
+			CodeConfiguration configuration = new CodeConfiguration();
+			VBWriter codeWriter = new VBWriter();
+			codeWriter.Configuration = configuration;
+
+			configuration.Formatting.Regions.EndRegionNameEnabled = true;
+			configuration.Formatting.Regions.Style = RegionStyle.NoDirective;
+
+			writer = new StringWriter();
+			codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+			string text = writer.ToString();
+			Assert.AreEqual(
+				"Public Class Test\r\n\r\n" +
+				"\tPublic val1 As Integer\r\n" +
+				"\tPublic val2 As Integer\r\n\r\n" +
+				"End Class", text,
+				"Unexpected element text.");
 		}
 
 		/// <summary>
@@ -1537,9 +1627,9 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "Public Declare Ansi Sub ExternalSub Lib \"Some.dll\" Alias \"doit\" (ByVal filename As String)",
-			    text,
-			    "Method element was not written correctly.");
+				"Public Declare Ansi Sub ExternalSub Lib \"Some.dll\" Alias \"doit\" (ByVal filename As String)",
+				text,
+				"Method element was not written correctly.");
 		}
 
 		/// <summary>
@@ -1587,10 +1677,10 @@ namespace NArrange.Tests.VisualBasic
 
 			string text = writer.ToString();
 			Assert.AreEqual(
-			    "'We'll be doing several text operations.\r\n" + 
-			    "Imports System.Text",
-			    text,
-			    "Using element was not written correctly.");
+				"'We'll be doing several text operations.\r\n" +
+				"Imports System.Text",
+				text,
+				"Using element was not written correctly.");
 		}
 
 		#endregion Public Methods

@@ -69,16 +69,16 @@ namespace NArrange.Core
 		{
 			get
 			{
-			    if(_configuration == null)
-			    {
-			        _configuration = CodeConfiguration.Default;
-			    }
+				if (_configuration == null)
+				{
+					_configuration = CodeConfiguration.Default;
+				}
 
-			    return _configuration;
+				return _configuration;
 			}
 			set
 			{
-			    _configuration = value;
+				_configuration = value;
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace NArrange.Core
 		{
 			if (codeElements == null)
 			{
-			    throw new ArgumentNullException("codeElements");
+				throw new ArgumentNullException("codeElements");
 			}
 
 			DoWriteElements(codeElements, writer);
@@ -124,34 +124,34 @@ namespace NArrange.Core
 		{
 			for (int index = 0; index < codeElements.Count; index++)
 			{
-			    ICodeElement codeElement = codeElements[index];
-			    if (codeElement != null)
-			    {
-			        CommentedElement commentedElement = codeElement as CommentedElement;
-			        if (index > 0 &&
-			            ((commentedElement != null && commentedElement.HeaderComments.Count > 0) ||
-			            codeElement is NamespaceElement || codeElement is TypeElement || 
+				ICodeElement codeElement = codeElements[index];
+				if (codeElement != null)
+				{
+					CommentedElement commentedElement = codeElement as CommentedElement;
+					if (index > 0 &&
+						((commentedElement != null && commentedElement.HeaderComments.Count > 0) ||
+						codeElement is NamespaceElement || codeElement is TypeElement ||
 						codeElement is RegionElement || codeElement is ConditionDirectiveElement ||
-			            (codeElement is MemberElement && !(codeElement is FieldElement)) ||
-			            (!(codeElement is GroupElement) && 
-			            codeElement.ElementType != codeElements[index - 1].ElementType) ||
-			            codeElements[index - 1] is GroupElement))
-			        {
-			            writer.WriteLine();
-			        }
+						(codeElement is MemberElement && !(codeElement is FieldElement)) ||
+						(!(codeElement is GroupElement) &&
+						codeElement.ElementType != codeElements[index - 1].ElementType) ||
+						codeElements[index - 1] is GroupElement))
+					{
+						writer.WriteLine();
+					}
 
-			        codeElement.Accept(visitor);
+					codeElement.Accept(visitor);
 
-			        if (codeElements.Count > 1 && index < codeElements.Count - 1)
-			        {
-			            writer.WriteLine();
-			            if ((codeElement is RegionElement || codeElement is ConditionDirectiveElement) && 
+					if (codeElements.Count > 1 && index < codeElements.Count - 1)
+					{
+						writer.WriteLine();
+						if ((codeElement is RegionElement || codeElement is ConditionDirectiveElement) &&
 							codeElement.Parent == null)
-			            {
-			                writer.WriteLine();
-			            }
-			        }
-			    }
+						{
+							writer.WriteLine();
+						}
+					}
+				}
 			}
 		}
 

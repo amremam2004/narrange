@@ -76,18 +76,18 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    if (_attributes == null)
-			    {
-			        lock (_attributesLock)
-			        {
-			            if (_attributes == null)
-			            {
-			                _attributes = new List<IAttributeElement>();
-			            }
-			        }
-			    }
+				if (_attributes == null)
+				{
+					lock (_attributesLock)
+					{
+						if (_attributes == null)
+						{
+							_attributes = new List<IAttributeElement>();
+						}
+					}
+				}
 
-			    return _attributes;
+				return _attributes;
 			}
 		}
 
@@ -102,11 +102,11 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return _access;
+				return _access;
 			}
 			set
 			{
-			    _access = value;
+				_access = value;
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace NArrange.Core.CodeElements
 		{
 			get
 			{
-			    return BaseAttributes.AsReadOnly();
+				return BaseAttributes.AsReadOnly();
 			}
 		}
 
@@ -144,13 +144,13 @@ namespace NArrange.Core.CodeElements
 			clone._access = _access;
 			lock (_attributesLock)
 			{
-			    for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
-			    {
-			        IAttributeElement attribute = Attributes[attributeIndex];
-			        IAttributeElement attributeClone = attribute.Clone() as IAttributeElement;
+				for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
+				{
+					IAttributeElement attribute = Attributes[attributeIndex];
+					IAttributeElement attributeClone = attribute.Clone() as IAttributeElement;
 
-			        clone.AddAttribute(attributeClone);
-			    }
+					clone.AddAttribute(attributeClone);
+				}
 			}
 
 			return clone;
@@ -168,14 +168,14 @@ namespace NArrange.Core.CodeElements
 		{
 			if (attributeElement != null && !BaseAttributes.Contains(attributeElement))
 			{
-			    lock (_attributesLock)
-			    {
-			        if (attributeElement != null && !BaseAttributes.Contains(attributeElement))
-			        {
-			            BaseAttributes.Add(attributeElement);
-			            attributeElement.Parent = this;
-			        }
-			    }
+				lock (_attributesLock)
+				{
+					if (attributeElement != null && !BaseAttributes.Contains(attributeElement))
+					{
+						BaseAttributes.Add(attributeElement);
+						attributeElement.Parent = this;
+					}
+				}
 			}
 		}
 
@@ -186,17 +186,17 @@ namespace NArrange.Core.CodeElements
 		{
 			lock (_attributesLock)
 			{
-			    for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
-			    {
-			        IAttributeElement attribute = Attributes[attributeIndex];
-			        if (attribute != null && attribute.Parent != null)
-			        {
-			            attribute.Parent = null;
-			            attributeIndex--;
-			        }
-			    }
+				for (int attributeIndex = 0; attributeIndex < Attributes.Count; attributeIndex++)
+				{
+					IAttributeElement attribute = Attributes[attributeIndex];
+					if (attribute != null && attribute.Parent != null)
+					{
+						attribute.Parent = null;
+						attributeIndex--;
+					}
+				}
 
-			    BaseAttributes.Clear();
+				BaseAttributes.Clear();
 			}
 		}
 
@@ -208,14 +208,14 @@ namespace NArrange.Core.CodeElements
 		{
 			if (attributeElement != null && BaseAttributes.Contains(attributeElement))
 			{
-			    lock (_attributesLock)
-			    {
-			        if (attributeElement != null && BaseAttributes.Contains(attributeElement))
-			        {
-			            BaseAttributes.Remove(attributeElement);
-			            attributeElement.Parent = null;
-			        }
-			    }
+				lock (_attributesLock)
+				{
+					if (attributeElement != null && BaseAttributes.Contains(attributeElement))
+					{
+						BaseAttributes.Remove(attributeElement);
+						attributeElement.Parent = null;
+					}
+				}
 			}
 		}
 

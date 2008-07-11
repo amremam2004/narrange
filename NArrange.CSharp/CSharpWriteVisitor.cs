@@ -49,6 +49,7 @@
  *		  values.
  *		- Preserve trailing comments for fields
  *		- Handle writing of conditional compilation preprocessor directives
+ *		- Write region comment directives
  *      Everton Elvio Koser
  *      - Fixed ordering of new and const for fields (merged by James Nies)
  *      - Honor the new keyword for nested types (merged by James Nies)
@@ -125,16 +126,18 @@ namespace NArrange.CSharp
 
 		private void WriteBeginBlock()
 		{
-			WriteIndentedLine(CSharpSymbol.BeginBlock.ToString());
+			WriteIndented(CSharpSymbol.BeginBlock.ToString());
 			TabCount++;
 		}
 
 		private void WriteBody(TextCodeElement element)
 		{
 			WriteBeginBlock();
+			Writer.WriteLine();
 			if (element.BodyText != null && element.BodyText.Trim().Length > 0)
 			{
 			    WriteTextBlock(element.BodyText);
+				Writer.WriteLine();
 			    WriteEndBlock();
 			    WriteClosingComment(element, ClosingCommentPrefix);
 			}
@@ -145,14 +148,8 @@ namespace NArrange.CSharp
 			}
 		}
 
-		private void WriteChildren(ICodeElement element)
-		{
-			CodeWriter.WriteVisitElements(element.Children, Writer, this);
-		}
-
 		private void WriteEndBlock()
 		{
-			Writer.WriteLine();
 			TabCount--;
 			WriteIndented(CSharpSymbol.EndBlock.ToString());
 		}
@@ -275,9 +272,9 @@ namespace NArrange.CSharp
 			                        lineBuilder[index] == ' ' && tabIndex < TabCount)
 			                    {
 			                        spaceCount++;
-			                        if (spaceCount == Configuration.Tabs.SpacesPerTab)
+			                        if (spaceCount == Configuration.Formatting.Tabs.SpacesPerTab)
 			                        {
-			                            lineBuilder.Remove(0, Configuration.Tabs.SpacesPerTab);
+										lineBuilder.Remove(0, Configuration.Formatting.Tabs.SpacesPerTab);
 			                            spaceCount = 0;
 			                            index = 0;
 			                            tabIndex++;
@@ -358,6 +355,35 @@ namespace NArrange.CSharp
 		}
 
 		#endregion Private Methods
+
+		#region Protected Methods
+
+		protected override void WriteRegionBeginDirective(RegionElement element)
+		{
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
+			builder.Append(CSharpSymbol.Preprocessor);
+			builder.Append(CSharpKeyword.Region);
+			builder.Append(' ');
+			builder.Append(element.Name);
+
+			WriteIndented(builder.ToString());
+		}
+
+		protected override void WriteRegionEndDirective(RegionElement element)
+		{
+			StringBuilder builder = new StringBuilder(DefaultBlockLength);
+			builder.Append(CSharpSymbol.Preprocessor);
+			builder.Append(CSharpKeyword.EndRegion);
+			if (Configuration.Formatting.Regions.EndRegionNameEnabled)
+			{
+				builder.Append(' ');
+				builder.Append(element.Name);
+			}
+
+			WriteIndented(builder.ToString());
+		}
+
+		#endregion Protected Methods
 
 		#region Public Methods
 
@@ -457,17 +483,14 @@ namespace NArrange.CSharp
 			const string ConditionFormat = "{0}{1} {2}";
 			ConditionDirectiveElement conditionDirective = element;
 
-			this.WriteIndentedLine(
+			this.WriteIndented(
 				string.Format(CultureInfo.InvariantCulture, ConditionFormat,
 				CSharpSymbol.Preprocessor, CSharpKeyword.If, element.ConditionExpression));
 
 			Writer.WriteLine();
-
 			WriteChildren(element);
-
 			if (element.Children.Count > 0)
 			{
-				Writer.WriteLine();
 				Writer.WriteLine();
 			}
 
@@ -477,22 +500,19 @@ namespace NArrange.CSharp
 
 				if (conditionDirective.ElseCondition == null)
 				{
-					this.WriteIndentedLine(CSharpSymbol.Preprocessor + CSharpKeyword.Else);
+					this.WriteIndented(CSharpSymbol.Preprocessor + CSharpKeyword.Else);
 				}
 				else
 				{
-					this.WriteIndentedLine(
+					this.WriteIndented(
 						string.Format(CultureInfo.InvariantCulture, ConditionFormat,
 						CSharpSymbol.Preprocessor, CSharpKeyword.Elif, conditionDirective.ConditionExpression));
 				}
 
 				Writer.WriteLine();
-
 				WriteChildren(conditionDirective);
-
-				if (conditionDirective.Children.Count > 0)
+				if (element.Children.Count > 0)
 				{
-					Writer.WriteLine();
 					Writer.WriteLine();
 				}
 			}
@@ -740,7 +760,7 @@ namespace NArrange.CSharp
 			//
 			// Process all children
 			//
-			WriteChildren(element);
+			WriteBlockChildren(element);
 
 			WriteEndBlock();
 		}
@@ -772,41 +792,6 @@ namespace NArrange.CSharp
 			Writer.WriteLine();
 
 			WriteBody(element);
-		}
-
-		/// <summary>
-		/// Processes a region element
-		/// </summary>
-		/// <param name="element"></param>
-		public override void VisitRegionElement(RegionElement element)
-		{
-			StringBuilder builder = new StringBuilder(DefaultBlockLength);
-			builder.Append(CSharpSymbol.Preprocessor);
-			builder.Append(CSharpKeyword.Region);
-			builder.Append(' ');
-			builder.Append(element.Name);
-
-			WriteIndentedLine(builder.ToString());
-			Writer.WriteLine();
-
-			WriteChildren(element);
-
-			if (element.Children.Count > 0)
-			{
-			    Writer.WriteLine();
-			    Writer.WriteLine();
-			}
-
-			builder = new StringBuilder(DefaultBlockLength);
-			builder.Append(CSharpSymbol.Preprocessor);
-			builder.Append(CSharpKeyword.EndRegion);
-			if (Configuration.Regions.EndRegionNameEnabled)
-			{
-			    builder.Append(' ');
-			    builder.Append(element.Name);
-			}
-
-			WriteIndented(builder.ToString());
 		}
 
 		/// <summary>
@@ -929,18 +914,8 @@ namespace NArrange.CSharp
 			else
 			{
 			    WriteBeginBlock();
-
-			    if (element.Children.Count > 0)
-			    {
-			        WriteChildren(element);
-
-			        WriteEndBlock();
-			    }
-			    else
-			    {
-			        TabCount--;
-			        WriteIndented(CSharpSymbol.EndBlock.ToString());
-			    }
+				WriteBlockChildren(element);
+				WriteEndBlock();
 
 			    WriteClosingComment(element, ClosingCommentPrefix);
 			}

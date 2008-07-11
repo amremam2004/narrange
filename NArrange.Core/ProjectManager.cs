@@ -36,6 +36,7 @@
  *      - Allow filtering of source and project files
  *		- Allow arranging of an entire directory
  *		- Allow multiple types of project parsers
+ *		- Pass the configuration to parsers
  *		Justin Dearing
  *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -76,7 +77,7 @@ namespace NArrange.Core
 		{
 			if (configuration == null)
 			{
-			    throw new ArgumentNullException("configuration");
+				throw new ArgumentNullException("configuration");
 			}
 
 			_configuration = configuration;
@@ -155,7 +156,7 @@ namespace NArrange.Core
 
 			foreach (string projectFile in projectFiles)
 			{
-			    sourceFiles.AddRange(GetProjectSourceFiles(projectFile));
+				sourceFiles.AddRange(GetProjectSourceFiles(projectFile));
 			}
 
 			return sourceFiles.AsReadOnly();
@@ -171,9 +172,9 @@ namespace NArrange.Core
 			// Load extension handlers
 			//
 			_projectExtensionHandlers = new Dictionary<string, ProjectHandler>(
-			    StringComparer.OrdinalIgnoreCase);
+				StringComparer.OrdinalIgnoreCase);
 			_sourceExtensionHandlers = new Dictionary<string, SourceHandler>(
-			    StringComparer.OrdinalIgnoreCase);
+				StringComparer.OrdinalIgnoreCase);
 			foreach (HandlerConfiguration handlerConfiguration in _configuration.Handlers)
 			{
 				switch (handlerConfiguration.HandlerType)
@@ -188,7 +189,7 @@ namespace NArrange.Core
 						break;
 
 					case HandlerType.Project:
-						ProjectHandlerConfiguration projectConfiguration = handlerConfiguration as ProjectHandlerConfiguration; 
+						ProjectHandlerConfiguration projectConfiguration = handlerConfiguration as ProjectHandlerConfiguration;
 						ProjectHandler projectHandler = new ProjectHandler(projectConfiguration);
 						foreach (ExtensionConfiguration extension in projectConfiguration.ProjectExtensions)
 						{
@@ -212,21 +213,21 @@ namespace NArrange.Core
 			ExtensionConfiguration extensionConfiguration = null;
 			foreach (ExtensionConfiguration extensionEntry in extensions)
 			{
-			    if (extensionEntry.Name == extension)
-			    {
-			        extensionConfiguration = extensionEntry;
-			        break;
-			    }
+				if (extensionEntry.Name == extension)
+				{
+					extensionConfiguration = extensionEntry;
+					break;
+				}
 			}
 
 			if (extensionConfiguration != null && extensionConfiguration.FilterBy != null)
 			{
-			    FilterBy filterBy = extensionConfiguration.FilterBy;
-			    FileFilter fileFilter = new FileFilter(filterBy.Condition);
-			    if (File.Exists(fileName))
-			    {
-			        isRecognizedFile = fileFilter.IsMatch(new FileInfo(fileName));
-			    }
+				FilterBy filterBy = extensionConfiguration.FilterBy;
+				FileFilter fileFilter = new FileFilter(filterBy.Condition);
+				if (File.Exists(fileName))
+				{
+					isRecognizedFile = fileFilter.IsMatch(new FileInfo(fileName));
+				}
 			}
 			return isRecognizedFile;
 		}
@@ -238,7 +239,7 @@ namespace NArrange.Core
 			SourceHandler handler = GetSourceHandler(fileName);
 			if (handler != null)
 			{
-			    recognized = IsRecognizedFile(fileName, handler.Configuration.SourceExtensions);
+				recognized = IsRecognizedFile(fileName, handler.Configuration.SourceExtensions);
 			}
 
 			return recognized;
@@ -281,15 +282,15 @@ namespace NArrange.Core
 
 			if (IsSolution(fileName))
 			{
-			    sourceFiles.AddRange(GetSolutionSourceFiles(fileName));
+				sourceFiles.AddRange(GetSolutionSourceFiles(fileName));
 			}
 			else if (IsProject(fileName))
 			{
-			    sourceFiles.AddRange(GetProjectSourceFiles(fileName));
+				sourceFiles.AddRange(GetProjectSourceFiles(fileName));
 			}
 			else if (IsRecognizedSourceFile(fileName))
 			{
-			    sourceFiles.Add(fileName);
+				sourceFiles.Add(fileName);
 			}
 			else if (Directory.Exists(fileName))
 			{
@@ -346,14 +347,15 @@ namespace NArrange.Core
 			SourceHandler sourceHandler = GetSourceHandler(inputFile);
 			if (sourceHandler != null)
 			{
-			    ICodeElementParser parser = sourceHandler.CodeParser;
-			    if (parser != null)
-			    {
-			        using (StringReader reader = new StringReader(text))
-			        {
-			            elements = parser.Parse(reader);
-			        }
-			    }
+				ICodeElementParser parser = sourceHandler.CodeParser;
+				if (parser != null)
+				{
+					parser.Configuration = _configuration;
+					using (StringReader reader = new StringReader(text))
+					{
+						elements = parser.Parse(reader);
+					}
+				}
 			}
 
 			return elements;
