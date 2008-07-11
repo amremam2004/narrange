@@ -1,5 +1,6 @@
 2008-07-11  James Nies
 
+	* Updated documentation.
 	* Allow region directives to be written and parsed as comments.
 
 2008-07-07  James Nies
