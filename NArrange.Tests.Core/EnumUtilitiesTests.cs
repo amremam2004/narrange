@@ -1,47 +1,47 @@
-using System;
-
-using NArrange.Core;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test fixture for the EnumUtilities class.
-	/// </summary>
-	[TestFixture]
-	public class EnumUtilitiesTests
-	{
-		#region Public Methods
+    using System;
 
-		/// <summary>
-		/// Tests the ToString method.
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			string str;
+    using NArrange.Core;
 
-			str = DayOfWeek.Friday.ToString();
-			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
-			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
+    using NUnit.Framework;
 
-			str = DayOfWeek.Sunday.ToString();
-			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
-			Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
+    /// <summary>
+    /// Test fixture for the EnumUtilities class.
+    /// </summary>
+    [TestFixture]
+    public class EnumUtilitiesTests
+    {
+        #region Public Methods
 
-			MemberModifiers modifiers;
-			modifiers = MemberModifiers.Override | MemberModifiers.ReadOnly;
-			str = modifiers.ToString();
-			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
-			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            string str;
 
-			modifiers = MemberModifiers.Override | MemberModifiers.Partial;
-			str = modifiers.ToString();
-			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
-			Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
-		}
+            str = DayOfWeek.Friday.ToString();
+            Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
+            Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Friday));
 
-		#endregion Public Methods
-	}
+            str = DayOfWeek.Sunday.ToString();
+            Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
+            Assert.AreEqual(str, EnumUtilities.ToString(DayOfWeek.Sunday));
+
+            MemberModifiers modifiers;
+            modifiers = MemberModifiers.Override | MemberModifiers.ReadOnly;
+            str = modifiers.ToString();
+            Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+            Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+
+            modifiers = MemberModifiers.Override | MemberModifiers.Partial;
+            str = modifiers.ToString();
+            Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+            Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
+        }
+
+        #endregion Public Methods
+    }
 }

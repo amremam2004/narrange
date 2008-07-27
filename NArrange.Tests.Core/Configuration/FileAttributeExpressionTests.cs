@@ -1,30 +1,29 @@
-using NArrange.Core;
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the FileAttributeExpression class.
-	/// </summary>
-	[TestFixture]
-	public class FileAttributeExpressionTests
-	{
-		#region Public Methods
+    using NArrange.Core;
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the ToString method.
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			FileAttributeExpression expression = new FileAttributeExpression(FileAttributeType.Path);
+    using NUnit.Framework;
 
-			Assert.AreEqual("$(File.Path)", expression.ToString(),
-				"Unexpected string representation.");
-		}
+    /// <summary>
+    /// Test fixture for the FileAttributeExpression class.
+    /// </summary>
+    [TestFixture]
+    public class FileAttributeExpressionTests
+    {
+        #region Public Methods
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            FileAttributeExpression expression = new FileAttributeExpression(FileAttributeType.Path);
+
+            Assert.AreEqual("$(File.Path)", expression.ToString(), "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

@@ -45,6 +45,7 @@
     <Compile Include="BackupUtilities.cs" />
     <Compile Include="CodeElements\CommentedElement.cs" />
     <Compile Include="CodeElements\ConditionDirectiveElement.cs" />
+    <Compile Include="CodeElements\ElementComparer.cs" />
     <Compile Include="CodeElements\GroupElement.cs" />
     <Compile Include="CodeElements\ICommentElement.cs" />
     <Compile Include="CodeElements\IGenericElement.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="Configuration\ConfigurationElement.cs" />
     <Compile Include="Configuration\ClosingCommentConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\UsingConfiguration.cs" />
+    <Compile Include="Configuration\LineSpacingConfiguration.cs" />
     <Compile Include="Configuration\FormattingConfiguration.cs" />
     <Compile Include="Configuration\HandlerConfiguration.cs">
       <SubType>Code</SubType>
@@ -84,7 +87,7 @@
     <Compile Include="Configuration\HandlerConfigurationCollection.cs" />
     <Compile Include="Configuration\EncodingConfiguration.cs" />
     <Compile Include="Configuration\ElementReferenceConfiguration.cs" />
-    <Compile Include="Configuration\RegionFormattingConfiguration.cs" />
+    <Compile Include="Configuration\RegionFormatConfiguration.cs" />
     <Compile Include="Configuration\SourceHandlerConfiguration.cs" />
     <Compile Include="Configuration\UnaryOperatorExpression.cs" />
     <Compile Include="Configuration\FileAttributeExpression.cs" />
@@ -117,12 +120,12 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="MSBuildSolutionParser.cs" />
     <Compile Include="ProjectManager.cs" />
+    <Compile Include="RegionArranger.cs" />
     <Compile Include="SolutionParser.cs" />
     <Compile Include="IProjectParser.cs" />
     <Compile Include="CodeElements\ElementUtilities.cs" />
     <Compile Include="SourceHandler.cs" />
     <Compile Include="ICodeElementWriter.cs" />
-    <Compile Include="RegionedInserter.cs" />
     <Compile Include="DefaultElementInserter.cs" />
     <Compile Include="ElementArranger.cs" />
     <Compile Include="GroupedInserter.cs" />
@@ -151,6 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DefaultConfig.v026.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

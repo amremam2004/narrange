@@ -1,202 +1,176 @@
 #region Header
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
- * 	    All rights reserved.                   				      
- *                                                                             
- * This program and the accompanying materials are made available under       
- * the terms of the Common Public License v1.0 which accompanies this         
- * distribution.							      
- *                                                                             
- * Redistribution and use in source and binary forms, with or                 
- * without modification, are permitted provided that the following            
- * conditions are met:                                                        
- *                                                                             
- * Redistributions of source code must retain the above copyright             
- * notice, this list of conditions and the following disclaimer.              
- * Redistributions in binary form must reproduce the above copyright          
- * notice, this list of conditions and the following disclaimer in            
- * the documentation and/or other materials provided with the distribution.   
- *                                                                             
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors.
+ *    All rights reserved.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Common Public License v1.0 which accompanies this
+ * distribution.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Fixed sort direction for inner sorts
- *		Justin Dearing
- *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *      - Fixed sort direction for inner sorts
+ *      Justin Dearing
+ *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
-using System;
-using System.ComponentModel;
-
-using NArrange.Core.CodeElements;
-using NArrange.Core.Configuration;
-
 namespace NArrange.Core
 {
-	/// <summary>
-	/// Sorted inserter
-	/// </summary>
-	public class SortedInserter : IElementInserter
-	{
-		#region Fields
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
 
-		private readonly Comparison<ICodeElement> _comparison;
-		private readonly ElementType _elementType;
+    using NArrange.Core.CodeElements;
+    using NArrange.Core.Configuration;
 
-		#endregion Fields
+    /// <summary>
+    /// Sorted inserter.
+    /// </summary>
+    public class SortedInserter : IElementInserter
+    {
+        #region Fields
 
-		#region Constructors
+        /// <summary>
+        /// Element type.
+        /// </summary>
+        private readonly ElementType _elementType;
 
-		/// <summary>
-		/// Creates a new sorted inserter using the specified sorting configuration
-		/// </summary>
-		/// <param name="elementType"></param>
-		/// <param name="sortBy"></param>
-		public SortedInserter(ElementType elementType, SortBy sortBy)
-		{
-			if (sortBy == null)
-			{
-			    throw new ArgumentNullException("sortBy");
-			}
+        /// <summary>
+        /// Sort configuration.
+        /// </summary>
+        private readonly SortBy _sortBy;
 
-			_elementType = elementType;
-			_comparison = CreateComparison(sortBy);
-		}
+        /// <summary>
+        /// Element comparer.
+        /// </summary>
+        private IComparer<ICodeElement> _comparer;
 
-		#endregion Constructors
+        #endregion Fields
 
-		#region Private Methods
+        #region Constructors
 
-		private Comparison<ICodeElement> CreateComparison(SortBy sortBy)
-		{
-			Comparison<ICodeElement> comparison = delegate(ICodeElement x, ICodeElement y)
-			{
-			    int compareValue = 0;
+        /// <summary>
+        /// Creates a new sorted inserter using the specified sorting configuration.
+        /// </summary>
+        /// <param name="elementType">Type of the element.</param>
+        /// <param name="sortBy">The sort by.</param>
+        public SortedInserter(ElementType elementType, SortBy sortBy)
+        {
+            if (sortBy == null)
+            {
+                throw new ArgumentNullException("sortBy");
+            }
 
-			    if (x == null && y != null)
-			    {
-			        compareValue = -1;
-			    }
-			    else if (x != null && y == null)
-			    {
-			        compareValue = 1;
-			    }
-			    else
-			    {
-			        switch (sortBy.By)
-			        {
-			            case ElementAttributeType.Access:
-			                AttributedElement attributedX = x as AttributedElement;
-			                AttributedElement attributedY = y as AttributedElement;
-			                if (attributedX != null && attributedY != null)
-			                {
-			                    compareValue = attributedX.Access.CompareTo(attributedY.Access);
-			                }
-			                break;
+            _elementType = elementType;
+            _sortBy = sortBy.Clone() as SortBy;
+        }
 
-			            case ElementAttributeType.ElementType:
-			                compareValue = x.ElementType.CompareTo(y.ElementType);
-			                break;
+        #endregion Constructors
 
-			            case ElementAttributeType.Type:
-			                string xType = ElementUtilities.GetAttribute(ElementAttributeType.Type, x);
-			                string yType = ElementUtilities.GetAttribute(ElementAttributeType.Type, y);
-			                compareValue = xType.CompareTo(yType);
-			                break;
+        #region Public Methods
 
-			            case ElementAttributeType.Name:
-			                    compareValue = StringComparer.Ordinal.Compare(
-			                        x.Name, y.Name);
-			                    break;
+        /// <summary>
+        /// Inserts an element into the parent using the strategy defined by the 
+        /// sort configuration.
+        /// </summary>
+        /// <param name="parentElement">Parent element.</param>
+        /// <param name="codeElement">Code element to insert.</param>
+        public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
+        {
+            if (codeElement != null)
+            {
+                ICodeElement compareElement = null;
 
-			            default:
-			                compareValue = 0;
-			                break;
-			        }
+                int insertIndex = 0;
 
-			        //
-			        // Inner sort?
-			        //
-			        if (compareValue == 0)
-			        {
-			            if (sortBy.InnerSortBy != null)
-			            {
-			                Comparison<ICodeElement> innerComparison = CreateComparison(sortBy.InnerSortBy);
-			                compareValue = innerComparison(x, y);
-			            }
-			        }
-					else if (sortBy.Direction == ListSortDirection.Descending)
-					{
-						compareValue = -compareValue;
-					}
-			    }
+                if (parentElement.Children.Count > 0)
+                {
+                    if (_comparer == null)
+                    {
+                        _comparer = CreateComparer(_sortBy);
+                    }
 
-			    return compareValue;
-			};
+                    for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
+                    {
+                        compareElement = parentElement.Children[elementIndex];
 
-			return comparison;
-		}
+                        bool greaterOrEqual =
+                            (_elementType == ElementType.NotSpecified &&
+                            _comparer.Compare(codeElement, compareElement) >= 0) ||
+                            (_elementType != ElementType.NotSpecified &&
+                            ((compareElement != null && compareElement.ElementType != _elementType) ||
+                            _comparer.Compare(codeElement, compareElement) >= 0));
+                        if (greaterOrEqual)
+                        {
+                            insertIndex++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
 
-		#endregion Private Methods
+                parentElement.InsertChild(insertIndex, codeElement);
+            }
+        }
 
-		#region Public Methods
+        #endregion Public Methods
 
-		/// <summary>
-		/// Inserts an element into the parent using the strategy defined by the 
-		/// sort configuration.
-		/// </summary>
-		/// <param name="parentElement"></param>
-		/// <param name="codeElement"></param>
-		public void InsertElement(ICodeElement parentElement, ICodeElement codeElement)
-		{
-			if (codeElement != null)
-			{
-			    ICodeElement compareElement = null;
+        #region Private Methods
 
-			    int insertIndex = 0;
+        /// <summary>
+        /// Creates a comparer based on the sort configuration.
+        /// </summary>
+        /// <param name="sortBy">Sort configuration.</param>
+        /// <returns>Comparer for two code elements.</returns>
+        private IComparer<ICodeElement> CreateComparer(SortBy sortBy)
+        {
+            ElementComparer comparer = null;
 
-				if (parentElement.Children.Count > 0)
-			    {
-			        for (int elementIndex = 0; elementIndex < parentElement.Children.Count; elementIndex++)
-			        {
-			            compareElement = parentElement.Children[elementIndex];
+            Stack<SortBy> sortByStack = new Stack<SortBy>();
 
-			            bool greaterOrEqual =
-			                (_elementType == ElementType.NotSpecified &&
-			                _comparison(codeElement, compareElement) >= 0) ||
-			                (_elementType != ElementType.NotSpecified &&
-			                ((compareElement != null && compareElement.ElementType != _elementType) ||
-			                _comparison(codeElement, compareElement) >= 0));
-			            if (greaterOrEqual)
-			            {
-			                insertIndex++;
-			            }
-			            else
-			            {
-			                break;
-			            }
-			        }
-			    }
+            while (sortBy != null)
+            {
+                sortByStack.Push(sortBy);
+                sortBy = sortBy.InnerSortBy;
+            }
 
-			    parentElement.InsertChild(insertIndex, codeElement);
-			}
-		}
+            while (sortByStack.Count > 0)
+            {
+                sortBy = sortByStack.Pop();
+                comparer = new ElementComparer(sortBy.By, sortBy.Direction, comparer);
+            }
 
-		#endregion Public Methods
-	}
+            return comparer;
+        }
+
+        #endregion Private Methods
+    }
 }

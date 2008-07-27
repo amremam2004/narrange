@@ -1,82 +1,75 @@
-using NArrange.Core;
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture for the NamespaceElement class
-	/// </summary>
-	[TestFixture]
-	public class NamespaceElementTests : CodeElementTests<NamespaceElement>
-	{
-		#region Protected Methods
+    using NArrange.Core;
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Creates an instance for cloning
-		/// </summary>
-		/// <returns></returns>
-		protected override NamespaceElement DoCreateClonePrototype()
-		{
-			NamespaceElement prototype = new NamespaceElement();
-			prototype.Name = "SampleNamespace";
+    using NUnit.Framework;
 
-			return prototype;
-		}
+    /// <summary>
+    /// Test fixture for the NamespaceElement class.
+    /// </summary>
+    [TestFixture]
+    public class NamespaceElementTests : CodeElementTests<NamespaceElement>
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Test for ToString()
-		/// </summary>
-		protected override void DoToStringTest()
-		{
-			NamespaceElement element = new NamespaceElement();
-			element.Name = "Test";
+        /// <summary>
+        /// Tests constructing a new NamespaceElement.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            NamespaceElement element = new NamespaceElement();
 
-			string str = element.ToString();
-			Assert.AreEqual("Test", str,
-			    "Unexpected value returned for ToString.");
-		}
+            //
+            // Verify default values
+            //
+            Assert.AreEqual(ElementType.Namespace, element.ElementType, "Unexpected element type.");
+            Assert.AreEqual(string.Empty, element.Name, "Unexpected default value for Name.");
+            Assert.IsNotNull(element.Children, "Children collection should not be null.");
+            Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
+            Assert.IsNotNull(element.HeaderComments, "HeaderCommentLines collection should not be null.");
+            Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
+        }
 
-		/// <summary>
-		/// Verifies that a clone has the same state as the original
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected override void DoVerifyClone(NamespaceElement original, NamespaceElement clone)
-		{
-			Assert.AreEqual(original.Name, clone.Name);
-		}
+        #endregion Public Methods
 
-		#endregion Protected Methods
+        #region Protected Methods
 
-		#region Public Methods
+        /// <summary>
+        /// Creates an instance for cloning.
+        /// </summary>
+        /// <returns>Clone prototype.</returns>
+        protected override NamespaceElement DoCreateClonePrototype()
+        {
+            NamespaceElement prototype = new NamespaceElement();
+            prototype.Name = "SampleNamespace";
 
-		/// <summary>
-		/// Tests constructing a new NamespaceElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			NamespaceElement element = new NamespaceElement();
+            return prototype;
+        }
 
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(ElementType.Namespace, element.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(element.HeaderComments,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, element.HeaderComments.Count,
-			    "HeaderCommentLines collection should be empty.");
-		}
+        /// <summary>
+        /// Test for ToString()
+        /// </summary>
+        protected override void DoToStringTest()
+        {
+            NamespaceElement element = new NamespaceElement();
+            element.Name = "Test";
 
-		#endregion Public Methods
-	}
+            string str = element.ToString();
+            Assert.AreEqual("Test", str, "Unexpected value returned for ToString.");
+        }
+
+        /// <summary>
+        /// Verifies that a clone has the same state as the original.
+        /// </summary>
+        /// <param name="original">Original element.</param>
+        /// <param name="clone">Clone element.</param>
+        protected override void DoVerifyClone(NamespaceElement original, NamespaceElement clone)
+        {
+            Assert.AreEqual(original.Name, clone.Name);
+        }
+
+        #endregion Protected Methods
+    }
 }

@@ -1,7 +1,8 @@
 The following changes were made in this release:
 
-0.2.6.0
-- Allow region directives to be written as comments.
-- Fixed a bug where in certain scenarios, the text of commented out elements was being reversed.
-- Fixed parsing of nullable type references containing whitespace.
-- Fixed an issue parsing escaped strings in C# member bodies.
+0.2.7.0
+- By default, provide a StyleCop compatible configuration for ordering of members.
+- Allow consecutive blank lines to be removed within member bodies.
+- Allow disabling of directives for individual regions.
+- Allow nested regions.
+- Fixed a bug where whitespace preceding a line was not fully converted to tabs/spaces.  Also, trim trailing whitespace in member bodies.

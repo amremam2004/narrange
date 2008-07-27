@@ -1,68 +1,68 @@
-using System.CodeDom.Compiler;
-using System.IO;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test utilities
-	/// </summary>
-	public static class TestUtilities
-	{
-		#region Public Properties
+    using System.CodeDom.Compiler;
+    using System.IO;
 
-		/// <summary>
-		/// Test code configuration files.
-		/// </summary>
-		public static FileInfo[] TestConfigurationFiles
-		{
-			get
-			{
-			    DirectoryInfo testConfigDirectory = new DirectoryInfo("TestConfigurations");
-			    FileInfo[] testConfigFiles = testConfigDirectory.GetFiles("*.xml");
+    using NUnit.Framework;
 
-			    return testConfigFiles;
-			}
-		}
+    /// <summary>
+    /// Test utilities.
+    /// </summary>
+    public static class TestUtilities
+    {
+        #region Public Static Properties
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets the test code configuration files.
+        /// </summary>
+        public static FileInfo[] TestConfigurationFiles
+        {
+            get
+            {
+                DirectoryInfo testConfigDirectory = new DirectoryInfo("TestConfigurations");
+                FileInfo[] testConfigFiles = testConfigDirectory.GetFiles("*.xml");
 
-		#region Public Methods
+                return testConfigFiles;
+            }
+        }
 
-		/// <summary>
-		/// Verifies that a file is not empty
-		/// </summary>
-		/// <param name="fileName"></param>
-		public static void AssertNotEmpty(string fileName)
-		{
-			using (FileStream fs = new FileStream(fileName, FileMode.Open))
-			{
-			    Assert.IsTrue(fs.Length > 0, "File {0} should not be empty.", fileName);
-			}
-		}
+        #endregion Public Static Properties
 
-		/// <summary>
-		/// Retrieves a compiler error from a compiler result
-		/// </summary>
-		/// <param name="results"></param>
-		/// <returns></returns>
-		public static CompilerError GetCompilerError(CompilerResults results)
-		{
-			CompilerError error = null;
+        #region Public Static Methods
 
-			foreach (CompilerError compilerError in results.Errors)
-			{
-			    if (!compilerError.IsWarning)
-			    {
-			        error = compilerError;
-			        break;
-			    }
-			}
+        /// <summary>
+        /// Verifies that a file is not empty.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
+        public static void AssertNotEmpty(string fileName)
+        {
+            using (FileStream fs = new FileStream(fileName, FileMode.Open))
+            {
+                Assert.IsTrue(fs.Length > 0, "File {0} should not be empty.", fileName);
+            }
+        }
 
-			return error;
-		}
+        /// <summary>
+        /// Retrieves a compiler error from a compiler result.
+        /// </summary>
+        /// <param name="results">Compiler results.</param>
+        /// <returns>Compiler error if present, otherwise null.</returns>
+        public static CompilerError GetCompilerError(CompilerResults results)
+        {
+            CompilerError error = null;
 
-		#endregion Public Methods
-	}
+            foreach (CompilerError compilerError in results.Errors)
+            {
+                if (!compilerError.IsWarning)
+                {
+                    error = compilerError;
+                    break;
+                }
+            }
+
+            return error;
+        }
+
+        #endregion Public Static Methods
+    }
 }

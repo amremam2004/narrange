@@ -1,92 +1,86 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using NUnit.Framework;
-
-using NArrange.Core;
-using NArrange.Core.CodeElements;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture for the ConditionDirectiveElement class.
-	/// </summary>
-	[TestFixture]
-	public class ConditionDirectiveElementTests : CommentedElementTests<ConditionDirectiveElement>
-	{
-		#region Protected Methods
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
-		/// <summary>
-		/// Creates an instance for cloning.
-		/// </summary>
-		/// <returns></returns>
-		protected override ConditionDirectiveElement DoCreateClonePrototype()
-		{
-			ConditionDirectiveElement prototype = new ConditionDirectiveElement();
-			prototype.ConditionExpression = "DEBUG";
-			FieldElement field1 = new FieldElement();
-			field1.Name = "field1";
-			field1.Type = "string";
-			prototype.AddChild(field1);
+    using NArrange.Core;
+    using NArrange.Core.CodeElements;
 
-			prototype.ElseCondition = new ConditionDirectiveElement();
-			prototype.ElseCondition.ConditionExpression = null;
-			FieldElement field2 = new FieldElement();
-			field2.Name = "field1";
-			field2.Type = "string";
-			prototype.ElseCondition.AddChild(field2);
+    using NUnit.Framework;
 
-			return prototype;
-		}
+    /// <summary>
+    /// Test fixture for the ConditionDirectiveElement class.
+    /// </summary>
+    [TestFixture]
+    public class ConditionDirectiveElementTests : CommentedElementTests<ConditionDirectiveElement>
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Verifies that a clone has the same state as the original.
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected override void DoVerifyClone(ConditionDirectiveElement original, ConditionDirectiveElement clone)
-		{
-			Assert.AreEqual(original.ConditionExpression, clone.ConditionExpression);
-			Assert.AreEqual(original.Children.Count, clone.Children.Count);
+        /// <summary>
+        /// Tests constructing a new UsingElement.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            UsingElement element = new UsingElement();
 
-			Assert.IsNotNull(original.ElseCondition);
-			Assert.IsNotNull(clone.ElseCondition);
-			Assert.AreNotSame(original.ElseCondition, clone.ElseCondition);
-			Assert.AreEqual(original.ElseCondition.ConditionExpression, clone.ElseCondition.ConditionExpression);
-			Assert.AreEqual(original.ElseCondition.Children.Count, clone.ElseCondition.Children.Count);
-		}
+            //
+            // Verify default values
+            //
+            Assert.AreEqual(string.Empty, element.Name, "Unexpected default value for Name.");
+            Assert.IsNull(element.Redefine, "Unexpected default value for Redefine.");
 
-		#endregion Protected Methods
+            Assert.IsNotNull(element.Children, "Children collection should not be null.");
+            Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
+            Assert.IsNotNull(element.HeaderComments, "HeaderCommentLines collection should not be null.");
+            Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
+        }
 
-		#region Public Methods
+        #endregion Public Methods
 
-		/// <summary>
-		/// Tests constructing a new UsingElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			UsingElement element = new UsingElement();
+        #region Protected Methods
 
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNull(element.Redefine,
-			    "Unexpected default value for Redefine.");
+        /// <summary>
+        /// Creates an instance for cloning.
+        /// </summary>
+        /// <returns>Clone prototype.</returns>
+        protected override ConditionDirectiveElement DoCreateClonePrototype()
+        {
+            ConditionDirectiveElement prototype = new ConditionDirectiveElement();
+            prototype.ConditionExpression = "DEBUG";
+            FieldElement field1 = new FieldElement();
+            field1.Name = "field1";
+            field1.Type = "string";
+            prototype.AddChild(field1);
 
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(element.HeaderComments,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, element.HeaderComments.Count,
-			    "HeaderCommentLines collection should be empty.");
-		}
+            prototype.ElseCondition = new ConditionDirectiveElement();
+            prototype.ElseCondition.ConditionExpression = null;
+            FieldElement field2 = new FieldElement();
+            field2.Name = "field1";
+            field2.Type = "string";
+            prototype.ElseCondition.AddChild(field2);
 
-		#endregion Public Methods
-	}
+            return prototype;
+        }
+
+        /// <summary>
+        /// Verifies that a clone has the same state as the original.
+        /// </summary>
+        /// <param name="original">Original element.</param>
+        /// <param name="clone">Clone element.</param>
+        protected override void DoVerifyClone(ConditionDirectiveElement original, ConditionDirectiveElement clone)
+        {
+            Assert.AreEqual(original.ConditionExpression, clone.ConditionExpression);
+            Assert.AreEqual(original.Children.Count, clone.Children.Count);
+
+            Assert.IsNotNull(original.ElseCondition);
+            Assert.IsNotNull(clone.ElseCondition);
+            Assert.AreNotSame(original.ElseCondition, clone.ElseCondition);
+            Assert.AreEqual(original.ElseCondition.ConditionExpression, clone.ElseCondition.ConditionExpression);
+            Assert.AreEqual(original.ElseCondition.Children.Count, clone.ElseCondition.Children.Count);
+        }
+
+        #endregion Protected Methods
+    }
 }

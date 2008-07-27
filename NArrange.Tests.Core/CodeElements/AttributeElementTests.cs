@@ -1,79 +1,74 @@
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture for the AttributeElement class.
-	/// </summary>
-	[TestFixture]
-	public class AttributeElementTests : CommentedElementTests<AttributeElement>
-	{
-		#region Protected Methods
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Creates an instance for cloning.
-		/// </summary>
-		/// <returns></returns>
-		protected override AttributeElement DoCreateClonePrototype()
-		{
-			AttributeElement prototype = new AttributeElement();
-			prototype.Name = "SampleAttribute";
-			prototype.Target = "class";
-			prototype.BodyText = "\"Test\"";
+    using NUnit.Framework;
 
-			AttributeElement child1 = new AttributeElement();
-			AttributeElement child2 = new AttributeElement();
+    /// <summary>
+    /// Test fixture for the AttributeElement class.
+    /// </summary>
+    [TestFixture]
+    public class AttributeElementTests : CommentedElementTests<AttributeElement>
+    {
+        #region Public Methods
 
-			prototype.AddChild(child1);
-			prototype.AddChild(child2);
+        /// <summary>
+        /// Tests constructing a new UsingElement.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            AttributeElement element = new AttributeElement();
 
-			return prototype;
-		}
+            //
+            // Verify default values
+            //
+            Assert.IsNull(element.Target, "Unexpected default value for Target.");
 
-		/// <summary>
-		/// Verifies that a clone has the same state as the original.
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected override void DoVerifyClone(AttributeElement original, AttributeElement clone)
-		{
-			Assert.AreEqual(original.Name, clone.Name);
-			Assert.AreEqual(original.Target, clone.Target);
-			Assert.AreEqual(original.BodyText, clone.BodyText);
+            Assert.IsNotNull(element.Children, "Children collection should not be null.");
+            Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
+            Assert.IsNotNull(element.HeaderComments, "HeaderCommentLines collection should not be null.");
+            Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
+        }
 
-			Assert.AreEqual(original.Children.Count, clone.Children.Count);
-		}
+        #endregion Public Methods
 
-		#endregion Protected Methods
+        #region Protected Methods
 
-		#region Public Methods
+        /// <summary>
+        /// Creates an instance for cloning.
+        /// </summary>
+        /// <returns>A clone prototype for testing.</returns>
+        protected override AttributeElement DoCreateClonePrototype()
+        {
+            AttributeElement prototype = new AttributeElement();
+            prototype.Name = "SampleAttribute";
+            prototype.Target = "class";
+            prototype.BodyText = "\"Test\"";
 
-		/// <summary>
-		/// Tests constructing a new UsingElement.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			AttributeElement element = new AttributeElement();
+            AttributeElement child1 = new AttributeElement();
+            AttributeElement child2 = new AttributeElement();
 
-			//
-			// Verify default values
-			//
-			Assert.IsNull(element.Target,
-			    "Unexpected default value for Target.");
+            prototype.AddChild(child1);
+            prototype.AddChild(child2);
 
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-			Assert.IsNotNull(element.HeaderComments,
-			    "HeaderCommentLines collection should not be null.");
-			Assert.AreEqual(0, element.HeaderComments.Count,
-			    "HeaderCommentLines collection should be empty.");
-		}
+            return prototype;
+        }
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Verifies that a clone has the same state as the original.
+        /// </summary>
+        /// <param name="original">Attribute element.</param>
+        /// <param name="clone">Clone instance.</param>
+        protected override void DoVerifyClone(AttributeElement original, AttributeElement clone)
+        {
+            Assert.AreEqual(original.Name, clone.Name);
+            Assert.AreEqual(original.Target, clone.Target);
+            Assert.AreEqual(original.BodyText, clone.BodyText);
+
+            Assert.AreEqual(original.Children.Count, clone.Children.Count);
+        }
+
+        #endregion Protected Methods
+    }
 }

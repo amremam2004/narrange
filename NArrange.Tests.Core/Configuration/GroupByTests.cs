@@ -1,84 +1,97 @@
-using NArrange.Core;
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the GroupBy class
-	/// </summary>
-	[TestFixture]
-	public class GroupByTests
-	{
-		#region Public Methods
+    using NArrange.Core;
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the creation of a new GroupBy
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			GroupBy groupBy = new GroupBy();
+    using NUnit.Framework;
 
-			//
-			// Verify default state
-			//
-			Assert.IsNull(groupBy.AttributeCapture,
-			    "Unexpected default value AttributeCapture.");
-			Assert.AreEqual(ElementAttributeType.None, groupBy.By,
-			    "Unexpected default value for By.");
-			Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType,
-			    "Unexpected default value for SeparateType.");
-			Assert.IsNull(groupBy.CustomSeparator,
-			    "Unexpected default value for CustomSeparator.");
-		}
+    /// <summary>
+    /// Test fixture for the GroupBy class.
+    /// </summary>
+    [TestFixture]
+    public class GroupByTests
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Tests the CustomSeparator property
-		/// </summary>
-		[Test]
-		public void CustomSeparatorTest()
-		{
-			GroupBy groupBy = new GroupBy();
-			Assert.IsNull(groupBy.CustomSeparator,
-			    "Unexpected default value for CustomSeparator.");
+        /// <summary>
+        /// Tests cloning the configuration element.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            groupBy.By = ElementAttributeType.Name;
+            groupBy.AttributeCapture = "(.*)";
+            groupBy.CustomSeparator = "\r\nXXX\r\n";
+            groupBy.Direction = SortDirection.Descending;
+            groupBy.SeparatorType = GroupSeparatorType.Custom;
 
-			groupBy.CustomSeparator = "// This is a group\r\n";
-			Assert.AreEqual("// This is a group\r\n", groupBy.CustomSeparator,
-			    "CustomSeparator was not set correctly.");
-		}
+            GroupBy clone = groupBy.Clone() as GroupBy;
+            Assert.AreEqual(groupBy.By, clone.By, "By was not copied correctly");
+            Assert.AreEqual(groupBy.AttributeCapture, clone.AttributeCapture, "AttributeCapture was not copied correctly");
+            Assert.AreEqual(groupBy.CustomSeparator, clone.CustomSeparator, "CustomSeparator was not copied correctly");
+            Assert.AreEqual(groupBy.Direction, clone.Direction, "Direction was not copied correctly");
+            Assert.AreEqual(groupBy.SeparatorType, clone.SeparatorType, "SeparatorType was not copied correctly");
+        }
 
-		/// <summary>
-		/// Tests the SeparateType property
-		/// </summary>
-		[Test]
-		public void SeparatorTypeTest()
-		{
-			GroupBy groupBy = new GroupBy();
-			Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType,
-			    "Unexpected default value for SeparateType.");
+        /// <summary>
+        /// Tests the creation of a new GroupBy.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            GroupBy groupBy = new GroupBy();
 
-			groupBy.SeparatorType = GroupSeparatorType.Custom;
-			Assert.AreEqual(GroupSeparatorType.Custom, groupBy.SeparatorType,
-			    "SeparateType was not set correctly.");
-		}
+            //
+            // Verify default state
+            //
+            Assert.IsNull(groupBy.AttributeCapture, "Unexpected default value AttributeCapture.");
+            Assert.AreEqual(ElementAttributeType.None, groupBy.By, "Unexpected default value for By.");
+            Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType, "Unexpected default value for SeparateType.");
+            Assert.IsNull(groupBy.CustomSeparator, "Unexpected default value for CustomSeparator.");
+            Assert.AreEqual(SortDirection.None, groupBy.Direction, "Unexpected default value for Direction.");
+        }
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			GroupBy groupBy = new GroupBy();
-			groupBy.By = ElementAttributeType.Access;
+        /// <summary>
+        /// Tests the CustomSeparator property.
+        /// </summary>
+        [Test]
+        public void CustomSeparatorTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            Assert.IsNull(groupBy.CustomSeparator, "Unexpected default value for CustomSeparator.");
 
-			string str = groupBy.ToString();
+            groupBy.CustomSeparator = "// This is a group\r\n";
+            Assert.AreEqual("// This is a group\r\n", groupBy.CustomSeparator, "CustomSeparator was not set correctly.");
+        }
 
-			Assert.AreEqual("Group by: Access", str,
-			    "Unexpected string representation.");
-		}
+        /// <summary>
+        /// Tests the SeparateType property.
+        /// </summary>
+        [Test]
+        public void SeparatorTypeTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            Assert.AreEqual(GroupSeparatorType.NewLine, groupBy.SeparatorType, "Unexpected default value for SeparateType.");
 
-		#endregion Public Methods
-	}
+            groupBy.SeparatorType = GroupSeparatorType.Custom;
+            Assert.AreEqual(GroupSeparatorType.Custom, groupBy.SeparatorType, "SeparateType was not set correctly.");
+        }
+
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            groupBy.By = ElementAttributeType.Access;
+
+            string str = groupBy.ToString();
+
+            Assert.AreEqual("Group by: Access", str, "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

@@ -1,53 +1,62 @@
-using System.IO;
-using System.Text;
-
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test fixture for the FileUtilities class.
-	/// </summary>
-	[TestFixture]
-	public class FileUtilitiesTests
-	{
-		#region Constants
+    using System.IO;
+    using System.Text;
 
-		private const string EncodingTestFileDirectory = "EncodingTestFiles";
+    using NArrange.Core.CodeElements;
 
-		#endregion Constants
+    using NUnit.Framework;
 
-		#region Public Methods
+    /// <summary>
+    /// Test fixture for the FileUtilities class.
+    /// </summary>
+    [TestFixture]
+    public class FileUtilitiesTests
+    {
+        #region Constants
 
-		/// <summary>
-		/// Tests the GetEncoding method.
-		/// </summary>
-		[Test]
-		public void GetEncodingTest()
-		{
-			DirectoryInfo testFileDirectory = new DirectoryInfo(EncodingTestFileDirectory);
-			FileInfo[] encodingTestFiles = testFileDirectory.GetFiles();
+        #region Constants
 
-			foreach (FileInfo file in encodingTestFiles)
-			{
-			    string codePageString = file.Name.Substring(0, file.Name.IndexOf('_'));
-			    int codePage;
-			    if (int.TryParse(codePageString, out codePage))
-			    {
-			        Encoding encoding = FileUtilities.GetEncoding(file.FullName);
-			        Assert.AreEqual(codePage, encoding.CodePage,
-			            "Unexpected Encoding.CodePage for encoding test file {0}.", file.Name);
-			    }
-			    else
-			    {
-			        Assert.Fail("Could not get code page value for encoding test file {0}.",
-			            file.Name);
-			    }
-			}
-		}
+        /// <summary>
+        /// Directory containing files for encoding testing.
+        /// </summary>
+        private const string EncodingTestFileDirectory = "EncodingTestFiles";
 
-		#endregion Public Methods
-	}
+        #endregion Constants
+
+        #endregion Constants
+
+        #region Public Methods
+
+        /// <summary>
+        /// Tests the GetEncoding method.
+        /// </summary>
+        [Test]
+        public void GetEncodingTest()
+        {
+            DirectoryInfo testFileDirectory = new DirectoryInfo(EncodingTestFileDirectory);
+            FileInfo[] encodingTestFiles = testFileDirectory.GetFiles();
+
+            foreach (FileInfo file in encodingTestFiles)
+            {
+                string codePageString = file.Name.Substring(0, file.Name.IndexOf('_'));
+                int codePage;
+                if (int.TryParse(codePageString, out codePage))
+                {
+                    Encoding encoding = FileUtilities.GetEncoding(file.FullName);
+                    Assert.AreEqual(
+                        codePage,
+                        encoding.CodePage,
+                        "Unexpected Encoding.CodePage for encoding test file {0}.",
+                        file.Name);
+                }
+                else
+                {
+                    Assert.Fail("Could not get code page value for encoding test file {0}.", file.Name);
+                }
+            }
+        }
+
+        #endregion Public Methods
+    }
 }

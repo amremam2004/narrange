@@ -59,10 +59,9 @@
     <EmbeddedResource Include="TestSourceFiles\MultipleNamespace.cs" />
     <EmbeddedResource Include="TestSourceFiles\MultiClassDefinition.cs" />
     <EmbeddedResource Include="TestSourceFiles\InterfaceDefinition.cs" />
-    <EmbeddedResource Include="TestSourceFiles\ExpectedFieldInitialValue.cs" />
-    <EmbeddedResource Include="TestSourceFiles\ExpectedFieldEndOfStatement.cs" />
-    <EmbeddedResource Include="TestSourceFiles\ExpectedBlockClose.cs" />
-    <EmbeddedResource Include="TestSourceFiles\ClassMembers.cs" />
+    <EmbeddedResource Include="TestSourceFiles\ClassMembers.cs">
+      <ExcludeFromSourceAnalysis>true</ExcludeFromSourceAnalysis>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestSourceFiles\ClassDefinition.cs" />
     <EmbeddedResource Include="TestSourceFiles\ClassAttributes.cs" />
     <EmbeddedResource Include="TestSourceFiles\AssemblyAttributes.cs" />

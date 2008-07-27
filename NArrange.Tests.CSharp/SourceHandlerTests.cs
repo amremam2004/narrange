@@ -1,46 +1,46 @@
-using System;
-
-using NArrange.Core;
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test fixture for the SourceHandler class.
-	/// </summary>
-	[TestFixture]
-	public class SourceHandlerTests
-	{
-		#region Public Methods
+    using System;
 
-		/// <summary>
-		/// Tests creating a new extension handler.
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			string assemblyName = "NArrange.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-			SourceHandlerConfiguration configuration = new SourceHandlerConfiguration();
-			configuration.AssemblyName = assemblyName;
+    using NArrange.Core;
+    using NArrange.Core.Configuration;
 
-			SourceHandler handler = new SourceHandler(configuration);
+    using NUnit.Framework;
 
-			Assert.IsNotNull(handler.CodeParser, "Parser was not created.");
-			Assert.IsNotNull(handler.CodeWriter, "Writer was not created.");
-		}
+    /// <summary>
+    /// Test fixture for the SourceHandler class.
+    /// </summary>
+    [TestFixture]
+    public class SourceHandlerTests
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Tests creating with a null configuration.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void CreateWithNullConfigurationTest()
-		{
-			new SourceHandler(null);
-		}
+        /// <summary>
+        /// Tests creating a new extension handler.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            string assemblyName = "NArrange.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+            SourceHandlerConfiguration configuration = new SourceHandlerConfiguration();
+            configuration.AssemblyName = assemblyName;
 
-		#endregion Public Methods
-	}
+            SourceHandler handler = new SourceHandler(configuration);
+
+            Assert.IsNotNull(handler.CodeParser, "Parser was not created.");
+            Assert.IsNotNull(handler.CodeWriter, "Writer was not created.");
+        }
+
+        /// <summary>
+        /// Tests creating with a null configuration.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreateWithNullConfigurationTest()
+        {
+            new SourceHandler(null);
+        }
+
+        #endregion Public Methods
+    }
 }

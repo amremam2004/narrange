@@ -1,102 +1,113 @@
-using System;
-
 namespace NArrange.Core.CodeElements
 {
-	/// <summary>
-	/// Interface implementation definition for type and member references to interfaces and 
-	/// interface members.
-	/// </summary>
-	public sealed class InterfaceReference : ICloneable
-	{
-		#region Fields
+    using System;
 
-		private string _name;
-		private InterfaceReferenceType _referenceType;
+    /// <summary>
+    /// Interface implementation definition for type and member references to interfaces and 
+    /// interface members.
+    /// </summary>
+    public sealed class InterfaceReference : ICloneable
+    {
+        #region Fields
 
-		#endregion Fields
+        /// <summary>
+        /// Referenced interface name.
+        /// </summary>
+        private string _name;
 
-		#region Constructors
+        /// <summary>
+        /// Reference type.
+        /// </summary>
+        private InterfaceReferenceType _referenceType;
 
-		/// <summary>
-		/// Creates a new InterfaceImplementation.
-		/// </summary>
-		public InterfaceReference()
-		{
-		}
+        #endregion Fields
 
-		/// <summary>
-		/// Creates a new InterfaceImplementation with the specified name and reference type.
-		/// </summary>
-		public InterfaceReference(string name, InterfaceReferenceType referenceType)
-		{
-			_name = name;
-			_referenceType = referenceType;
-		}
+        #region Constructors
 
-		#endregion Constructors
+        /// <summary>
+        /// Creates a new InterfaceImplementation.
+        /// </summary>
+        public InterfaceReference()
+        {
+        }
 
-		#region Public Properties
+        /// <summary>
+        /// Creates a new InterfaceImplementation with the specified name and reference type.
+        /// </summary>
+        /// <param name="name">The interface name.</param>
+        /// <param name="referenceType">Type of the reference.</param>
+        public InterfaceReference(string name, InterfaceReferenceType referenceType)
+        {
+            _name = name;
+            _referenceType = referenceType;
+        }
 
-		/// <summary>
-		/// Gets or sets the referenced interface name.
-		/// </summary>
-		public string Name
-		{
-			get
-			{
-			    return _name;
-			}
-			set
-			{
-			    _name = value;
-			}
-		}
+        #endregion Constructors
 
-		/// <summary>
-		/// Gets or sets the interface reference type.
-		/// </summary>
-		public InterfaceReferenceType ReferenceType
-		{
-			get
-			{
-			    return _referenceType;
-			}
-			set
-			{
-			    _referenceType = value;
-			}
-		}
+        #region Public Properties
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets or sets the referenced interface name.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
 
-		#region Public Methods
+        /// <summary>
+        /// Gets or sets the interface reference type.
+        /// </summary>
+        public InterfaceReferenceType ReferenceType
+        {
+            get
+            {
+                return _referenceType;
+            }
+            set
+            {
+                _referenceType = value;
+            }
+        }
 
-		/// <summary>
-		/// Creates a clone of this instance
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			InterfaceReference clone = new InterfaceReference();
+        #endregion Public Properties
 
-			//
-			// Copy state
-			//
-			clone._name = _name;
-			clone._referenceType = _referenceType;
+        #region Public Methods
 
-			return clone;
-		}
+        /// <summary>
+        /// Creates a clone of this instance
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public object Clone()
+        {
+            InterfaceReference clone = new InterfaceReference();
 
-		/// <summary>
-		/// Gets the string representation of this object.
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return _name;
-		}
+            //
+            // Copy state
+            //
+            clone._name = _name;
+            clone._referenceType = _referenceType;
 
-		#endregion Public Methods
-	}
+            return clone;
+        }
+
+        /// <summary>
+        /// Gets the string representation of this object.
+        /// </summary>
+        /// <returns>The string representation.</returns>
+        public override string ToString()
+        {
+            return _name;
+        }
+
+        #endregion Public Methods
+    }
 }

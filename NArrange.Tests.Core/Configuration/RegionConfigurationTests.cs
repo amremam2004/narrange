@@ -1,51 +1,65 @@
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the RegionConfiguration class
-	/// </summary>
-	[TestFixture]
-	public class RegionConfigurationTests
-	{
-		#region Public Methods
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the creation of a new RegionConfiguration
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			RegionConfiguration regionConfiguration = new RegionConfiguration();
+    using NUnit.Framework;
 
-			//
-			// Verify default state
-			//
-			Assert.IsNull(regionConfiguration.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(regionConfiguration.Elements,
-			    "Elements collection should not be null.");
-			Assert.AreEqual(0, regionConfiguration.Elements.Count,
-			    "Elements collection should be empty.");
-		}
+    /// <summary>
+    /// Test fixture for the RegionConfiguration class.
+    /// </summary>
+    [TestFixture]
+    public class RegionConfigurationTests
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			RegionConfiguration regionConfiguration = new RegionConfiguration();
-			regionConfiguration.Name = "Test Region";
+        /// <summary>
+        /// Tests the ICloneable implementation.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            RegionConfiguration regionConfiguration = new RegionConfiguration();
+            regionConfiguration.Name = "Some Region";
+            regionConfiguration.DirectivesEnabled = false;
 
-			string str = regionConfiguration.ToString();
+            RegionConfiguration clone = regionConfiguration.Clone() as RegionConfiguration;
+            Assert.IsNotNull(clone, "Clone did not return a valid instance.");
 
-			Assert.AreEqual("Region: Test Region", str,
-			    "Unexpected string representation.");
-		}
+            Assert.AreEqual(regionConfiguration.Name, clone.Name);
+            Assert.AreEqual(regionConfiguration.DirectivesEnabled, clone.DirectivesEnabled);
+        }
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Tests the creation of a new RegionConfiguration.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            RegionConfiguration regionConfiguration = new RegionConfiguration();
+
+            //
+            // Verify default state
+            //
+            Assert.IsNull(regionConfiguration.Name, "Unexpected default value for Name.");
+            Assert.IsNotNull(regionConfiguration.Elements, "Elements collection should not be null.");
+            Assert.AreEqual(0, regionConfiguration.Elements.Count, "Elements collection should be empty.");
+            Assert.IsTrue(regionConfiguration.DirectivesEnabled, "Directives should be enabled.");
+        }
+
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            RegionConfiguration regionConfiguration = new RegionConfiguration();
+            regionConfiguration.Name = "Test Region";
+
+            string str = regionConfiguration.ToString();
+
+            Assert.AreEqual("Region: Test Region", str, "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

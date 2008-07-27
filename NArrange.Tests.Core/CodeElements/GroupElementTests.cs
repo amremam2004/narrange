@@ -1,82 +1,77 @@
-using NArrange.Core;
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture for the GroupElement class
-	/// </summary>
-	[TestFixture]
-	public class GroupElementTests : CodeElementTests<GroupElement>
-	{
-		#region Protected Methods
+    using NArrange.Core;
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Creates an instance for cloning
-		/// </summary>
-		/// <returns></returns>
-		protected override GroupElement DoCreateClonePrototype()
-		{
-			GroupElement prototype = new GroupElement();
-			prototype.Name = "Test Group";
-			prototype.SeparatorType = GroupSeparatorType.Custom;
-			prototype.CustomSeparator = "//\r\n// Some elements\r\n//";
+    using NUnit.Framework;
 
-			return prototype;
-		}
+    /// <summary>
+    /// Test fixture for the GroupElement class.
+    /// </summary>
+    [TestFixture]
+    public class GroupElementTests : CodeElementTests<GroupElement>
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Test for ToString()
-		/// </summary>
-		protected override void DoToStringTest()
-		{
-			NamespaceElement element = new NamespaceElement();
-			element.Name = "Test";
+        /// <summary>
+        /// Tests constructing a new GroupElement.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            GroupElement element = new GroupElement();
 
-			string str = element.ToString();
-			Assert.AreEqual("Test", str,
-			    "Unexpected value returned for ToString.");
-		}
+            //
+            // Verify default values
+            //
+            Assert.AreEqual(ElementType.NotSpecified, element.ElementType, "Unexpected element type.");
+            Assert.AreEqual(string.Empty, element.Name, "Unexpected default value for Name.");
+            Assert.IsNotNull(element.Children, "Children collection should not be null.");
+            Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
+        }
 
-		/// <summary>
-		/// Verifies that a clone has the same state as the original
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected override void DoVerifyClone(GroupElement original, GroupElement clone)
-		{
-			Assert.AreEqual(original.Name, clone.Name);
-			Assert.AreEqual(original.SeparatorType, clone.SeparatorType);
-			Assert.AreEqual(original.CustomSeparator, clone.CustomSeparator);
-		}
+        #endregion Public Methods
 
-		#endregion Protected Methods
+        #region Protected Methods
 
-		#region Public Methods
+        /// <summary>
+        /// Creates an instance for cloning.
+        /// </summary>
+        /// <returns>Clone prototype.</returns>
+        protected override GroupElement DoCreateClonePrototype()
+        {
+            GroupElement prototype = new GroupElement();
+            prototype.Name = "Test Group";
+            prototype.SeparatorType = GroupSeparatorType.Custom;
+            prototype.CustomSeparator = "//\r\n// Some elements\r\n//";
 
-		/// <summary>
-		/// Tests constructing a new GroupElement
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			GroupElement element = new GroupElement();
+            return prototype;
+        }
 
-			//
-			// Verify default values
-			//
-			Assert.AreEqual(ElementType.NotSpecified, element.ElementType,
-			    "Unexpected element type.");
-			Assert.AreEqual(string.Empty, element.Name,
-			    "Unexpected default value for Name.");
-			Assert.IsNotNull(element.Children,
-			    "Children collection should not be null.");
-			Assert.AreEqual(0, element.Children.Count,
-			    "Children collection should be empty.");
-		}
+        /// <summary>
+        /// Test for ToString()
+        /// </summary>
+        protected override void DoToStringTest()
+        {
+            NamespaceElement element = new NamespaceElement();
+            element.Name = "Test";
 
-		#endregion Public Methods
-	}
+            string str = element.ToString();
+            Assert.AreEqual("Test", str, "Unexpected value returned for ToString.");
+        }
+
+        /// <summary>
+        /// Verifies that a clone has the same state as the original.
+        /// </summary>
+        /// <param name="original">Original element.</param>
+        /// <param name="clone">Clone element.</param>
+        protected override void DoVerifyClone(GroupElement original, GroupElement clone)
+        {
+            Assert.AreEqual(original.Name, clone.Name);
+            Assert.AreEqual(original.SeparatorType, clone.SeparatorType);
+            Assert.AreEqual(original.CustomSeparator, clone.CustomSeparator);
+        }
+
+        #endregion Protected Methods
+    }
 }

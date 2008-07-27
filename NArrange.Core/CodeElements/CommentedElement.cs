@@ -1,35 +1,35 @@
 #region Header
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
- * 	    All rights reserved.                   				      
- *                                                                             
- * This program and the accompanying materials are made available under       
- * the terms of the Common Public License v1.0 which accompanies this         
- * distribution.							      
- *                                                                             
- * Redistribution and use in source and binary forms, with or                 
- * without modification, are permitted provided that the following            
- * conditions are met:                                                        
- *                                                                             
- * Redistributions of source code must retain the above copyright             
- * notice, this list of conditions and the following disclaimer.              
- * Redistributions in binary form must reproduce the above copyright          
- * notice, this list of conditions and the following disclaimer in            
- * the documentation and/or other materials provided with the distribution.   
- *                                                                             
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors.
+ *    All rights reserved.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Common Public License v1.0 which accompanies this
+ * distribution.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * Contributors:
  *      James Nies
  *      - Initial creation
@@ -37,126 +37,133 @@
 
 #endregion Header
 
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
 namespace NArrange.Core.CodeElements
 {
-	/// <summary>
-	/// Code element base class for elements with header comments.
-	/// </summary>
-	public abstract class CommentedElement : CodeElement
-	{
-		#region Fields
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
-		private List<ICommentElement> _comments;
-		private readonly object _commentsLock = new object();
+    /// <summary>
+    /// Code element base class for elements with header comments.
+    /// </summary>
+    public abstract class CommentedElement : CodeElement
+    {
+        #region Fields
 
-		#endregion Fields
+        /// <summary>
+        /// Synchronization lock for the comments collection.
+        /// </summary>
+        private readonly object _commentsLock = new object();
 
-		#region Protected Properties
+        /// <summary>
+        /// Comments for this element.
+        /// </summary>
+        private List<ICommentElement> _comments;
 
-		/// <summary>
-		/// Base header comment collection
-		/// </summary>
-		protected List<ICommentElement> BaseHeaderComments
-		{
-			get
-			{
-			    if (_comments == null)
-			    {
-			        lock (_commentsLock)
-			        {
-			            if (_comments == null)
-			            {
-			                _comments = new List<ICommentElement>();
-			            }
-			        }
-			    }
+        #endregion Fields
 
-			    return _comments;
-			}
-		}
+        #region Public Properties
 
-		#endregion Protected Properties
+        /// <summary>
+        /// Gets the collection of header comments.
+        /// </summary>
+        public ReadOnlyCollection<ICommentElement> HeaderComments
+        {
+            get
+            {
+                return BaseHeaderComments.AsReadOnly();
+            }
+        }
 
-		#region Public Properties
+        #endregion Public Properties
 
-		/// <summary>
-		/// Gets the collection of header comments
-		/// </summary>
-		public ReadOnlyCollection<ICommentElement> HeaderComments
-		{
-			get
-			{
-			    return BaseHeaderComments.AsReadOnly();
-			}
-		}
+        #region Protected Properties
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets the base header comment collection.
+        /// </summary>
+        protected List<ICommentElement> BaseHeaderComments
+        {
+            get
+            {
+                if (_comments == null)
+                {
+                    lock (_commentsLock)
+                    {
+                        if (_comments == null)
+                        {
+                            _comments = new List<ICommentElement>();
+                        }
+                    }
+                }
 
-		#region Public Methods
+                return _comments;
+            }
+        }
 
-		/// <summary>
-		/// Adds a header comment to this element
-		/// </summary>
-		/// <param name="comment"></param>
-		public void AddHeaderComment(ICommentElement comment)
-		{
-			BaseHeaderComments.Add(comment);
-		}
+        #endregion Protected Properties
 
-		/// <summary>
-		/// Adds a header comment line to this element
-		/// </summary>
-		/// <param name="commentLine"></param>
-		public void AddHeaderCommentLine(string commentLine)
-		{
-			BaseHeaderComments.Add(new CommentElement(commentLine));
-		}
+        #region Public Methods
 
-		/// <summary>
-		/// Adds a header comment line to this element
-		/// </summary>
-		/// <param name="commentLine"></param>
-		/// <param name="xmlComment"></param>
-		public void AddHeaderCommentLine(string commentLine, bool xmlComment)
-		{
-			if (xmlComment)
-			{
-			    BaseHeaderComments.Add(new CommentElement(commentLine, CommentType.XmlLine));
-			}
-			else
-			{
-			    AddHeaderCommentLine(commentLine);
-			}
-		}
+        /// <summary>
+        /// Adds a header comment to this element.
+        /// </summary>
+        /// <param name="comment">The comment.</param>
+        public void AddHeaderComment(ICommentElement comment)
+        {
+            BaseHeaderComments.Add(comment);
+        }
 
-		/// <summary>
-		/// Clears all header comments.
-		/// </summary>
-		public void ClearHeaderCommentLines()
-		{
-			BaseHeaderComments.Clear();
-		}
+        /// <summary>
+        /// Adds a header comment line to this element.
+        /// </summary>
+        /// <param name="commentLine">The comment line.</param>
+        public void AddHeaderCommentLine(string commentLine)
+        {
+            BaseHeaderComments.Add(new CommentElement(commentLine));
+        }
 
-		/// <summary>
-		/// Creates a clone of the instance and assigns any state
-		/// </summary>
-		/// <returns></returns>
-		public override object Clone()
-		{
-			CommentedElement clone = base.Clone() as CommentedElement;
+        /// <summary>
+        /// Adds a header comment line to this element.
+        /// </summary>
+        /// <param name="commentLine">Comment line text.</param>
+        /// <param name="xmlComment">Whether or not the comment is an XML comment.</param>
+        public void AddHeaderCommentLine(string commentLine, bool xmlComment)
+        {
+            if (xmlComment)
+            {
+                BaseHeaderComments.Add(new CommentElement(commentLine, CommentType.XmlLine));
+            }
+            else
+            {
+                AddHeaderCommentLine(commentLine);
+            }
+        }
 
-			foreach (ICommentElement comment in HeaderComments)
-			{
-			    ICommentElement commentClone = comment.Clone() as ICommentElement;
-			    clone.AddHeaderComment(commentClone);
-			}
+        /// <summary>
+        /// Clears all header comments.
+        /// </summary>
+        public void ClearHeaderCommentLines()
+        {
+            BaseHeaderComments.Clear();
+        }
 
-			return clone;
-		}
+        /// <summary>
+        /// Creates a clone of the instance and assigns any state.
+        /// </summary>
+        /// <returns>Clone of this instance.</returns>
+        public override object Clone()
+        {
+            CommentedElement clone = base.Clone() as CommentedElement;
 
-		#endregion Public Methods
-	}
+            foreach (ICommentElement comment in HeaderComments)
+            {
+                ICommentElement commentClone = comment.Clone() as ICommentElement;
+                clone.AddHeaderComment(commentClone);
+            }
+
+            return clone;
+        }
+
+        #endregion Public Methods
+    }
 }

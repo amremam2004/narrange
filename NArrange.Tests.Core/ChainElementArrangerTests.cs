@@ -1,166 +1,201 @@
-using System;
-
-using NArrange.Core;
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test fixture for the ChainElementArranger class.
-	/// </summary>
-	[TestFixture]
-	public class ChainElementArrangerTests
-	{
-		#region Public Methods
+    using System;
 
-		/// <summary>
-		/// Tests the AddArranger method with a null arranger
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void AddArrangerNullTest()
-		{
-			ChainElementArranger chainArranger = new ChainElementArranger();
-			chainArranger.AddArranger(null);
-		}
+    using NArrange.Core;
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Tests the CanArrange method
-		/// </summary>
-		[Test]
-		public void CanArrangeTest()
-		{
-			ChainElementArranger chain = new ChainElementArranger();
-			FieldElement fieldElement = new FieldElement();
+    using NUnit.Framework;
 
-			//
-			// No arrangers in chain
-			//
-			Assert.IsFalse(chain.CanArrange(fieldElement), 
-			    "Empty chain element arranger should not be able to arrange an element.");
+    /// <summary>
+    /// Test fixture for the ChainElementArranger class.
+    /// </summary>
+    [TestFixture]
+    public class ChainElementArrangerTests
+    {
+        #region Public Methods
 
-			//
-			// Add an arranger that can't arrange the element
-			//
-			TestElementArranger disabledArranger = new TestElementArranger(false);
-			chain.AddArranger(disabledArranger);
-			Assert.IsFalse(chain.CanArrange(fieldElement),
-			    "Unexpected return value from CanArrange.");
+        /// <summary>
+        /// Tests the AddArranger method with a null arranger.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AddArrangerNullTest()
+        {
+            ChainElementArranger chainArranger = new ChainElementArranger();
+            chainArranger.AddArranger(null);
+        }
 
-			//
-			// Add an arranger that can arrange the element
-			//
-			TestElementArranger enabledArranger = new TestElementArranger(true);
-			chain.AddArranger(enabledArranger);
-			Assert.IsTrue(chain.CanArrange(fieldElement),
-			    "Unexpected return value from CanArrange.");
+        /// <summary>
+        /// Tests the CanArrange method.
+        /// </summary>
+        [Test]
+        public void CanArrangeTest()
+        {
+            ChainElementArranger chain = new ChainElementArranger();
+            FieldElement fieldElement = new FieldElement();
 
-			//
-			// Null
-			//
-			Assert.IsFalse(chain.CanArrange(null),
-			    "Unexpected return value from CanArrange.");
-		}
+            //
+            // No arrangers in chain
+            //
+            Assert.IsFalse(
+                chain.CanArrange(fieldElement),
+                "Empty chain element arranger should not be able to arrange an element.");
 
-		/// <summary>
-		/// Tests the Arrange method with an element that cannot be handled.
-		/// </summary>
-		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void UnsupportedArrangeNoParentTest()
-		{
-			ChainElementArranger chain = new ChainElementArranger();
-			FieldElement fieldElement = new FieldElement();
+            //
+            // Add an arranger that can't arrange the element
+            //
+            TestElementArranger disabledArranger = new TestElementArranger(false);
+            chain.AddArranger(disabledArranger);
+            Assert.IsFalse(chain.CanArrange(fieldElement), "Unexpected return value from CanArrange.");
 
-			//
-			// Add an arranger that can't arrange the element
-			//
-			TestElementArranger disabledArranger = new TestElementArranger(false);
-			chain.AddArranger(disabledArranger);
-			Assert.IsFalse(chain.CanArrange(fieldElement),
-			    "Unexpected return value from CanArrange.");
+            //
+            // Add an arranger that can arrange the element
+            //
+            TestElementArranger enabledArranger = new TestElementArranger(true);
+            chain.AddArranger(enabledArranger);
+            Assert.IsTrue(chain.CanArrange(fieldElement), "Unexpected return value from CanArrange.");
 
-			chain.ArrangeElement(null, fieldElement);
-		}
+            //
+            // Null
+            //
+            Assert.IsFalse(chain.CanArrange(null), "Unexpected return value from CanArrange.");
+        }
 
-		/// <summary>
-		/// Tests the Arrange method with an element that cannot be handled.
-		/// </summary>
-		[Test]
-		public void UnsupportedArrangeWithParentTest()
-		{
-			GroupElement parentElement = new GroupElement();
-			ChainElementArranger chain = new ChainElementArranger();
-			FieldElement fieldElement = new FieldElement();
+        /// <summary>
+        /// Tests the Arrange method with an element that cannot be handled.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void UnsupportedArrangeNoParentTest()
+        {
+            ChainElementArranger chain = new ChainElementArranger();
+            FieldElement fieldElement = new FieldElement();
 
-			//
-			// Add an arranger that can't arrange the element
-			//
-			TestElementArranger disabledArranger = new TestElementArranger(false);
-			chain.AddArranger(disabledArranger);
-			Assert.IsFalse(chain.CanArrange(fieldElement),
-			    "Unexpected return value from CanArrange.");
+            //
+            // Add an arranger that can't arrange the element
+            //
+            TestElementArranger disabledArranger = new TestElementArranger(false);
+            chain.AddArranger(disabledArranger);
+            Assert.IsFalse(chain.CanArrange(fieldElement), "Unexpected return value from CanArrange.");
 
-			chain.ArrangeElement(parentElement, fieldElement);
-			Assert.IsTrue(parentElement.Children.Contains(fieldElement));
-		}
+            chain.ArrangeElement(null, fieldElement);
+        }
 
-		#endregion Public Methods
+        /// <summary>
+        /// Tests the Arrange method with an element that cannot be handled.
+        /// </summary>
+        [Test]
+        public void UnsupportedArrangeWithParentTest()
+        {
+            GroupElement parentElement = new GroupElement();
+            ChainElementArranger chain = new ChainElementArranger();
+            FieldElement fieldElement = new FieldElement();
 
-		#region Other
+            //
+            // Add an arranger that can't arrange the element
+            //
+            TestElementArranger disabledArranger = new TestElementArranger(false);
+            chain.AddArranger(disabledArranger);
+            Assert.IsFalse(chain.CanArrange(fieldElement), "Unexpected return value from CanArrange.");
 
-		private class TestElementArranger : IElementArranger
-		{
-			#region Fields
+            chain.ArrangeElement(parentElement, fieldElement);
+            Assert.IsTrue(parentElement.Children.Contains(fieldElement));
+        }
 
-			private bool _arrangeCalled;
-			private bool _canArrange;
+        #endregion Public Methods
 
-			#endregion Fields
+        #region Other
 
-			#region Constructors
+        /// <summary>
+        /// Test code element arranger.
+        /// </summary>
+        private class TestElementArranger : IElementArranger
+        {
+            #region Fields
 
-			public TestElementArranger(bool canArrange)
-			{
-				_canArrange = canArrange;
-			}
+            /// <summary>
+            /// Whether or not arrage was called.
+            /// </summary>
+            private bool _arrangeCalled;
 
-			#endregion Constructors
+            /// <summary>
+            /// Whether or not this arranger can process elements.
+            /// </summary>
+            private bool _canArrange;
 
-			#region Public Properties
+            #endregion Fields
 
-			public bool ArrangeCalled
-			{
-				get
-				{
-				    return _arrangeCalled;
-				}
-			}
+            #region Constructors
 
-			#endregion Public Properties
+            /// <summary>
+            /// Creates a test element arranger.
+            /// </summary>
+            /// <param name="canArrange">Fixed value for the CanArrange property.</param>
+            public TestElementArranger(bool canArrange)
+            {
+                _canArrange = canArrange;
+            }
 
-			#region Public Methods
+            #endregion Constructors
 
-			public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
-			{
-				_arrangeCalled = true;
-			}
+            #region Public Properties
 
-			public bool CanArrange(ICodeElement codeElement)
-			{
-				return _canArrange;
-			}
+            /// <summary>
+            /// Gets a value indicating whether or not arrange was called.
+            /// </summary>
+            public bool ArrangeCalled
+            {
+                get
+                {
+                    return _arrangeCalled;
+                }
+            }
 
-			public bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
-			{
-				return _canArrange;
-			}
+            #endregion Public Properties
 
-			#endregion Public Methods
-		}
+            #region Public Methods
 
-		#endregion Other
-	}
+            /// <summary>
+            /// Arranges the specified element within the parent element.
+            /// </summary>
+            /// <param name="parentElement">The parent element.</param>
+            /// <param name="codeElement">The code element.</param>
+            public void ArrangeElement(ICodeElement parentElement, ICodeElement codeElement)
+            {
+                _arrangeCalled = true;
+            }
+
+            /// <summary>
+            /// Determines whether or not this arranger can handle arrangement of
+            /// the specified element.
+            /// </summary>
+            /// <param name="codeElement">The code element.</param>
+            /// <returns>
+            /// 	<c>true</c> if this instance can arrange the specified code element; otherwise, <c>false</c>.
+            /// </returns>
+            public bool CanArrange(ICodeElement codeElement)
+            {
+                return _canArrange;
+            }
+
+            /// <summary>
+            /// Determines whether or not this arranger can handle arrangement of
+            /// the specified element.
+            /// </summary>
+            /// <param name="parentElement">The parent element.</param>
+            /// <param name="codeElement">The code element.</param>
+            /// <returns>
+            /// 	<c>true</c> if this instance can arrange the specified parent element; otherwise, <c>false</c>.
+            /// </returns>
+            public bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
+            {
+                return _canArrange;
+            }
+
+            #endregion Public Methods
+        }
+
+        #endregion Other
+    }
 }

@@ -84,12 +84,6 @@
     <EmbeddedResource Include="TestSourceFiles\ClassDefinition.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestSourceFiles\ExpectedBlockClose.vb" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestSourceFiles\ExpectedFieldInitialValue.vb" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TestSourceFiles\InterfaceDefinition.vb" />
     <EmbeddedResource Include="TestSourceFiles\Operators.vb" />
   </ItemGroup>

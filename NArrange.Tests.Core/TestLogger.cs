@@ -1,198 +1,205 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
-
-using NArrange.Core;
-
 namespace NArrange.Tests.Core
 {
-	/// <summary>
-	/// Test logger
-	/// </summary>
-	public class TestLogger : ILogger
-	{
-		#region Fields
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using System.Text;
 
-		private List<TestLogEvent> _events = new List<TestLogEvent>();
-		private bool _writeToConsole = false;
+    using NArrange.Core;
 
-		#endregion Fields
+    /// <summary>
+    /// Test logger.
+    /// </summary>
+    public class TestLogger : ILogger
+    {
+        #region Fields
 
-		#region Public Properties
+        /// <summary>
+        /// Logged events collection.
+        /// </summary>
+        private List<TestLogEvent> _events = new List<TestLogEvent>();
 
-		/// <summary>
-		/// Gets the log event history
-		/// </summary>
-		public ReadOnlyCollection<TestLogEvent> Events
-		{
-			get
-			{
-			    return _events.AsReadOnly();
-			}
-		}
+        /// <summary>
+        /// Whether or not events should also be written to the console.
+        /// </summary>
+        private bool _writeToConsole = false;
 
-		/// <summary>
-		/// Gets or sets a value indicating whether or not messages should be written 
-		/// to the console.
-		/// </summary>
-		public bool WriteToConsole
-		{
-			get
-			{
-				return _writeToConsole;
-			}
-			set
-			{
-				_writeToConsole = value;
-			}
-		}
+        #endregion Fields
 
-		#endregion Public Properties
+        #region Public Properties
 
-		#region Public Methods
+        /// <summary>
+        /// Gets the log event history.
+        /// </summary>
+        public ReadOnlyCollection<TestLogEvent> Events
+        {
+            get
+            {
+                return _events.AsReadOnly();
+            }
+        }
 
-		/// <summary>
-		/// Clears the test log
-		/// </summary>
-		public void Clear()
-		{
-			_events.Clear();
-		}
+        /// <summary>
+        /// Gets or sets a value indicating whether or not messages should be written 
+        /// to the console.
+        /// </summary>
+        public bool WriteToConsole
+        {
+            get
+            {
+                return _writeToConsole;
+            }
+            set
+            {
+                _writeToConsole = value;
+            }
+        }
 
-		/// <summary>
-		/// Determines if the specified message exists in the log
-		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		/// <returns></returns>
-		public bool HasMessage(LogLevel level, string message)
-		{
-			bool hasMessage = false;
+        #endregion Public Properties
 
-			foreach (TestLogEvent logEvent in _events)
-			{
-			    if (logEvent.Level == level && logEvent.Message == message)
-			    {
-			        hasMessage = true;
-			        break;
-			    }
-			}
+        #region Public Methods
 
-			return hasMessage;
-		}
+        /// <summary>
+        /// Clears the test log.
+        /// </summary>
+        public void Clear()
+        {
+            _events.Clear();
+        }
 
-		/// <summary>
-		/// Determines if a partial matching message exists in the log
-		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		/// <returns></returns>
-		public bool HasPartialMessage(LogLevel level, string message)
-		{
-			bool hasMessage = false;
+        /// <summary>
+        /// Determines if the specified message exists in the log.
+        /// </summary>
+        /// <param name="level">Log level.</param>
+        /// <param name="message">Log message.</param>
+        /// <returns>Whether or not the message exists in the log.</returns>
+        public bool HasMessage(LogLevel level, string message)
+        {
+            bool hasMessage = false;
 
-			foreach (TestLogEvent logEvent in _events)
-			{
-			    if (logEvent.Level == level && logEvent.Message.Contains(message))
-			    {
-			        hasMessage = true;
-			        break;
-			    }
-			}
+            foreach (TestLogEvent logEvent in _events)
+            {
+                if (logEvent.Level == level && logEvent.Message == message)
+                {
+                    hasMessage = true;
+                    break;
+                }
+            }
 
-			return hasMessage;
-		}
+            return hasMessage;
+        }
 
-		/// <summary>
-		/// Logs a message
-		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		public void LogMessage(LogLevel level, string message, params object[] args)
-		{
-			string formatted = string.Format(CultureInfo.InvariantCulture,
-			    message, args);
+        /// <summary>
+        /// Determines if a partial matching message exists in the log.
+        /// </summary>
+        /// <param name="level">Log level.</param>
+        /// <param name="message">Log message.</param>
+        /// <returns>Whether or not the message exists in the log.</returns>
+        public bool HasPartialMessage(LogLevel level, string message)
+        {
+            bool hasMessage = false;
 
-			if (WriteToConsole)
-			{
-				Console.WriteLine(formatted);
-			}
+            foreach (TestLogEvent logEvent in _events)
+            {
+                if (logEvent.Level == level && logEvent.Message.Contains(message))
+                {
+                    hasMessage = true;
+                    break;
+                }
+            }
 
-			TestLogEvent logEvent = new TestLogEvent(level, formatted);
+            return hasMessage;
+        }
 
-			_events.Add(logEvent);
-		}
+        /// <summary>
+        /// Logs a message.
+        /// </summary>
+        /// <param name="level">Log level.</param>
+        /// <param name="message">Log message.</param>
+        /// <param name="args">Message arguments.</param>
+        public void LogMessage(LogLevel level, string message, params object[] args)
+        {
+            string formatted = string.Format(
+                CultureInfo.InvariantCulture, message, args);
 
-		/// <summary>
-		/// Gets the text of all events.
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			StringBuilder textBuilder = new StringBuilder();
-			foreach (TestLogEvent logEvent in Events)
-			{
-			    textBuilder.AppendLine(logEvent.ToString());
-			}
+            if (WriteToConsole)
+            {
+                Console.WriteLine(formatted);
+            }
 
-			return textBuilder.ToString();
-		}
+            TestLogEvent logEvent = new TestLogEvent(level, formatted);
 
-		#endregion Public Methods
+            _events.Add(logEvent);
+        }
 
-		#region Other
+        /// <summary>
+        /// Gets the text of all events.
+        /// </summary>
+        /// <returns>String representation.</returns>
+        public override string ToString()
+        {
+            StringBuilder textBuilder = new StringBuilder();
+            foreach (TestLogEvent logEvent in Events)
+            {
+                textBuilder.AppendLine(logEvent.ToString());
+            }
 
-		/// <summary>
-		/// Test log event
-		/// </summary>
-		public struct TestLogEvent
-		{
-			#region Fields
+            return textBuilder.ToString();
+        }
 
-			/// <summary>
-			/// Log level
-			/// </summary>
-			public readonly LogLevel Level;
+        #endregion Public Methods
 
-			/// <summary>
-			/// Log message
-			/// </summary>
-			public readonly string Message;
+        #region Other
 
-			#endregion Fields
+        /// <summary>
+        /// Test log event.
+        /// </summary>
+        public struct TestLogEvent
+        {
+            #region Fields
 
-			#region Constructors
+            /// <summary>
+            /// Log level.
+            /// </summary>
+            public readonly LogLevel Level;
 
-			/// <summary>
-			/// Creates a new test log event
-			/// </summary>
-			/// <param name="level"></param>
-			/// <param name="message"></param>
-			public TestLogEvent(LogLevel level, string message)
-			{
-				Level = level;
-				Message = message;
-			}
+            /// <summary>
+            /// Log message.
+            /// </summary>
+            public readonly string Message;
 
-			#endregion Constructors
+            #endregion Fields
 
-			#region Public Methods
+            #region Constructors
 
-			/// <summary>
-			/// Gets the string representation.
-			/// </summary>
-			/// <returns></returns>
-			public override string ToString()
-			{
-				return string.Format("{0}: {1}", Level, Message);
-			}
+            /// <summary>
+            /// Creates a new test log event.
+            /// </summary>
+            /// <param name="level">Log level.</param>
+            /// <param name="message">Log message.</param>
+            public TestLogEvent(LogLevel level, string message)
+            {
+                Level = level;
+                Message = message;
+            }
 
-			#endregion Public Methods
-		}
+            #endregion Constructors
 
-		#endregion Other
-	}
+            #region Public Methods
+
+            /// <summary>
+            /// Gets the string representation.
+            /// </summary>
+            /// <returns>String representation.</returns>
+            public override string ToString()
+            {
+                return string.Format("{0}: {1}", Level, Message);
+            }
+
+            #endregion Public Methods
+        }
+
+        #endregion Other
+    }
 }

@@ -66,11 +66,14 @@
     <Compile Include="ConditionExpressionEvaluatorTests.cs" />
     <Compile Include="Configuration\BinaryOperatorExpressionTests.cs" />
     <Compile Include="Configuration\CodeConfigurationTests.cs" />
+    <Compile Include="Configuration\UsingConfigurationTests.cs" />
+    <Compile Include="Configuration\FormattingConfigurationTests.cs" />
+    <Compile Include="Configuration\LineSpacingConfigurationTests.cs" />
     <Compile Include="Configuration\ProjectHandlerConfigurationTests.cs" />
     <Compile Include="Configuration\EncodingConfigurationTests.cs" />
     <Compile Include="Configuration\ElementReferenceConfigurationTests.cs" />
     <Compile Include="Configuration\FileAttributeExpressionTests.cs" />
-    <Compile Include="Configuration\RegionFormattingConfigurationTests.cs" />
+    <Compile Include="Configuration\RegionFormatConfigurationTests.cs" />
     <Compile Include="Configuration\UnaryOperatorExpressionTests.cs" />
     <Compile Include="Configuration\SourceHandlerConfigurationTests.cs" />
     <Compile Include="Configuration\InterfaceReferenceTests.cs" />
@@ -93,11 +96,9 @@
     <Compile Include="ProjectManagerTests.cs" />
     <Compile Include="GroupedInserterTests.cs" />
     <Compile Include="CodeElements\ElementUtilitiesTests.cs" />
-    <Compile Include="RegionedInserterTests.cs" />
     <Compile Include="ElementFilterTests.cs" />
     <Compile Include="ChainElementArrangerTests.cs" />
     <Compile Include="ElementArrangerFactoryTests.cs" />
-    <Compile Include="ElementArrangerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionParserTests.cs">
       <SubType>Code</SubType>
@@ -124,6 +125,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\NArrange.Core\DefaultConfig.v026.xml">
+      <Link>TestConfigurations\DefaultConfig.v026.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\NArrange.Core\DefaultConfig.xml">
       <Link>TestConfigurations\DefaultConfig.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

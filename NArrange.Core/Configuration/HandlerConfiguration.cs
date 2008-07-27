@@ -1,75 +1,80 @@
-using System;
-using System.ComponentModel;
-using System.Xml.Serialization;
-
 namespace NArrange.Core.Configuration
 {
-	/// <summary>
-	/// Base class for handler configuration information.
-	/// </summary>
-	public abstract class HandlerConfiguration : ICloneable
-	{
-		#region Fields
+    using System;
+    using System.ComponentModel;
+    using System.Xml.Serialization;
 
-		private string _assembly;
+    /// <summary>
+    /// Base class for handler configuration information.
+    /// </summary>
+    public abstract class HandlerConfiguration : ICloneable
+    {
+        #region Fields
 
-		#endregion Fields
+        /// <summary>
+        /// Assembly name.
+        /// </summary>
+        private string _assembly;
 
-		#region Public Properties
+        #endregion Fields
 
-		/// <summary>
-		/// Gets or sets the extension handler assembly
-		/// </summary>
-		[XmlAttribute("Assembly")]
-		[Description("The full assembly name used for assembly loading.")]
-		[DisplayName("Assembly name")]
-		public string AssemblyName
-		{
-			get
-			{
-				return _assembly;
-			}
-			set
-			{
-				_assembly = value;
-			}
-		}
+        #region Public Properties
 
-		/// <summary>
-		/// Gets the handler type.
-		/// </summary>
-		public abstract HandlerType HandlerType
-		{
-			get;
-		}
+        /// <summary>
+        /// Gets or sets the extension handler assembly.
+        /// </summary>
+        [XmlAttribute("Assembly")]
+        [Description("The full assembly name used for assembly loading.")]
+        [DisplayName("Assembly name")]
+        public string AssemblyName
+        {
+            get
+            {
+                return _assembly;
+            }
+            set
+            {
+                _assembly = value;
+            }
+        }
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets the handler type.
+        /// </summary>
+        public abstract HandlerType HandlerType
+        {
+            get;
+        }
 
-		#region Protected Methods
+        #endregion Public Properties
 
-		/// <summary>
-		/// Creates a clone of this instance.
-		/// </summary>
-		/// <returns></returns>
-		protected abstract HandlerConfiguration DoClone();
+        #region Public Methods
 
-		#endregion Protected Methods
+        /// <summary>
+        /// Creates a clone of this instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public object Clone()
+        {
+            HandlerConfiguration clone = DoClone();
 
-		#region Public Methods
+            clone._assembly = _assembly;
 
-		/// <summary>
-		/// Creates a clone of this instance.
-		/// </summary>
-		/// <returns></returns>
-		public object Clone()
-		{
-			HandlerConfiguration clone = DoClone();
+            return clone;
+        }
 
-			clone._assembly = _assembly;
+        #endregion Public Methods
 
-			return clone;
-		}
+        #region Protected Methods
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Creates a clone of this instance.
+        /// </summary>
+        /// <returns>Clone of the instance.</returns>
+        protected abstract HandlerConfiguration DoClone();
+
+        #endregion Protected Methods
+    }
 }

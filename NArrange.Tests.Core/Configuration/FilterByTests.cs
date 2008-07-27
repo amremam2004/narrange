@@ -1,47 +1,45 @@
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the FilterBy class
-	/// </summary>
-	[TestFixture]
-	public class FilterByTests
-	{
-		#region Public Methods
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the creation of a new FilterBy
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			FilterBy filterBy = new FilterBy();
+    using NUnit.Framework;
 
-			//
-			// Verify default state
-			//
-			Assert.IsNull(filterBy.Condition,
-			    "Unexpected default value for Condition.");
-		}
+    /// <summary>
+    /// Test fixture for the FilterBy class.
+    /// </summary>
+    [TestFixture]
+    public class FilterByTests
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			FilterBy filterBy = new FilterBy();
-			filterBy.Condition = "$(Access) == 'Protected'";
+        /// <summary>
+        /// Tests the creation of a new FilterBy.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            FilterBy filterBy = new FilterBy();
 
-			string str = filterBy.ToString();
+            //
+            // Verify default state
+            //
+            Assert.IsNull(filterBy.Condition, "Unexpected default value for Condition.");
+        }
 
-			Assert.AreEqual("Filter by: $(Access) == 'Protected'", str,
-			    "Unexpected string representation.");
-		}
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            FilterBy filterBy = new FilterBy();
+            filterBy.Condition = "$(Access) == 'Protected'";
 
-		#endregion Public Methods
-	}
+            string str = filterBy.ToString();
+
+            Assert.AreEqual("Filter by: $(Access) == 'Protected'", str, "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

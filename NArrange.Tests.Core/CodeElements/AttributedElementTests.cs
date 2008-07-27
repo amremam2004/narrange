@@ -1,115 +1,111 @@
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Base test fixture for code elements with attributes.
-	/// </summary>
-	/// <typeparam name="TCodeElement"></typeparam>
-	public abstract class AttributedElementTests<TCodeElement> : CodeElementTests<TCodeElement>
-		where TCodeElement : AttributedElement, new()
-	{
-		#region Public Methods
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Tests the AddAttribute method.
-		/// </summary>
-		[Test]
-		public void AddAttributeTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
+    using NUnit.Framework;
 
-			AttributeElement attribute1 = new AttributeElement("Test");
-			AttributeElement attribute2 = new AttributeElement("Ignore");
-			codeElement.AddAttribute(attribute1);
-			codeElement.AddAttribute(attribute2);
+    /// <summary>
+    /// Base test fixture for code elements with attributes.
+    /// </summary>
+    /// <typeparam name="TCodeElement">Code element type.</typeparam>
+    public abstract class AttributedElementTests<TCodeElement> : CodeElementTests<TCodeElement>
+        where TCodeElement : AttributedElement, new()
+    {
+        #region Public Methods
 
-			Assert.AreEqual(2, codeElement.Attributes.Count,
-			    "Attributes were not added correctly.");
+        /// <summary>
+        /// Tests the AddAttribute method.
+        /// </summary>
+        [Test]
+        public void AddAttributeTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
 
-			Assert.AreSame(codeElement, attribute1.Parent,
-			    "Attribute parent was not set correctly.");
-			Assert.AreSame(codeElement, attribute2.Parent,
-			    "Attribute parent was not set correctly.");
+            AttributeElement attribute1 = new AttributeElement("Test");
+            AttributeElement attribute2 = new AttributeElement("Ignore");
+            codeElement.AddAttribute(attribute1);
+            codeElement.AddAttribute(attribute2);
 
-			codeElement.AddAttribute(attribute2);
+            Assert.AreEqual(2, codeElement.Attributes.Count, "Attributes were not added correctly.");
 
-			Assert.AreEqual(2, codeElement.Attributes.Count,
-			    "Attribute should not have been added again.");
+            Assert.AreSame(codeElement, attribute1.Parent, "Attribute parent was not set correctly.");
+            Assert.AreSame(codeElement, attribute2.Parent, "Attribute parent was not set correctly.");
 
-			Assert.IsTrue(codeElement.Attributes.Contains(attribute1));
-			Assert.IsTrue(codeElement.Attributes.Contains(attribute2));
-		}
+            codeElement.AddAttribute(attribute2);
 
-		/// <summary>
-		/// Tests the ClearAttributes method.
-		/// </summary>
-		[Test]
-		public void ClearAttributesTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
+            Assert.AreEqual(2, codeElement.Attributes.Count, "Attribute should not have been added again.");
 
-			AttributeElement attribute1 = new AttributeElement("Test");
-			AttributeElement attribute2 = new AttributeElement("Ignore");
-			codeElement.AddAttribute(attribute1);
-			codeElement.AddAttribute(attribute2);
+            Assert.IsTrue(codeElement.Attributes.Contains(attribute1));
+            Assert.IsTrue(codeElement.Attributes.Contains(attribute2));
+        }
 
-			Assert.AreEqual(2, codeElement.Attributes.Count,
-			    "Attributes were not added correctly.");
+        /// <summary>
+        /// Tests the ClearAttributes method.
+        /// </summary>
+        [Test]
+        public void ClearAttributesTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
 
-			codeElement.ClearAttributes();
+            AttributeElement attribute1 = new AttributeElement("Test");
+            AttributeElement attribute2 = new AttributeElement("Ignore");
+            codeElement.AddAttribute(attribute1);
+            codeElement.AddAttribute(attribute2);
 
-			Assert.AreEqual(0, codeElement.Attributes.Count,
-			    "Attributes were not cleared correctly.");
+            Assert.AreEqual(2, codeElement.Attributes.Count, "Attributes were not added correctly.");
 
-			Assert.IsNull(attribute1.Parent, "Attribute parent should have been cleared.");
-			Assert.IsNull(attribute2.Parent, "Attribute parent should have been cleared.");
-		}
+            codeElement.ClearAttributes();
 
-		/// <summary>
-		/// Tests the AddAttribute method.
-		/// </summary>
-		[Test]
-		public void RemoveAttributeTest()
-		{
-			TCodeElement codeElement1 = new TCodeElement();
+            Assert.AreEqual(0, codeElement.Attributes.Count, "Attributes were not cleared correctly.");
 
-			AttributeElement attribute1 = new AttributeElement("Test");
-			AttributeElement attribute2 = new AttributeElement("Ignore");
-			codeElement1.AddAttribute(attribute1);
-			codeElement1.AddAttribute(attribute2);
+            Assert.IsNull(attribute1.Parent, "Attribute parent should have been cleared.");
+            Assert.IsNull(attribute2.Parent, "Attribute parent should have been cleared.");
+        }
 
-			Assert.AreEqual(2, codeElement1.Attributes.Count,
-			    "Attributes were not added correctly.");
+        /// <summary>
+        /// Tests the AddAttribute method.
+        /// </summary>
+        [Test]
+        public void RemoveAttributeTest()
+        {
+            TCodeElement codeElement1 = new TCodeElement();
 
-			//
-			// Remove the attribute using the method
-			//
-			codeElement1.RemoveAttribute(attribute2);
+            AttributeElement attribute1 = new AttributeElement("Test");
+            AttributeElement attribute2 = new AttributeElement("Ignore");
+            codeElement1.AddAttribute(attribute1);
+            codeElement1.AddAttribute(attribute2);
 
-			Assert.AreEqual(1, codeElement1.Attributes.Count,
-			    "Attribute should have been removed.");
+            Assert.AreEqual(2, codeElement1.Attributes.Count, "Attributes were not added correctly.");
 
-			Assert.IsTrue(codeElement1.Attributes.Contains(attribute1));
-			Assert.IsFalse(codeElement1.Attributes.Contains(attribute2));
+            //
+            // Remove the attribute using the method
+            //
+            codeElement1.RemoveAttribute(attribute2);
 
-			//
-			// Remove the attribute by assigning a different parent
-			//
-			TCodeElement codeElement2 = new TCodeElement();
-			attribute1.Parent = codeElement2;
+            Assert.AreEqual(1, codeElement1.Attributes.Count, "Attribute should have been removed.");
 
-			Assert.AreEqual(0, codeElement1.Attributes.Count,
-			    "Attribute should have been removed from the original element.");
-			Assert.AreEqual(1, codeElement2.Attributes.Count,
-			    "Attribute should have been added to the new element.");
+            Assert.IsTrue(codeElement1.Attributes.Contains(attribute1));
+            Assert.IsFalse(codeElement1.Attributes.Contains(attribute2));
 
-			Assert.IsFalse(codeElement1.Attributes.Contains(attribute1));
-			Assert.IsTrue(codeElement2.Attributes.Contains(attribute1));
-		}
+            //
+            // Remove the attribute by assigning a different parent
+            //
+            TCodeElement codeElement2 = new TCodeElement();
+            attribute1.Parent = codeElement2;
 
-		#endregion Public Methods
-	}
+            Assert.AreEqual(
+                0,
+                codeElement1.Attributes.Count,
+                "Attribute should have been removed from the original element.");
+            Assert.AreEqual(
+                1,
+                codeElement2.Attributes.Count,
+                "Attribute should have been added to the new element.");
+
+            Assert.IsFalse(codeElement1.Attributes.Contains(attribute1));
+            Assert.IsTrue(codeElement2.Attributes.Contains(attribute1));
+        }
+
+        #endregion Public Methods
+    }
 }

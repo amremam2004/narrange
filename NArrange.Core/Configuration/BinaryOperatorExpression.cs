@@ -1,153 +1,169 @@
 #region Header
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
- * 	    All rights reserved.                   				      
- *                                                                             
- * This program and the accompanying materials are made available under       
- * the terms of the Common Public License v1.0 which accompanies this         
- * distribution.							      
- *                                                                             
- * Redistribution and use in source and binary forms, with or                 
- * without modification, are permitted provided that the following            
- * conditions are met:                                                        
- *                                                                             
- * Redistributions of source code must retain the above copyright             
- * notice, this list of conditions and the following disclaimer.              
- * Redistributions in binary form must reproduce the above copyright          
- * notice, this list of conditions and the following disclaimer in            
- * the documentation and/or other materials provided with the distribution.   
- *                                                                             
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors.
+ *    All rights reserved.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Common Public License v1.0 which accompanies this
+ * distribution.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		Justin Dearing
- *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *      Justin Dearing
+ *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
-using System.Threading;
-
 namespace NArrange.Core.Configuration
 {
-	/// <summary>
-	/// Binary operator expression
-	/// </summary>
-	public class BinaryOperatorExpression : IConditionExpression
-	{
-		#region Fields
+    using System.Threading;
 
-		private readonly IConditionExpression _left;
-		private readonly BinaryExpressionOperator _operatorType;
-		private readonly IConditionExpression _right;
+    /// <summary>
+    /// Binary operator expression.
+    /// </summary>
+    public class BinaryOperatorExpression : IConditionExpression
+    {
+        #region Fields
 
-		#endregion Fields
+        /// <summary>
+        /// Left condition expression.
+        /// </summary>
+        private readonly IConditionExpression _left;
 
-		#region Constructors
+        /// <summary>
+        /// Operator type.
+        /// </summary>
+        private readonly BinaryExpressionOperator _operatorType;
 
-		/// <summary>
-		/// Creates a new operator expression.
-		/// </summary>
-		/// <param name="operatorType"></param>
-		/// <param name="left"></param>
-		/// <param name="right"></param>
-		public BinaryOperatorExpression(BinaryExpressionOperator operatorType, 
-			IConditionExpression left, IConditionExpression right)
-		{
-			_operatorType = operatorType;
-			_left = left;
-			_right = right;
-		}
+        /// <summary>
+        /// Right condition expression.
+        /// </summary>
+        private readonly IConditionExpression _right;
 
-		#endregion Constructors
+        #endregion Fields
 
-		#region Public Properties
+        #region Constructors
 
-		/// <summary>
-		/// Left expression
-		/// </summary>
-		public IConditionExpression Left
-		{
-			get 
-			{
-			    return _left;
-			}
-		}
+        /// <summary>
+        /// Creates a new operator expression.
+        /// </summary>
+        /// <param name="operatorType">Type of the operator.</param>
+        /// <param name="left">The left expression.</param>
+        /// <param name="right">The right expression.</param>
+        public BinaryOperatorExpression(
+            BinaryExpressionOperator operatorType,
+            IConditionExpression left,
+            IConditionExpression right)
+        {
+            _operatorType = operatorType;
+            _left = left;
+            _right = right;
+        }
 
-		/// <summary>
-		/// Gets the expression operator
-		/// </summary>
-		public BinaryExpressionOperator Operator
-		{
-			get
-			{
-			    return _operatorType;
-			}
-		}
+        #endregion Constructors
 
-		/// <summary>
-		/// Right expression
-		/// </summary>
-		public IConditionExpression Right
-		{
-			get 
-			{
-			    return _right;
-			}
-		}
+        #region Public Properties
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets the left expression.
+        /// </summary>
+        public IConditionExpression Left
+        {
+            get
+            {
+                return _left;
+            }
+        }
 
-		#region Public Methods
+        /// <summary>
+        /// Gets the expression operator.
+        /// </summary>
+        public BinaryExpressionOperator Operator
+        {
+            get
+            {
+                return _operatorType;
+            }
+        }
 
-		/// <summary>
-		/// Gets the string representation of this expression
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			string operatorString = string.Empty;
-			switch(_operatorType)
-			{
-			    case BinaryExpressionOperator.Equal:
-			        operatorString = "==";
-			        break;
+        /// <summary>
+        /// Gets the right expression.
+        /// </summary>
+        public IConditionExpression Right
+        {
+            get
+            {
+                return _right;
+            }
+        }
 
-			    case BinaryExpressionOperator.Contains:
-			        operatorString = ":";
-			        break;
+        #endregion Public Properties
 
-			    case BinaryExpressionOperator.And:
-			        operatorString = "And";
-			        break;
+        #region Public Methods
 
-			    case BinaryExpressionOperator.Or:
-			        operatorString = "Or";
-			        break;
+        /// <summary>
+        /// Gets the string representation of this expression.
+        /// </summary>
+        /// <returns>The string representation.</returns>
+        public override string ToString()
+        {
+            string operatorString = string.Empty;
+            switch (_operatorType)
+            {
+                case BinaryExpressionOperator.Equal:
+                    operatorString = "==";
+                    break;
 
-			    default:
-			        operatorString = EnumUtilities.ToString(_operatorType);
-			        break;
-			}
+                case BinaryExpressionOperator.Contains:
+                    operatorString = ":";
+                    break;
 
-			return string.Format(Thread.CurrentThread.CurrentCulture,
-			    "({0} {1} {2})", 
-			    Left, operatorString, Right);
-		}
+                case BinaryExpressionOperator.And:
+                    operatorString = "And";
+                    break;
 
-		#endregion Public Methods
-	}
+                case BinaryExpressionOperator.Or:
+                    operatorString = "Or";
+                    break;
+
+                default:
+                    operatorString = EnumUtilities.ToString(_operatorType);
+                    break;
+            }
+
+            return string.Format(
+                Thread.CurrentThread.CurrentCulture,
+                "({0} {1} {2})",
+                Left,
+                operatorString,
+                Right);
+        }
+
+        #endregion Public Methods
+    }
 }

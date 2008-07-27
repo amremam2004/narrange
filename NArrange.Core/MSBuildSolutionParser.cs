@@ -1,125 +1,128 @@
 #region Header
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
- * 	    All rights reserved.                   				      
- *                                                                             
- * This program and the accompanying materials are made available under       
- * the terms of the Common Public License v1.0 which accompanies this         
- * distribution.							      
- *                                                                             
- * Redistribution and use in source and binary forms, with or                 
- * without modification, are permitted provided that the following            
- * conditions are met:                                                        
- *                                                                             
- * Redistributions of source code must retain the above copyright             
- * notice, this list of conditions and the following disclaimer.              
- * Redistributions in binary form must reproduce the above copyright          
- * notice, this list of conditions and the following disclaimer in            
- * the documentation and/or other materials provided with the distribution.   
- *                                                                             
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors.
+ *    All rights reserved.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Common Public License v1.0 which accompanies this
+ * distribution.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * Contributors:
  *      James Nies
  *      - Initial creation
- *      - Fixed an issue with parsing of project files from a solution.  
- *        The solution parser was attempting to parse a project name when a 
+ *      - Fixed an issue with parsing of project files from a solution.
+ *        The solution parser was attempting to parse a project name when a
  *        ProjectSection was encountered.
- *		- Refactoring of SolutionParser to allow for MonoDevelop solution
- *		  files.
- *		Justin Dearing
- *		- Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *      - Refactoring of SolutionParser to allow for MonoDevelop solution
+ *        files.
+ *      Justin Dearing
+ *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-
 namespace NArrange.Core
 {
-	/// <summary>
-	/// MSBuild solution file parser.
-	/// </summary>
-	public sealed class MSBuildSolutionParser : ISolutionParser
-	{
-		#region Fields
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.IO;
 
-		private readonly List<string> _extensions = new List<string>(new string[]{"sln"});
+    /// <summary>
+    /// MSBuild solution file parser.
+    /// </summary>
+    public sealed class MSBuildSolutionParser : ISolutionParser
+    {
+        #region Fields
 
-		#endregion Fields
+        /// <summary>
+        /// File extensions handled by this solution parser.
+        /// </summary>
+        private readonly List<string> _extensions = new List<string>(new string[] { "sln" });
 
-		#region Public Properties
+        #endregion Fields
 
-		/// <summary>
-		/// Gets a list of extensions supported by this solution parser.
-		/// </summary>
-		public ReadOnlyCollection<string> Extensions
-		{
-			get
-			{
-				return _extensions.AsReadOnly();
-			}
-		}
+        #region Public Properties
 
-		#endregion Public Properties
+        /// <summary>
+        /// Gets a list of extensions supported by this solution parser.
+        /// </summary>
+        public ReadOnlyCollection<string> Extensions
+        {
+            get
+            {
+                return _extensions.AsReadOnly();
+            }
+        }
 
-		#region Public Methods
+        #endregion Public Properties
 
-		/// <summary>
-		/// Parses project file names from a solution file.
-		/// </summary>
-		/// <param name="solutionFile"></param>
-		/// <returns>A list of project file names</returns>
-		public ReadOnlyCollection<string> Parse(string solutionFile)
-		{
-			if (solutionFile == null)
-			{
-				throw new ArgumentNullException("solutionFile");
-			}
+        #region Public Methods
 
-			string solutionPath = Path.GetDirectoryName(solutionFile);
+        /// <summary>
+        /// Parses project file names from a solution file.
+        /// </summary>
+        /// <param name="solutionFile">Solution file name.</param>
+        /// <returns>A list of project file names</returns>
+        public ReadOnlyCollection<string> Parse(string solutionFile)
+        {
+            if (solutionFile == null)
+            {
+                throw new ArgumentNullException("solutionFile");
+            }
 
-			List<string> projectFiles = new List<string>();
+            string solutionPath = Path.GetDirectoryName(solutionFile);
 
-			using (StreamReader reader = new StreamReader(solutionFile, true))
-			{
-				while (!reader.EndOfStream)
-				{
-					//
-					// Find lines like the following:
-					// Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
+            List<string> projectFiles = new List<string>();
 
-					string line = reader.ReadLine().TrimStart();
-					if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
-					{
-						string[] projectData = line.Split(',');
-						string projectFile = projectData[1].Trim().Trim('"');
-						string projectPath = Path.Combine(solutionPath, projectFile);
-						if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
-						{
-							projectFiles.Add(projectPath);
-						}
-					}
-				}
-			}
+            using (StreamReader reader = new StreamReader(solutionFile, true))
+            {
+                while (!reader.EndOfStream)
+                {
+                    //
+                    // Find lines like the following:
+                    // Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.Core", "NArrange.Core\NArrange.Core.csproj", "{CD74EA33-223D-4CD9-9028-AADD4E929613}"
+                    //
+                    string line = reader.ReadLine().TrimStart();
+                    if (line.StartsWith("Project(", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string[] projectData = line.Split(',');
+                        string projectFile = projectData[1].Trim().Trim('"');
+                        string projectPath = Path.Combine(solutionPath, projectFile);
+                        if (!string.IsNullOrEmpty(Path.GetExtension(projectPath)))
+                        {
+                            projectFiles.Add(projectPath);
+                        }
+                    }
+                }
+            }
 
-			return projectFiles.AsReadOnly();
-		}
+            return projectFiles.AsReadOnly();
+        }
 
-		#endregion Public Methods
-	}
+        #endregion Public Methods
+    }
 }

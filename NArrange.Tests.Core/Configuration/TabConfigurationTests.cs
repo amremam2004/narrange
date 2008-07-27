@@ -1,68 +1,65 @@
-using NArrange.Core;
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the TabConfiguration class
-	/// </summary>
-	[TestFixture]
-	public class TabConfigurationTests
-	{
-		#region Public Methods
+    using NArrange.Core;
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the ICloneable implementation
-		/// </summary>
-		[Test]
-		public void CloneTest()
-		{
-			TabConfiguration tabConfiguration = new TabConfiguration();
-			tabConfiguration.TabStyle = TabStyle.Spaces;
-			tabConfiguration.SpacesPerTab = 8;
+    using NUnit.Framework;
 
-			TabConfiguration clone = tabConfiguration.Clone() as TabConfiguration;
-			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
+    /// <summary>
+    /// Test fixture for the TabConfiguration class.
+    /// </summary>
+    [TestFixture]
+    public class TabConfigurationTests
+    {
+        #region Public Methods
 
-			Assert.AreEqual(tabConfiguration.TabStyle, clone.TabStyle);
-			Assert.AreEqual(tabConfiguration.SpacesPerTab, clone.SpacesPerTab);
-		}
+        /// <summary>
+        /// Tests the ICloneable implementation.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            TabConfiguration tabConfiguration = new TabConfiguration();
+            tabConfiguration.TabStyle = TabStyle.Tabs;
+            tabConfiguration.SpacesPerTab = 8;
 
-		/// <summary>
-		/// Tests the creation of a new TabConfiguration
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			TabConfiguration tabConfiguration = new TabConfiguration();
+            TabConfiguration clone = tabConfiguration.Clone() as TabConfiguration;
+            Assert.IsNotNull(clone, "Clone did not return a valid instance.");
 
-			//
-			// Verify default state
-			//
-			Assert.AreEqual(TabStyle.Tabs, tabConfiguration.TabStyle,
-			    "Unexpected default value for Style.");
-			Assert.AreEqual(4, tabConfiguration.SpacesPerTab,
-			    "Unexpected default value for SpacesPerTab.");
-		}
+            Assert.AreEqual(tabConfiguration.TabStyle, clone.TabStyle);
+            Assert.AreEqual(tabConfiguration.SpacesPerTab, clone.SpacesPerTab);
+        }
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			TabConfiguration tabConfiguration = new TabConfiguration();
-			tabConfiguration.TabStyle = TabStyle.Spaces;
-			tabConfiguration.SpacesPerTab = 8;
+        /// <summary>
+        /// Tests the creation of a new TabConfiguration.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            TabConfiguration tabConfiguration = new TabConfiguration();
 
-			string str = tabConfiguration.ToString();
+            //
+            // Verify default state
+            //
+            Assert.AreEqual(TabStyle.Spaces, tabConfiguration.TabStyle, "Unexpected default value for Style.");
+            Assert.AreEqual(4, tabConfiguration.SpacesPerTab, "Unexpected default value for SpacesPerTab.");
+        }
 
-			Assert.AreEqual("Tabs: Spaces, 8", str,
-			    "Unexpected string representation.");
-		}
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            TabConfiguration tabConfiguration = new TabConfiguration();
+            tabConfiguration.TabStyle = TabStyle.Spaces;
+            tabConfiguration.SpacesPerTab = 8;
 
-		#endregion Public Methods
-	}
+            string str = tabConfiguration.ToString();
+
+            Assert.AreEqual("Tabs: Spaces, 8", str, "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

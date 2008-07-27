@@ -7,8 +7,6 @@ Imports System.Runtime.InteropServices
 Imports System.Reflection
 Imports System.ComponentModel
 
-<assembly: AssemblyDescription("Sample assembly for VB parsing and writing.")>
-
 Namespace SampleNamespace
 
 	''' <summary>

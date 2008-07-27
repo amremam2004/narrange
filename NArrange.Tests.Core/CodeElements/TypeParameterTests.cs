@@ -1,61 +1,53 @@
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture for the TypeParameter class
-	/// </summary>
-	[TestFixture]
-	public class TypeParameterTests
-	{
-		#region Public Methods
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Tests the ICloneable implementation
-		/// </summary>
-		[Test]
-		public void CloneTest()
-		{
-			TypeParameter typeParameter = new TypeParameter();
-			typeParameter.Name = "T";
-			typeParameter.AddConstraint("IDisposable");
-			typeParameter.AddConstraint("new()");
+    using NUnit.Framework;
 
-			TypeParameter clone = typeParameter.Clone() as TypeParameter;
-			Assert.IsNotNull(clone,
-			    "Clone should return a TypeParameter instance.");
+    /// <summary>
+    /// Test fixture for the TypeParameter class.
+    /// </summary>
+    [TestFixture]
+    public class TypeParameterTests
+    {
+        #region Public Methods
 
-			Assert.AreEqual(typeParameter.Name, clone.Name,
-			    "Name property was not copied correctly.");
-			Assert.AreEqual(typeParameter.Constraints.Count, clone.Constraints.Count,
-			    "Constraints property was not copied correctly.");
-			Assert.AreEqual(typeParameter.Constraints[0], clone.Constraints[0],
-			    "Constraints property was not copied correctly.");
-			Assert.AreEqual(typeParameter.Constraints[1], clone.Constraints[1],
-			    "Constraints property was not copied correctly.");
-		}
+        /// <summary>
+        /// Tests the ICloneable implementation.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            TypeParameter typeParameter = new TypeParameter();
+            typeParameter.Name = "T";
+            typeParameter.AddConstraint("IDisposable");
+            typeParameter.AddConstraint("new()");
 
-		/// <summary>
-		/// Tests the construction of a type parameter
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			TypeParameter typeParameter = new TypeParameter();
+            TypeParameter clone = typeParameter.Clone() as TypeParameter;
+            Assert.IsNotNull(clone, "Clone should return a TypeParameter instance.");
 
-			//
-			// Verify default values.
-			//
-			Assert.AreEqual(string.Empty, typeParameter.Name,
-			    "Unexpected default value for name.");
-			Assert.IsNotNull(typeParameter.Constraints,
-			    "Constraints collection should be instantiated.");
-			Assert.AreEqual(0, typeParameter.Constraints.Count,
-			    "Constraints collection should be empty.");
-		}
+            Assert.AreEqual(typeParameter.Name, clone.Name, "Name property was not copied correctly.");
+            Assert.AreEqual(typeParameter.Constraints.Count, clone.Constraints.Count, "Constraints property was not copied correctly.");
+            Assert.AreEqual(typeParameter.Constraints[0], clone.Constraints[0], "Constraints property was not copied correctly.");
+            Assert.AreEqual(typeParameter.Constraints[1], clone.Constraints[1], "Constraints property was not copied correctly.");
+        }
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Tests the construction of a type parameter.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            TypeParameter typeParameter = new TypeParameter();
+
+            //
+            // Verify default values.
+            //
+            Assert.AreEqual(string.Empty, typeParameter.Name, "Unexpected default value for name.");
+            Assert.IsNotNull(typeParameter.Constraints, "Constraints collection should be instantiated.");
+            Assert.AreEqual(0, typeParameter.Constraints.Count, "Constraints collection should be empty.");
+        }
+
+        #endregion Public Methods
+    }
 }

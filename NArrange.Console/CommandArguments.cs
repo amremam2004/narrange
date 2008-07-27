@@ -1,343 +1,390 @@
 #region Header
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Copyright (c) 2007-2008 James Nies and NArrange contributors. 	      
- * 	    All rights reserved.                   				      
- *                                                                             
- * This program and the accompanying materials are made available under       
- * the terms of the Common Public License v1.0 which accompanies this         
- * distribution.							      
- *                                                                             
- * Redistribution and use in source and binary forms, with or                 
- * without modification, are permitted provided that the following            
- * conditions are met:                                                        
- *                                                                             
- * Redistributions of source code must retain the above copyright             
- * notice, this list of conditions and the following disclaimer.              
- * Redistributions in binary form must reproduce the above copyright          
- * notice, this list of conditions and the following disclaimer in            
- * the documentation and/or other materials provided with the distribution.   
- *                                                                             
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS          
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,        
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY     
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING    
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               
- *                                                                             
+ * Copyright (c) 2007-2008 James Nies and NArrange contributors.
+ *    All rights reserved.
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Common Public License v1.0 which accompanies this
+ * distribution.
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * Contributors:
  *      James Nies
  *      - Initial creation
- *		- Fixed parsing of command line switches under Mono
- *		Justin Dearing
- *		- Removed unused using statements
+ *      - Fixed parsing of command line switches under Mono
+ *      Justin Dearing
+ *      - Removed unused using statements
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
 
-using System;
-using System.Collections.Generic;
-
-using NArrange.Core;
-
 namespace NArrange.ConsoleApplication
 {
-	/// <summary>
-	/// Command arguments class for the NArrange console application.
-	/// </summary>
-	public sealed class CommandArguments
-	{
-		#region Constants
+    using System;
+    using System.Collections.Generic;
 
-		/// <summary>
-		/// Unix flag/switch prefix character.
-		/// </summary>
-		public const char UnixSwitch = '-';
+    using NArrange.Core;
 
-		/// <summary>
-		/// Windows flag/switch prefix character.
-		/// </summary>
-		public const char WindowsSwitch = '/';
+    /// <summary>
+    /// Command arguments class for the NArrange console application.
+    /// </summary>
+    public sealed class CommandArguments
+    {
+        #region Constants
 
-		#endregion Constants
+        #region Constants
 
-		#region Fields
+        /// <summary>
+        /// Unix flag/switch prefix character.
+        /// </summary>
+        public const char UnixSwitch = '-';
 
-		private bool _backup;
-		private string _configuration;
-		private string _input;
-		private string _output;
-		private bool _restore;
-		private bool _trace;
+        /// <summary>
+        /// Windows flag/switch prefix character.
+        /// </summary>
+        public const char WindowsSwitch = '/';
 
-		#endregion Fields
+        #endregion Constants
 
-		#region Constructors
+        #endregion Constants
 
-		/// <summary>
-		/// Do not allow creation.
-		/// </summary>
-		private CommandArguments()
-		{
-		}
+        #region Fields
 
-		#endregion Constructors
+        /// <summary>
+        /// Perform backup.
+        /// </summary>
+        private bool _backup;
 
-		#region Public Properties
+        /// <summary>
+        /// Configuration file.
+        /// </summary>
+        private string _configuration;
 
-		/// <summary>
-		/// Gets a value indicating whether or not a backup should be performed.
-		/// </summary>
-		public bool Backup
-		{
-			get
-			{
-			    return _backup;
-			}
-		}
+        /// <summary>
+        /// Input file or directory.
+        /// </summary>
+        private string _input;
 
-		/// <summary>
-		/// Gets the configuration file.
-		/// </summary>
-		public string Configuration
-		{
-			get
-			{
-			    return _configuration;
-			}
-		}
+        /// <summary>
+        /// Output file or directory.
+        /// </summary>
+        private string _output;
 
-		/// <summary>
-		/// Gets the input file.
-		/// </summary>
-		public string Input
-		{
-			get
-			{
-			    return _input;
-			}
-		}
+        /// <summary>
+        /// Perform restore.
+        /// </summary>
+        private bool _restore;
 
-		/// <summary>
-		/// Gets the output file.
-		/// </summary>
-		public string Output
-		{
-			get
-			{
-			    return _output;
-			}
-		}
+        /// <summary>
+        /// Trace logging.
+        /// </summary>
+        private bool _trace;
 
-		/// <summary>
-		/// Gets a value indicating whether or not a restore should be performed.
-		/// </summary>
-		public bool Restore
-		{
-			get
-			{
-			    return _restore;
-			}
-		}
+        #endregion Fields
 
-		/// <summary>
-		/// Gets a value indicating whether or not tracing should be performed.
-		/// </summary>
-		public bool Trace
-		{
-			get
-			{
-			    return _trace;
-			}
-		}
+        #region Constructors
 
-		#endregion Public Properties
+        /// <summary>
+        /// Do not allow creation.
+        /// </summary>
+        private CommandArguments()
+        {
+        }
 
-		#region Private Methods
+        #endregion Constructors
 
-		/// <summary>
-		/// Called when a parsing error occurs
-		/// </summary>
-		private static void OnParseError(string invalidFlag)
-		{
-			throw new ArgumentException("Invalid flag " + invalidFlag);
-		}
+        #region Enumerations
 
-		/// <summary>
-		/// Called when a parsing error occurs
-		/// </summary>
-		private static void OnParseError()
-		{
-			throw new ArgumentException("args");
-		}
+        /// <summary>
+        /// Enumeration that defines the valid command argument flags
+        /// </summary>
+        private enum CommandArgumentFlag
+        {
+            /// <summary>
+            /// Unknown command argument.
+            /// </summary>
+            Unknown,
 
-		/// <summary>
-		/// Parses a command argument flag from a text string
-		/// </summary>
-		/// <param name="flagString">Flag text</param>
-		/// <returns></returns>
-		private static CommandArgumentFlag ParseFlag(string flagString)
-		{
-			CommandArgumentFlag flag = CommandArgumentFlag.Unknown;
+            /// <summary>
+            /// Configuration file.
+            /// </summary>
+            Configuration,
 
-			string[] enumStrings = Enum.GetNames(typeof(CommandArgumentFlag));
-			foreach (string enumString in enumStrings)
-			{
-			    string fullName = enumString.ToLower();
-			    char abbr = fullName[0];
-			    string lowerFlagString = flagString.ToLower();
+            /// <summary>
+            /// Perform backup.
+            /// </summary>
+            Backup,
 
-			    if (lowerFlagString == abbr.ToString() || lowerFlagString == fullName)
-			    {
-			        flag = (CommandArgumentFlag)Enum.Parse(typeof(CommandArgumentFlag), enumString);
-			    }
-			}
+            /// <summary>
+            /// Perform restore.
+            /// </summary>
+            Restore,
 
-			return flag;
-		}
+            /// <summary>
+            /// Trace logging.
+            /// </summary>
+            Trace
+        }
 
-		#endregion Private Methods
+        #endregion Enumerations
 
-		#region Public Methods
+        #region Public Properties
 
-		/// <summary>
-		/// Parses command arguments from an array of strings.
-		/// </summary>
-		/// <param name="args">String array arguments</param>
-		/// <returns>A CommandArguments instance</returns>'=
-		/// <exception cref="ArgumentException"/>
-		public static CommandArguments Parse(params string[] args)
-		{
-			CommandArguments commandArguments = new CommandArguments();
+        /// <summary>
+        /// Gets a value indicating whether or not a backup should be performed.
+        /// </summary>
+        public bool Backup
+        {
+            get
+            {
+                return _backup;
+            }
+        }
 
-			if (args == null || args.Length == 0)
-			{
-			    OnParseError();
-			}
+        /// <summary>
+        /// Gets the configuration file.
+        /// </summary>
+        public string Configuration
+        {
+            get
+            {
+                return _configuration;
+            }
+        }
 
-			List<string> argList = new List<string>(args);
-			for (int argIndex = 0; argIndex < argList.Count; argIndex++)
-			{
-			    string arg = argList[argIndex];
+        /// <summary>
+        /// Gets the input file.
+        /// </summary>
+        public string Input
+        {
+            get
+            {
+                return _input;
+            }
+        }
 
-			    if (string.IsNullOrEmpty(arg))
-			    {
-			        OnParseError();
-			    }
+        /// <summary>
+        /// Gets the output file.
+        /// </summary>
+        public string Output
+        {
+            get
+            {
+                return _output;
+            }
+        }
 
-			    if (arg.Length > 0 && 
-					((!MonoUtilities.IsMonoRuntime && arg[0] == WindowsSwitch) ||
-					arg[0] == UnixSwitch))
-			    {
-			        string argLower = arg.ToLower();
-			        if (arg.Length >= 2)
-			        {
-			            string flagParts = arg.Substring(1);
-			            int separatorIndex = flagParts.IndexOf(':');
-			            string flagString = flagParts;
-			            if(separatorIndex > 0)
-			            {
-			                flagString = flagParts.Substring(0, separatorIndex);
-			            }
+        /// <summary>
+        /// Gets a value indicating whether or not a restore should be performed.
+        /// </summary>
+        public bool Restore
+        {
+            get
+            {
+                return _restore;
+            }
+        }
 
-			            CommandArgumentFlag flag = ParseFlag(flagString);
+        /// <summary>
+        /// Gets a value indicating whether or not tracing should be performed.
+        /// </summary>
+        public bool Trace
+        {
+            get
+            {
+                return _trace;
+            }
+        }
 
-			            switch (flag)
-			            {
-			                case CommandArgumentFlag.Configuration:
-			                    if (separatorIndex < 0)
-			                    {
-			                        OnParseError(arg);
-			                    }
-			                    commandArguments._configuration = flagParts.Substring(separatorIndex + 1);
-			                    if (string.IsNullOrEmpty(commandArguments._configuration))
-			                    {
-			                        OnParseError(arg);
-			                    }
-			                    break;
+        #endregion Public Properties
 
-			                case CommandArgumentFlag.Backup:
-			                    commandArguments._backup = true;
-			                    break;
+        #region Public Static Methods
 
-			                case CommandArgumentFlag.Restore:
-			                    commandArguments._restore = true;
-			                    break;
+        /// <summary>
+        /// Parses command arguments from an array of strings.
+        /// </summary>
+        /// <param name="args">String array arguments</param>
+        /// <returns>A CommandArguments instance</returns>'=
+        /// <exception cref="ArgumentException"/>
+        public static CommandArguments Parse(params string[] args)
+        {
+            CommandArguments commandArguments = new CommandArguments();
 
-			                case CommandArgumentFlag.Trace:
-			                    commandArguments._trace = true;
-			                    break;
+            if (args == null || args.Length == 0)
+            {
+                OnParseError();
+            }
 
-			                default:
-			                    OnParseError();
-			                    break;
-			            }
+            List<string> argList = new List<string>(args);
+            for (int argIndex = 0; argIndex < argList.Count; argIndex++)
+            {
+                string arg = argList[argIndex];
 
-			            argList.RemoveAt(argIndex);
-			            argIndex--;
-			        }
-			        else
-			        {
-			            OnParseError(arg);
-			        }
-			    }
-			    else
-			    {
-			        if (commandArguments._input == null)
-			        {
-			            commandArguments._input = arg;
-			            argList.RemoveAt(argIndex);
-			            argIndex--;
-			        }
-			        else if (commandArguments._output == null)
-			        {
-			            commandArguments._output = arg;
-			            argList.RemoveAt(argIndex);
-			            argIndex--;
-			        }
-			    }
-			}
+                if (string.IsNullOrEmpty(arg))
+                {
+                    OnParseError();
+                }
 
-			if (argList.Count > 0)
-			{
-			    OnParseError();
-			}
+                if (arg.Length > 0 &&
+                    ((!MonoUtilities.IsMonoRuntime && arg[0] == WindowsSwitch) ||
+                    arg[0] == UnixSwitch))
+                {
+                    string argLower = arg.ToLower();
+                    if (arg.Length >= 2)
+                    {
+                        string flagParts = arg.Substring(1);
+                        int separatorIndex = flagParts.IndexOf(':');
+                        string flagString = flagParts;
+                        if (separatorIndex > 0)
+                        {
+                            flagString = flagParts.Substring(0, separatorIndex);
+                        }
 
-			if (commandArguments._backup && commandArguments._restore)
-			{
-			    OnParseError();
-			}
+                        CommandArgumentFlag flag = ParseFlag(flagString);
 
-			if (commandArguments.Output != null &&
-			    (commandArguments._backup || commandArguments._restore))
-			{
-			    OnParseError();
-			}
+                        switch (flag)
+                        {
+                            case CommandArgumentFlag.Configuration:
+                                if (separatorIndex < 0)
+                                {
+                                    OnParseError(arg);
+                                }
+                                commandArguments._configuration = flagParts.Substring(separatorIndex + 1);
+                                if (string.IsNullOrEmpty(commandArguments._configuration))
+                                {
+                                    OnParseError(arg);
+                                }
+                                break;
 
-			return commandArguments;
-		}
+                            case CommandArgumentFlag.Backup:
+                                commandArguments._backup = true;
+                                break;
 
-		#endregion Public Methods
+                            case CommandArgumentFlag.Restore:
+                                commandArguments._restore = true;
+                                break;
 
-		#region Other
+                            case CommandArgumentFlag.Trace:
+                                commandArguments._trace = true;
+                                break;
 
-		/// <summary>
-		/// Enumeration that defines the valid command argument flags
-		/// </summary>
-		private enum CommandArgumentFlag
-		{
-			Unknown,
-			Configuration,
-			Backup,
-			Restore,
-			Trace
-		}
+                            default:
+                                OnParseError();
+                                break;
+                        }
 
-		#endregion Other
-	}
+                        argList.RemoveAt(argIndex);
+                        argIndex--;
+                    }
+                    else
+                    {
+                        OnParseError(arg);
+                    }
+                }
+                else
+                {
+                    if (commandArguments._input == null)
+                    {
+                        commandArguments._input = arg;
+                        argList.RemoveAt(argIndex);
+                        argIndex--;
+                    }
+                    else if (commandArguments._output == null)
+                    {
+                        commandArguments._output = arg;
+                        argList.RemoveAt(argIndex);
+                        argIndex--;
+                    }
+                }
+            }
+
+            if (argList.Count > 0)
+            {
+                OnParseError();
+            }
+
+            if (commandArguments._backup && commandArguments._restore)
+            {
+                OnParseError();
+            }
+
+            if (commandArguments.Output != null &&
+                (commandArguments._backup || commandArguments._restore))
+            {
+                OnParseError();
+            }
+
+            return commandArguments;
+        }
+
+        #endregion Public Static Methods
+
+        #region Private Static Methods
+
+        /// <summary>
+        /// Called when a parsing error occurs.
+        /// </summary>
+        /// <param name="invalidFlag">Invalid flag text.</param>
+        private static void OnParseError(string invalidFlag)
+        {
+            throw new ArgumentException("Invalid flag " + invalidFlag);
+        }
+
+        /// <summary>
+        /// Called when a parsing error occurs.
+        /// </summary>
+        private static void OnParseError()
+        {
+            throw new ArgumentException("args");
+        }
+
+        /// <summary>
+        /// Parses a command argument flag from a text string.
+        /// </summary>
+        /// <param name="flagString">Command argument flag text.</param>
+        /// <returns>Command argument flag.</returns>
+        private static CommandArgumentFlag ParseFlag(string flagString)
+        {
+            CommandArgumentFlag flag = CommandArgumentFlag.Unknown;
+
+            string[] enumStrings = Enum.GetNames(typeof(CommandArgumentFlag));
+            foreach (string enumString in enumStrings)
+            {
+                string fullName = enumString.ToLower();
+                char abbr = fullName[0];
+                string lowerFlagString = flagString.ToLower();
+
+                if (lowerFlagString == abbr.ToString() || lowerFlagString == fullName)
+                {
+                    flag = (CommandArgumentFlag)Enum.Parse(typeof(CommandArgumentFlag), enumString);
+                }
+            }
+
+            return flag;
+        }
+
+        #endregion Private Static Methods
+    }
 }

@@ -1,68 +1,66 @@
-using NArrange.Core.Configuration;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.Configuration
 {
-	/// <summary>
-	/// Test fixture for the ExtensionConfiguration class
-	/// </summary>
-	[TestFixture]
-	public class ExtensionConfigurationTests
-	{
-		#region Public Methods
+    using NArrange.Core.Configuration;
 
-		/// <summary>
-		/// Tests the ICloneable implementation
-		/// </summary>
-		[Test]
-		public void CloneTest()
-		{
-			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
-			extensionConfiguration.Name = "cs";
+    using NUnit.Framework;
 
-			FilterBy filter = new FilterBy();
-			filter.Condition = "$(File.Name) != 'Test.cs'";
-			extensionConfiguration.FilterBy = filter;
+    /// <summary>
+    /// Test fixture for the ExtensionConfiguration class.
+    /// </summary>
+    [TestFixture]
+    public class ExtensionConfigurationTests
+    {
+        #region Public Methods
 
-			ExtensionConfiguration clone = extensionConfiguration.Clone() as ExtensionConfiguration;
-			Assert.IsNotNull(clone, "Clone did not return a valid instance.");
+        /// <summary>
+        /// Tests the ICloneable implementation.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
+            extensionConfiguration.Name = "cs";
 
-			Assert.AreEqual(extensionConfiguration.Name, clone.Name);
-			Assert.IsNotNull(clone.FilterBy, "FilterBy was not cloned.");
-			Assert.AreEqual(extensionConfiguration.FilterBy.Condition, clone.FilterBy.Condition);
-		}
+            FilterBy filter = new FilterBy();
+            filter.Condition = "$(File.Name) != 'Test.cs'";
+            extensionConfiguration.FilterBy = filter;
 
-		/// <summary>
-		/// Tests the creation of a new ExtensionConfiguration
-		/// </summary>
-		[Test]
-		public void CreateTest()
-		{
-			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
+            ExtensionConfiguration clone = extensionConfiguration.Clone() as ExtensionConfiguration;
+            Assert.IsNotNull(clone, "Clone did not return a valid instance.");
 
-			//
-			// Verify default state
-			//
-			Assert.IsNull(extensionConfiguration.Name,
-			    "Unexpected default value for Name.");
-		}
+            Assert.AreEqual(extensionConfiguration.Name, clone.Name);
+            Assert.IsNotNull(clone.FilterBy, "FilterBy was not cloned.");
+            Assert.AreEqual(extensionConfiguration.FilterBy.Condition, clone.FilterBy.Condition);
+        }
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public void ToStringTest()
-		{
-			ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
-			extensionConfiguration.Name = "cs";
+        /// <summary>
+        /// Tests the creation of a new ExtensionConfiguration.
+        /// </summary>
+        [Test]
+        public void CreateTest()
+        {
+            ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
 
-			string str = extensionConfiguration.ToString();
+            //
+            // Verify default state
+            //
+            Assert.IsNull(extensionConfiguration.Name, "Unexpected default value for Name.");
+        }
 
-			Assert.AreEqual("Extension: cs", str,
-			    "Unexpected string representation.");
-		}
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public void ToStringTest()
+        {
+            ExtensionConfiguration extensionConfiguration = new ExtensionConfiguration();
+            extensionConfiguration.Name = "cs";
 
-		#endregion Public Methods
-	}
+            string str = extensionConfiguration.ToString();
+
+            Assert.AreEqual("Extension: cs", str, "Unexpected string representation.");
+        }
+
+        #endregion Public Methods
+    }
 }

@@ -1,242 +1,246 @@
-using NArrange.Core.CodeElements;
-
-using NUnit.Framework;
-
 namespace NArrange.Tests.Core.CodeElements
 {
-	/// <summary>
-	/// Test fixture base for the CodeElement class
-	/// </summary>
-	public abstract class CodeElementTests<TCodeElement>
-		where TCodeElement : CodeElement, new()
-	{
-		#region Protected Methods
+    using NArrange.Core.CodeElements;
 
-		/// <summary>
-		/// Creates an instance to be cloned
-		/// </summary>
-		/// <returns></returns>
-		protected abstract TCodeElement DoCreateClonePrototype();
+    using NUnit.Framework;
 
-		/// <summary>
-		/// Performs the ToString test
-		/// </summary>
-		protected virtual void DoToStringTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
-			codeElement.Name = "Element";
-			string str = codeElement.ToString();
-			Assert.AreEqual("Element", str,
-			    "Unexpected string representation.");
-		}
+    /// <summary>
+    /// Test fixture base for the CodeElement class.
+    /// </summary>
+    /// <typeparam name="TCodeElement">Code element type.</typeparam>
+    public abstract class CodeElementTests<TCodeElement>
+        where TCodeElement : CodeElement, new()
+    {
+        #region Public Methods
 
-		/// <summary>
-		/// Verifies that a clone has the same state as the original
-		/// </summary>
-		/// <param name="original"></param>
-		/// <param name="clone"></param>
-		protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);
+        /// <summary>
+        /// Tests the AddChild method.
+        /// </summary>
+        [Test]
+        public void AddChildTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
 
-		#endregion Protected Methods
+            GroupElement child1 = new GroupElement("Test");
+            GroupElement child2 = new GroupElement("Ignore");
+            codeElement.AddChild(child1);
+            codeElement.AddChild(child2);
 
-		#region Public Methods
+            Assert.AreEqual(2, codeElement.Children.Count, "Children were not added correctly.");
 
-		/// <summary>
-		/// Tests the AddChild method.
-		/// </summary>
-		[Test]
-		public void AddChildTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
+            Assert.AreSame(codeElement, child1.Parent, "Attribute parent was not set correctly.");
+            Assert.AreSame(codeElement, child2.Parent, "Attribute parent was not set correctly.");
 
-			GroupElement child1 = new GroupElement("Test");
-			GroupElement child2 = new GroupElement("Ignore");
-			codeElement.AddChild(child1);
-			codeElement.AddChild(child2);
+            codeElement.AddChild(child2);
 
-			Assert.AreEqual(2, codeElement.Children.Count,
-			    "Children were not added correctly.");
+            Assert.AreEqual(2, codeElement.Children.Count, "Attribute should not have been added again.");
 
-			Assert.AreSame(codeElement, child1.Parent,
-			    "Attribute parent was not set correctly.");
-			Assert.AreSame(codeElement, child2.Parent,
-			    "Attribute parent was not set correctly.");
+            Assert.IsTrue(codeElement.Children.Contains(child1));
+            Assert.IsTrue(codeElement.Children.Contains(child2));
+        }
 
-			codeElement.AddChild(child2);
+        /// <summary>
+        /// Tests the ClearChildren method.
+        /// </summary>
+        [Test]
+        public void ClearChildrenTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
 
-			Assert.AreEqual(2, codeElement.Children.Count,
-			    "Attribute should not have been added again.");
+            GroupElement child1 = new GroupElement("Test");
+            GroupElement child2 = new GroupElement("Ignore");
+            codeElement.AddChild(child1);
+            codeElement.AddChild(child2);
 
-			Assert.IsTrue(codeElement.Children.Contains(child1));
-			Assert.IsTrue(codeElement.Children.Contains(child2));
-		}
+            Assert.AreEqual(2, codeElement.Children.Count, "Children were not added correctly.");
 
-		/// <summary>
-		/// Tests the ClearChildren method.
-		/// </summary>
-		[Test]
-		public void ClearChildrenTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
+            codeElement.ClearChildren();
 
-			GroupElement child1 = new GroupElement("Test");
-			GroupElement child2 = new GroupElement("Ignore");
-			codeElement.AddChild(child1);
-			codeElement.AddChild(child2);
+            Assert.AreEqual(0, codeElement.Children.Count, "Children were not cleared correctly.");
 
-			Assert.AreEqual(2, codeElement.Children.Count,
-			    "Children were not added correctly.");
+            Assert.IsNull(child1.Parent, "Attribute parent should have been cleared.");
+            Assert.IsNull(child2.Parent, "Attribute parent should have been cleared.");
+        }
 
-			codeElement.ClearChildren();
+        /// <summary>
+        /// Tests the clone method.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            const string Key1 = "Test1";
+            const string Key2 = "Test2";
 
-			Assert.AreEqual(0, codeElement.Children.Count,
-			    "Children were not cleared correctly.");
+            TCodeElement original = DoCreateClonePrototype();
+            original[Key1] = "SomeValue";
+            original[Key2] = false;
 
-			Assert.IsNull(child1.Parent, "Attribute parent should have been cleared.");
-			Assert.IsNull(child2.Parent, "Attribute parent should have been cleared.");
-		}
+            TCodeElement clone = original.Clone() as TCodeElement;
+            Assert.IsNotNull(
+                clone,
+                "Clone did not create an instance of type {0}.",
+                typeof(TCodeElement).Name);
+            Assert.AreNotSame(original, clone, "Clone should be a different instance.");
 
-		/// <summary>
-		/// Tests the clone method
-		/// </summary>
-		[Test]
-		public void CloneTest()
-		{
-			const string Key1 = "Test1";
-			const string Key2 = "Test2";
+            Assert.AreEqual(
+                original[Key1],
+                clone[Key1],
+                "Extended properties were not cloned correctly.");
+            Assert.AreEqual(
+                original[Key2],
+                clone[Key2],
+                "Extended properties were not cloned correctly.");
 
-			TCodeElement original = DoCreateClonePrototype();
-			original[Key1] = "SomeValue";
-			original[Key2] = false;
+            DoVerifyClone(original, clone);
+        }
 
-			TCodeElement clone = original.Clone() as TCodeElement;
-			Assert.IsNotNull(clone, "Clone did not create an instance of type {0}.",
-			    typeof(TCodeElement).Name);
-			Assert.AreNotSame(original, clone, "Clone should be a different instance.");
+        /// <summary>
+        /// Tests the InsertChild method.
+        /// </summary>
+        [Test]
+        public void InsertChildTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
 
-			Assert.AreEqual(original[Key1], clone[Key1], 
-			    "Extended properties were not cloned correctly.");
-			Assert.AreEqual(original[Key2], clone[Key2],
-			    "Extended properties were not cloned correctly.");
+            GroupElement child1 = new GroupElement("Test");
+            GroupElement child2 = new GroupElement("Ignore");
+            codeElement.AddChild(child1);
+            codeElement.InsertChild(0, child2);
 
-			DoVerifyClone(original, clone);
-		}
+            Assert.AreEqual(2, codeElement.Children.Count, "Children were not added correctly.");
 
-		/// <summary>
-		/// Tests the InsertChild method.
-		/// </summary>
-		[Test]
-		public void InsertChildTest()
-		{
-			TCodeElement codeElement = new TCodeElement();
+            Assert.AreEqual(0, codeElement.Children.IndexOf(child2));
+            Assert.AreEqual(1, codeElement.Children.IndexOf(child1));
 
-			GroupElement child1 = new GroupElement("Test");
-			GroupElement child2 = new GroupElement("Ignore");
-			codeElement.AddChild(child1);
-			codeElement.InsertChild(0, child2);
+            Assert.AreSame(codeElement, child1.Parent, "Attribute parent was not set correctly.");
+            Assert.AreSame(codeElement, child2.Parent, "Attribute parent was not set correctly.");
 
-			Assert.AreEqual(2, codeElement.Children.Count,
-			    "Children were not added correctly.");
+            codeElement.InsertChild(1, child2);
 
-			Assert.AreEqual(0, codeElement.Children.IndexOf(child2));
-			Assert.AreEqual(1, codeElement.Children.IndexOf(child1));
+            Assert.AreEqual(2, codeElement.Children.Count, "Attribute should not have been added again.");
 
-			Assert.AreSame(codeElement, child1.Parent,
-			    "Attribute parent was not set correctly.");
-			Assert.AreSame(codeElement, child2.Parent,
-			    "Attribute parent was not set correctly.");
+            Assert.AreEqual(0, codeElement.Children.IndexOf(child1));
+            Assert.AreEqual(1, codeElement.Children.IndexOf(child2));
+        }
 
-			codeElement.InsertChild(1, child2);
+        /// <summary>
+        /// Tests getting and setting the parent property.
+        /// </summary>
+        [Test]
+        public virtual void ParentTest()
+        {
+            TCodeElement parentElement = new TCodeElement();
+            TCodeElement childElement = new TCodeElement();
+            Assert.IsNull(childElement.Parent, "Parent should not be set.");
 
-			Assert.AreEqual(2, codeElement.Children.Count,
-			    "Attribute should not have been added again.");
+            childElement.Parent = parentElement;
+            Assert.AreSame(
+                parentElement,
+                childElement.Parent,
+                "Parent was not set correctly.");
 
-			Assert.AreEqual(0, codeElement.Children.IndexOf(child1));
-			Assert.AreEqual(1, codeElement.Children.IndexOf(child2));
-		}
+            Assert.IsTrue(
+                parentElement.Children.Contains(childElement),
+                "Parent Children collection does not contain the child element.");
 
-		/// <summary>
-		/// Tests getting and setting the parent property
-		/// </summary>
-		[Test]
-		public virtual void ParentTest()
-		{
-			TCodeElement parentElement = new TCodeElement();
-			TCodeElement childElement = new TCodeElement();
-			Assert.IsNull(childElement.Parent, "Parent should not be set.");
+            childElement.Parent = null;
+            Assert.IsNull(childElement.Parent, "Parent should not be set.");
 
-			childElement.Parent = parentElement;
-			Assert.AreSame(parentElement, childElement.Parent,
-			    "Parent was not set correctly.");
+            Assert.IsFalse(
+                parentElement.Children.Contains(childElement),
+                "Parent Children collection should not contain the child element.");
 
-			Assert.IsTrue(parentElement.Children.Contains(childElement),
-			    "Parent Children collection does not contain the child element.");
+            parentElement.AddChild(childElement);
+            Assert.AreSame(
+                parentElement,
+                childElement.Parent,
+                 "Parent was not set correctly.");
 
-			childElement.Parent = null;
-			Assert.IsNull(childElement.Parent, "Parent should not be set.");
+            parentElement.RemoveChild(childElement);
+            Assert.IsNull(childElement.Parent, "Parent should not be set.");
+        }
 
-			Assert.IsFalse(parentElement.Children.Contains(childElement),
-			    "Parent Children collection should not contain the child element.");
+        /// <summary>
+        /// Tests the RemoveChild method.
+        /// </summary>
+        [Test]
+        public void RemoveChildTest()
+        {
+            TCodeElement codeElement1 = new TCodeElement();
 
-			parentElement.AddChild(childElement);
-			Assert.AreSame(parentElement, childElement.Parent,
-			     "Parent was not set correctly.");
+            GroupElement child1 = new GroupElement("Test");
+            GroupElement child2 = new GroupElement("Ignore");
+            codeElement1.AddChild(child1);
+            codeElement1.AddChild(child2);
 
-			parentElement.RemoveChild(childElement);
-			Assert.IsNull(childElement.Parent, "Parent should not be set.");
-		}
+            Assert.AreEqual(2, codeElement1.Children.Count, "Children were not added correctly.");
 
-		/// <summary>
-		/// Tests the RemoveChild method.
-		/// </summary>
-		[Test]
-		public void RemoveChildTest()
-		{
-			TCodeElement codeElement1 = new TCodeElement();
+            //
+            // Remove the attribute using the method
+            //
+            codeElement1.RemoveChild(child2);
 
-			GroupElement child1 = new GroupElement("Test");
-			GroupElement child2 = new GroupElement("Ignore");
-			codeElement1.AddChild(child1);
-			codeElement1.AddChild(child2);
+            Assert.AreEqual(1, codeElement1.Children.Count, "Attribute should have been removed.");
 
-			Assert.AreEqual(2, codeElement1.Children.Count,
-			    "Children were not added correctly.");
+            Assert.IsTrue(codeElement1.Children.Contains(child1));
+            Assert.IsFalse(codeElement1.Children.Contains(child2));
 
-			//
-			// Remove the attribute using the method
-			//
-			codeElement1.RemoveChild(child2);
+            //
+            // Remove the attribute by assigning a different parent
+            //
+            TCodeElement codeElement2 = new TCodeElement();
+            child1.Parent = codeElement2;
 
-			Assert.AreEqual(1, codeElement1.Children.Count,
-			    "Attribute should have been removed.");
+            Assert.AreEqual(
+                0,
+                codeElement1.Children.Count,
+                "Attribute should have been removed from the original element.");
+            Assert.AreEqual(
+                1,
+                codeElement2.Children.Count,
+                "Attribute should have been added to the new element.");
 
-			Assert.IsTrue(codeElement1.Children.Contains(child1));
-			Assert.IsFalse(codeElement1.Children.Contains(child2));
+            Assert.IsFalse(codeElement1.Children.Contains(child1));
+            Assert.IsTrue(codeElement2.Children.Contains(child1));
+        }
 
-			//
-			// Remove the attribute by assigning a different parent
-			//
-			TCodeElement codeElement2 = new TCodeElement();
-			child1.Parent = codeElement2;
+        /// <summary>
+        /// Tests the ToString method.
+        /// </summary>
+        [Test]
+        public virtual void ToStringTest()
+        {
+            DoToStringTest();
+        }
 
-			Assert.AreEqual(0, codeElement1.Children.Count,
-			    "Attribute should have been removed from the original element.");
-			Assert.AreEqual(1, codeElement2.Children.Count,
-			    "Attribute should have been added to the new element.");
+        #endregion Public Methods
 
-			Assert.IsFalse(codeElement1.Children.Contains(child1));
-			Assert.IsTrue(codeElement2.Children.Contains(child1));
-		}
+        #region Protected Methods
 
-		/// <summary>
-		/// Tests the ToString method
-		/// </summary>
-		[Test]
-		public virtual void ToStringTest()
-		{
-			DoToStringTest();
-		}
+        /// <summary>
+        /// Creates an instance to be cloned.
+        /// </summary>
+        /// <returns>Clone prototype.</returns>
+        protected abstract TCodeElement DoCreateClonePrototype();
 
-		#endregion Public Methods
-	}
+        /// <summary>
+        /// Performs the ToString test.
+        /// </summary>
+        protected virtual void DoToStringTest()
+        {
+            TCodeElement codeElement = new TCodeElement();
+            codeElement.Name = "Element";
+            string str = codeElement.ToString();
+            Assert.AreEqual("Element", str, "Unexpected string representation.");
+        }
+
+        /// <summary>
+        /// Verifies that a clone has the same state as the original.
+        /// </summary>
+        /// <param name="original">Original element.</param>
+        /// <param name="clone">Clone element.</param>
+        protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);
+
+        #endregion Protected Methods
+    }
 }
