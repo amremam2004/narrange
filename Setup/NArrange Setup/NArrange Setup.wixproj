@@ -1,0 +1,42 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Package</OutputType>
+    <RootNamespace>NArrange_Setup</RootNamespace>
+    <OutputName>NArrange Setup</OutputName>
+    <WixToolPath Condition=" '$(WixToolPath)' == '' ">$(SharpDevelopBinPath)\Tools\Wix</WixToolPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(WixToolPath)\wix.targets</WixTargetsPath>
+    <WixTasksPath Condition=" '$(WixTasksPath)' == '' ">$(WixToolPath)\WixTasks.dll</WixTasksPath>
+    <SupressIces>ICE45</SupressIces>
+    <WixVariables>WixUILicenseRtf=license.rtf</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <Import Project="$(WixToolPath)\wix.targets" />
+  <ItemGroup>
+    <WixExtension Include="$(WixToolPath)\WixUIExtension.dll" />
+    <Compile Include="Files.wxs" />
+    <Compile Include="Setup.wxs" />
+    <ProjectReference Include="..\..\NArrange.Console\NArrange.ConsoleApplication.csproj">
+      <Project>{78E67A66-D3C9-4916-86D3-3CBC579E7332}</Project>
+      <Name>NArrange.ConsoleApplication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NArrange.GuiConfig\NArrange.GuiConfig.csproj">
+      <Project>{63CD7C78-1D31-4FB8-A4AD-25944AE238A5}</Project>
+      <Name>NArrange.GuiConfig</Name>
+    </ProjectReference>
+    <None Include="license.rtf" />
+  </ItemGroup>
+</Project>

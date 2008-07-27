@@ -1,0 +1,32 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="INSTALLDIR" Name="NArrange">
+					<Component Id="NArrange.License" Guid="2516BE25-9594-4FC6-A181-DAA127DD9732" DiskId="1">
+						<File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
+					</Component>
+					<Component Id="NArrange.ConsoleApplication" Guid="8A662738-B311-461C-BB56-115C77EF7725">
+						<File Id="NArrange.ConsoleApplication.Executable" Name="narrange-console.exe" Source="$(var.NArrange.ConsoleApplication.TargetDir)\narrange-console.exe"/>
+					</Component>
+					<Component Id="NArrange.GuiConfig" Guid="9B44DB2A-B122-421E-BF64-9BED63BB6A31">
+						<File Id="NArrange.GuiConfig.Executable" Name="narrange-config.exe" Source="$(var.NArrange.GuiConfig.TargetDir)\narrange-config.exe"/>
+						<File Id="NArrange.GuiConfig.Lib" Name="NArrange.GUI.dll" Source="$(var.NArrange.GuiConfig.TargetDir)\NArrange.GUI.dll"/>
+					</Component>
+					<Component Id="NArrange.Libs" Guid="C6D19A15-5225-449B-8E4B-EBD665BF6DA5">
+						<File Id="NArrange.Core.Lib" Name="NArrange.Core.dll" Source="$(var.NArrange.ConsoleApplication.TargetDir)\NArrange.Core.dll"/>
+						<File Id="NArrange.CSharp.Lib" Name="NArrange.CSharp.dll" Source="$(var.NArrange.ConsoleApplication.TargetDir)\NArrange.CSharp.dll"/>
+						<File Id="NArrange.VisualBasic.Lib" Name="NArrange.VisualBasic.dll" Source="$(var.NArrange.ConsoleApplication.TargetDir)\NArrange.VisualBasic.dll"/>
+					</Component>
+				</Directory>
+			</Directory>
+		</DirectoryRef>
+		<ComponentGroup Id="NArrange.Core">
+			<ComponentRef Id="NArrange.License" />
+			<ComponentRef Id="NArrange.ConsoleApplication" />
+			<ComponentRef Id="NArrange.GuiConfig" />
+			<ComponentRef Id="NArrange.Libs" />
+		</ComponentGroup>
+	</Fragment>
+</Wix>

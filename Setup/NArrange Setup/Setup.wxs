@@ -1,0 +1,39 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*"
+		Name="NArrange"
+		Language="1033"
+		Version="1.0.0.0"
+		UpgradeCode="AAF3AD2C-8C0A-4DE7-B603-B2D88BBE1737"
+		Manufacturer="James Nies">
+		<Package
+			InstallerVersion="200"
+			Compressed="yes"/>
+		<!--
+			Source media for the installation. 
+ 			Specifies a single cab file to be embedded in the installer's .msi. 
+		-->
+		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high"/>
+		
+		<!-- Installation directory and files are defined in Files.wxs -->
+		<Directory Id="TARGETDIR" Name="SourceDir"/>
+				
+		<Feature Id="NArrange"
+		         Title="NArrange Binaries"
+		         Description="NArrange console application, GUI configuration, and supporting DLLs."
+		         Level="1"
+		         ConfigurableDirectory="INSTALLDIR">
+			<ComponentGroupRef Id="NArrange.Core"/>
+		</Feature>
+		
+		<!-- 
+			Using the Wix UI library
+ 
+			With the the WixUI_FeatureTree dialog set the user goes 
+			directly from the license agreement dialog to the feature 
+			customization dialog. This dialog set is useful
+			when your product installs all features by default. 
+		-->
+		<UIRef Id="WixUI_FeatureTree"/>
+	</Product>
+</Wix>

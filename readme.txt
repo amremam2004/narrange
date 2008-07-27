@@ -2,6 +2,8 @@ NArrange - "An open source tool for arranging .Net source code"
 
 Copyright (c) 2007-2008 James Nies and NArrange contributors.
 Zip functionality courtesy of ic#code (Mike Krueger, John Reilly). 
+
+License for this software is available at ".\Setup\NArrange Setup\license.rtf"
   
 
 ***WARNING***
