@@ -30,12 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added a Format method for getting a formatted string representation
- *        of a code element
- *      - Preserve element access when None
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -53,7 +48,7 @@ namespace NArrange.Core.CodeElements
     /// </summary>
     public static class ElementUtilities
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Gets a string representation of a code element using the specified
@@ -190,9 +185,22 @@ namespace NArrange.Core.CodeElements
             return attributeString;
         }
 
-        #endregion Public Static Methods
-
-        #region Private Static Methods
+        /// <summary>
+        /// Processes each element in a code element tree.
+        /// </summary>
+        /// <param name="codeElement">Code element to process.</param>
+        /// <param name="action">Action that performs processing.</param>
+        public static void ProcessElementTree(ICodeElement codeElement, Action<ICodeElement> action)
+        {
+            if (codeElement != null)
+            {
+                action(codeElement);
+                foreach (ICodeElement childElement in codeElement.Children)
+                {
+                    ProcessElementTree(childElement, action);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the Attributes attribute.
@@ -265,6 +273,6 @@ namespace NArrange.Core.CodeElements
             return attributeString;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

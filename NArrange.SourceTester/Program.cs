@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -60,20 +57,16 @@ namespace NArrange.SourceTester
     /// </summary>
     public class Program
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Application failure status code.
         /// </summary>
         private const int Fail = -1;
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Application entry point
@@ -127,10 +120,6 @@ namespace NArrange.SourceTester
 
             Environment.Exit(Fail);
         }
-
-        #endregion Public Static Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Compares two assemblies.
@@ -461,6 +450,6 @@ namespace NArrange.SourceTester
             Console.WriteLine();
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     public abstract class CodeElementTests<TCodeElement>
         where TCodeElement : CodeElement, new()
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the AddChild method.
@@ -213,10 +213,6 @@ namespace NArrange.Tests.Core.CodeElements
             DoToStringTest();
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Creates an instance to be cloned.
         /// </summary>
@@ -241,6 +237,6 @@ namespace NArrange.Tests.Core.CodeElements
         /// <param name="clone">Clone element.</param>
         protected abstract void DoVerifyClone(TCodeElement original, TCodeElement clone);
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

@@ -30,11 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - When creating an arranger for an element reference, use the
- *        configuration of the referenced element.
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,7 +48,7 @@ namespace NArrange.Core
     /// </summary>
     public static class ElementArrangerFactory
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Creates an element arranger using the specified configuration information.
@@ -104,10 +100,6 @@ namespace NArrange.Core
             return arranger;
         }
 
-        #endregion Public Static Methods
-
-        #region Internal Static Methods
-
         /// <summary>
         /// Creates an arranger for the children of elements associated with the 
         /// specified cofiguration.
@@ -131,6 +123,6 @@ namespace NArrange.Core
             return childrenArranger;
         }
 
-        #endregion Internal Static Methods
+        #endregion Methods
     }
 }

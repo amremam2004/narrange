@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -46,7 +44,7 @@ namespace NArrange.Core
     /// </summary>
     public static class ZipUtilities
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Unzips the specified zip file to the destination directory.
@@ -72,6 +70,6 @@ namespace NArrange.Core
             fastZip.CreateZip(zipFileName, sourceDirectory, true, null);
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

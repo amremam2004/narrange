@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class RegionConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -60,6 +60,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Region: Test Region", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

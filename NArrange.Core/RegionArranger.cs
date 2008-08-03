@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -114,7 +112,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Arranges the specified code element into the parent.
@@ -222,10 +220,6 @@ namespace NArrange.Core
             return _childrenArranger.CanArrange(parentElement, codeElement);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Intitializes the arranger for children of the region.
         /// </summary>
@@ -237,6 +231,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

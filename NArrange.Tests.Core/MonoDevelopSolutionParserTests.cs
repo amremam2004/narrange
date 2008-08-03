@@ -24,7 +24,7 @@ namespace NArrange.Tests.Core
 
         #endregion Fields
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Writes the test solution to a file.
@@ -44,10 +44,6 @@ namespace NArrange.Tests.Core
                 File.WriteAllText(fileName, contents);
             }
         }
-
-        #endregion Public Static Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Tests parsing a null fileName.
@@ -114,6 +110,6 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

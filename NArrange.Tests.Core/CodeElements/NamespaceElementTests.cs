@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class NamespaceElementTests : CodeElementTests<NamespaceElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new NamespaceElement.
@@ -31,10 +31,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsNotNull(element.HeaderComments, "HeaderCommentLines collection should not be null.");
             Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -70,6 +66,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.Name, clone.Name);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

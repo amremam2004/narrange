@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -48,9 +45,7 @@ namespace NArrange.Core
     /// </summary>
     public class ConsoleLogger : ILogger
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Console message color for errors.
@@ -72,12 +67,6 @@ namespace NArrange.Core
         /// </summary>
         private const ConsoleColor WarningColor = ConsoleColor.Yellow;
 
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Fields
-
         /// <summary>
         /// Log trace messages to the console.
         /// </summary>
@@ -85,7 +74,7 @@ namespace NArrange.Core
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether or not trace messages should be 
@@ -103,9 +92,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Writes a message to the console using the specified color.
@@ -134,10 +123,6 @@ namespace NArrange.Core
                 Console.ForegroundColor = origColor;
             }
         }
-
-        #endregion Public Static Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Logs a message to the console.
@@ -174,6 +159,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

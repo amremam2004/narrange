@@ -30,18 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Allow scoping in element attribute expression evaluation
- *      - Added parsing for file attribute expressions
- *      - Added a Matches binary operator for regular expression support in
- *        condition expressions
- *      - Allow apostrophes in string expressions by escaping with another
- *        apostrophe
- *      - Fixed handling of extra parentheses and improved validation
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -60,9 +50,7 @@ namespace NArrange.Core.Configuration
     /// </summary>
     public sealed class ConditionExpressionParser
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Expression end.
@@ -89,12 +77,6 @@ namespace NArrange.Core.Configuration
         /// </summary>
         public const char ScopeSeparator = '.';
 
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Static Fields
-
         /// <summary>
         /// Singleton sych lock.
         /// </summary>
@@ -105,7 +87,7 @@ namespace NArrange.Core.Configuration
         /// </summary>
         private static ConditionExpressionParser _instance;
 
-        #endregion Static Fields
+        #endregion Fields
 
         #region Constructors
 
@@ -118,7 +100,7 @@ namespace NArrange.Core.Configuration
 
         #endregion Constructors
 
-        #region Public Static Properties
+        #region Properties
 
         /// <summary>
         /// Gets the single instance of the expression parser.
@@ -142,9 +124,9 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Public Static Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Parses and expression to an expression tree.
@@ -485,10 +467,6 @@ namespace NArrange.Core.Configuration
             return conditionExpression;
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Takes in a list of expressions and operator expression placeholders and
         /// builds an expression tree node.
@@ -629,7 +607,7 @@ namespace NArrange.Core.Configuration
             throw new FormatException(messageBuilder.ToString());
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
 
         #region Other
 
@@ -660,7 +638,7 @@ namespace NArrange.Core.Configuration
 
             #endregion Constructors
 
-            #region Public Properties
+            #region Properties
 
             /// <summary>
             /// Gets the expression operator.
@@ -673,7 +651,7 @@ namespace NArrange.Core.Configuration
                 }
             }
 
-            #endregion Public Properties
+            #endregion Properties
         }
 
         #endregion Other

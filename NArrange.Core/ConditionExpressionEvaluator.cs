@@ -30,15 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Allow scoping in element attribute expression evaluation
- *      - Allow evaluation of file attribute expressions
- *      - Added a Matches binary operator for regular expression support in
- *        condition expressions
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -58,7 +51,7 @@ namespace NArrange.Core
     /// </summary>
     public sealed class ConditionExpressionEvaluator
     {
-        #region Static Fields
+        #region Fields
 
         /// <summary>
         /// Synchronization lock for the singleton instance.
@@ -70,7 +63,7 @@ namespace NArrange.Core
         /// </summary>
         private static ConditionExpressionEvaluator _instance;
 
-        #endregion Static Fields
+        #endregion Fields
 
         #region Constructors
 
@@ -83,7 +76,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Static Properties
+        #region Properties
 
         /// <summary>
         /// Gets the single instance of the expression evaluator.
@@ -107,9 +100,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Static Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Evaluates an expression against the specified file.
@@ -158,10 +151,6 @@ namespace NArrange.Core
 
             return result;
         }
-
-        #endregion Public Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Gets the expression value.
@@ -256,10 +245,6 @@ namespace NArrange.Core
             return value;
         }
 
-        #endregion Private Static Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Evaluates an expression against the specified entity.
         /// </summary>
@@ -348,6 +333,6 @@ namespace NArrange.Core
             return result;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

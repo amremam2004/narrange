@@ -66,7 +66,7 @@ namespace NArrange.Tests.Core
 
         #endregion Fields
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests arranging all files in a directory.
@@ -502,10 +502,6 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets the test file contents.
         /// </summary>
@@ -527,6 +523,6 @@ namespace NArrange.Tests.Core
             return contents;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

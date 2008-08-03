@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -51,7 +49,7 @@ namespace NArrange.Core
     /// </summary>
     public class MSBuildProjectParser : IProjectParser
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Parses source file names from a project file.
@@ -93,6 +91,6 @@ namespace NArrange.Core
             return sourceFiles.AsReadOnly();
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

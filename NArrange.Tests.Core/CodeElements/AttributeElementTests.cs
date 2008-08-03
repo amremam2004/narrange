@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class AttributeElementTests : CommentedElementTests<AttributeElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new UsingElement.
@@ -30,10 +30,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsNotNull(element.HeaderComments, "HeaderCommentLines collection should not be null.");
             Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -69,6 +65,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.Children.Count, clone.Children.Count);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

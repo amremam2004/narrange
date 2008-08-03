@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -105,7 +103,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Events
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the component that the property is associated with.
@@ -143,9 +141,9 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Gets the string represenation of this object.
@@ -155,10 +153,6 @@ namespace NArrange.Gui.Configuration
         {
             return _property.DisplayName;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Clears the property value.
@@ -231,6 +225,6 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

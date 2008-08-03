@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class EncodingConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -99,6 +99,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Encoding: CodePage - 65001", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

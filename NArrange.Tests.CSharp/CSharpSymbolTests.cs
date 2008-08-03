@@ -12,7 +12,7 @@ namespace NArrange.Tests.CSharp
     [TestFixture]
     public class CSharpSymbolTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the IsCSharpSymbol method.
@@ -41,6 +41,6 @@ namespace NArrange.Tests.CSharp
             Assert.IsFalse(CSharpSymbol.IsCSharpSymbol('_'));
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

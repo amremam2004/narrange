@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class UnaryOperatorExpressionTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Gets the string representation of the operator expression with an invalid operator type.
@@ -53,6 +53,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("!(($(Element.Name) == 'Test'))", operatorExpression.ToString());
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

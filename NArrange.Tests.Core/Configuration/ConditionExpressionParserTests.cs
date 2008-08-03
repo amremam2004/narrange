@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class ConditionExpressionParserTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests parsing an AND expression.
@@ -910,6 +910,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Test ' it", stringExpression.Text, "Unexpected expression text.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

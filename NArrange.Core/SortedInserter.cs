@@ -30,12 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Fixed sort direction for inner sorts
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -93,7 +89,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Inserts an element into the parent using the strategy defined by the 
@@ -141,10 +137,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Creates a comparer based on the sort configuration.
         /// </summary>
@@ -171,6 +163,6 @@ namespace NArrange.Core
             return comparer;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

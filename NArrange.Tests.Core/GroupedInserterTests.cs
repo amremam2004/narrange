@@ -14,7 +14,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class GroupedInserterTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a GroupedInserter instance.
@@ -190,6 +190,6 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(2, groupElement.Children[0].Children.IndexOf(using3), "Element is not at the correct index.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

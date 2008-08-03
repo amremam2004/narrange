@@ -30,24 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added configuration for closing comments
- *      - Added configuration for region options
- *      - Added a ResolveReferences method that gets called whenever a
- *        configuration is loaded or cloned.  This resolves references
- *        in ElementReferenceConfiguration config elements by locating
- *        the referenced element and attaching a clone to the reference.
- *      - Added configuration for encoding
- *      - Allow the configuration to be loaded without resolving
- *        references (needed for configuration editor)
- *      - Upgrade configurations to the new project extension format when
- *        loading.
- *      - Moved formatting configurations to a new config element and
- *        upgrade when loading.
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -65,13 +49,7 @@ namespace NArrange.Core.Configuration
     /// </summary>
     public class CodeConfiguration : ConfigurationElement
     {
-        #region Static Fields
-
-        /// <summary>
-        /// Seriarializer for serializing and deserializing the configuration 
-        /// to and from XML.
-        /// </summary>
-        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(CodeConfiguration));
+        #region Fields
 
         /// <summary>
         /// Synchronization lock for the default configuration instance.
@@ -79,13 +57,15 @@ namespace NArrange.Core.Configuration
         private static readonly object _defaultLock = new object();
 
         /// <summary>
+        /// Seriarializer for serializing and deserializing the configuration 
+        /// to and from XML.
+        /// </summary>
+        private static readonly XmlSerializer _serializer;
+
+        /// <summary>
         /// The default configuration instance.
         /// </summary>
         private static CodeConfiguration _default;
-
-        #endregion Static Fields
-
-        #region Fields
 
         /// <summary>
         /// Encoding configuration.
@@ -104,7 +84,23 @@ namespace NArrange.Core.Configuration
 
         #endregion Fields
 
-        #region Public Static Properties
+        #region Constructors
+
+        /// <summary>
+        /// Type initialization.
+        /// </summary>
+        static CodeConfiguration()
+        {
+            _serializer = new XmlSerializer(typeof(CodeConfiguration));
+
+            // Register handlers for invalid configuration elements
+            _serializer.UnknownAttribute += new XmlAttributeEventHandler(HandleUnknownAttribute);
+            _serializer.UnknownElement += new XmlElementEventHandler(HandleUnknownElement);
+        }
+
+        #endregion Constructors
+
+        #region Properties
 
         /// <summary>
         /// Gets the default configuration.
@@ -133,10 +129,6 @@ namespace NArrange.Core.Configuration
                 return _default;
             }
         }
-
-        #endregion Public Static Properties
-
-        #region Public Properties
 
         /// <summary>
         /// Gets or sets the closing comment configuration.
@@ -277,9 +269,9 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Loads a configuration from the specified file.
@@ -337,10 +329,6 @@ namespace NArrange.Core.Configuration
 
             return configuration;
         }
-
-        #endregion Public Static Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Override Clone so that we can force resolution of element references.
@@ -421,10 +409,6 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Creates a clone of this instance.
         /// </summary>
@@ -445,9 +429,25 @@ namespace NArrange.Core.Configuration
             return clone;
         }
 
-        #endregion Protected Methods
+        /// <summary>
+        /// Handler for unknown attributes.
+        /// </summary>
+        /// <param name="sender">The sender/</param>
+        /// <param name="e">Event arguments.</param>
+        private static void HandleUnknownAttribute(object sender, XmlAttributeEventArgs e)
+        {
+            throw new InvalidOperationException(e.ToString() + " Unknown attribute " + e.Attr.Name);
+        }
 
-        #region Private Methods
+        /// <summary>
+        /// Handler for unknown elements.
+        /// </summary>
+        /// <param name="sender">The sender/</param>
+        /// <param name="e">Event arguments.</param>
+        private static void HandleUnknownElement(object sender, XmlElementEventArgs e)
+        {
+            throw new InvalidOperationException(e.ToString() + " Unknown element " + e.Element.Name);
+        }
 
         /// <summary>
         /// Recurses through the configuration tree and executes actions against 
@@ -539,6 +539,6 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

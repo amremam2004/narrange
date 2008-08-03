@@ -10,7 +10,7 @@ namespace NArrange.Tests.Gui
     [TestFixture]
     public class BaseFormTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Verify that a BaseForm can be created without throwing an exception.
@@ -22,6 +22,6 @@ namespace NArrange.Tests.Gui
             Assert.IsNotNull(form, "Expected a valid base form instance.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

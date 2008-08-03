@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class CodeConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the Clone method.
@@ -330,6 +330,6 @@ namespace NArrange.Tests.Core.Configuration
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

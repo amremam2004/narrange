@@ -30,23 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Code writer refactoring
- *      - Optionally write end region name
- *      - Parse attribute names and params to the code element model
- *        vs. entire attribute text
- *      - Fixed ordering of new and const for fields
- *      - Honor the new keyword for nested types
- *      - Fixed writing of fields that don't have a type specified
- *      - Fixed writing of multiple Handles declarations for methods
- *      - Preserve trailing comments for fields
- *      - Fixed writing of Implements for events
- *      - Handle writing of conditional compilation preprocessor directives
- *      - Added writing of region comment directives
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -83,7 +68,7 @@ namespace NArrange.VisualBasic
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Processes an attribute element.
@@ -752,10 +737,6 @@ namespace NArrange.VisualBasic
             WriteIndented(builder.ToString());
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Writes children for a block element.
         /// </summary>
@@ -811,10 +792,6 @@ namespace NArrange.VisualBasic
             WriteIndented(builder.ToString());
         }
 
-        #endregion Protected Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets the type parent.
         /// </summary>
@@ -832,10 +809,6 @@ namespace NArrange.VisualBasic
 
             return parentTypeElement;
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Writes the member or type access.
@@ -1179,6 +1152,6 @@ namespace NArrange.VisualBasic
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

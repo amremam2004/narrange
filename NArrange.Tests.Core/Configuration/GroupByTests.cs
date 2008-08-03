@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class GroupByTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests cloning the configuration element.
@@ -92,6 +92,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Group by: Access", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

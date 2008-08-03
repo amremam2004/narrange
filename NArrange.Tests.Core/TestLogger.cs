@@ -27,7 +27,7 @@ namespace NArrange.Tests.Core
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the log event history.
@@ -56,9 +56,9 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Clears the test log.
@@ -148,7 +148,7 @@ namespace NArrange.Tests.Core
             return textBuilder.ToString();
         }
 
-        #endregion Public Methods
+        #endregion Methods
 
         #region Other
 
@@ -186,7 +186,7 @@ namespace NArrange.Tests.Core
 
             #endregion Constructors
 
-            #region Public Methods
+            #region Methods
 
             /// <summary>
             /// Gets the string representation.
@@ -197,7 +197,7 @@ namespace NArrange.Tests.Core
                 return string.Format("{0}: {1}", Level, Message);
             }
 
-            #endregion Public Methods
+            #endregion Methods
         }
 
         #endregion Other

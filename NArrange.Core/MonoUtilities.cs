@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -48,16 +45,16 @@ namespace NArrange.Core
     /// </summary>
     public static class MonoUtilities
     {
-        #region Static Fields
+        #region Fields
 
         /// <summary>
         /// Whether or not the process is running under the Mono runtime.
         /// </summary>
         private static readonly Type _monoRuntime = Type.GetType("Mono.Runtime");
 
-        #endregion Static Fields
+        #endregion Fields
 
-        #region Public Static Properties
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether or not the current process
@@ -71,6 +68,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Static Properties
+        #endregion Properties
     }
 }

@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ChainElementArrangerTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the AddArranger method with a null arranger.
@@ -103,7 +103,7 @@ namespace NArrange.Tests.Core
             Assert.IsTrue(parentElement.Children.Contains(fieldElement));
         }
 
-        #endregion Public Methods
+        #endregion Methods
 
         #region Other
 
@@ -139,7 +139,7 @@ namespace NArrange.Tests.Core
 
             #endregion Constructors
 
-            #region Public Properties
+            #region Properties
 
             /// <summary>
             /// Gets a value indicating whether or not arrange was called.
@@ -152,9 +152,9 @@ namespace NArrange.Tests.Core
                 }
             }
 
-            #endregion Public Properties
+            #endregion Properties
 
-            #region Public Methods
+            #region Methods
 
             /// <summary>
             /// Arranges the specified element within the parent element.
@@ -193,7 +193,7 @@ namespace NArrange.Tests.Core
                 return _canArrange;
             }
 
-            #endregion Public Methods
+            #endregion Methods
         }
 
         #endregion Other

@@ -30,15 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Allow filtering of source and project files
- *      - Allow arranging of an entire directory
- *      - Allow multiple types of project parsers
- *      - Pass the configuration to parsers
- *      Justin Dearing
- *     - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -98,7 +91,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Gets the file extension.
@@ -121,10 +114,6 @@ namespace NArrange.Core
         {
             return SolutionParser.Instance.IsSolution(inputFile);
         }
-
-        #endregion Public Static Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Determines whether or not the specified file can be parsed.
@@ -220,10 +209,6 @@ namespace NArrange.Core
             return elements;
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets a boolean indicating whether or not the file is a 
         /// recognized source file.
@@ -258,10 +243,6 @@ namespace NArrange.Core
 
             return isRecognizedFile;
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Gets all source file for a directory.
@@ -415,6 +396,6 @@ namespace NArrange.Core
             return recognized;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

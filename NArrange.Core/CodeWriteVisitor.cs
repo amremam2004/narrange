@@ -30,13 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Allow processing of ConditionDirectiveElements
- *      - Moved formatting configurations to a new config element
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -59,20 +54,12 @@ namespace NArrange.Core
     /// </summary>
     public abstract class CodeWriteVisitor : ICodeElementVisitor
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Default element block length.
         /// </summary>
         protected const int DefaultBlockLength = 256;
-
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Fields
 
         /// <summary>
         /// Code configuration.
@@ -113,7 +100,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Protected Properties
+        #region Properties
 
         /// <summary>
         /// Gets the code configuration.
@@ -152,9 +139,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Protected Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Processes an attribute element.
@@ -328,10 +315,6 @@ namespace NArrange.Core
         /// </summary>
         /// <param name="element">Using/Import directive code element.</param>
         public abstract void VisitUsingElement(UsingElement element);
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Writes children for a block element.
@@ -552,6 +535,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

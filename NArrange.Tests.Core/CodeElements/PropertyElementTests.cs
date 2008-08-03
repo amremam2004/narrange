@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class PropertyElementTests : AttributedElementTests<PropertyElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a new instance.
@@ -38,10 +38,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsFalse(propertyElement.IsStatic, "Unexpected default value for IsStatic.");
             Assert.AreEqual(string.Empty, propertyElement.Name, "Unexpected default value for Name.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -85,6 +81,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.Type, clone.Type, "Type was not copied correctly.");
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class TypeElementTests : AttributedElementTests<TypeElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a new instance.
@@ -42,10 +42,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsNotNull(typeElement.TypeParameters, "TypeParameters collection should not be null.");
             Assert.AreEqual(0, typeElement.TypeParameters.Count, "TypeParameters collection should be empty.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -100,6 +96,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.TypeParameters.Count, clone.TypeParameters.Count, "TypeParameters were not copied correctly.");
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

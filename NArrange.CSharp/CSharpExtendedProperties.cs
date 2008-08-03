@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -46,17 +43,13 @@ namespace NArrange.CSharp
     /// </summary>
     public static class CSharpExtendedProperties
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Property for whether or not the field is fixed (bool).
         /// </summary>
         public const string Fixed = CSharpKeyword.Fixed;
 
-        #endregion Constants
-
-        #endregion Constants
+        #endregion Fields
     }
 }

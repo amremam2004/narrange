@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core
     /// </summary>
     public static class TestUtilities
     {
-        #region Public Static Properties
+        #region Properties
 
         /// <summary>
         /// Gets the test code configuration files.
@@ -26,9 +26,9 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Static Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Verifies that a file is not empty.
@@ -63,6 +63,6 @@ namespace NArrange.Tests.Core
             return error;
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

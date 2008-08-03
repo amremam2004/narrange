@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -71,7 +68,7 @@ namespace NArrange.Core.Configuration
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the handler type.
@@ -154,9 +151,9 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Gets the string representation.
@@ -169,10 +166,6 @@ namespace NArrange.Core.Configuration
                 "Source Handler: {0}",
                 _language);
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates a clone of this instance.
@@ -193,6 +186,6 @@ namespace NArrange.Core.Configuration
             return clone;
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

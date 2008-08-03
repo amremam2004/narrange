@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class FormattingConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -65,6 +65,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.IsNotNull(formattingConfiguration.Usings, "Expected an instance Usings.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

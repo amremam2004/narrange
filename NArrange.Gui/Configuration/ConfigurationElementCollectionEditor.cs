@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,7 +47,7 @@ namespace NArrange.Gui.Configuration
     /// </summary>
     public sealed class ConfigurationElementCollectionEditor : CollectionEditor
     {
-        #region Static Fields
+        #region Fields
 
         /// <summary>
         /// Item types supported by the editor.
@@ -61,7 +59,7 @@ namespace NArrange.Gui.Configuration
                 typeof(RegionConfiguration)
             };
 
-        #endregion Static Fields
+        #endregion Fields
 
         #region Constructors
 
@@ -76,7 +74,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Constructors
 
-        #region Protected Methods
+        #region Methods
 
         /// <summary>
         /// Creates a new instance of the specified type.
@@ -115,6 +113,6 @@ namespace NArrange.Gui.Configuration
             return ItemTypes;
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

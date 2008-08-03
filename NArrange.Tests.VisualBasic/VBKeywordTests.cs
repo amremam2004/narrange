@@ -12,7 +12,7 @@ namespace NArrange.Tests.VisualBasic
     [TestFixture]
     public class VBKeywordTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the IsVBKeyword method
@@ -73,6 +73,6 @@ namespace NArrange.Tests.VisualBasic
             Assert.AreEqual("Testit", VBKeyword.Normalize("testit"));
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

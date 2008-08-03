@@ -30,20 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added a TabStyle enumeration
- *      - Added an enumeration for whitespace characters
- *      - Added an enumeration for interface implementation types
- *      - Added FileAttributeType and UnaryExpressionOperator enumerations
- *      - Added a Matches binary operator for regular expression support in
- *        condition expressions
- *      - Added a HandlerType enumeration
- *      - Added ElementType.ConditionDirective
- *      - Added a RegionStyle enumeration
- *      Everton Elvio Koser
- *      - Added TypeModifiers.New (merged by James Nies)
+ *<author>James Nies</author>
+ *<contributor>Everton Elvio Koser</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header

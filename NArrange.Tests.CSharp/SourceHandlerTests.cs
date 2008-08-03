@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class SourceHandlerTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests creating a new extension handler.
@@ -41,6 +41,6 @@ namespace NArrange.Tests.Core
             new SourceHandler(null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

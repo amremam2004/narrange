@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class TypeParameterTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -48,6 +48,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(0, typeParameter.Constraints.Count, "Constraints collection should be empty.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

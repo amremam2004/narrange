@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class SourceHandlerConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ToString method.
@@ -25,6 +25,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Source Handler: TestLanguage", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

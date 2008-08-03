@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,7 +47,7 @@ namespace NArrange.GuiConfig
     /// </summary>
     public static class Program
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// The main entry point for the application.
@@ -62,6 +60,6 @@ namespace NArrange.GuiConfig
             Application.Run(new ConfigurationEditorForm());
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

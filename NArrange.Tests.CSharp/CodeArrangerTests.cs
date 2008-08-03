@@ -28,7 +28,7 @@ namespace NArrange.Tests.Core
 
         #endregion Fields
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests arrangement with nested regions.
@@ -91,6 +91,94 @@ namespace NArrange.Tests.Core
 
             FieldElement arrangedFieldElement = arrangedRegion2.Children[0] as FieldElement;
             Assert.IsNotNull(arrangedFieldElement, "Expected a field element after arranging.");
+        }
+
+        /// <summary>
+        /// Tests arranging static fields with and without dependencies.
+        /// </summary>
+        [Test]
+        public void ArrangeStaticFieldsTest()
+        {
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+
+            TypeElement classElement = new TypeElement();
+            classElement.Type = TypeElementType.Class;
+            classElement.Access = CodeAccess.Public;
+            classElement.Name = "TestClass";
+
+            FieldElement fieldElement1 = new FieldElement();
+            fieldElement1.MemberModifiers = MemberModifiers.Static;
+            fieldElement1.Access = CodeAccess.Protected;
+            fieldElement1.Type = "object";
+            fieldElement1.Name = "_obj";
+            fieldElement1.InitialValue = "typeof(int).ToString();";
+            classElement.AddChild(fieldElement1);
+
+            // This field has a static dependency.  Normally it would be sorted first
+            // due to its access, but we want to make sure it gets added after the
+            // field for which it is dependent.
+            FieldElement fieldElement2 = new FieldElement();
+            fieldElement2.MemberModifiers = MemberModifiers.Static;
+            fieldElement2.Access = CodeAccess.Public;
+            fieldElement2.Type = "bool";
+            fieldElement2.Name = "Initialized";
+            fieldElement2.InitialValue = "_initializationString != null";
+            classElement.AddChild(fieldElement2);
+
+            FieldElement fieldElement3 = new FieldElement();
+            fieldElement3.MemberModifiers = MemberModifiers.Static;
+            fieldElement3.Access = CodeAccess.Private;
+            fieldElement3.Type = "string";
+            fieldElement3.Name = "_initializationString";
+            fieldElement3.InitialValue = "_obj";
+            classElement.AddChild(fieldElement3);
+
+            codeElements.Add(classElement);
+
+            CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
+
+            ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(codeElements.AsReadOnly());
+
+            Assert.AreEqual(1, arranged.Count, "After arranging, an unexpected number of elements were returned.");
+            TypeElement typeElement = arranged[0] as TypeElement;
+            Assert.IsNotNull(typeElement, "Expected a type element.");
+
+            List<FieldElement> staticFields = new List<FieldElement>();
+            Action<ICodeElement> findStaticFields = delegate(ICodeElement codeElement)
+            {
+                FieldElement fieldElement = codeElement as FieldElement;
+                if (fieldElement != null && fieldElement.MemberModifiers == MemberModifiers.Static)
+                {
+                    staticFields.Add(fieldElement);
+                }
+            };
+
+            ElementUtilities.ProcessElementTree(typeElement, findStaticFields);
+
+            Assert.AreEqual(3, staticFields.Count, "Unexpected number of static fields after arranging.");
+            Assert.AreEqual("_obj", staticFields[0].Name);
+            Assert.AreEqual("_initializationString", staticFields[1].Name);
+            Assert.AreEqual("Initialized", staticFields[2].Name);
+
+            //
+            // Remove the dependency
+            //
+            fieldElement2.InitialValue = "true";
+            fieldElement3.InitialValue = "\"test\"";
+
+            arranged = arranger.Arrange(codeElements.AsReadOnly());
+
+            Assert.AreEqual(1, arranged.Count, "After arranging, an unexpected number of elements were returned.");
+            typeElement = arranged[0] as TypeElement;
+            Assert.IsNotNull(typeElement, "Expected a type element.");
+
+            staticFields.Clear();
+            ElementUtilities.ProcessElementTree(typeElement, findStaticFields);
+
+            Assert.AreEqual(3, staticFields.Count, "Unexpected number of static fields after arranging.");
+            Assert.AreEqual("Initialized", staticFields[0].Name);
+            Assert.AreEqual("_obj", staticFields[1].Name);
+            Assert.AreEqual("_initializationString", staticFields[2].Name);
         }
 
         /// <summary>
@@ -302,10 +390,10 @@ namespace NArrange.Tests.Core
             }
 
             Assert.AreEqual("Fields", nestedRegionElements[0].Name, "Unexpected region element name.");
-            Assert.AreEqual("Public Properties", nestedRegionElements[1].Name, "Unexpected region element name.");
-            Assert.AreEqual("Public Methods", nestedRegionElements[2].Name, "Unexpected region element name.");
+            Assert.AreEqual("Properties", nestedRegionElements[1].Name, "Unexpected region element name.");
+            Assert.AreEqual("Methods", nestedRegionElements[2].Name, "Unexpected region element name.");
 
-            GroupElement fieldGroupElement = nestedRegionElements[0].Children[0] as GroupElement;
+            GroupElement fieldGroupElement = nestedRegionElements[0].Children[0].Children[0] as GroupElement;
             Assert.IsNotNull(fieldGroupElement, "Expected a group element for fields.");
 
             foreach (ICodeElement codeElement in fieldGroupElement.Children)
@@ -318,22 +406,24 @@ namespace NArrange.Tests.Core
                     codeElement);
             }
 
-            foreach (ICodeElement codeElement in nestedRegionElements[1].Children)
+            Assert.AreEqual(1, nestedRegionElements[1].Children.Count);
+            foreach (ICodeElement codeElement in nestedRegionElements[1].Children[0].Children)
             {
                 PropertyElement propertyElementTest = codeElement as PropertyElement;
                 Assert.IsNotNull(
                     propertyElementTest,
-                    "Expected a property element but type {0}: {1}",
+                    "Expected a property element but was type {0}: {1}",
                      codeElement.ElementType,
                      codeElement);
             }
 
-            foreach (ICodeElement codeElement in nestedRegionElements[2].Children)
+            Assert.AreEqual(1, nestedRegionElements[2].Children.Count);
+            foreach (ICodeElement codeElement in nestedRegionElements[2].Children[0].Children)
             {
                 MethodElement methodElementTest = codeElement as MethodElement;
                 Assert.IsNotNull(
                     methodElementTest,
-                    "Expected a method element but type {0}: {1}",
+                    "Expected a method element but was type {0}: {1}",
                      codeElement.ElementType,
                      codeElement);
             }
@@ -452,10 +542,10 @@ namespace NArrange.Tests.Core
             }
 
             Assert.AreEqual("Fields", regionElements[0].Name, "Unexpected region element name.");
-            Assert.AreEqual("Public Properties", regionElements[1].Name, "Unexpected region element name.");
-            Assert.AreEqual("Public Methods", regionElements[2].Name, "Unexpected region element name.");
+            Assert.AreEqual("Properties", regionElements[1].Name, "Unexpected region element name.");
+            Assert.AreEqual("Methods", regionElements[2].Name, "Unexpected region element name.");
 
-            GroupElement fieldGroupElement = regionElements[0].Children[0] as GroupElement;
+            GroupElement fieldGroupElement = regionElements[0].Children[0].Children[0] as GroupElement;
             Assert.IsNotNull(fieldGroupElement, "Expected a group element for fields.");
 
             foreach (ICodeElement codeElement in fieldGroupElement.Children)
@@ -468,22 +558,24 @@ namespace NArrange.Tests.Core
                     codeElement);
             }
 
-            foreach (ICodeElement codeElement in regionElements[1].Children)
+            Assert.AreEqual(1, regionElements[1].Children.Count);
+            foreach (ICodeElement codeElement in regionElements[1].Children[0].Children)
             {
                 PropertyElement propertyElementTest = codeElement as PropertyElement;
                 Assert.IsNotNull(
                     propertyElementTest,
-                    "Expected a property element but type {0}: {1}",
+                    "Expected a property element but was type {0}: {1}",
                      codeElement.ElementType,
                      codeElement);
             }
 
-            foreach (ICodeElement codeElement in regionElements[2].Children)
+            Assert.AreEqual(1, regionElements[2].Children.Count);
+            foreach (ICodeElement codeElement in regionElements[2].Children[0].Children)
             {
                 MethodElement methodElementTest = codeElement as MethodElement;
                 Assert.IsNotNull(
                     methodElementTest,
-                    "Expected a method element but type {0}: {1}",
+                    "Expected a method element but was type {0}: {1}",
                      codeElement.ElementType,
                      codeElement);
             }
@@ -745,6 +837,6 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

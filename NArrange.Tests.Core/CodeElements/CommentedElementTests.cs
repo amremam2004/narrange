@@ -12,7 +12,7 @@ namespace NArrange.Tests.Core.CodeElements
     public abstract class CommentedElementTests<TCodeElement> : CodeElementTests<TCodeElement>
         where TCodeElement : CommentedElement, new()
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the AddHeaderCommentLine method.
@@ -68,6 +68,6 @@ namespace NArrange.Tests.Core.CodeElements
                 0, codeElement.HeaderComments.Count, "Header comment lines was not cleared.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

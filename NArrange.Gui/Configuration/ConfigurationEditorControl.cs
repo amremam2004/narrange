@@ -30,12 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Do not use a custom TypeDescriptor for element collections
- *        under Mono
- *      - Allow creation of Project Handlers
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -92,7 +87,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the CodeConfiguration to edit.
@@ -115,9 +110,9 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Private Static Methods
+        #region Methods
 
         /// <summary>
         /// Creates a node for a list/collection property.
@@ -148,10 +143,6 @@ namespace NArrange.Gui.Configuration
 
             return new ListPropertyTreeNode(property, component, newItemTypes);
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Adds child tree view nodes under the specified root node using data
@@ -398,6 +389,6 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -49,9 +47,19 @@ namespace NArrange.Core
     /// </summary>
     public static class BackupUtilities
     {
-        #region Constants
+        #region Fields
 
-        #region Constants
+        /// <summary>
+        /// Default backup root directory.
+        /// </summary>
+        public static readonly string BackupRoot = Path.Combine(
+            Path.GetTempPath(), "NArrange");
+
+        /// <summary>
+        /// Max string length for an integer.
+        /// </summary>
+        private static readonly int MaxIntLength = 
+            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
 
         /// <summary>
         /// Backup index file name.
@@ -68,27 +76,9 @@ namespace NArrange.Core
         /// </summary>
         private const string ZipFileName = "files.zip";
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Static Fields
-
-        /// <summary>
-        /// Default backup root directory.
-        /// </summary>
-        public static readonly string BackupRoot = Path.Combine(
-            Path.GetTempPath(), "NArrange");
-
-        /// <summary>
-        /// Max string length for an integer.
-        /// </summary>
-        private static readonly int MaxIntLength = 
-            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
-
-        #endregion Static Fields
-
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Creates a backup of the specified files using the specified key.
@@ -288,10 +278,6 @@ namespace NArrange.Core
             return success;
         }
 
-        #endregion Public Static Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Attempts to delete a directory, catching any exceptions.
         /// </summary>
@@ -310,6 +296,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

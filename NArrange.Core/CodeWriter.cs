@@ -30,12 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Code writer refactoring
- *      - When visiting children, treat condition directive elements in
- *        a similar manner as regions
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -63,7 +58,7 @@ namespace NArrange.Core
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the code configuration.
@@ -85,9 +80,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Writes each element using the specified visitor.
@@ -134,10 +129,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Static Methods
-
-        #region Public Methods
-
         /// <summary>
         /// Writes code elements to the specified text writer.
         /// </summary>
@@ -153,10 +144,6 @@ namespace NArrange.Core
             DoWriteElements(codeElements, writer);
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Template method for inheritors to write a collection of code elements to the
         /// specified text writer.
@@ -165,6 +152,6 @@ namespace NArrange.Core
         /// <param name="writer">The writer.</param>
         protected abstract void DoWriteElements(ReadOnlyCollection<ICodeElement> codeElements, TextWriter writer);
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

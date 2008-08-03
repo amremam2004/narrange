@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class RegionElementTests : CodeElementTests<RegionElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new RegionElement.
@@ -30,10 +30,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
             Assert.IsTrue(element.DirectivesEnabled, "Directives should be enabled by default.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -71,6 +67,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.DirectivesEnabled, clone.DirectivesEnabled);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

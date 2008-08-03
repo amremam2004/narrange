@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class CommentElementTests : CodeElementTests<CommentElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new CommentElement.
@@ -61,10 +61,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsNull(element.Text, "Unexpected default value for Text.");
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Creates an instance for cloning.
         /// </summary>
@@ -101,6 +97,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.Type, clone.Type);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

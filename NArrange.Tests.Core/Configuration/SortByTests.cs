@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class SortByTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a new SortBy.
@@ -45,6 +45,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Sort by: Name", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

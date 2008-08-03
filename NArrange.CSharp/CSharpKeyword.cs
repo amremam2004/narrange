@@ -30,12 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added keywords for conditional compilation directives
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -47,9 +43,13 @@ namespace NArrange.CSharp
     /// </summary>
     public static class CSharpKeyword
     {
-        #region Constants
+        #region Fields
 
-        #region Constants
+        /// <summary>
+        /// Type parameter new() constraint.
+        /// </summary>
+        public static readonly string NewConstraint = New + 
+            CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
 
         /// <summary>
         /// "abstract" keyword.
@@ -241,18 +241,6 @@ namespace NArrange.CSharp
         /// </summary>
         public const string Where = "where";
 
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Static Fields
-
-        /// <summary>
-        /// Type parameter new() constraint.
-        /// </summary>
-        public static readonly string NewConstraint = New + 
-            CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
-
-        #endregion Static Fields
+        #endregion Fields
     }
 }

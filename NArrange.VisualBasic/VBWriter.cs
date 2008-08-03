@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,7 +49,7 @@ namespace NArrange.VisualBasic
     /// </summary>
     public sealed class VBWriter : CodeWriter
     {
-        #region Protected Methods
+        #region Methods
 
         /// <summary>
         /// Writes code elements to the specified writer.
@@ -65,6 +62,6 @@ namespace NArrange.VisualBasic
             WriteVisitElements(codeElements, writer, visitor);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

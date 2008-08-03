@@ -30,14 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Changed constructor to use a handler configuration and expose
- *        the configuration as a property
- *      - Obsoleted the project extensions
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -99,7 +93,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the code parser associated with the extension.
@@ -134,9 +128,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Private Methods
+        #region Methods
 
         /// <summary>
         /// Initializes the extension handler.
@@ -159,6 +153,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

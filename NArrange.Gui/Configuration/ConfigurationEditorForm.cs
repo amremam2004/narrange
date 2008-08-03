@@ -30,11 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Fixed loading of configurations with invalid references
- *      - Improved Load/Save error messages
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -74,7 +70,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Constructors
 
-        #region Private Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether a configuration can currently be selected.
@@ -96,9 +92,9 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Private Properties
+        #endregion Properties
 
-        #region Private Methods
+        #region Methods
 
         /// <summary>
         /// Creates a new configuration using the specified filename and updates
@@ -246,6 +242,6 @@ namespace NArrange.Gui.Configuration
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

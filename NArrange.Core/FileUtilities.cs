@@ -30,10 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added a GetEncoding method for determining file encodings
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -48,7 +45,7 @@ namespace NArrange.Core.CodeElements
     /// </summary>
     public static class FileUtilities
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Gets the string representation of a file attribute.
@@ -202,6 +199,6 @@ namespace NArrange.Core.CodeElements
             return encoding;
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

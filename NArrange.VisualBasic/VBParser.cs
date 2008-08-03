@@ -30,27 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added parsing support for partial methods
- *      - Support parsing of Handles and WithEvents keywords
- *      - Preserve header comments without associating w/ imports
- *      - Parse attribute names and params to the code element model
- *        vs. entire attribute text
- *      - Improved handling of unhandled element text
- *      - Fixed parsing of fields and function that don't have a
- *        type specified
- *      - Preserve element access when None
- *      - Fixed parsing of method/Handles identifiers beginning with
- *        an underscore
- *      - Preserve trailing comments for fields
- *      - Allow parsing of basic conditional compilation directives
- *      - Fixed a bug where in certain scenarios, the text of commented out
- *        elements was being reversed
- *      - Added parsing of region comment directives
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -73,7 +54,7 @@ namespace NArrange.VisualBasic
     /// </summary>
     public sealed class VBParser : CodeParser
     {
-        #region Protected Methods
+        #region Methods
 
         /// <summary>
         /// Parses elements from the current point in the stream.
@@ -83,10 +64,6 @@ namespace NArrange.VisualBasic
         {
             return ParseElements(null);
         }
-
-        #endregion Protected Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Creates a constructor from a method element.
@@ -338,10 +315,6 @@ namespace NArrange.VisualBasic
                 comments.Clear();
             }
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Captures an type name alias from the stream.
@@ -2394,6 +2367,6 @@ namespace NArrange.VisualBasic
             return read.ToString();
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

@@ -12,7 +12,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ZipUtilitiesTest
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests zipping and unzipping files.
@@ -82,6 +82,6 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

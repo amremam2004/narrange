@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     public abstract class AttributedElementTests<TCodeElement> : CodeElementTests<TCodeElement>
         where TCodeElement : AttributedElement, new()
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the AddAttribute method.
@@ -106,6 +106,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsTrue(codeElement2.Attributes.Contains(attribute1));
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

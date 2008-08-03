@@ -12,7 +12,7 @@ namespace NArrange.Tests.ConsoleApplication
     [TestFixture]
     public class CommandArgumentsTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests parsing an empty string arg
@@ -345,6 +345,6 @@ namespace NArrange.Tests.ConsoleApplication
             CommandArguments.Parse("Input.cs", "/z");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

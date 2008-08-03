@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ProjectHandlerTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests creating a new project handler.
@@ -70,6 +70,6 @@ namespace NArrange.Tests.Core
             new ProjectHandler(null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

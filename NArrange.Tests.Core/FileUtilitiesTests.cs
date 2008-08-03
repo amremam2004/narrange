@@ -13,20 +13,16 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class FileUtilitiesTests
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Directory containing files for encoding testing.
         /// </summary>
         private const string EncodingTestFileDirectory = "EncodingTestFiles";
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the GetEncoding method.
@@ -57,6 +53,6 @@ namespace NArrange.Tests.Core
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

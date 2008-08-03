@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -64,7 +62,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the body text.
@@ -81,9 +79,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Creates a clone of the instance and assigns any state.
@@ -101,6 +99,6 @@ namespace NArrange.Core.CodeElements
             return clone;
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

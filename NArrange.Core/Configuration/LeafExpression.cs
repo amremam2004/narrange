@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -44,7 +42,7 @@ namespace NArrange.Core.Configuration
     /// </summary>
     public abstract class LeafExpression : IConditionExpression
     {
-        #region Private Properties
+        #region Properties
 
         /// <summary>
         /// Gets the left expression.
@@ -68,6 +66,6 @@ namespace NArrange.Core.Configuration
             }
         }
 
-        #endregion Private Properties
+        #endregion Properties
     }
 }

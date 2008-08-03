@@ -30,13 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Allow region directives to be written as comments.
- *      Justin Dearing
- *      - Added this header
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -57,9 +52,12 @@ namespace NArrange.Core
     /// </summary>
     public abstract class CodeParser : ICodeElementParser
     {
-        #region Constants
+        #region Fields
 
-        #region Constants
+        /// <summary>
+        /// Whitepace characters.
+        /// </summary>
+        protected static readonly char[] WhiteSpaceCharacters = { ' ', '\t', '\r', '\n' };
 
         /// <summary>
         /// Default block length (for instantiating string builders)
@@ -75,21 +73,6 @@ namespace NArrange.Core
         /// Empty character.
         /// </summary>
         protected const char EmptyChar = '\0';
-
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Static Fields
-
-        /// <summary>
-        /// Whitepace characters.
-        /// </summary>
-        protected static readonly char[] WhiteSpaceCharacters = { ' ', '\t', '\r', '\n' };
-
-        #endregion Static Fields
-
-        #region Fields
 
         /// <summary>
         /// Buffer for reading a character.
@@ -133,7 +116,7 @@ namespace NArrange.Core
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the code configuration.
@@ -154,10 +137,6 @@ namespace NArrange.Core
                 _configuration = value;
             }
         }
-
-        #endregion Public Properties
-
-        #region Protected Properties
 
         /// <summary>
         /// Gets the most recently read character.
@@ -202,9 +181,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Protected Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Determines whether or not the specified character is whitespace.
@@ -216,10 +195,6 @@ namespace NArrange.Core
             return character == ' ' || character == '\t' ||
                 character == '\n' || character == '\r';
         }
-
-        #endregion Public Static Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Parses a collection of code elements from a stream reader.
@@ -242,10 +217,6 @@ namespace NArrange.Core
 
             return codeElements.AsReadOnly();
         }
-
-        #endregion Public Methods
-
-        #region Protected Static Methods
 
         /// <summary>
         /// Applies attributes and comments to a code element.
@@ -292,10 +263,6 @@ namespace NArrange.Core
                 }
             }
         }
-
-        #endregion Protected Static Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Parses elements from the current point in the stream.
@@ -458,10 +425,6 @@ namespace NArrange.Core
             return false;
         }
 
-        #endregion Protected Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Reset the parser to a state to handle parsing another input.
         /// </summary>
@@ -473,6 +436,6 @@ namespace NArrange.Core
             _position = 1;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

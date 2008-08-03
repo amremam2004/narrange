@@ -17,7 +17,7 @@ namespace NArrange.Tests.CSharp
     [TestFixture]
     public class CSharpWriterTests : CodeWriterTests<CSharpWriter>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests writing an element with closing comments.
@@ -1599,6 +1599,6 @@ namespace NArrange.Tests.CSharp
                 "Using element was not written correctly.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

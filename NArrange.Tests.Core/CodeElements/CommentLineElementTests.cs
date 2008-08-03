@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class CommentLineElementTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the clone method.
@@ -73,10 +73,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual("This is some text.", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Creates an instance for testing Clone.
         /// </summary>
@@ -97,6 +93,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.Type, clone.Type, "IsXmlComment was not copied correctly.");
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

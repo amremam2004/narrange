@@ -13,7 +13,7 @@ namespace NArrange.Tests.CSharp
     [TestFixture]
     public class CSharpWriteArrangedTests : WriteArrangedTests<CSharpParser, CSharpWriter>
     {
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets a list of valid test files.
@@ -39,9 +39,9 @@ namespace NArrange.Tests.CSharp
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Protected Methods
+        #region Methods
 
         /// <summary>
         /// Compiles source code text to the specified assembly.
@@ -54,6 +54,6 @@ namespace NArrange.Tests.CSharp
             return CSharpTestFile.Compile(text, assemblyName);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

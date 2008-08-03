@@ -17,16 +17,12 @@ namespace NArrange.Tests.VisualBasic
     /// </summary>
     public class VBTestFile : ISourceCodeTestFile
     {
-        #region Static Fields
+        #region Fields
 
         /// <summary>
         /// Cache of compiled test source files.
         /// </summary>
         private static Dictionary<string, Assembly> _compiledSourceFiles = new Dictionary<string, Assembly>();
-
-        #endregion Static Fields
-
-        #region Fields
 
         /// <summary>
         /// Assembly for the test file.
@@ -54,7 +50,7 @@ namespace NArrange.Tests.VisualBasic
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the assembly associated with the test file
@@ -78,9 +74,9 @@ namespace NArrange.Tests.VisualBasic
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Compiles VB source code
@@ -135,10 +131,6 @@ namespace NArrange.Tests.VisualBasic
             return stream;
         }
 
-        #endregion Public Static Methods
-
-        #region Public Methods
-
         /// <summary>
         /// Gets a TextReader for this test file
         /// </summary>
@@ -147,10 +139,6 @@ namespace NArrange.Tests.VisualBasic
         {
             return GetTestFileReader(_resourceName);
         }
-
-        #endregion Public Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Gets the assembly for the specified resource.
@@ -198,6 +186,6 @@ namespace NArrange.Tests.VisualBasic
             return assembly;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

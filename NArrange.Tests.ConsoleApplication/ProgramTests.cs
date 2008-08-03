@@ -61,7 +61,7 @@ namespace NArrange.Tests.ConsoleApplication
 
         #endregion Fields
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests arranging all files in a directory.
@@ -638,10 +638,6 @@ namespace NArrange.Tests.ConsoleApplication
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets the test file contents.
         /// </summary>
@@ -662,10 +658,6 @@ namespace NArrange.Tests.ConsoleApplication
             return contents;
         }
 
-        #endregion Private Static Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Arranges using the specified args and logger.
         /// </summary>
@@ -678,6 +670,6 @@ namespace NArrange.Tests.ConsoleApplication
             return Program.Run(logger, commandArgs);
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ElementFilterTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests access filtering.
@@ -104,6 +104,6 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(ElementAttributeScope.Parent, filter.RequiredScope);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

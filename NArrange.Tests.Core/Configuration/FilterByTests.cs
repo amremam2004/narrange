@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class FilterByTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a new FilterBy.
@@ -40,6 +40,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Filter by: $(Access) == 'Protected'", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

@@ -17,16 +17,12 @@ namespace NArrange.Tests.CSharp
     /// </summary>
     public class CSharpTestFile : ISourceCodeTestFile
     {
-        #region Static Fields
+        #region Fields
 
         /// <summary>
         /// Cache of compiled test source files.
         /// </summary>
         private static Dictionary<string, Assembly> _compiledSourceFiles = new Dictionary<string, Assembly>();
-
-        #endregion Static Fields
-
-        #region Fields
 
         /// <summary>
         /// Assembly name.
@@ -54,7 +50,7 @@ namespace NArrange.Tests.CSharp
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the assembly associated with the test file.
@@ -78,9 +74,9 @@ namespace NArrange.Tests.CSharp
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Compiles C# source code.
@@ -136,10 +132,6 @@ namespace NArrange.Tests.CSharp
             return stream;
         }
 
-        #endregion Public Static Methods
-
-        #region Public Methods
-
         /// <summary>
         /// Gets a TextReader for this test file.
         /// </summary>
@@ -148,10 +140,6 @@ namespace NArrange.Tests.CSharp
         {
             return GetTestFileReader(_resourceName);
         }
-
-        #endregion Public Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Gets the assembly.
@@ -201,6 +189,6 @@ namespace NArrange.Tests.CSharp
             return assembly;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

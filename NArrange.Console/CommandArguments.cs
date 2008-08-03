@@ -30,12 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Fixed parsing of command line switches under Mono
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -52,9 +48,7 @@ namespace NArrange.ConsoleApplication
     /// </summary>
     public sealed class CommandArguments
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Unix flag/switch prefix character.
@@ -65,12 +59,6 @@ namespace NArrange.ConsoleApplication
         /// Windows flag/switch prefix character.
         /// </summary>
         public const char WindowsSwitch = '/';
-
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Fields
 
         /// <summary>
         /// Perform backup.
@@ -150,7 +138,7 @@ namespace NArrange.ConsoleApplication
 
         #endregion Enumerations
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether or not a backup should be performed.
@@ -218,9 +206,9 @@ namespace NArrange.ConsoleApplication
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Parses command arguments from an array of strings.
@@ -339,10 +327,6 @@ namespace NArrange.ConsoleApplication
             return commandArguments;
         }
 
-        #endregion Public Static Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Called when a parsing error occurs.
         /// </summary>
@@ -385,6 +369,6 @@ namespace NArrange.ConsoleApplication
             return flag;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

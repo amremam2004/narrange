@@ -5,7 +5,7 @@ namespace NArrange.Tests.VisualBasic
     /// </summary>
     public static class VBTestUtilities
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Assembly attributes test file
@@ -115,6 +115,6 @@ namespace NArrange.Tests.VisualBasic
             return new VBTestFile("StructDefinition.vb");
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

@@ -30,13 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added special processing for arranging condition directive
- *        elements
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -94,7 +89,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Private Properties
+        #region Properties
 
         /// <summary>
         /// Gets the arranger chain.
@@ -127,9 +122,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Arranges the code elements according to the configuration supplied 
@@ -179,10 +174,6 @@ namespace NArrange.Core
             return arranged.AsReadOnly();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Moves using directives if configured to do so.
         /// </summary>
@@ -229,6 +220,6 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

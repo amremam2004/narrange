@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class BackupUtilitiesTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the Backup and Restore methods by creating a backup, modifying files
@@ -178,6 +178,6 @@ namespace NArrange.Tests.Core
             BackupUtilities.RestoreFiles("c:\temp", null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

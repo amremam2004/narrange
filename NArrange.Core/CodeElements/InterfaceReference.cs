@@ -44,7 +44,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the referenced interface name.
@@ -76,9 +76,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Creates a clone of this instance
@@ -108,6 +108,6 @@ namespace NArrange.Core.CodeElements
             return _name;
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

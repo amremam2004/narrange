@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -94,7 +92,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the collection of constraints for this type parameter.
@@ -122,10 +120,6 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
-
-        #region Private Properties
-
         /// <summary>
         /// Gets the list of parameter constraints.
         /// </summary>
@@ -148,9 +142,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Private Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Adds a constraint for the type parameter.
@@ -183,6 +177,6 @@ namespace NArrange.Core.CodeElements
             return clone;
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

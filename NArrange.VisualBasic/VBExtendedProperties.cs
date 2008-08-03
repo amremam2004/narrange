@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -46,9 +43,7 @@ namespace NArrange.VisualBasic
     /// </summary>
     public static class VBExtendedProperties
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// AccessModifier extended property 
@@ -100,8 +95,6 @@ namespace NArrange.VisualBasic
         /// </summary>
         public const string WithEvents = VBKeyword.WithEvents;
 
-        #endregion Constants
-
-        #endregion Constants
+        #endregion Fields
     }
 }

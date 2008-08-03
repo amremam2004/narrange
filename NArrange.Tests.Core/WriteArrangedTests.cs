@@ -1,5 +1,6 @@
 namespace NArrange.Tests.Core
 {
+    using System;
     using System.CodeDom.Compiler;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -19,7 +20,7 @@ namespace NArrange.Tests.Core
         where TCodeParser : ICodeElementParser, new()
         where TCodeWriter : ICodeElementWriter, new()
     {
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets an array of valid test files.
@@ -29,9 +30,9 @@ namespace NArrange.Tests.Core
             get;
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests writing a tree of arranged elements.
@@ -66,53 +67,56 @@ namespace NArrange.Tests.Core
 
                 foreach (FileInfo configFile in TestUtilities.TestConfigurationFiles)
                 {
-                    CodeConfiguration configuration = CodeConfiguration.Load(configFile.FullName);
-                    CodeArranger arranger = new CodeArranger(configuration);
-
-                    ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
-
-                    //
-                    // Write the arranged elements
-                    //
-                    StringWriter writer = new StringWriter();
-                    TCodeWriter codeWriter = new TCodeWriter();
-                    codeWriter.Configuration = configuration;
-                    codeWriter.Write(arranged, writer);
-
-                    string text = writer.ToString();
-
-                    // Write the file to the output directory for further analysis
-                    Directory.CreateDirectory(outputDirectory);
-
-                    string configurationDirectory = Path.Combine(
-                        outputDirectory,
-                        Path.GetFileNameWithoutExtension(configFile.FullName));
-                    Directory.CreateDirectory(configurationDirectory);
-
-                    File.WriteAllText(Path.Combine(configurationDirectory, testFile.Name), text);
-
-                    //
-                    // Verify that the arranged file still compiles sucessfully.
-                    //
-                    CompilerResults results = Compile(text, testFile.Name);
-                    CompilerError error = TestUtilities.GetCompilerError(results);
-                    if (error != null)
+                    try
                     {
-                        Assert.Fail(
-                            "Arranged source code should not produce compiler errors. " +
-                            "Error: {0} - {1}, line {2}, column {3} ",
-                            error.ErrorText,
-                            testFile.Name,
-                            error.Line,
-                            error.Column);
+                        CodeConfiguration configuration = CodeConfiguration.Load(configFile.FullName);
+                        CodeArranger arranger = new CodeArranger(configuration);
+
+                        ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(testElements);
+
+                        //
+                        // Write the arranged elements
+                        //
+                        StringWriter writer = new StringWriter();
+                        TCodeWriter codeWriter = new TCodeWriter();
+                        codeWriter.Configuration = configuration;
+                        codeWriter.Write(arranged, writer);
+
+                        string text = writer.ToString();
+
+                        // Write the file to the output directory for further analysis
+                        Directory.CreateDirectory(outputDirectory);
+
+                        string configurationDirectory = Path.Combine(
+                            outputDirectory,
+                            Path.GetFileNameWithoutExtension(configFile.FullName));
+                        Directory.CreateDirectory(configurationDirectory);
+
+                        File.WriteAllText(Path.Combine(configurationDirectory, testFile.Name), text);
+
+                        //
+                        // Verify that the arranged file still compiles sucessfully.
+                        //
+                        CompilerResults results = Compile(text, testFile.Name);
+                        CompilerError error = TestUtilities.GetCompilerError(results);
+                        if (error != null)
+                        {
+                            Assert.Fail(
+                                "Arranged source code should not produce compiler errors. " +
+                                "Error: {0} - {1}, line {2}, column {3} ",
+                                error.ErrorText,
+                                testFile.Name,
+                                error.Line,
+                                error.Column);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail("Configuration " + configFile + ": " + ex.ToString());
                     }
                 }
             }
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Compiles source code text to an assembly with the specified name.
@@ -122,6 +126,6 @@ namespace NArrange.Tests.Core
         /// <returns>Compiler results.</returns>
         protected abstract CompilerResults Compile(string text, string assemblyName);
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

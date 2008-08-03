@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -91,7 +88,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the handler configuration used to create this ProjectHandler.
@@ -115,9 +112,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Private Methods
+        #region Methods
 
         /// <summary>
         /// Initializes the extension handler.
@@ -148,6 +145,6 @@ namespace NArrange.Core
             _projectParser = Activator.CreateInstance(projectParserType) as IProjectParser;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

@@ -30,11 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -46,9 +43,7 @@ namespace NArrange.VisualBasic
     /// </summary>
     public static class VBSymbol
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Alias separator symbol.
@@ -115,11 +110,9 @@ namespace NArrange.VisualBasic
         /// </summary>
         public const char Preprocessor = '#';
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Determines if the specified char is a Visual Basic symbol character.
@@ -143,6 +136,6 @@ namespace NArrange.VisualBasic
                 character == LineDelimiter;
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

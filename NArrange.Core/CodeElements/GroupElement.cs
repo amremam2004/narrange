@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -79,7 +77,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the custom separator string.
@@ -122,9 +120,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Allows an ICodeElementVisitor to process (or visit) this element.
@@ -135,10 +133,6 @@ namespace NArrange.Core.CodeElements
         {
             visitor.VisitGroupElement(this);
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates a clone of this instance.
@@ -153,6 +147,6 @@ namespace NArrange.Core.CodeElements
             return clone;
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

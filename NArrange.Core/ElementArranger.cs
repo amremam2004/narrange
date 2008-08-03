@@ -30,13 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Improved performance by checking whether or not CanArrange needs
- *        to evaluate an expression with a parent scope.
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -105,7 +100,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Arranges the element in within the code tree represented in the specified
@@ -166,6 +161,15 @@ namespace NArrange.Core
                     _parentConfiguration);
             }
 
+            // For Type elements, if interdependent static fields are present, correct their
+            // ordering.
+            TypeElement typeElement = codeElement as TypeElement;
+            if (typeElement != null &&
+                (typeElement.Type == TypeElementType.Class || typeElement.Type == TypeElementType.Structure || typeElement.Type == TypeElementType.Module))
+            {
+                CorrectStaticFieldDependencies(typeElement);
+            }
+
             _inserter.InsertElement(parentElement, codeElement);
         }
 
@@ -212,10 +216,6 @@ namespace NArrange.Core
                 codeElement.ElementType == _elementConfiguration.ElementType) &&
                 (_filter == null || _filter.IsMatch(testCodeElement));
         }
-
-        #endregion Public Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Creates an element filter.
@@ -268,10 +268,6 @@ namespace NArrange.Core
             return inserter;
         }
 
-        #endregion Private Static Methods
-
-        #region Private Methods
-
         /// <summary>
         /// Arranges the child element.
         /// </summary>
@@ -299,6 +295,83 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Private Methods
+        /// <summary>
+        /// If dependent static fields exist, then correct their ordering regardless
+        /// of arranging rules.
+        /// </summary>
+        /// <param name="typeElement">Type code element.</param>
+        private void CorrectStaticFieldDependencies(TypeElement typeElement)
+        {
+            FieldElement[] staticFields = GetTypeStaticFields(typeElement);
+
+            for (int fieldIndex = 0; fieldIndex < staticFields.Length; fieldIndex++)
+            {
+                FieldElement staticField = staticFields[fieldIndex];
+
+                if (!string.IsNullOrEmpty(staticField.InitialValue))
+                {
+                    for (int compareFieldIndex = 0; compareFieldIndex < staticFields.Length; compareFieldIndex++)
+                    {
+                        FieldElement compareStaticField = staticFields[compareFieldIndex];
+
+                        if (compareStaticField != staticField)
+                        {
+                            // If the static field references this field, then move the referenced
+                            // field if necessary.
+                            // TODO: Consider checking to see if the referenced name is not within
+                            // a string.
+                            if (staticField.InitialValue.Contains(compareStaticField.Name))
+                            {
+                                int fieldPosition = staticField.Parent.Children.IndexOf(staticField);
+                                if (!(staticField.Parent == compareStaticField.Parent &&
+                                    compareStaticField.Parent.Children.IndexOf(compareStaticField) < fieldPosition))
+                                {
+                                    staticField.Parent.InsertChild(fieldPosition, compareStaticField);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all static fields for a Type.
+        /// </summary>
+        /// <param name="typeElement">Type element.</param>
+        /// <returns>All static fields for the specified Type element.</returns>
+        private FieldElement[] GetTypeStaticFields(TypeElement typeElement)
+        {
+            List<FieldElement> staticFields = new List<FieldElement>();
+
+            Action<ICodeElement> findStaticFields = delegate(ICodeElement codeElement)
+            {
+                FieldElement fieldElement = codeElement as FieldElement;
+                if (fieldElement != null && fieldElement.MemberModifiers == MemberModifiers.Static)
+                {
+                    bool isTypeChild = false;
+                    ICodeElement parentElement = codeElement.Parent;
+                    while (!isTypeChild && parentElement != null)
+                    {
+                        isTypeChild = parentElement == typeElement;
+                        if (!isTypeChild)
+                        {
+                            parentElement = parentElement.Parent;
+                        }
+                    }
+
+                    if (isTypeChild)
+                    {
+                        staticFields.Add(fieldElement);
+                    }
+                }
+            };
+
+            ElementUtilities.ProcessElementTree(typeElement, findStaticFields);
+
+            return staticFields.ToArray();
+        }
+
+        #endregion Methods
     }
 }

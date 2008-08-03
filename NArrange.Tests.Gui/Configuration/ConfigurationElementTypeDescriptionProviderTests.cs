@@ -16,7 +16,7 @@ namespace NArrange.Tests.Gui.Configuration
     [TestFixture]
     public class ConfigurationElementTypeDescriptionProviderTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the GetTypeDescriptor method.
@@ -49,6 +49,6 @@ namespace NArrange.Tests.Gui.Configuration
                 "Unexpected editor type for the Elements property.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

@@ -15,7 +15,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ConditionExpressionEvaluatorTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the Evaluate method with an And expression.
@@ -413,6 +413,6 @@ namespace NArrange.Tests.Core
             Assert.IsFalse(result, "Unexpected expression evaluation result.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

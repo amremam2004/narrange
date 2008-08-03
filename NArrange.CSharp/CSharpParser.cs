@@ -30,43 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Fixed parsing of events with generic return types
- *      - Improved parsing performance by reducing the number of calls to
- *        TryParseElement
- *      - Parse regions to the element tree
- *      - Preserve block comments
- *      - Fixed parsing of interface event types and non-specified
- *        access constructors
- *      - Fixed parsing of string and character literals containing
- *        backslashes
- *      - Fixed parsing of equal and not equal operators
- *      - Fixed parsing of verbatim string literals (e.g. @"\\Server\")
- *      - Added parsing support for partial methods
- *      - Fixed parsing of array return types with intermixed spaces
- *      - Fixed a parsing error where type parameters were always expected
- *        when parsing generic types
- *      - Preserve header comments without associating w/ using elements
- *      - Fixed parsing of properties with multiple index parameters
- *      - Handle fixed size buffer fields
- *      - Parse attribute names and params to the code element model
- *        vs. entire attribute text
- *      - Improved handling of unhandled element text
- *      - Fixed parsing of new lines in attributes
- *      - Preserve element access when None
- *      - Preserve trailing comments for fields
- *      - Allow parsing of basic conditional compilation directives
- *      - Fixed parsing of generic type references containing whitespace
- *      - Fixed a bug where in certain scenarios, the text of commented out
- *        elements was being reversed
- *      - Fixed parsing of nullable type references containing whitespace
- *      - Fixed an issue parsing escaped strings in member bodies
- *      - Allow parsing of comment region directives
- *      Justin Dearing
- *      - Removed unused using statements
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -89,20 +54,16 @@ namespace NArrange.CSharp
     /// </summary>
     public sealed class CSharpParser : CodeParser
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Escape character.
         /// </summary>
         private const char EscapeChar = '\\';
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Protected Methods
+        #region Methods
 
         /// <summary>
         /// Parses elements from the current point in the stream.
@@ -112,10 +73,6 @@ namespace NArrange.CSharp
         {
             return ParseElements(null);
         }
-
-        #endregion Protected Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Gets the member or type access.
@@ -528,10 +485,6 @@ namespace NArrange.CSharp
 
             return removed;
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Captures a type name alias from the stream.
@@ -2360,6 +2313,6 @@ namespace NArrange.CSharp
             return codeElement;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

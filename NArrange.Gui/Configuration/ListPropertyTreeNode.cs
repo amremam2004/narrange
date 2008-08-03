@@ -30,8 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -86,7 +85,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Constructors
 
-        #region Private Static Methods
+        #region Methods
 
         /// <summary>
         /// Gets the display name for a type.
@@ -106,10 +105,6 @@ namespace NArrange.Gui.Configuration
 
             return displayName;
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Adds a new item to the list of the specified type.
@@ -165,6 +160,6 @@ namespace NArrange.Gui.Configuration
             this.ContextMenuStrip = _contextMenu;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

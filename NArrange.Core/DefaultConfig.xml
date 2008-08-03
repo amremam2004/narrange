@@ -143,52 +143,145 @@
                     </Sort>
                     <Elements>
                         <ElementRef Id="DefaultConditional"/>
-                        <Region Name="Constants">
-                            <Elements>
-                                <Region Name="Constants">
-                                    <Elements>
-                                        <Element Type="Field">
-                                            <Filter Condition="$(Modifier) : 'Constant'"/>
-                                            <Group By="Access" SeparatorType="NewLine"/>
-                                            <Sort By="Access" Direction="Descending">
-                                                <Sort By="Name"/>
-                                            </Sort>
-                                        </Element>
-                                    </Elements>
-                                </Region>
-                            </Elements>
-                        </Region>
-                        <Region Name="Static Fields">
+                        <Region Name="Fixed Fields" DirectivesEnabled="false">
                             <Elements>
                                 <Element Type="Field">
-                                    <Filter Condition="$(Modifier) : 'Static'"/>
-                                    <!-- Do not sort or group statics due to potential dependencies among fields -->
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Fixed Fields">
-                            <Elements>
-                                <Element Type="Field">
-                                    <Filter Condition="$(Parent.Attributes) : 'StructLayout'"/>
+                                    <Filter Condition="$(Parent.Attributes) : 'StructLayout' And !($(Modifier) : 'Static')"/>
                                     <!-- Do not sort or group fields that are members of a type with a StructLayout attribute -->
                                 </Element>
                             </Elements>
                         </Region>
                         <Region Name="Fields">
                             <Elements>
-                                <Element Type="Field">
-                                    <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
-                                    <Sort By="Access" Direction="Descending">
-                                        <Sort By="Name"/>
-                                    </Sort>
-                                </Element>
+                                <Region Name="Public Constant/Read-Only Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Public' And ($(Modifier) : 'Constant' Or $(Modifier) : 'ReadOnly')"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Public Static Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Public Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Public'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Constant/Read-Only Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) : 'Internal' And ($(Modifier) : 'Constant' Or $(Modifier) : 'ReadOnly')"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Static Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) : 'Internal' And $(Modifier) : 'Static'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) : 'Internal'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Constant/Read-Only Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Protected' And ($(Modifier) : 'Constant' Or $(Modifier) : 'ReadOnly')"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Static Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Protected' And $(Modifier) : 'Static'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Protected'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Constant/Read-Only Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="($(Access) == 'Private'Or $(Access) == 'None') And ($(Modifier) : 'Constant' Or $(Modifier) : 'ReadOnly')"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Static Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="($(Access) == 'Private'Or $(Access) == 'None') And $(Modifier) : 'Static'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Fields" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Field">
+                                            <Filter Condition="$(Access) == 'Private'Or $(Access) == 'None'"/>
+                                            <Group By="Modifier" SeparatorType="NewLine" Direction ="Descending"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
                             </Elements>
                         </Region>
                         <Region Name="Constructors">
                             <Elements>
-                                <Element Type="Constructor">
-                                    <Sort By="Name"/>
-                                </Element>
+                                <Region Name="Static Constructors" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Constructor">
+                                            <Filter Condition="$(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Other Constructors" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Constructor">
+                                            <Sort By="Access" Direction="Descending">
+                                                <Sort By="Name"/>
+                                            </Sort>
+                                        </Element>
+                                    </Elements>
+                                </Region>
                             </Elements>
                         </Region>
                         <Region Name="Enumerations">
@@ -205,44 +298,72 @@
                                 </Element>
                             </Elements>
                         </Region>
-                        <Region Name="Public Static Properties">
+                        <Region Name="Properties">
                             <Elements>
-                                <Element Type="Property">
-                                    <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Public Properties">
-                            <Elements>
-                                <Element Type="Property">
-                                    <Filter Condition="$(Access) == 'Public' And $(Name) != 'this'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Internal Properties">
-                            <Elements>
-                                <Element Type="Property">
-                                    <Filter Condition="$(Access) : 'Internal' And $(Name) != 'this'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Protected Properties">
-                            <Elements>
-                                <Element Type="Property">
-                                    <Filter Condition="$(Access) == 'Protected' And $(Name) != 'this'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Private Properties">
-                            <Elements>
-                                <Element Type="Property">
-                                    <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Name) != 'this'"/>
-                                    <Sort By="Name"/>
-                                </Element>
+                                <Region Name="Public Static Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Public Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) == 'Public' And $(Name) != 'this'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Static Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) : 'Internal' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) : 'Internal' And $(Name) != 'this'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Static Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) == 'Protected' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="$(Access) == 'Protected' And $(Name) != 'this'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Static Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Properties" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Property">
+                                            <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Name) != 'this'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
                             </Elements>
                         </Region>
                         <Region Name="Indexers">
@@ -255,68 +376,72 @@
                                 </Element>
                             </Elements>
                         </Region>
-                        <Region Name="Public Static Methods">
+                        <Region Name="Methods">
                             <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Public Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Public'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Internal Static Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Internal' And $(Modifier) : 'Static'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Internal Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) : 'Internal'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Protected Static Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Protected' And $(Modifier) : 'Static'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Protected Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Protected'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Private Static Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Modifier) : 'Static'"/>
-                                    <Sort By="Name"/>
-                                </Element>
-                            </Elements>
-                        </Region>
-                        <Region Name="Private Methods">
-                            <Elements>
-                                <Element Type="Method">
-                                    <Filter Condition="$(Access) == 'Private' Or $(Access) == 'None'"/>
-                                    <Sort By="Name"/>
-                                </Element>
+                                <Region Name="Public Static Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Public Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) == 'Public'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Static Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) : 'Internal' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Internal Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) : 'Internal'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Static Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) == 'Protected' And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Protected Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) == 'Protected'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Static Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Modifier) : 'Static'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
+                                <Region Name="Private Methods" DirectivesEnabled="false">
+                                    <Elements>
+                                        <Element Type="Method">
+                                            <Filter Condition="$(Access) == 'Private' Or $(Access) == 'None'"/>
+                                            <Sort By="Name"/>
+                                        </Element>
+                                    </Elements>
+                                </Region>
                             </Elements>
                         </Region>
                         <Region Name="Other">

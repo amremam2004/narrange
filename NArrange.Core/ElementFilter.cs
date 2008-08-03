@@ -30,13 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added a RequiredScope property that indicates the scope level
- *        required to evaluate the expression for an element.
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -80,7 +75,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the required scope information for evaluating the condition.
@@ -93,9 +88,9 @@ namespace NArrange.Core
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Determines whether or not the specified code element matches the
@@ -116,10 +111,6 @@ namespace NArrange.Core
 
             return isMatch;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Gets the scope required to evaluate the condition.
@@ -156,6 +147,6 @@ namespace NArrange.Core
             return scope;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

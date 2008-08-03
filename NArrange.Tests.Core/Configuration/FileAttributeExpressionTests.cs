@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class FileAttributeExpressionTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ToString method.
@@ -24,6 +24,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("$(File.Path)", expression.ToString(), "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

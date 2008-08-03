@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class ExtensionConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -61,6 +61,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Extension: cs", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

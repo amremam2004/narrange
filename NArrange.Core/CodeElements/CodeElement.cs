@@ -30,11 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added an indexed property for getting and setting language
- *        specific information as weakly typed extended properties.
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -92,7 +88,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the collection of children for this element.
@@ -155,10 +151,6 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
-
-        #region Protected Properties
-
         /// <summary>
         /// Gets the base child collection.
         /// </summary>
@@ -181,7 +173,7 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Protected Properties
+        #endregion Properties
 
         #region Indexers
 
@@ -214,7 +206,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Indexers
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Allows an ICodeElementVisitor to process (or visit) this element.
@@ -354,16 +346,12 @@ namespace NArrange.Core.CodeElements
             return ElementUtilities.Format(format, this);
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Creates a clone of the instance and assigns any state.
         /// </summary>
         /// <returns>Clone of the code element.</returns>
         protected abstract CodeElement DoClone();
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

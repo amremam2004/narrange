@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class UsingConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ICloneable implementation.
@@ -61,6 +61,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Usings: MoveTo - File", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

@@ -5,7 +5,7 @@ namespace NArrange.Tests.CSharp
     /// </summary>
     public static class CSharpTestUtilities
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Assembly attributes test file.
@@ -106,6 +106,6 @@ namespace NArrange.Tests.CSharp
             return new CSharpTestFile("UTF8.cs");
         }
 
-        #endregion Public Static Methods
+        #endregion Methods
     }
 }

@@ -12,7 +12,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class EnumUtilitiesTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ToString method.
@@ -42,6 +42,6 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(str, EnumUtilities.ToString(modifiers));
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

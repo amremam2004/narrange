@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class GroupElementTests : CodeElementTests<GroupElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new GroupElement.
@@ -29,10 +29,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.IsNotNull(element.Children, "Children collection should not be null.");
             Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -72,6 +68,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.CustomSeparator, clone.CustomSeparator);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

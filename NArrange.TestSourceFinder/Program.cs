@@ -57,7 +57,7 @@ namespace NArrange.TestSourceFinder
     /// </summary>
     internal class Program
     {
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// The application entry point.
@@ -82,10 +82,6 @@ namespace NArrange.TestSourceFinder
                 Console.WriteLine(ex.Message);
             }
         }
-
-        #endregion Public Static Methods
-
-        #region Private Static Methods
 
         /// <summary>
         /// Compiles the source file.
@@ -178,6 +174,6 @@ namespace NArrange.TestSourceFinder
             return sourceFiles.ToArray();
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

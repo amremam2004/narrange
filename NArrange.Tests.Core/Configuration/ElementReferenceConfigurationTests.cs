@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class ElementReferenceConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a new ElementReferenceConfiguration.
@@ -40,6 +40,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Element Reference: SomeId", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

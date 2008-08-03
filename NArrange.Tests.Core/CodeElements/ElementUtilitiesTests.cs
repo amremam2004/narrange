@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class ElementUtilitiesTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests Format with a null element.
@@ -208,6 +208,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

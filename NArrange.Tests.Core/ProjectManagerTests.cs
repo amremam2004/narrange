@@ -12,7 +12,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ProjectManagerTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests creating a new ProjectManager with a null configuration.
@@ -24,6 +24,6 @@ namespace NArrange.Tests.Core
             ProjectManager projectManager = new ProjectManager(null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

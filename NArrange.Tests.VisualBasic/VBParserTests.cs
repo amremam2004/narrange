@@ -16,9 +16,7 @@ namespace NArrange.Tests.VisualBasic
     [TestFixture]
     public class VBParserTests
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Constructor region index in ClassMembers.vb.
@@ -55,11 +53,9 @@ namespace NArrange.Tests.VisualBasic
         /// </summary>
         private const int PropertyRegionIndex = 2;
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests that when the end of a block is expected, the appropriate
@@ -4194,10 +4190,6 @@ namespace NArrange.Tests.VisualBasic
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets the ClassMembers test class.
         /// </summary>
@@ -4225,6 +4217,6 @@ namespace NArrange.Tests.VisualBasic
             return classElement;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

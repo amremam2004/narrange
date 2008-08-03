@@ -11,7 +11,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class InterfaceReferenceTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests creation of an InterfaceReference instance.
@@ -57,6 +57,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual(InterfaceReferenceType.Class, reference.ReferenceType, "Unexpected value for ReferenceType.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

@@ -30,11 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Implement the IGenericElement interface
- *      - Added an IsPartial property for partial method support
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -79,7 +75,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the element type.
@@ -170,10 +166,6 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Public Properties
-
-        #region Private Properties
-
         /// <summary>
         /// Gets the list of type parameters.
         /// </summary>
@@ -196,9 +188,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Private Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Allows an ICodeElementVisitor to process (or visit) this element.
@@ -223,10 +215,6 @@ namespace NArrange.Core.CodeElements
 
             TypeParametersBase.Add(typeParameter);
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates a clone of this instance.
@@ -254,6 +242,6 @@ namespace NArrange.Core.CodeElements
             return clone;
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

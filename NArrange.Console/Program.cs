@@ -30,17 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Moved logging into a ConsoleLogger class
- *      - Added a backup and restore feature
- *      - Fixed parsing of config file name
- *      - Refactored out command argument parsing
- *      - Allow arranging an entire directory
- *      - Fixed parsing of command line switches under Mono
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -58,20 +49,16 @@ namespace NArrange.ConsoleApplication
     /// </summary>
     public class Program
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Execution error code.
         /// </summary>
         private const int Fail = -1;
 
-        #endregion Constants
+        #endregion Fields
 
-        #endregion Constants
-
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Gets the copyright text.
@@ -283,10 +270,6 @@ namespace NArrange.ConsoleApplication
             return success;
         }
 
-        #endregion Public Static Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Writes usage information to the console.
         /// </summary>
@@ -297,6 +280,6 @@ namespace NArrange.ConsoleApplication
             Console.WriteLine();
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

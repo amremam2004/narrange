@@ -30,17 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added a backup and restore feature
- *      - Fixed a bug where the output file override was not being
- *        acknowledged
- *      - Use a configured encoding if present, otherwise auto-detect and
- *        preserve the encoding withing the arrange result.
- *      - Allow arranging of an entire directory
- *      Justin Dearing
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -128,7 +119,7 @@ namespace NArrange.Core
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Arranges a file, project or solution.
@@ -240,10 +231,6 @@ namespace NArrange.Core
             return success;
         }
 
-        #endregion Public Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Gets a configuration load error.
         /// </summary>
@@ -266,10 +253,6 @@ namespace NArrange.Core
 
             return messageBuilder.ToString();
         }
-
-        #endregion Private Static Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Arranges code elements.
@@ -589,7 +572,7 @@ namespace NArrange.Core
             return success;
         }
 
-        #endregion Private Methods
+        #endregion Methods
 
         #region Other
 
@@ -654,7 +637,7 @@ namespace NArrange.Core
 
             #endregion Constructors
 
-            #region Public Properties
+            #region Properties
 
             /// <summary>
             /// Gets the encoding to use for writing.
@@ -700,7 +683,7 @@ namespace NArrange.Core
                 }
             }
 
-            #endregion Public Properties
+            #endregion Properties
         }
 
         #endregion Other

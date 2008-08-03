@@ -30,9 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -61,7 +59,7 @@ namespace NArrange.Core.CodeElements
 
         #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the list of interface implementations.
@@ -73,10 +71,6 @@ namespace NArrange.Core.CodeElements
                 return ImplementsBase.AsReadOnly();
             }
         }
-
-        #endregion Public Properties
-
-        #region Protected Properties
 
         /// <summary>
         /// Gets the list of interface implementations.
@@ -100,9 +94,9 @@ namespace NArrange.Core.CodeElements
             }
         }
 
-        #endregion Protected Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Adds an item to the Implements collection.
@@ -115,10 +109,6 @@ namespace NArrange.Core.CodeElements
                 ImplementsBase.Add(implementation);
             }
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Clones this instance.
@@ -145,6 +135,6 @@ namespace NArrange.Core.CodeElements
             return clone;
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

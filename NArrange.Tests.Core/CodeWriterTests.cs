@@ -17,7 +17,7 @@ namespace NArrange.Tests.Core
     public abstract class CodeWriterTests<TCodeWriter>
         where TCodeWriter : ICodeElementWriter, new()
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests writing an element with an unknown tab style.
@@ -100,6 +100,6 @@ namespace NArrange.Tests.Core
             codeWriter.Write(codeElements.AsReadOnly(), writer);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

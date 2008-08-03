@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.CodeElements
     [TestFixture]
     public class UsingElementTests : CommentedElementTests<UsingElement>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests constructing a new UsingElement.
@@ -32,10 +32,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(0, element.HeaderComments.Count, "HeaderCommentLines collection should be empty.");
             Assert.IsFalse(element.IsMovable, "By default using/import directives should not be movable.");
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Creates an instance for cloning.
@@ -63,6 +59,6 @@ namespace NArrange.Tests.Core.CodeElements
             Assert.AreEqual(original.IsMovable, clone.IsMovable);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
     }
 }

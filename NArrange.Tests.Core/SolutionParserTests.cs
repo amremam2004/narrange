@@ -12,7 +12,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class SolutionParserTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the extensions property.
@@ -58,6 +58,6 @@ namespace NArrange.Tests.Core
             SolutionParser.Instance.Parse(null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

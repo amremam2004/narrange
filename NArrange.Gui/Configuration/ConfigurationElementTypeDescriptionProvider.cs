@@ -30,8 +30,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
+ *<author>James Nies</author>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -71,7 +70,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Create and return the custom type descriptor and chain it with the original
@@ -87,7 +86,7 @@ namespace NArrange.Gui.Configuration
             return new CodeConfigurationTypeDescriptor(_baseProvider.GetTypeDescriptor(objectType, instance));
         }
 
-        #endregion Public Methods
+        #endregion Methods
 
         #region Other
 
@@ -110,7 +109,7 @@ namespace NArrange.Gui.Configuration
 
             #endregion Constructors
 
-            #region Public Methods
+            #region Methods
 
             /// <summary>
             /// Gets the PropertyDescriptors for the Type.
@@ -155,7 +154,7 @@ namespace NArrange.Gui.Configuration
                 return this.GetProperties(null);
             }
 
-            #endregion Public Methods
+            #endregion Methods
         }
 
         /// <summary>
@@ -186,7 +185,7 @@ namespace NArrange.Gui.Configuration
 
             #endregion Constructors
 
-            #region Public Properties
+            #region Properties
 
             /// <summary>
             /// Gets the type of the component for which this property belongs.
@@ -221,9 +220,9 @@ namespace NArrange.Gui.Configuration
                 }
             }
 
-            #endregion Public Properties
+            #endregion Properties
 
-            #region Public Methods
+            #region Methods
 
             /// <summary>
             /// Gets a value indicating whether or not the properties value can be
@@ -294,7 +293,7 @@ namespace NArrange.Gui.Configuration
                 return _originalProperty.ShouldSerializeValue(component);
             }
 
-            #endregion Public Methods
+            #endregion Methods
         }
 
         #endregion Other

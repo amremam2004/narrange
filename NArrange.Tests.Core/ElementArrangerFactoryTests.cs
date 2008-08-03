@@ -13,7 +13,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class ElementArrangerFactoryTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests calling CreateElementArranger with a null configuration.
@@ -25,6 +25,6 @@ namespace NArrange.Tests.Core
             ElementArrangerFactory.CreateElementArranger(null, new ElementConfiguration());
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

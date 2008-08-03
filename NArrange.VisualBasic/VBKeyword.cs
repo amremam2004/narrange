@@ -30,12 +30,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Added keywords for conditional compilation directives
- *      Justin Dearing
- *      - Removed unused using statements
+ *<author>James Nies</author>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -50,9 +46,7 @@ namespace NArrange.VisualBasic
     /// </summary>
     public static class VBKeyword
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// "Alias" keyword.
@@ -339,21 +333,15 @@ namespace NArrange.VisualBasic
         /// </summary>
         public const string WriteOnly = "WriteOnly";
 
-        #endregion Constants
-
-        #endregion Constants
-
-        #region Static Fields
-
         /// <summary>
         /// A collection of keywords that have specialized normalization rules.
         /// </summary>
         private static Dictionary<string, string> _specialNormalizedKeywords = 
             CreateNormalizedKeywordDictionary();
 
-        #endregion Static Fields
+        #endregion Fields
 
-        #region Public Static Methods
+        #region Methods
 
         /// <summary>
         /// Determines whether or not the specifed word is a VB keyword.
@@ -457,10 +445,6 @@ namespace NArrange.VisualBasic
             return normalized;
         }
 
-        #endregion Public Static Methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Creates a dictionary of special cases when normalizing keywords.
         /// </summary>
@@ -483,6 +467,6 @@ namespace NArrange.VisualBasic
             return _specialNormalizedKeywords;
         }
 
-        #endregion Private Static Methods
+        #endregion Methods
     }
 }

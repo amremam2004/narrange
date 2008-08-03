@@ -19,7 +19,7 @@ namespace NArrange.Tests.VisualBasic
     [TestFixture]
     public class VBWriterTests : CodeWriterTests<VBWriter>
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests writing an element with closing comments.
@@ -1776,6 +1776,6 @@ namespace NArrange.Tests.VisualBasic
                 "Using element was not written correctly.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

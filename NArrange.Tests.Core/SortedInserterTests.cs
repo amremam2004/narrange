@@ -15,7 +15,7 @@ namespace NArrange.Tests.Core
     [TestFixture]
     public class SortedInserterTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the creation of a SortedInserter instance.
@@ -620,6 +620,6 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(0, regionElement.Children.IndexOf(field1), "Element is not at the correct index.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

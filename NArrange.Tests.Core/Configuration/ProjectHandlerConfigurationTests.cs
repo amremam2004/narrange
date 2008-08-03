@@ -10,7 +10,7 @@ namespace NArrange.Tests.Core.Configuration
     [TestFixture]
     public class ProjectHandlerConfigurationTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the ToString method.
@@ -25,6 +25,6 @@ namespace NArrange.Tests.Core.Configuration
             Assert.AreEqual("Project Handler: TestAssembly.TestParser", str, "Unexpected string representation.");
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

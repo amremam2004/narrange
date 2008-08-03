@@ -12,7 +12,7 @@ namespace NArrange.Tests.VisualBasic
     [TestFixture]
     public class VBSymbolTests
     {
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Tests the IsVBSymbol method
@@ -41,6 +41,6 @@ namespace NArrange.Tests.VisualBasic
             Assert.IsFalse(VBSymbol.IsVBSymbol('*'));
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

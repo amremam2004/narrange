@@ -30,32 +30,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Contributors:
- *      James Nies
- *      - Initial creation
- *      - Fixed an extra line feed for namespace-nested using statements
- *      - Fixed writing of C# redefine using statements
- *      - Provided support for closing comments
- *      - Fixed extra tabs being written after field declaration statements
- *      - Handle writing of partial methods
- *      - Only write type parameter constraints when they are present
- *      - Fixed writing of volatile fields
- *      - Code writer refactoring
- *      - Optionally write end region name
- *      - Handle fixed size buffer fields
- *      - Parse attribute names and params to the code element model
- *        vs. entire attribute text
- *      - Fixed extra space being written before multiline field initial
- *        values.
- *      - Preserve trailing comments for fields
- *      - Handle writing of conditional compilation preprocessor directives
- *      - Write region comment directives
- *      Everton Elvio Koser
- *      - Fixed ordering of new and const for fields (merged by James Nies)
- *      - Honor the new keyword for nested types (merged by James Nies)
- *      Justin Dearing
- *      - Removed unused using statements
- *      - Code cleanup via ReSharper 4.0 (http://www.jetbrains.com/resharper/)
+ *<author>James Nies</author>
+ *<contributor>Everton Elvio Koser</contributor>
+ *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #endregion Header
@@ -78,18 +55,14 @@ namespace NArrange.CSharp
     /// </summary>
     internal sealed class CSharpWriteVisitor : CodeWriteVisitor
     {
-        #region Constants
-
-        #region Constants
+        #region Fields
 
         /// <summary>
         /// Closing comment prefix.
         /// </summary>
         private const string ClosingCommentPrefix = "// ";
 
-        #endregion Constants
-
-        #endregion Constants
+        #endregion Fields
 
         #region Constructors
 
@@ -105,7 +78,7 @@ namespace NArrange.CSharp
 
         #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Processes an attribute element.
@@ -675,10 +648,6 @@ namespace NArrange.CSharp
             WriteIndented(builder.ToString());
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         /// <summary>
         /// Writes a begin region directive.
         /// </summary>
@@ -711,10 +680,6 @@ namespace NArrange.CSharp
 
             WriteIndented(builder.ToString());
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Writes the accessibility for a member or type.
@@ -952,6 +917,6 @@ namespace NArrange.CSharp
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }
