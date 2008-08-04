@@ -3,29 +3,64 @@
 
 	<PropertyGroup>
 		<BuildDirectory>$(MSBuildProjectDirectory)\Build</BuildDirectory>
-		<BinDirectory>$(BuildDirectory)\NArrange\bin</BinDirectory>
-		<SourceDistributionDirectory>$(BuildDirectory)\NArrange\src</SourceDistributionDirectory>
-		<BuildAllDependsOn>Clean;MakeSourceDistribution;Build</BuildAllDependsOn>
+		<RootDirectory>$(BuildDirectory)\NArrange</RootDirectory>
+		<BinDirectory>$(RootDirectory)\bin</BinDirectory>
+		<SourceDistributionDirectory>$(RootDirectory)\src</SourceDistributionDirectory>
+		<BuildAllDependsOn>Clean;SourceAnalysis;MakeSourceDistribution;Build</BuildAllDependsOn>
+
+		<!-- Version -->
 		<Major>0</Major>
 		<Minor>2</Minor>
 		<Build>7</Build>
+
+		<!-- StyleCop related stuff -->
+		<StyleCopRoot>$(ProgramFiles)\MSBuild\Microsoft\SourceAnalysis\v4.2</StyleCopRoot>
+		<SourceAnalysisSettingsFile>$(MSBuildProjectDirectory)Settings.SourceAnalysis</SourceAnalysisSettingsFile>
+		<SourceAnalysisForceFullAnalysis Condition="'$(SourceAnalysisForceFullAnalysis)' == ''">true</SourceAnalysisForceFullAnalysis>
+		<SourceAnalysisCacheResults Condition="'$(SourceAnalysisCacheResults)' == ''">false</SourceAnalysisCacheResults>
+		<SourceAnalysisTreatErrorsAsWarnings Condition="'$(SourceAnalysisTreatErrorsAsWarnings)' == ''">true</SourceAnalysisTreatErrorsAsWarnings>
+		<SourceAnalysisEnabled Condition="'$(SourceAnalysisEnabled)' == ''">true</SourceAnalysisEnabled>
+		<SourceAnalysisOverrideSettingsFile Condition="'$(SourceAnalysisOverrideSettingsFile)' == ''">$(SourceAnalysisSettingsFile)</SourceAnalysisOverrideSettingsFile>
 	</PropertyGroup>
+
+	<UsingTask AssemblyFile="$(StyleCopRoot)\Microsoft.SourceAnalysis.dll" TaskName="SourceAnalysisTask"/>
+
 	<ItemGroup>
-		<Projects Include=".\**\*.csproj" Exclude=".\**\*TestProject.csproj"/>
+		<Projects Include="$(MSBuildProjectDirectory)\**\*.csproj"
+				  Exclude="$(MSBuildProjectDirectory)\**\*TestProject.csproj;
+							$(BuildDirectory)\**\*.csproj"/>
 	</ItemGroup>
-	
+
 	<Target Name="BuildAll" DependsOnTargets="$(BuildAllDependsOn)"/>
 
 	<Target Name="Clean">
-		<RemoveDir Directories="$(BinDirectory)"/>
+		<Message Text="Cleaning..."/>
+		<RemoveDir Directories="$(RootDirectory)"/>
+		<MakeDir Directories="$(RootDirectory)"/>
 		<MSBuild Projects="@(Projects)" Targets="Clean" Properties="Configuration=Release;"/>
+	</Target>
+
+	<Target Name="SourceAnalysis">
+		<Message Text="Running source analysis..."/>
+		<CreateItem Include="$(MSBuildProjectDirectory)\**\*.cs"
+			Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.cs">
+			<Output TaskParameter="Include" ItemName="SourceAnalysisFiles" />
+		</CreateItem>
+
+		<SourceAnalysisTask
+			ProjectFullPath="$(MSBuildProjectFile)"
+			SourceFiles="@(SourceAnalysisFiles)"
+			ForceFullAnalysis="$(SourceAnalysisForceFullAnalysis)"
+			DefineConstants="$(DefineConstants)"
+			TreatErrorsAsWarnings="$(SourceAnalysisTreatErrorsAsWarnings)"
+			CacheResults="$(SourceAnalysisCacheResults)"
+			OverrideSettingsFile="$(SourceAnalysisOverrideSettingsFile)" />
 	</Target>
 
 	<Target Name="MakeSourceDistribution">
 
 		<Message Text="Making source distribution..."/>
 
-		<RemoveDir Directories="$(SourceDistributionDirectory)"/>
 		<MakeDir Directories="$(SourceDistributionDirectory)"/>
 		<CreateItem Include="$(MSBuildProjectDirectory)\**\*.*"
 					Exclude="$(MSBuildProjectDirectory)\**\*svn\**\*.*;
@@ -35,11 +70,13 @@
 						$(MSBuildProjectDirectory)\**\XmlDoc*\*.*;
 						$(MSBuildProjectDirectory)\coverage.*;
 						$(MSBuildProjectDirectory)\*.nprof;
+						$(MSBuildProjectDirectory)\*.fxcop;
 						$(MSBuildProjectDirectory)\TestResult.xml;
 						$(MSBuildProjectDirectory)\UnitTests.*;
 						$(MSBuildProjectDirectory)\authors.xml;
 						$(MSBuildProjectDirectory)\svn2cl.*;
 						$(MSBuildProjectDirectory)\changelog.bat;
+						$(MSBuildProjectDirectory)\SourceAnalysisViolations.xml;
 						$(MSBuildProjectDirectory)\**\*.suo;;
 						$(MSBuildProjectDirectory)\**\*.user;
 						$(MSBuildProjectDirectory)\**\Doc\Templates\*.*;
@@ -51,22 +88,29 @@
 		<Message Text="@(SourceFiles)"/>
 		<Copy SourceFiles ="@(SourceFiles)" DestinationFolder="$(SourceDistributionDirectory)\%(RecursiveDir)"/>
 
+		<CreateItem Include="$(MSBuildProjectDirectory)\Setup\**\license.rtf">
+			<Output ItemName="InfoFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(SourceDistributionDirectory)"/>
+
 		<CreateItem Include="$(SourceDistributionDirectory)\**\*.*">
 			<Output ItemName="ZipSourceFiles" TaskParameter="Include"/>
 		</CreateItem>
 
-		<Zip Files="@(ZipSourceFiles)" WorkingDirectory="$(BuildDirectory)" 
+		<Zip Files="@(ZipSourceFiles)" WorkingDirectory="$(BuildDirectory)"
 			 ZipFileName="..\Releases\NArrange-$(Major).$(Minor).$(Build)-src.zip"/>
 	</Target>
-		
+
 	<Target Name="Build">
-		<MakeDir Directories="$(BinDirectory)"/>  
-		
+		<MakeDir Directories="$(BinDirectory)"/>
+
+		<Message Text="Copying dependencies..."/>
 		<CreateItem Include="$(MSBuildProjectDirectory)\Dependencies\**\*.dll">
 			<Output ItemName="Dependencies" TaskParameter="Include" />
 		</CreateItem>
 		<Copy SourceFiles="@(Dependencies)" DestinationFolder="$(BinDirectory)"/>
-		
+
+		<Message Text="Building projects..."/>
 		<MSBuild Projects="@(Projects)" Properties="Configuration=Release">
 			<Output ItemName="OutputFiles" TaskParameter="TargetOutputs"/>
 		</MSBuild>
@@ -87,11 +131,11 @@
 		<Copy SourceFiles="@(AdditionalFiles)" DestinationFolder="$(BinDirectory)"/>
 
 		<CreateItem Include="$(MSBuildProjectDirectory)\*.txt;
-				     $(MSBuildProjectDirectory)\*.rtf">
+					$(MSBuildProjectDirectory)\*.rtf;
+				     $(MSBuildProjectDirectory)\Setup\**\license.rtf">
 			<Output ItemName="InfoFiles" TaskParameter="Include" />
 		</CreateItem>
-		<Copy SourceFiles="@(InfoFiles)" 
-			DestinationFolder="$(BuildDirectory)\NArrange\"/>
+		<Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(BuildDirectory)\NArrange\"/>
 
 		<CreateItem Include="$(MSBuildProjectDirectory)\Doc\**\*.*"
 			        	Exclude="$(MSBuildProjectDirectory)\Doc\**\*svn\**\*.*;
@@ -100,7 +144,7 @@
 						$(MSBuildProjectDirectory)\Doc\Images\Originals\**\*.*">
 			<Output ItemName="DocFiles" TaskParameter="Include" />
 		</CreateItem>
-		<Copy SourceFiles="@(DocFiles)" 
+		<Copy SourceFiles="@(DocFiles)"
 			DestinationFiles="@(DocFiles->'$(BuildDirectory)\NArrange\Doc\%(RecursiveDir)%(Filename)%(Extension)')"/>
 
 		<CreateItem Include="$(BinDirectory)\**\*.*;
@@ -115,7 +159,7 @@
 						$(BuildDirectory)\NArrange\changelog.txt">
 			<Output ItemName="ZipBinFiles" TaskParameter="Include"/>
 		</CreateItem>
-		
+
 		<Zip Files="@(ZipBinFiles)" WorkingDirectory="$(BuildDirectory)"
 			 ZipFileName="..\Releases\NArrange-$(Major).$(Minor).$(Build)-net-2.0.zip"/>
 	</Target>
