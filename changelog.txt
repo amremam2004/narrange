@@ -1,5 +1,37 @@
+2008-08-03  James Nies
+
+	* - Fixed default ordering of fields for StyleCop compatibility
+	  - When arranging static fields, determine dependencies and sort
+	  appropriately
+	  - Cleaned up header comments
+	  - When loading the configuration, use the serializer error
+	  handling for unknown elements and attributes
+
+2008-07-27  James Nies
+
+	* Create separate solutions for msbuild 2005 and 2008 formats.
+
+2008-07-27  Justin Dearing
+
+	* Added an MSI Setup project.
+	  Added solution folders to the solution.
+
+2008-07-27  James Nies
+
+	* - Provide a roughly StyleCop compatible default configuration for
+	  ordering of members.
+	  - Allow consecutive blank lines to be removed within member
+	  bodies.
+	  - Allow disabling of directives for individual regions.
+	  - Allow nested regions.
+	  - Fixed a bug where whitespace preceding a line was not fully
+	  converted to tabs/spaces. Also, trim trailing whitespace in
+	  member bodies.
+
 2008-07-11  James Nies
 
+	* Bumped version to 0.2.7.
+	* Updated changelog.
 	* Updated documentation.
 	* Allow region directives to be written and parsed as comments.
 
