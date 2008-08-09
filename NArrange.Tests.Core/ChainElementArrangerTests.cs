@@ -105,7 +105,7 @@ namespace NArrange.Tests.Core
 
         #endregion Methods
 
-        #region Other
+        #region Nested Types
 
         /// <summary>
         /// Test code element arranger.
@@ -196,6 +196,6 @@ namespace NArrange.Tests.Core
             #endregion Methods
         }
 
-        #endregion Other
+        #endregion Nested Types
     }
 }

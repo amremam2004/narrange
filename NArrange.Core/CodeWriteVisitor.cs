@@ -317,6 +317,35 @@ namespace NArrange.Core
         public abstract void VisitUsingElement(UsingElement element);
 
         /// <summary>
+        /// Gets the formatted text to write for a comment.
+        /// </summary>
+        /// <param name="comment">Comment with text.</param>
+        /// <returns>Formatted comment text.</returns>
+        protected string FormatCommentText(ICommentElement comment)
+        {
+            string commentText = null;
+
+            if (comment != null)
+            {
+                switch (comment.Type)
+                {
+                    case CommentType.Line:
+                        int tabCount = 0;
+                        string commentLine = ProcessLineWhitepace(comment.Text, ref tabCount);
+                        string leadingSpace = CreateTabWhitespace(tabCount);
+                        commentText = leadingSpace + commentLine;
+                        break;
+
+                    default:
+                        commentText = comment.Text;
+                        break;
+                }
+            }
+
+            return commentText;
+        }
+
+        /// <summary>
         /// Writes children for a block element.
         /// </summary>
         /// <param name="element">Element whose children will be written.</param>
@@ -392,26 +421,7 @@ namespace NArrange.Core
         /// <param name="text">The text to write.</param>
         protected void WriteIndented(string text)
         {
-            for (int tabIndex = 0; tabIndex < _tabCount; tabIndex++)
-            {
-                if (_configuration.Formatting.Tabs.TabStyle == TabStyle.Tabs)
-                {
-                    _writer.Write("\t");
-                }
-                else if (_configuration.Formatting.Tabs.TabStyle == TabStyle.Spaces)
-                {
-                    _writer.Write(new string(' ', _configuration.Formatting.Tabs.SpacesPerTab));
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        string.Format(
-                        Thread.CurrentThread.CurrentCulture,
-                        "Unknown tab style {0}.",
-                        _configuration.Formatting.Tabs.TabStyle));
-                }
-            }
-
+            _writer.Write(CreateTabWhitespace(_tabCount));
             _writer.Write(text);
         }
 
@@ -457,7 +467,7 @@ namespace NArrange.Core
             if (!string.IsNullOrEmpty(text))
             {
                 int originalTabCount = TabCount;
-                string[] lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                string[] lines = text.Split(new char[] { '\n' }, StringSplitOptions.None);
 
                 bool previousLineBlank = false;
 
@@ -472,46 +482,7 @@ namespace NArrange.Core
                     {
                         int lineTabCount = 0;
 
-                        StringBuilder lineBuilder = new StringBuilder(line);
-
-                        while (lineBuilder.Length > 0 && CodeParser.IsWhiteSpace(lineBuilder[0]))
-                        {
-                            if (lineBuilder[0] == '\t')
-                            {
-                                lineBuilder.Remove(0, 1);
-                                lineTabCount++;
-                            }
-                            else if (lineBuilder[0] == ' ')
-                            {
-                                int spaceCount = 0;
-                                int index = 0;
-                                while (lineBuilder.Length > 0 && index < lineBuilder.Length &&
-                                    lineBuilder[index] == ' ')
-                                {
-                                    spaceCount++;
-                                    if (spaceCount == Configuration.Formatting.Tabs.SpacesPerTab)
-                                    {
-                                        lineBuilder.Remove(0, Configuration.Formatting.Tabs.SpacesPerTab);
-                                        spaceCount = 0;
-                                        index = 0;
-                                        lineTabCount++;
-                                    }
-                                    else
-                                    {
-                                        index++;
-                                    }
-                                }
-
-                                if (!(lineBuilder.Length > 0 && lineBuilder[0] == '\t'))
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
+                        string formattedLine = ProcessLineWhitepace(line, ref lineTabCount);
 
                         if (lineTabCount > TabCount)
                         {
@@ -520,11 +491,11 @@ namespace NArrange.Core
 
                         if (lineIndex < lines.Length - 1)
                         {
-                            WriteIndentedLine(lineBuilder.ToString().TrimEnd());
+                            WriteIndentedLine(formattedLine);
                         }
                         else
                         {
-                            WriteIndented(lineBuilder.ToString().TrimEnd());
+                            WriteIndented(formattedLine);
                         }
                     }
 
@@ -533,6 +504,90 @@ namespace NArrange.Core
                     TabCount = originalTabCount;
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates whitespace for the specified number of tabs.
+        /// </summary>
+        /// <param name="tabCount">Number of tabs worth of whiespace to create.</param>
+        /// <returns>Whitespace string.</returns>
+        private string CreateTabWhitespace(int tabCount)
+        {
+            string leadingSpace;
+            if (Configuration.Formatting.Tabs.TabStyle == TabStyle.Spaces)
+            {
+                leadingSpace = new string(' ', Configuration.Formatting.Tabs.SpacesPerTab * tabCount);
+            }
+            else if (Configuration.Formatting.Tabs.TabStyle == TabStyle.Tabs)
+            {
+                leadingSpace = new string('\t', tabCount);
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                    Thread.CurrentThread.CurrentCulture,
+                    "Unknown tab style {0}.",
+                    _configuration.Formatting.Tabs.TabStyle));
+            }
+
+            return leadingSpace;
+        }
+
+        /// <summary>
+        /// Processes leading/trailing whitespace for a line of text.
+        /// </summary>
+        /// <param name="line">Line to process.</param>
+        /// <param name="lineTabCount">Number of preceding tabs.</param>
+        /// <returns>Processed line.</returns>
+        private string ProcessLineWhitepace(string line, ref int lineTabCount)
+        {
+            string formattedLine;
+
+            StringBuilder lineBuilder = new StringBuilder(line);
+
+            while (lineBuilder.Length > 0 && CodeParser.IsWhiteSpace(lineBuilder[0]))
+            {
+                if (lineBuilder[0] == '\t')
+                {
+                    lineBuilder.Remove(0, 1);
+                    lineTabCount++;
+                }
+                else if (lineBuilder[0] == ' ')
+                {
+                    int spaceCount = 0;
+                    int index = 0;
+                    while (lineBuilder.Length > 0 && index < lineBuilder.Length &&
+                        lineBuilder[index] == ' ')
+                    {
+                        spaceCount++;
+                        if (spaceCount == Configuration.Formatting.Tabs.SpacesPerTab)
+                        {
+                            lineBuilder.Remove(0, Configuration.Formatting.Tabs.SpacesPerTab);
+                            spaceCount = 0;
+                            index = 0;
+                            lineTabCount++;
+                        }
+                        else
+                        {
+                            index++;
+                        }
+                    }
+
+                    if (!(lineBuilder.Length > 0 && lineBuilder[0] == '\t'))
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            formattedLine = lineBuilder.ToString().TrimEnd();
+
+            return formattedLine;
         }
 
         #endregion Methods

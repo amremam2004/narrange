@@ -1,5 +1,5 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Debug" />
+  <Settings activeconfig="Release" />
   <Config name="Debug" binpathtype="Auto">
     <assembly path="NArrange.Tests.Core\bin\Debug\NArrange.Tests.Core.dll" />
     <assembly path="NArrange.Tests.CSharp\bin\Debug\NArrange.Tests.CSharp.dll" />

@@ -148,11 +148,19 @@ namespace NArrange.Core
 
                     if (firstNamespace == null)
                     {
-                        NamespaceElement namespaceElement = elementClone as NamespaceElement;
-                        if (namespaceElement != null)
+                        Action<ICodeElement> findFirstNamespace = delegate(ICodeElement processElement)
                         {
-                            firstNamespace = namespaceElement;
-                        }
+                            if (firstNamespace == null)
+                            {
+                                NamespaceElement namespaceElement = processElement as NamespaceElement;
+                                if (namespaceElement != null)
+                                {
+                                    firstNamespace = namespaceElement;
+                                }
+                            }
+                        };
+
+                        ElementUtilities.ProcessElementTree(elementClone, findFirstNamespace);
                     }
                 }
 
@@ -177,23 +185,51 @@ namespace NArrange.Core
         /// <summary>
         /// Moves using directives if configured to do so.
         /// </summary>
-        /// <param name="elements">List of code elements.</param>
+        /// <param name="elements">List of top-level code elements.</param>
         /// <param name="namespaceElement">Namespace namespace to use when moving usings.</param>
         private void MoveUsings(List<ICodeElement> elements, NamespaceElement namespaceElement)
         {
             CodeLevel moveUsingsTo = _configuration.Formatting.Usings.MoveTo;
+
+            List<ICodeElement> tempElements = new List<ICodeElement>(elements);
+
             if (moveUsingsTo != CodeLevel.None && namespaceElement != null)
             {
                 if (moveUsingsTo == CodeLevel.Namespace)
                 {
-                    for (int elementIndex = 0; elementIndex < elements.Count; elementIndex++)
+                    for (int elementIndex = 0; elementIndex < tempElements.Count; elementIndex++)
                     {
-                        UsingElement usingElement = elements[elementIndex] as UsingElement;
+                        UsingElement usingElement = tempElements[elementIndex] as UsingElement;
                         if (usingElement != null && usingElement.IsMovable)
                         {
-                            elements.Remove(usingElement);
+                            if (elements.Contains(usingElement))
+                            {
+                                elements.Remove(usingElement);
+                            }
+                            tempElements.Remove(usingElement);
                             namespaceElement.InsertChild(0, usingElement);
                             elementIndex--;
+                        }
+                        else
+                        {
+                            if (tempElements[elementIndex] is RegionElement ||
+                                tempElements[elementIndex] is GroupElement)
+                            {
+                                tempElements.AddRange(tempElements[elementIndex].Children);
+                            }
+                            else if (tempElements[elementIndex] is ConditionDirectiveElement)
+                            {
+                                ConditionDirectiveElement condition = tempElements[elementIndex] as ConditionDirectiveElement;
+                                while (condition != null)
+                                {
+                                    if (namespaceElement.Parent == condition)
+                                    {
+                                        tempElements.AddRange(tempElements[elementIndex].Children);
+                                        break;
+                                    }
+                                    condition = condition.ElseCondition;
+                                }
+                            }
                         }
                     }
                 }
@@ -207,6 +243,22 @@ namespace NArrange.Core
                             namespaceElement.RemoveChild(usingElement);
                             elements.Insert(0, usingElement);
                             elementIndex--;
+                        }
+                        else
+                        {
+                            if (tempElements[elementIndex] is RegionElement ||
+                                tempElements[elementIndex] is GroupElement)
+                            {
+                                foreach (ICodeElement childElement in tempElements[elementIndex].Children)
+                                {
+                                    if (childElement is UsingElement ||
+                                        childElement is RegionElement ||
+                                        childElement is GroupElement)
+                                    {
+                                        tempElements.Add(childElement);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -574,7 +574,7 @@ namespace NArrange.Core
 
         #endregion Methods
 
-        #region Other
+        #region Nested Types
 
         /// <summary>
         /// Arrange result.
@@ -686,6 +686,6 @@ namespace NArrange.Core
             #endregion Properties
         }
 
-        #endregion Other
+        #endregion Nested Types
     }
 }

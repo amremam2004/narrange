@@ -162,7 +162,7 @@ namespace NArrange.VisualBasic
                     builder.Append("'");
                 }
 
-                builder.Append(comment.Text);
+                builder.Append(FormatCommentText(comment));
                 WriteIndented(builder.ToString());
             }
         }

@@ -1134,7 +1134,7 @@ namespace NArrange.CSharp
                             }
                         }
                         else if (line.StartsWith(CSharpKeyword.EndRegion, StringComparison.Ordinal) ||
-                       line.StartsWith(CSharpKeyword.EndIf, StringComparison.Ordinal))
+                            line.StartsWith(CSharpKeyword.EndIf, StringComparison.Ordinal))
                         {
                             ICodeElement enclosingElement = null;
 

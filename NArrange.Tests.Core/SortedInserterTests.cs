@@ -533,6 +533,63 @@ namespace NArrange.Tests.Core
         }
 
         /// <summary>
+        /// Tests inserting type elements by Type.
+        /// </summary>
+        [Test]
+        public void InsertByTypeElementTypeDescendingTest()
+        {
+            SortBy sortBy = new SortBy();
+            sortBy.By = ElementAttributeType.Type;
+            sortBy.Direction = SortDirection.Descending;
+
+            SortedInserter sortedInserter = new SortedInserter(ElementType.Type, sortBy);
+
+            //
+            // Create a parent element
+            //
+            RegionElement regionElement = new RegionElement();
+            Assert.AreEqual(0, regionElement.Children.Count, "Parent element should not have any children.");
+
+            //
+            // Insert an element with a mid value.
+            //
+            TypeElement type1 = new TypeElement();
+            type1.Name = "Type1";
+            type1.Type = TypeElementType.Structure;
+            sortedInserter.InsertElement(regionElement, type1);
+
+            //
+            // Insert an element that should be sorted toward the end
+            //
+            TypeElement type2 = new TypeElement();
+            type2.Name = "Type2";
+            type2.Type = TypeElementType.Class;
+            sortedInserter.InsertElement(regionElement, type2);
+
+            //
+            // Insert an element that should be sorted toward the middle
+            //
+            TypeElement type3 = new TypeElement();
+            type3.Name = "Type3";
+            type3.Type = TypeElementType.Interface;
+            sortedInserter.InsertElement(regionElement, type3);
+
+            //
+            // Insert an element that should be sorted toward the beginning
+            //
+            TypeElement type4 = new TypeElement();
+            type4.Name = "Type4";
+            type4.Type = TypeElementType.Enum;
+            sortedInserter.InsertElement(regionElement, type4);
+
+            Assert.AreEqual(4, regionElement.Children.Count, "Element was not inserted into the parent.");
+            Assert.AreEqual(0, regionElement.Children.IndexOf(type4), "Element is not at the correct index.");
+            Assert.AreEqual(1, regionElement.Children.IndexOf(type3), "Element is not at the correct index.");
+            Assert.AreEqual(2, regionElement.Children.IndexOf(type1), "Element is not at the correct index.");
+            Assert.AreEqual(3, regionElement.Children.IndexOf(type2), "Element is not at the correct index.");
+        }
+
+        /// <summary>
         /// Tests inserting elements by type.
         /// </summary>
         [Test]

@@ -359,19 +359,24 @@ namespace NArrange.Tests.Core
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
 
             Assert.AreEqual(1, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
-            TypeElement parentTypeElement = namespaceElementTest.Children[0] as TypeElement;
+            RegionElement typeRegionElement = namespaceElementTest.Children[0] as RegionElement;
+            Assert.IsNotNull(typeRegionElement, "Expected a region element.");
+            Assert.AreEqual("Types", typeRegionElement.Name);
+
+            Assert.AreEqual(1, typeRegionElement.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
+            TypeElement parentTypeElement = typeRegionElement.Children[0] as TypeElement;
             Assert.IsNotNull(parentTypeElement, "Expected a type element.");
 
             Assert.AreEqual(TypeElementType.Class, parentTypeElement.Type, "Unexpected type element type.");
             Assert.AreEqual(parentClassElement.Name, parentTypeElement.Name, "Unexpected type element name.");
 
             Assert.AreEqual(1, parentTypeElement.Children.Count, "After arranging, an unexpected number of parent class elements were returned.");
-            RegionElement regionElement = parentTypeElement.Children[0] as RegionElement;
-            Assert.IsNotNull(regionElement, "Expected a region element.");
-            Assert.AreEqual("Other", regionElement.Name, "Unexpected region name.");
+            RegionElement nestedTypeRegionElement = parentTypeElement.Children[0] as RegionElement;
+            Assert.IsNotNull(nestedTypeRegionElement, "Expected a region element.");
+            Assert.AreEqual("Nested Types", nestedTypeRegionElement.Name, "Unexpected region name.");
 
-            Assert.AreEqual(1, regionElement.Children.Count, "After arranging, an unexpected number of parent class region elements were returned.");
-            TypeElement nestedTypeElement = regionElement.Children[0] as TypeElement;
+            Assert.AreEqual(1, nestedTypeRegionElement.Children.Count, "After arranging, an unexpected number of parent class region elements were returned.");
+            TypeElement nestedTypeElement = nestedTypeRegionElement.Children[0] as TypeElement;
             Assert.IsNotNull(nestedTypeElement, "Expected a type element.");
 
             Assert.AreEqual(TypeElementType.Class, nestedTypeElement.Type, "Unexpected type element type.");
@@ -525,7 +530,12 @@ namespace NArrange.Tests.Core
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
 
             Assert.AreEqual(1, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
-            TypeElement typeElement = namespaceElementTest.Children[0] as TypeElement;
+            RegionElement typeRegionElement = namespaceElementTest.Children[0] as RegionElement;
+            Assert.IsNotNull(typeRegionElement, "Expected a region element.");
+            Assert.AreEqual("Types", typeRegionElement.Name);
+
+            Assert.AreEqual(1, typeRegionElement.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
+            TypeElement typeElement = typeRegionElement.Children[0] as TypeElement;
             Assert.IsNotNull(typeElement, "Expected a type element.");
 
             Assert.AreEqual(TypeElementType.Class, typeElement.Type, "Unexpected type element type.");
@@ -629,7 +639,12 @@ namespace NArrange.Tests.Core
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
 
             Assert.AreEqual(1, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
-            TypeElement typeElement = namespaceElementTest.Children[0] as TypeElement;
+            RegionElement typeRegionElement = namespaceElementTest.Children[0] as RegionElement;
+            Assert.IsNotNull(typeRegionElement, "Expected a region element.");
+            Assert.AreEqual("Types", typeRegionElement.Name);
+
+            Assert.AreEqual(1, typeRegionElement.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
+            TypeElement typeElement = typeRegionElement.Children[0] as TypeElement;
             Assert.IsNotNull(typeElement, "Expected a type element.");
             Assert.AreEqual(TypeElementType.Structure, typeElement.Type, "Unexpected type element type.");
             Assert.AreEqual(structElement.Name, typeElement.Name, "Unexpected type element name.");

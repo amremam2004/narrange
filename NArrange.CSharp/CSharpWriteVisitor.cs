@@ -146,7 +146,7 @@ namespace NArrange.CSharp
             if (comment.Type == CommentType.Block)
             {
                 builder.Append("/*");
-                builder.Append(comment.Text);
+                builder.Append(FormatCommentText(comment));
                 builder.Append("*/");
 
                 WriteTextBlock(builder.ToString());
@@ -162,7 +162,7 @@ namespace NArrange.CSharp
                     builder.Append("//");
                 }
 
-                builder.Append(comment.Text);
+                builder.Append(FormatCommentText(comment));
                 WriteIndented(builder.ToString());
             }
         }
@@ -755,6 +755,12 @@ namespace NArrange.CSharp
         /// <param name="memberAttributes">Member modifiers.</param>
         private void WriteMemberAttributes(MemberModifiers memberAttributes)
         {
+            if ((memberAttributes & MemberModifiers.Static) == MemberModifiers.Static)
+            {
+                Writer.Write(CSharpKeyword.Static);
+                Writer.Write(' ');
+            }
+
             if ((memberAttributes & MemberModifiers.Unsafe) == MemberModifiers.Unsafe)
             {
                 Writer.Write(CSharpKeyword.Unsafe);
@@ -770,12 +776,6 @@ namespace NArrange.CSharp
             if ((memberAttributes & MemberModifiers.Constant) == MemberModifiers.Constant)
             {
                 Writer.Write(CSharpKeyword.Constant);
-                Writer.Write(' ');
-            }
-
-            if ((memberAttributes & MemberModifiers.Static) == MemberModifiers.Static)
-            {
-                Writer.Write(CSharpKeyword.Static);
                 Writer.Write(' ');
             }
 

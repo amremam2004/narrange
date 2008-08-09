@@ -609,7 +609,7 @@ namespace NArrange.Core.Configuration
 
         #endregion Methods
 
-        #region Other
+        #region Nested Types
 
         /// <summary>
         /// Operator expression.
@@ -654,6 +654,6 @@ namespace NArrange.Core.Configuration
             #endregion Properties
         }
 
-        #endregion Other
+        #endregion Nested Types
     }
 }

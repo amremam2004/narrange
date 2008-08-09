@@ -88,7 +88,7 @@ namespace NArrange.Gui.Configuration
 
         #endregion Methods
 
-        #region Other
+        #region Nested Types
 
         /// <summary>
         /// Custom type descriptor. It creates a new property and returns it along
@@ -296,6 +296,6 @@ namespace NArrange.Gui.Configuration
             #endregion Methods
         }
 
-        #endregion Other
+        #endregion Nested Types
     }
 }

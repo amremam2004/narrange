@@ -150,7 +150,7 @@ namespace NArrange.Tests.Core
 
         #endregion Methods
 
-        #region Other
+        #region Nested Types
 
         /// <summary>
         /// Test log event.
@@ -200,6 +200,6 @@ namespace NArrange.Tests.Core
             #endregion Methods
         }
 
-        #endregion Other
+        #endregion Nested Types
     }
 }

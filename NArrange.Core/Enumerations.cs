@@ -552,6 +552,11 @@ namespace NArrange.Core
     public enum TypeElementType
     {
         /// <summary>
+        /// Module element type.
+        /// </summary>
+        Module,
+
+        /// <summary>
         /// Class element type.
         /// </summary>
         Class,
@@ -569,12 +574,7 @@ namespace NArrange.Core
         /// <summary>
         /// Enumeration element type.
         /// </summary>
-        Enum,
-
-        /// <summary>
-        /// Module element type.
-        /// </summary>
-        Module
+        Enum
     }
 
     /// <summary>

@@ -67,7 +67,7 @@ namespace NArrange.Core.CodeElements
         /// <summary>
         /// Type of the type element.
         /// </summary>
-        private TypeElementType _type;
+        private TypeElementType _type = TypeElementType.Class;
 
         /// <summary>
         /// Type modifiers.
