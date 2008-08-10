@@ -1,23 +1,35 @@
 ﻿<?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<!-- C9A6181D-BCAD-4561-A4A2-1D464646C6D3 -->
 	<Product Id="*"
-		Name="NArrange"
+		Name="NArrange $(var.ProductVersion)"
 		Language="1033"
-		Version="1.0.0.0"
+		Version="$(var.ProductVersion)"
 		UpgradeCode="AAF3AD2C-8C0A-4DE7-B603-B2D88BBE1737"
-		Manufacturer="James Nies">
-		<Package
-			InstallerVersion="200"
-			Compressed="yes"/>
+		Manufacturer="James Nies and NArrange Contributors">
+
+		<Package InstallerVersion="200" Compressed="yes"/>
+		
+		<Property Id='ARPCOMMENTS'>NArrange .NET Code Organizer</Property>
+		<Property Id='ARPCONTACT'>email: james@narrange.net</Property>
+		<Property Id='ARPURLINFOABOUT'>http://narrange.sourceforge.net</Property>
+		
 		<!--
 			Source media for the installation. 
  			Specifies a single cab file to be embedded in the installer's .msi. 
 		-->
 		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high"/>
 		
+		<Condition Message='.NET Framework 2.0 must be installed prior to installation of this product.'>
+    		Installed OR (MsiNetAssemblySupport >= "2.0.50727")
+		</Condition>
+		
 		<!-- Installation directory and files are defined in Files.wxs -->
 		<Directory Id="TARGETDIR" Name="SourceDir"/>
 				
+		<Icon Id="NArrange.ico" SourceFile="..\..\Images\LogoIcon.ico"/>
+		
 		<Feature Id="NArrange"
 		         Title="NArrange Binaries"
 		         Description="NArrange console application, GUI configuration, and supporting DLLs."

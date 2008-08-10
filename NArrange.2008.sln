@@ -43,7 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{8AE5BEC8
 	ProjectSection(SolutionItems) = postProject
 	EndProjectSection
 EndProject
-Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "NArrange Setup", "Setup\NArrange Setup\NArrange Setup.wixproj", "{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}"
+Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "NArrange.Setup", "Setup\NArrange Setup\NArrange.Setup.wixproj", "{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
