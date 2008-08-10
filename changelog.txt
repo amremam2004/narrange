@@ -1,5 +1,9 @@
 2008-08-10  James Nies
 
+	* - Moved license.rtf to the trunk root and modified setup/build
+	  scripts for this
+	  - Modified the MSI to optionally display the readme and release
+	  notes and added an Add/Remove programs icon
 	* - Incorporated the MSI WIX project into the distribution build
 	  script.
 	  - MSI work (bitmaps, shortcuts, sample config files, readme)

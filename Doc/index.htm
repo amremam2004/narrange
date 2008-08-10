@@ -48,8 +48,8 @@
               <tr> 
                 <td valign="top"><!-- #BeginEditable "Content" --> 
                   <h1>Documentation</h1>
-                  <p>Version 0.2.6.0<br>
-                    Last Modified: 07/10/2008<br>
+                  <p>Version 0.2.7.0<br>
+                    Last Modified: 08/10/2008<br>
                   </p>
                   <h2>Index</h2>
                   <p>- <a href="#introduction">Introduction</a><br>
@@ -250,12 +250,16 @@
                   </ol>
                   <h2>Configuration<a name="configuration"></a></h2>
                   <h3>Creating a Custom Configuration File<a name="createconfig"></a></h3>
+                  <p>By default, NArrange uses a configuration that is, for the 
+                    most part, compatible with the member ordering rules defined 
+                    by the Microsoft StyleCop source analysis tool. An exception 
+                    to this is file header regions.</p>
                   <p>To override the default arrangement of source code members, 
                     a custom configuration file can be used. To create your own 
-                    custom configuration file, you should start by creating a 
-                    copy of DefaultConfig.xml and renaming appropriately. Note 
-                    that NArrange does not read DefaultConfig.xml, but rather 
-                    it is provided as an example for creating a custom configuration. 
+                    custom configuration file, you can start by creating a copy 
+                    of DefaultConfig.xml and renaming appropriately. Note that 
+                    NArrange does not read DefaultConfig.xml, but rather it is 
+                    provided as an example for creating a custom configuration. 
                     The actual default configuration is embedded within the NArrange 
                     core assembly.</p>
                   <p>The NArrange Configuration Editor, shown below, can be used 
@@ -421,7 +425,11 @@
                     and format before rearranging the source code. </p>
                   <p>Another style that is available is NoDirective. With this 
                     style, members within the configured regions will be written 
-                    without any directives (as a group).</p>
+                    without any directives (as a group). Directives can be omitted 
+                    for individual regions by setting the <font face="Courier New, Courier, mono" color="#000066">Region</font> 
+                    element's <font face="Courier New, Courier, mono" color="#000066">DirectivesEnabled</font> 
+                    attribute to false. This technique is also useful for grouping 
+                    elements. </p>
                   <p>More formatting options will likely be made available in 
                     future versions of NArrange.<br>
                   </p>
