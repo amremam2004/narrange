@@ -1,3 +1,21 @@
+2008-08-10  James Nies
+
+	* - Incorporated the MSI WIX project into the distribution build
+	  script.
+	  - MSI work (bitmaps, shortcuts, sample config files, readme)
+
+2008-08-09  James Nies
+
+	* Additional StyleCop compatibility configuration changes.
+
+2008-08-04  James Nies
+
+	* Build work
+	  - Run StyleCop against source files during distribution build
+	  - Copy license.rtf to the root of the binary and source
+	  distributions
+	* Updated changelog
+
 2008-08-03  James Nies
 
 	* - Fixed default ordering of fields for StyleCop compatibility

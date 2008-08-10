@@ -11,12 +11,14 @@
 					</Component>
 					<Component Id="NArrange.ConsoleApplication" Guid="8A662738-B311-461C-BB56-115C77EF7725" DiskId="1">
 						<File Id="NArrange.ConsoleApplication.Executable" Name="narrange-console.exe" Source="$(var.NArrange.ConsoleApplication.TargetDir)\narrange-console.exe" />
+						<!-- Setup PATH environment variable such that multiple versions of NArrange can coexist, -->
+						<!-- with the most recent installation taking precedence." -->
 						<Environment Id="UpdateBin" Name="NARRANGE" Action="set" System="yes" Part="first" Value="[INSTALLDIR]" />
-						<Environment Id="UpdatePath" Name="PATH" Action="set" System="yes" Part="last" Value="[NArrangeBin]" />
+						<Environment Id="UpdatePath" Name="PATH" Action="set" System="yes" Part="last" Permanent="yes" Value="%NARRANGE%" />
 					</Component>
 					<Component Id="NArrange.GuiConfig" Guid="9B44DB2A-B122-421E-BF64-9BED63BB6A31">
 						<File Id="NArrange.GuiConfig.Executable" Name="narrange-config.exe" Source="$(var.NArrange.GuiConfig.TargetDir)\narrange-config.exe">
-							<Shortcut Id="StartMenuNarrangeConfig" Directory="ProgramMenuDir" Name="NArrange Configuration Editor" WorkingDirectory="INSTALLDIR" Icon="NArrange.ico" IconIndex="0" Advertise="yes" />
+							<Shortcut Id="StartMenuNarrangeConfig" Directory="ProgramMenuDir" Name="NArrange Configuration Editor" WorkingDirectory="INSTALLDIR" Icon="NArrange.exe" IconIndex="0" Advertise="yes" />
 						</File>
 						<File Id="NArrange.GuiConfig.Lib" Name="NArrange.GUI.dll" Source="$(var.NArrange.GuiConfig.TargetDir)\NArrange.GUI.dll" />
 						<RemoveFolder Id="RemoveShortcutFolder" Directory="ProgramMenuDir" On="uninstall" />
@@ -28,14 +30,19 @@
 					
 					<!-- Due to a bug in WIX 3, each file with a shortcut must be in its own component. -->
 					<Component Id="NArrange.License" Guid="2516BE25-9594-4FC6-A181-DAA127DD9732">
-						<File Id="LicenseFile" Name="license.rtf" Source="license.rtf">
-							<Shortcut Id="LicenseStartMenu" Directory="ProgramMenuInfoDir" Name="License.rtf" WorkingDirectory="INSTALLDIR" Advertise="yes" />
+						<File Id="License" Name="license.rtf" Source="..\license.rtf">
+							<Shortcut Id="LicenseStartMenu" Directory="ProgramMenuInfoDir" Name="View License" WorkingDirectory="INSTALLDIR" Advertise="yes" />
 						</File>
 					    <RemoveFolder Id="RemoveInfoShortcutFolder" Directory="ProgramMenuInfoDir" On="uninstall" />
 					</Component>
 					<Component Id="NArrange.Readme" Guid="AAC3FD10-7FA2-4a1d-95C6-9CF443FA62B6">
-						<File Id="ReadmeFile" Name="readme.txt" Source="..\..\readme.txt">
-							<Shortcut Id="ReadmeStartMenu" Directory="ProgramMenuInfoDir" Name="Readme.txt" WorkingDirectory="INSTALLDIR" Advertise="yes" />
+						<File Id="Readme" Name="readme.txt" Source="..\readme.txt">
+							<Shortcut Id="ReadmeStartMenu" Directory="ProgramMenuInfoDir" Name="View Readme" WorkingDirectory="INSTALLDIR" Advertise="yes" />
+						</File>
+					</Component>
+					<Component Id="NArrange.Release" Guid="680F3970-C369-4cfd-9D5C-DA1367F59400">
+						<File Id="ReleaseNotes" Name="release.txt" Source="..\release.txt">
+							<Shortcut Id="ReleaseStartMenu" Directory="ProgramMenuInfoDir" Name="View Release Notes" WorkingDirectory="INSTALLDIR" Advertise="yes" />
 						</File>
 					</Component>
 					<Component Id="NArrange.Homepage" Guid="E825BEAD-B7F7-4375-BD13-085D11C857FA">
@@ -58,6 +65,7 @@
 			<ComponentRef Id="NArrange.ConfigSamples" />
 			<ComponentRef Id="NArrange.License" />
 			<ComponentRef Id="NArrange.Readme" />
+			<ComponentRef Id="NArrange.Release" />
 			<ComponentRef Id="NArrange.Homepage" />
 		</ComponentGroup>
 	</Fragment>

@@ -3,7 +3,7 @@
 	
 	<!-- C9A6181D-BCAD-4561-A4A2-1D464646C6D3 -->
 	<Product Id="*"
-		Name="NArrange $(var.ProductVersion)"
+		Name="NArrange $(var.ProductVersion) (Beta)"
 		Language="1033"
 		Version="$(var.ProductVersion)"
 		UpgradeCode="AAF3AD2C-8C0A-4DE7-B603-B2D88BBE1737"
@@ -11,9 +11,12 @@
 
 		<Package InstallerVersion="200" Compressed="yes"/>
 		
+		<Icon Id="NArrange.exe" SourceFile="..\Images\LogoIcon.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="NArrange.exe" />
 		<Property Id='ARPCOMMENTS'>NArrange .NET Code Organizer</Property>
 		<Property Id='ARPCONTACT'>email: james@narrange.net</Property>
 		<Property Id='ARPURLINFOABOUT'>http://narrange.sourceforge.net</Property>
+		<Property Id="ALLUSERS" Value="1"/>
 		
 		<!--
 			Source media for the installation. 
@@ -27,8 +30,6 @@
 		
 		<!-- Installation directory and files are defined in Files.wxs -->
 		<Directory Id="TARGETDIR" Name="SourceDir"/>
-				
-		<Icon Id="NArrange.ico" SourceFile="..\..\Images\LogoIcon.ico"/>
 		
 		<Feature Id="NArrange"
 		         Title="NArrange Binaries"
@@ -36,8 +37,15 @@
 		         Level="1"
 		         ConfigurableDirectory="INSTALLDIR">
 			<ComponentGroupRef Id="NArrange.Core"/>
-		</Feature>
+		</Feature>		
+
+		<!-- Prompt the user to view the readme and release note files -->
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="View readme and release notes" />
+		<Property Id='WIXUI_EXITDIALOGOPTIONALCHECKBOX' Value='1' />
 		
+		<CustomAction Id="ViewReadme" Directory="INSTALLDIR" ExeCommand="[SystemFolder]notepad.exe readme.txt" Return="asyncNoWait" />
+		<CustomAction Id="ViewRelease" Directory="INSTALLDIR" ExeCommand="[SystemFolder]notepad.exe release.txt" Return="asyncNoWait" />
+
 		<!-- 
 			Using the Wix UI library
  
@@ -46,6 +54,10 @@
 			customization dialog. This dialog set is useful
 			when your product installs all features by default. 
 		-->
-		<UIRef Id="WixUI_FeatureTree"/>
+		<UI>
+    		<UIRef Id="WixUI_FeatureTree"/>
+    		<Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="ViewReadme" Order="1">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed</Publish>
+			<Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="ViewRelease" Order="2">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed</Publish>
+		</UI>
 	</Product>
 </Wix>

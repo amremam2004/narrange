@@ -1,3 +1,7 @@
+*** IMPORTANT ***
+In version 0.2.7 the default configuration was changed to match the ordering rules enforced by Microsoft's C# source analysis tool StyleCop.  For those wishing to use the old default configuration, a copy has been provided in DefaultConfig.v026.xml.  Please retain a copy of this file for your usage as it may not be distributed in future releases.
+
+
 The following changes were made in this release:
 
 0.2.7.0
@@ -6,3 +10,4 @@ The following changes were made in this release:
 - Allow disabling of directives for individual regions.
 - Allow nested regions.
 - Fixed a bug where whitespace preceding a line was not fully converted to tabs/spaces.  Also, trim trailing whitespace in member bodies.
+- Initial MSI distribution.
