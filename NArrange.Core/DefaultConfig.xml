@@ -343,13 +343,77 @@
                                         <ElementRef Id ="DefaultDelegate"/>
                                     </Elements>
                                 </Region>
+                                <Region Name="Nested Interfaces">
+                                    <Elements>
+                                        <ElementRef Id="DefaultInterface"/>
+                                    </Elements>
+                                </Region>
                                 <Region Name="Events">
                                     <Elements>
-                                        <Element Type="Event">
-                                            <Sort By="Access" Direction="Descending">
-                                                <Sort By="Name"/>
-                                            </Sort>
-                                        </Element>
+                                        <Region Name="Public Static Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) == 'Public' And $(Modifier) : 'Static'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Public Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) == 'Public' Or $(Name) : '.'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Internal Static Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) : 'Internal' And $(Modifier) : 'Static'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Internal Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) : 'Internal'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Protected Static Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) == 'Protected' And $(Modifier) : 'Static'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Protected Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) == 'Protected'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Private Static Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="($(Access) == 'Private' Or $(Access) == 'None') And $(Modifier) : 'Static'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
+                                        <Region Name="Private Events" DirectivesEnabled="false">
+                                            <Elements>
+                                                <Element Type="Event">
+                                                    <Filter Condition="$(Access) == 'Private' Or $(Access) == 'None'"/>
+                                                    <Sort By="Name"/>
+                                                </Element>
+                                            </Elements>
+                                        </Region>
                                     </Elements>
                                 </Region>
                                 <Region Name="Properties">
@@ -436,11 +500,6 @@
                                                 <Sort By="Name"/>
                                             </Sort>
                                         </Element>
-                                    </Elements>
-                                </Region>
-                                <Region Name="Nested Interfaces">
-                                    <Elements>
-                                        <ElementRef Id="DefaultInterface"/>
                                     </Elements>
                                 </Region>
                                 <Region Name="Methods">
