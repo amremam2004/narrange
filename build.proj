@@ -13,7 +13,7 @@
         <!-- Version -->
         <Major>0</Major>
         <Minor>2</Minor>
-        <Build>7</Build>
+        <Build>8</Build>
 
         <!-- StyleCop related stuff -->
         <StyleCopRoot>$(ProgramFiles)\MSBuild\Microsoft\SourceAnalysis\v4.2</StyleCopRoot>
