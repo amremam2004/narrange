@@ -1,5 +1,7 @@
 2008-08-11  James Nies
 
+	* Fixed ordering of static events.
+	* Updated changelog
 	* No need to lock the instance when creating the child collection.
 
 2008-08-10  James Nies
