@@ -1,5 +1,10 @@
+2008-08-11  James Nies
+
+	* No need to lock the instance when creating the child collection.
+
 2008-08-10  James Nies
 
+	* Updated documentation.
 	* - Moved license.rtf to the trunk root and modified setup/build
 	  scripts for this
 	  - Modified the MSI to optionally display the readme and release
