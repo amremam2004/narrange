@@ -54,6 +54,11 @@ namespace NArrange.Core.Configuration
         /// </summary>
         private ConfigurationElementCollection _elements;
 
+        /// <summary>
+        /// Child element collection sychronization lock object.
+        /// </summary>
+        private object _elementsSynchLock = new object();
+
         #endregion Fields
 
         #region Properties
@@ -71,7 +76,7 @@ namespace NArrange.Core.Configuration
             {
                 if (_elements == null)
                 {
-                    lock (this)
+                    lock (_elementsSynchLock)
                     {
                         if (_elements == null)
                         {
