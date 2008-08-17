@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.TestSourceFinder",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NArrange.VisualBasic", "NArrange.VisualBasic\NArrange.VisualBasic.csproj", "{33A733CE-7BDD-42D6-ADE6-77B82226F965}"
 EndProject
-Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "NArrange.Setup", "NArrange.Setup\NArrange.Setup.wixproj", "{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "NArrange.Setup", "NArrange.Setup\NArrange.Setup.wixproj", "{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,10 +96,8 @@ Global
 		{33A733CE-7BDD-42D6-ADE6-77B82226F965}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33A733CE-7BDD-42D6-ADE6-77B82226F965}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33A733CE-7BDD-42D6-ADE6-77B82226F965}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}.Release|Any CPU.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

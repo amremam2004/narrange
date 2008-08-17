@@ -1,5 +1,8 @@
 2008-08-11  James Nies
 
+	* Bumped config versions
+	* Bumped version
+	* Updated changelog
 	* Fixed ordering of static events.
 	* Updated changelog
 	* No need to lock the instance when creating the child collection.

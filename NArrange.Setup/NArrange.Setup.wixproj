@@ -6,7 +6,7 @@
     <OutputType>Package</OutputType>
     <RootNamespace>NArrange_Setup</RootNamespace>
     <OutputName>setup</OutputName>
-    <WixToolPath Condition=" '$(WixToolPath)' == '' ">$(SharpDevelopBinPath)\Tools\Wix</WixToolPath>
+    <WixToolPath Condition=" '$(WixToolPath)' == '' ">..\..\Tools\Wix</WixToolPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(WixToolPath)\wix.targets</WixTargetsPath>
     <WixTasksPath Condition=" '$(WixTasksPath)' == '' ">$(WixToolPath)\WixTasks.dll</WixTasksPath>
     <SupressIces>ICE45</SupressIces>
@@ -28,8 +28,12 @@
   </PropertyGroup>
   <Import Project="$(WixToolPath)\wix.targets" />
   <ItemGroup>
-    <WixExtension Include="$(WixToolPath)\WixUIExtension.dll" />
-    <WixExtension Include="$(WixToolPath)\WixUtilExtension.dll" />
+    <WixExtension Include="WixUIExtension">
+      <HintPath>..\..\Tools\Wix\WixUIExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>..\..\Tools\Wix\WixUtilExtension.dll</HintPath>
+    </WixExtension>
     <Compile Include="Files.wxs" />
     <Compile Include="Setup.wxs" />
     <ProjectReference Include="..\NArrange.Console\NArrange.ConsoleApplication.csproj">
