@@ -20,7 +20,6 @@ namespace NArrange.Tests.Core
         /// Tests the CanArrange method with various inputs.
         /// </summary>
         [Test]
-        //[Ignore]
         public void CanArrangeTest()
         {
             RegionConfiguration methodRegionConfiguration = new RegionConfiguration();
@@ -47,13 +46,16 @@ namespace NArrange.Tests.Core
             MethodElement method = new MethodElement();
             method.Name = "DoSomething";
 
-            Assert.IsTrue(methodRegionArranger.CanArrange(method),
+            Assert.IsTrue(
+                methodRegionArranger.CanArrange(method),
                 "Expected region arranger to be able to arrange the element.");
 
-            Assert.IsFalse(propertyRegionArranger.CanArrange(method),
+            Assert.IsFalse(
+                propertyRegionArranger.CanArrange(method),
                 "Expected region arranger to not be able to arrange the element.");
 
-            Assert.IsFalse(methodRegionArranger.CanArrange(null),
+            Assert.IsFalse(
+                methodRegionArranger.CanArrange(null),
                  "Expected region arranger to not be able to arrange a null element.");
         }
 

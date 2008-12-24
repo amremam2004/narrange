@@ -2065,6 +2065,15 @@ namespace NArrange.CSharp
                     }
                     else
                     {
+                        EatWhiteSpace();
+
+                        char nextChar = NextChar;
+                        if (nextChar == CSharpSymbol.BeginGeneric)
+                        {
+                            name += CSharpSymbol.BeginGeneric.ToString() +
+                                ParseNestedText(CSharpSymbol.BeginGeneric, CSharpSymbol.EndGeneric, true, true) +
+                                CSharpSymbol.EndGeneric.ToString();
+                        }
                         usingElement.Name = name;
                         usingElement.Redefine = alias;
                         EatChar(CSharpSymbol.EndOfStatement);

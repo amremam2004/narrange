@@ -3749,6 +3749,24 @@ namespace NArrange.Tests.CSharp
         }
 
         /// <summary>
+        /// Tests parsing a using statement that redefines a class to a generic type.
+        /// </summary>
+        [Test]
+        public void ParseUsingRedefineGenericTest()
+        {
+            StringReader reader = new StringReader(
+                "using Redefined = System.Collections.Generic.Dictionary<int,object>;");
+            CSharpParser parser = new CSharpParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
+            UsingElement usingElement = elements[0] as UsingElement;
+            Assert.IsNotNull(usingElement, "Element is not a UsingElement.");
+            Assert.AreEqual("System.Collections.Generic.Dictionary<int,object>", usingElement.Name, "Unexpected name.");
+            Assert.AreEqual("Redefined", usingElement.Redefine);
+        }
+
+        /// <summary>
         /// Tests parsing a using statement that redefines a class/namespace.
         /// </summary>
         [Test]

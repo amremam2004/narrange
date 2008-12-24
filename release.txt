@@ -6,3 +6,5 @@ The following changes were made in this release:
 
 0.2.8.0
 - Fixed missing SharpZipLib assembly in MSI.
+- Fixed a C# parsing bug with using statements that redefine a generic type.
+  (Thanks to megakid for providing the parser change)
