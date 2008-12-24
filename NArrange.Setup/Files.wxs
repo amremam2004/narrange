@@ -50,6 +50,9 @@
 							<Shortcut Id="HomepageStartMenu" Directory="ProgramMenuInfoDir" Name="NArrange Homepage" WorkingDirectory="INSTALLDIR" Advertise="yes" />
 						</File>
 					</Component>
+          <Component Id="NArrange.Dependencies" Guid="2B8AD53E-C34A-41aa-9414-D9AEC5EFE4FE">
+						<File Id="ICSharpCode.SharpZipLib.Lib" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.NArrange.Core.TargetDir)\ICSharpCode.SharpZipLib.dll" />
+					</Component>
 				</Directory>
 			</Directory>
 			<Directory Id="ProgramMenuFolder" Name="PMenu">
@@ -59,6 +62,7 @@
 			</Directory>
 		</DirectoryRef>
 		<ComponentGroup Id="NArrange.Core">
+      <ComponentRef Id="NArrange.Dependencies" />
 			<ComponentRef Id="NArrange.Libs" />
 			<ComponentRef Id="NArrange.ConsoleApplication" />
 			<ComponentRef Id="NArrange.GuiConfig" />
