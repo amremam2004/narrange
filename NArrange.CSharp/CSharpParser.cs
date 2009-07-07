@@ -1437,8 +1437,27 @@ namespace NArrange.CSharp
         private EventElement ParseEvent(CodeAccess access, MemberModifiers memberAttributes)
         {
             EventElement eventElement = new EventElement();
-            eventElement.Type = CaptureTypeName();
-            eventElement.Name = CaptureWord();
+
+            StringBuilder eventSignature = new StringBuilder();
+            while (NextChar != CSharpSymbol.EndOfStatement &&
+                NextChar != CSharpSymbol.BeginBlock)
+            {
+                if (TryReadChar())
+                {
+                    eventSignature.Append(CurrentChar);
+                }
+            }
+
+            string[] words = eventSignature.ToString().Split(WhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries);
+            StringCollection wordList = new StringCollection();
+            wordList.AddRange(words);
+            string name = null;
+            string type = null;
+
+            GetMemberNameAndType(wordList, out name, out type);
+
+            eventElement.Type = type;
+            eventElement.Name = name;
             eventElement.Access = access;
             eventElement.MemberModifiers = memberAttributes;
 

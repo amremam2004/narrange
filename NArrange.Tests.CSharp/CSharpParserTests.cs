@@ -1606,6 +1606,26 @@ namespace NArrange.Tests.CSharp
         }
 
         /// <summary>
+        /// Verifies the parsing of events with generic type signatures.
+        /// </summary>
+        [Test]
+        public void ParseEventGenericTest()
+        {
+            StringReader reader = new StringReader(
+               "public event EventHandler<TEventArgs<T1, T2>> EventName;");
+
+            CSharpParser parser = new CSharpParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
+            EventElement eventElement = elements[0] as EventElement;
+            Assert.IsNotNull(eventElement, "Element is not a EventElement.");
+            Assert.AreEqual("EventName", eventElement.Name, "Unexpected name.");
+            Assert.AreEqual(CodeAccess.Public, eventElement.Access, "Unexpected code access.");
+            Assert.AreEqual("EventHandler<TEventArgs<T1, T2>>", eventElement.Type, "Unexpected member type.");
+        }
+
+        /// <summary>
         /// Verifies the parsing of events from the 
         /// sample class.
         /// </summary>

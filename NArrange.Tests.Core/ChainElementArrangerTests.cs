@@ -172,7 +172,7 @@ namespace NArrange.Tests.Core
             /// </summary>
             /// <param name="codeElement">The code element.</param>
             /// <returns>
-            /// 	<c>true</c> if this instance can arrange the specified code element; otherwise, <c>false</c>.
+            /// <c>true</c> if this instance can arrange the specified code element; otherwise, <c>false</c>.
             /// </returns>
             public bool CanArrange(ICodeElement codeElement)
             {
@@ -186,7 +186,7 @@ namespace NArrange.Tests.Core
             /// <param name="parentElement">The parent element.</param>
             /// <param name="codeElement">The code element.</param>
             /// <returns>
-            /// 	<c>true</c> if this instance can arrange the specified parent element; otherwise, <c>false</c>.
+            /// <c>true</c> if this instance can arrange the specified parent element; otherwise, <c>false</c>.
             /// </returns>
             public bool CanArrange(ICodeElement parentElement, ICodeElement codeElement)
             {
