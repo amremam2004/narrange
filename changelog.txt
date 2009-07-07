@@ -1,5 +1,18 @@
+2009-07-07  James Nies
+
+	* - Fixed parsing of C# events with generic type signatures
+	  - Upgraded build process from MS Source Analysis to StyleCop 4.3
+
+2008-12-30  James Nies
+
+	* Changed HTML doc title.
+
 2008-12-24  James Nies
 
+	* Fixed a C# parsing bug with using statements that redefine a
+	  generic type. (Thanks to megakid for providing the parser change)
+	* Added unit tests for the RegionArranger class.
+	* Added SharpZipLib to the MSI.
 	* Updated external links in HTML documentation.
 
 2008-08-17  James Nies
