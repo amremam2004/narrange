@@ -268,10 +268,6 @@ namespace NArrange.Core
                         UsingElement usingElement = tempElements[elementIndex] as UsingElement;
                         if (usingElement != null && usingElement.IsMovable)
                         {
-                            if (elements.Contains(usingElement))
-                            {
-                                elements.Remove(usingElement);
-                            }
                             tempElements.Remove(usingElement);
                             elements.Insert(0, usingElement);
                             elementIndex--;
