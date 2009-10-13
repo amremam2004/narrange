@@ -274,12 +274,12 @@ namespace NArrange.Tests.Core
             enumElement.Name = "TestEnum";
             enumElement.BodyText = "Value1 = 1,\r\nValue2 = 2";
 
-            NamespaceElement namesspaceElement = new NamespaceElement();
-            namesspaceElement.Name = "TestNamespace";
-            namesspaceElement.AddChild(usingElement);
-            namesspaceElement.AddChild(enumElement);
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            namespaceElement.AddChild(usingElement);
+            namespaceElement.AddChild(enumElement);
 
-            codeElements.Add(namesspaceElement);
+            codeElements.Add(namespaceElement);
 
             CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 
@@ -291,7 +291,7 @@ namespace NArrange.Tests.Core
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
 
             Assert.AreEqual(2, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
-            Assert.AreEqual(ElementType.Using, namesspaceElement.Children[0].ElementType);
+            Assert.AreEqual(ElementType.Using, namespaceElement.Children[0].ElementType);
 
             RegionElement regionElement = namespaceElementTest.Children[1] as RegionElement;
             Assert.IsNotNull(regionElement, "Expected a region element.");
@@ -324,9 +324,9 @@ namespace NArrange.Tests.Core
             classElement.Name = "NestedClass";
             parentClassElement.AddChild(classElement);
 
-            NamespaceElement namesspaceElement = new NamespaceElement();
-            namesspaceElement.Name = "TestNamespace";
-            namesspaceElement.AddChild(parentClassElement);
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            namespaceElement.AddChild(parentClassElement);
 
             MethodElement methodElement = new MethodElement();
             methodElement.Type = "void";
@@ -347,7 +347,7 @@ namespace NArrange.Tests.Core
             propertyElement.BodyText = "return _val";
             classElement.AddChild(propertyElement);
 
-            codeElements.Add(namesspaceElement);
+            codeElements.Add(namespaceElement);
 
             CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 
@@ -495,9 +495,9 @@ namespace NArrange.Tests.Core
             classElement.Access = CodeAccess.Public;
             classElement.Name = "TestClass";
 
-            NamespaceElement namesspaceElement = new NamespaceElement();
-            namesspaceElement.Name = "TestNamespace";
-            namesspaceElement.AddChild(classElement);
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            namespaceElement.AddChild(classElement);
 
             MethodElement methodElement = new MethodElement();
             methodElement.Type = "void";
@@ -518,7 +518,7 @@ namespace NArrange.Tests.Core
             propertyElement.BodyText = "return _val";
             classElement.AddChild(propertyElement);
 
-            codeElements.Add(namesspaceElement);
+            codeElements.Add(namespaceElement);
 
             CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 
@@ -605,9 +605,9 @@ namespace NArrange.Tests.Core
             structElement.Name = "TestStructure";
             structElement.AddAttribute(new AttributeElement("System.Runtime.InteropServices.StructLayout"));
 
-            NamespaceElement namesspaceElement = new NamespaceElement();
-            namesspaceElement.Name = "TestNamespace";
-            namesspaceElement.AddChild(structElement);
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            namespaceElement.AddChild(structElement);
 
             FieldElement fieldElement1 = new FieldElement();
             fieldElement1.Type = "int";
@@ -627,7 +627,7 @@ namespace NArrange.Tests.Core
             fieldElement3.Name = "y";
             structElement.AddChild(fieldElement3);
 
-            codeElements.Add(namesspaceElement);
+            codeElements.Add(namespaceElement);
 
             CodeArranger arranger = new CodeArranger(CodeConfiguration.Default);
 
@@ -747,10 +747,10 @@ namespace NArrange.Tests.Core
         }
 
         /// <summary>
-        /// Tests moving usings.
+        /// Tests moving usings to the namespace level.
         /// </summary>
         [Test]
-        public void MoveUsingsTest()
+        public void MoveUsingsBasicTest()
         {
             List<ICodeElement> codeElements = new List<ICodeElement>();
 
@@ -769,11 +769,11 @@ namespace NArrange.Tests.Core
             codeElements.Add(using1);
             codeElements.Add(using2);
 
-            NamespaceElement namesspaceElement = new NamespaceElement();
-            namesspaceElement.Name = "TestNamespace";
-            namesspaceElement.AddChild(using3);
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            namespaceElement.AddChild(using3);
 
-            codeElements.Add(namesspaceElement);
+            codeElements.Add(namespaceElement);
 
             CodeConfiguration configuration = CodeConfiguration.Default.Clone() as CodeConfiguration;
             CodeArranger arranger;
@@ -834,6 +834,169 @@ namespace NArrange.Tests.Core
             Assert.AreEqual("System", namespaceGroup.Children[0].Name);
             Assert.AreEqual("System.Collections", namespaceGroup.Children[1].Name);
             Assert.AreEqual("System.IO", namespaceGroup.Children[2].Name);
+
+            //
+            // Move back to file level;
+            //
+            configuration.Formatting.Usings.MoveTo = CodeLevel.File;
+            arranger = new CodeArranger(configuration);
+            arranged = arranger.Arrange(codeElements.AsReadOnly());
+
+            Assert.AreEqual(2, arranged.Count, "After arranging, an unexpected number of elements were returned.");
+
+            fileGroup = arranged[0] as GroupElement;
+            Assert.IsNotNull(fileGroup);
+            Assert.AreEqual("System", fileGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", fileGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", fileGroup.Children[2].Name);
+
+            namespaceElementTest = arranged[1] as NamespaceElement;
+            Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+        }
+
+        /// <summary>
+        /// Tests moving usings to the file level.
+        /// </summary>
+        [Test]
+        public void MoveUsingsToFileTest()
+        {
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+
+            UsingElement using1 = new UsingElement();
+            using1.Name = "System";
+            using1.IsMovable = true;
+
+            codeElements.Add(using1);
+
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            codeElements.Add(namespaceElement);
+
+            // Nested region and groups
+            RegionElement region = new RegionElement();
+            region.Name = "Region";
+            namespaceElement.AddChild(region);
+            GroupElement group = new GroupElement();
+            group.Name = "Group";
+            region.AddChild(group);
+
+            UsingElement using2 = new UsingElement();
+            using2.Name = "System.IO";
+            using2.IsMovable = true;
+
+            group.AddChild(using2);
+
+            UsingElement using3 = new UsingElement();
+            using3.Name = "System.Collections";
+            using3.IsMovable = true;
+            namespaceElement.AddChild(using3);
+
+            TypeElement class1 = new TypeElement();
+            class1.Name = "Class1";
+            namespaceElement.AddChild(class1);
+
+            TypeElement class2 = new TypeElement();
+            class2.Name = "Class2";
+            namespaceElement.AddChild(class2);
+
+            CodeConfiguration configuration = CodeConfiguration.Default.Clone() as CodeConfiguration;
+            CodeArranger arranger;
+
+            //
+            // Move to file.
+            //
+            configuration.Formatting.Usings.MoveTo = CodeLevel.File;
+            arranger = new CodeArranger(configuration);
+            ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(codeElements.AsReadOnly());
+
+            Assert.AreEqual(2, arranged.Count, "After arranging, an unexpected number of elements were returned.");
+
+            GroupElement fileGroup = arranged[0] as GroupElement;
+            Assert.IsNotNull(fileGroup);
+            Assert.AreEqual("System", fileGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", fileGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", fileGroup.Children[2].Name);
+
+            NamespaceElement namespaceElementTest = arranged[1] as NamespaceElement;
+            Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+            Assert.AreEqual(2, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
+
+            RegionElement typeRegion = namespaceElementTest.Children[1] as RegionElement;
+            Assert.IsNotNull(typeRegion);
+            Assert.AreEqual("Class1", typeRegion.Children[0].Name);
+            Assert.AreEqual("Class2", typeRegion.Children[1].Name);
+        }
+
+        /// <summary>
+        /// Tests moving usings to the namespace level.
+        /// </summary>
+        [Test]
+        public void MoveUsingsToNamespaceTest()
+        {
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+
+            UsingElement using1 = new UsingElement();
+            using1.Name = "System";
+            using1.IsMovable = true;
+
+            codeElements.Add(using1);
+
+            // Nested region and groups
+            RegionElement region = new RegionElement();
+            region.Name = "Region";
+            codeElements.Add(region);
+            GroupElement group = new GroupElement();
+            group.Name = "Group";
+            region.AddChild(group);
+
+            UsingElement using2 = new UsingElement();
+            using2.Name = "System.IO";
+            using2.IsMovable = true;
+
+            group.AddChild(using2);
+
+            NamespaceElement namespaceElement = new NamespaceElement();
+            namespaceElement.Name = "TestNamespace";
+            codeElements.Add(namespaceElement);
+
+            UsingElement using3 = new UsingElement();
+            using3.Name = "System.Collections";
+            using3.IsMovable = true;
+            namespaceElement.AddChild(using3);
+
+            TypeElement class1 = new TypeElement();
+            class1.Name = "Class1";
+            namespaceElement.AddChild(class1);
+
+            TypeElement class2 = new TypeElement();
+            class2.Name = "Class2";
+            namespaceElement.AddChild(class2);
+
+            CodeConfiguration configuration = CodeConfiguration.Default.Clone() as CodeConfiguration;
+            CodeArranger arranger;
+
+            //
+            // Move to namespace.
+            //
+            configuration.Formatting.Usings.MoveTo = CodeLevel.Namespace;
+            arranger = new CodeArranger(configuration);
+            ReadOnlyCollection<ICodeElement> arranged = arranger.Arrange(codeElements.AsReadOnly());
+
+            Assert.AreEqual(2, arranged.Count, "After arranging, an unexpected number of elements were returned.");
+
+            NamespaceElement namespaceElementTest = arranged[1] as NamespaceElement;
+            Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
+            Assert.AreEqual(2, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
+            GroupElement namespaceGroup = namespaceElementTest.Children[0] as GroupElement;
+            Assert.IsNotNull(namespaceGroup);
+            Assert.AreEqual("System", namespaceGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", namespaceGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", namespaceGroup.Children[2].Name);
+
+            RegionElement typeRegion = namespaceElementTest.Children[1] as RegionElement;
+            Assert.IsNotNull(typeRegion);
+            Assert.AreEqual("Class1", typeRegion.Children[0].Name);
+            Assert.AreEqual("Class2", typeRegion.Children[1].Name);
         }
 
         /// <summary>

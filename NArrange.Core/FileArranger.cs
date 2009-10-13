@@ -335,6 +335,14 @@ namespace NArrange.Core
                     inputFile,
                     parseException.Message);
             }
+            catch (Exception parseException)
+            {
+                LogMessage(
+                    LogLevel.Warning,
+                    "Unable to parse file {0}: {1}",
+                    inputFile,
+                    parseException.Message);
+            }
 
             if (elements != null)
             {

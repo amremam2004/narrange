@@ -191,12 +191,14 @@ namespace NArrange.Core
         {
             CodeLevel moveUsingsTo = _configuration.Formatting.Usings.MoveTo;
 
-            List<ICodeElement> tempElements = new List<ICodeElement>(elements);
+            List<ICodeElement> tempElements;
 
             if (moveUsingsTo != CodeLevel.None && namespaceElement != null)
             {
                 if (moveUsingsTo == CodeLevel.Namespace)
                 {
+                    tempElements = new List<ICodeElement>(elements);
+
                     for (int elementIndex = 0; elementIndex < tempElements.Count; elementIndex++)
                     {
                         UsingElement usingElement = tempElements[elementIndex] as UsingElement;
@@ -235,6 +237,8 @@ namespace NArrange.Core
                 }
                 else if (moveUsingsTo == CodeLevel.File)
                 {
+                    tempElements = new List<ICodeElement>();
+
                     for (int elementIndex = 0; elementIndex < namespaceElement.Children.Count; elementIndex++)
                     {
                         UsingElement usingElement = namespaceElement.Children[elementIndex] as UsingElement;
@@ -244,21 +248,38 @@ namespace NArrange.Core
                             elements.Insert(0, usingElement);
                             elementIndex--;
                         }
-                        else
+                        else if (namespaceElement.Children[elementIndex] is RegionElement ||
+                                namespaceElement.Children[elementIndex] is GroupElement)
                         {
-                            if (tempElements[elementIndex] is RegionElement ||
-                                tempElements[elementIndex] is GroupElement)
+                            foreach (ICodeElement childElement in namespaceElement.Children[elementIndex].Children)
                             {
-                                foreach (ICodeElement childElement in tempElements[elementIndex].Children)
+                                if (childElement is UsingElement ||
+                                    childElement is RegionElement ||
+                                    childElement is GroupElement)
                                 {
-                                    if (childElement is UsingElement ||
-                                        childElement is RegionElement ||
-                                        childElement is GroupElement)
-                                    {
-                                        tempElements.Add(childElement);
-                                    }
+                                    tempElements.Add(childElement);
                                 }
                             }
+                        }
+                    }
+
+                    for (int elementIndex = 0; elementIndex < tempElements.Count; elementIndex++)
+                    {
+                        UsingElement usingElement = tempElements[elementIndex] as UsingElement;
+                        if (usingElement != null && usingElement.IsMovable)
+                        {
+                            if (elements.Contains(usingElement))
+                            {
+                                elements.Remove(usingElement);
+                            }
+                            tempElements.Remove(usingElement);
+                            elements.Insert(0, usingElement);
+                            elementIndex--;
+                        }
+                        else if (tempElements[elementIndex] is RegionElement ||
+                               tempElements[elementIndex] is GroupElement)
+                        {
+                            tempElements.AddRange(tempElements[elementIndex].Children);
                         }
                     }
                 }
