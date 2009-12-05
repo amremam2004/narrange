@@ -58,8 +58,10 @@
             </Elements>
         </Region>
         <Element Id="DefaultUsing" Type="Using">
-            <!-- Note: System reference group is always placed first -->
-            <Group By="Name" AttributeCapture="^(.*?)(\.|$)" SeparatorType="NewLine" Direction="Ascending"/>
+            <Group By="Type" SeparatorType="Custom" Direction="Descending">
+              <!-- Note: System reference group is always placed first -->
+              <Group By="Name" AttributeCapture="^(.*?)(\.|$)" SeparatorType="NewLine" Direction="Ascending"/>
+            </Group>
             <!-- Sort by name within groups -->
             <Sort By="Name"/>
         </Element>

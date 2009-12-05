@@ -66,6 +66,7 @@ namespace NArrange.Core.Configuration
         /// The sort direction for groups.
         /// </summary>
         private SortDirection _direction;
+        private GroupBy _innerGroupBy;
 
         /// <summary>
         /// The regular expression text, if any, to be used to capture only a portion of the 
@@ -156,6 +157,24 @@ namespace NArrange.Core.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the inner grouping specification.
+        /// </summary>
+        [XmlElement("Group")]
+        [Description("The inner group that will also apply when grouping elements.")]
+        [DisplayName("Inner group by")]
+        public GroupBy InnerGroupBy
+        {
+            get
+            {
+                return _innerGroupBy;
+            }
+            set
+            {
+                _innerGroupBy = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the separator type.
         /// </summary>
         [XmlAttribute("SeparatorType")]
@@ -192,6 +211,11 @@ namespace NArrange.Core.Configuration
             clone._customSeparator = _customSeparator;
             clone._separatorType = _separatorType;
             clone._direction = _direction;
+
+            if (_innerGroupBy != null)
+            {
+                clone._innerGroupBy = _innerGroupBy.Clone() as GroupBy;
+            }
 
             return clone;
         }

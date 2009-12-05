@@ -458,8 +458,13 @@ namespace NArrange.Tests.Core
 
             GroupElement groupElement = arranged[1] as GroupElement;
             Assert.IsNotNull(groupElement, "Expected a group element.");
-            Assert.AreEqual(7, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
+            Assert.AreEqual("Namespace", groupElement.Name, "Unexpected group name.");
+            Assert.AreEqual(1, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
+
+            groupElement = groupElement.Children[0] as GroupElement;
+            Assert.IsNotNull(groupElement, "Expected a group element.");
             Assert.AreEqual("System", groupElement.Name, "Unexpected group name.");
+            Assert.AreEqual(7, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
 
             string lastUsingName = null;
             foreach (CodeElement groupedElement in groupElement.Children)
@@ -690,8 +695,13 @@ namespace NArrange.Tests.Core
 
             GroupElement groupElement = namespaceElement.Children[0] as GroupElement;
             Assert.IsNotNull(groupElement, "Expected a group element.");
-            Assert.AreEqual(8, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
+            Assert.AreEqual("Namespace", groupElement.Name, "Unexpected group name.");
+            Assert.AreEqual(1, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
+
+            groupElement = groupElement.Children[0] as GroupElement;
+            Assert.IsNotNull(groupElement, "Expected a group element.");
             Assert.AreEqual("System", groupElement.Name, "Unexpected group name.");
+            Assert.AreEqual(8, groupElement.Children.Count, "Group contains an unexpected number of child elements.");
 
             string lastUsingName = null;
             foreach (CodeElement groupedElement in groupElement.Children)
@@ -738,6 +748,10 @@ namespace NArrange.Tests.Core
             //
             Assert.AreEqual(1, arranged.Count, "An unexpected number of root elements were returned from Arrange.");
             GroupElement groupElement = arranged[0] as GroupElement;
+            Assert.IsNotNull(groupElement, "Expected a group element.");
+            Assert.AreEqual("Namespace", groupElement.Name);
+
+            groupElement = groupElement.Children[0] as GroupElement;
             Assert.IsNotNull(groupElement, "Expected a group element.");
             Assert.AreEqual("System", groupElement.Name);
             foreach (ICodeElement arrangedElement in groupElement.Children)
@@ -789,15 +803,17 @@ namespace NArrange.Tests.Core
 
             GroupElement fileGroup = arranged[0] as GroupElement;
             Assert.IsNotNull(fileGroup);
-            Assert.AreEqual("System", fileGroup.Children[0].Name);
-            Assert.AreEqual("System.IO", fileGroup.Children[1].Name);
+            GroupElement innerGroup = fileGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[1].Name);
 
             NamespaceElement namespaceElementTest = arranged[1] as NamespaceElement;
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
             Assert.AreEqual(1, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
             GroupElement namespaceGroup = namespaceElementTest.Children[0] as GroupElement;
             Assert.IsNotNull(namespaceGroup);
-            Assert.AreEqual("System.Collections", namespaceGroup.Children[0].Name);
+            innerGroup = namespaceGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System.Collections", innerGroup.Children[0].Name);
 
             //
             // Move to file level;
@@ -810,9 +826,10 @@ namespace NArrange.Tests.Core
 
             fileGroup = arranged[0] as GroupElement;
             Assert.IsNotNull(fileGroup);
-            Assert.AreEqual("System", fileGroup.Children[0].Name);
-            Assert.AreEqual("System.Collections", fileGroup.Children[1].Name);
-            Assert.AreEqual("System.IO", fileGroup.Children[2].Name);
+            innerGroup = fileGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", innerGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[2].Name);
 
             namespaceElementTest = arranged[1] as NamespaceElement;
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
@@ -831,9 +848,10 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(1, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
             namespaceGroup = namespaceElementTest.Children[0] as GroupElement;
             Assert.IsNotNull(namespaceGroup);
-            Assert.AreEqual("System", namespaceGroup.Children[0].Name);
-            Assert.AreEqual("System.Collections", namespaceGroup.Children[1].Name);
-            Assert.AreEqual("System.IO", namespaceGroup.Children[2].Name);
+            innerGroup = namespaceGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", innerGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[2].Name);
 
             //
             // Move back to file level;
@@ -846,9 +864,10 @@ namespace NArrange.Tests.Core
 
             fileGroup = arranged[0] as GroupElement;
             Assert.IsNotNull(fileGroup);
-            Assert.AreEqual("System", fileGroup.Children[0].Name);
-            Assert.AreEqual("System.Collections", fileGroup.Children[1].Name);
-            Assert.AreEqual("System.IO", fileGroup.Children[2].Name);
+            innerGroup = fileGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", innerGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[2].Name);
 
             namespaceElementTest = arranged[1] as NamespaceElement;
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
@@ -913,9 +932,10 @@ namespace NArrange.Tests.Core
 
             GroupElement fileGroup = arranged[0] as GroupElement;
             Assert.IsNotNull(fileGroup);
-            Assert.AreEqual("System", fileGroup.Children[0].Name);
-            Assert.AreEqual("System.Collections", fileGroup.Children[1].Name);
-            Assert.AreEqual("System.IO", fileGroup.Children[2].Name);
+            GroupElement innerGroup = fileGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", innerGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[2].Name);
 
             NamespaceElement namespaceElementTest = arranged[1] as NamespaceElement;
             Assert.IsNotNull(namespaceElementTest, "Expected a namespace element.");
@@ -989,9 +1009,10 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(2, namespaceElementTest.Children.Count, "After arranging, an unexpected number of namespace elements were returned.");
             GroupElement namespaceGroup = namespaceElementTest.Children[0] as GroupElement;
             Assert.IsNotNull(namespaceGroup);
-            Assert.AreEqual("System", namespaceGroup.Children[0].Name);
-            Assert.AreEqual("System.Collections", namespaceGroup.Children[1].Name);
-            Assert.AreEqual("System.IO", namespaceGroup.Children[2].Name);
+            GroupElement innerGroup = namespaceGroup.Children[0] as GroupElement;
+            Assert.AreEqual("System", innerGroup.Children[0].Name);
+            Assert.AreEqual("System.Collections", innerGroup.Children[1].Name);
+            Assert.AreEqual("System.IO", innerGroup.Children[2].Name);
 
             RegionElement typeRegion = namespaceElementTest.Children[1] as RegionElement;
             Assert.IsNotNull(typeRegion);

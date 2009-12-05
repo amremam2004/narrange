@@ -2093,8 +2093,8 @@ namespace NArrange.CSharp
                                 ParseNestedText(CSharpSymbol.BeginGeneric, CSharpSymbol.EndGeneric, true, true) +
                                 CSharpSymbol.EndGeneric.ToString();
                         }
-                        usingElement.Name = name;
-                        usingElement.Redefine = alias;
+                        usingElement.Name = alias;
+                        usingElement.Redefine = name;
                         EatChar(CSharpSymbol.EndOfStatement);
                     }
                 }

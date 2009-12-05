@@ -1387,8 +1387,8 @@ namespace NArrange.VisualBasic
                     }
                     else
                     {
-                        usingElement.Name = name;
-                        usingElement.Redefine = alias;
+                        usingElement.Name = alias;
+                        usingElement.Redefine = name;
                         TryReadChar(Environment.NewLine[0]);
                     }
                 }

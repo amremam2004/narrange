@@ -141,7 +141,9 @@ namespace NArrange.Tests.Core.Configuration
             Assert.IsNotNull(usingElement, "Expected an ElementConfiguration.");
             Assert.AreEqual(ElementType.Using, usingElement.ElementType, "Unexpected element type.");
             Assert.IsNotNull(usingElement.GroupBy, "Expected grouping to be specified.");
-            Assert.AreEqual(ElementAttributeType.Name, usingElement.GroupBy.By, "Expected name grouping.");
+            Assert.AreEqual(ElementAttributeType.Type, usingElement.GroupBy.By, "Expected type grouping.");
+            Assert.IsNotNull(usingElement.GroupBy.InnerGroupBy, "Expected inner grouping to be specified.");
+            Assert.AreEqual(ElementAttributeType.Name, usingElement.GroupBy.InnerGroupBy.By, "Expected name grouping.");
             Assert.IsNotNull(usingElement.SortBy, "Expected a sort to be specified.");
             Assert.AreEqual(ElementAttributeType.Name, usingElement.SortBy.By, "Expected name sorting.");
 

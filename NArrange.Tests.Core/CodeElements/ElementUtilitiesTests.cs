@@ -201,10 +201,21 @@ namespace NArrange.Tests.Core.CodeElements
             attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, typeElement);
             Assert.AreEqual("Interface", attribute, "Unexpected attribute.");
 
+            CommentElement commentElement = new CommentElement(CommentType.Block);
+
+            attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, commentElement);
+            Assert.AreEqual("Block", attribute, "Unexpected attribute.");
+
             UsingElement usingElement = new UsingElement();
-            usingElement.Name = "System";
+            usingElement.Name = "MySystem";
+            usingElement.Redefine = "System";
 
             attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, usingElement);
+            Assert.AreEqual("Alias", attribute, "Unexpected attribute.");
+
+            ConditionDirectiveElement conditionElement = new ConditionDirectiveElement();
+
+            attribute = ElementUtilities.GetAttribute(ElementAttributeType.Type, conditionElement);
             Assert.AreEqual(string.Empty, attribute, "Unexpected attribute.");
         }
 

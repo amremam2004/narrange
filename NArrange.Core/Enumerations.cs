@@ -632,6 +632,22 @@ namespace NArrange.Core
     }
 
     /// <summary>
+    /// Using type.
+    /// </summary>
+    public enum UsingType
+    {
+        /// <summary>
+        /// Namespace.
+        /// </summary>
+        Namespace,
+
+        /// <summary>
+        /// Redefinition of namespace or type.
+        /// </summary>
+        Alias
+    }
+
+    /// <summary>
     /// Whitespace character types.
     /// </summary>
     [Flags]

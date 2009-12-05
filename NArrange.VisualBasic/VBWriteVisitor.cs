@@ -727,12 +727,12 @@ namespace NArrange.VisualBasic
             StringBuilder builder = new StringBuilder(DefaultBlockLength);
             builder.Append(VBKeyword.Imports);
             builder.Append(' ');
+            builder.Append(element.Name);
             if (!string.IsNullOrEmpty(element.Redefine))
             {
-                builder.Append(element.Redefine);
                 builder.Append(" " + VBSymbol.Assignment.ToString() + " ");
+                builder.Append(element.Redefine);
             }
-            builder.Append(element.Name);
 
             WriteIndented(builder.ToString());
         }

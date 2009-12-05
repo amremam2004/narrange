@@ -255,18 +255,19 @@ namespace NArrange.Core.CodeElements
             }
             else
             {
-                TypeElement typeElement = codeElement as TypeElement;
-                if (typeElement != null)
+                switch (codeElement.ElementType)
                 {
-                    attributeString = EnumUtilities.ToString(typeElement.Type);
-                }
-                else
-                {
-                    CommentElement commentElement = codeElement as CommentElement;
-                    if (commentElement != null)
-                    {
-                        attributeString = EnumUtilities.ToString(commentElement.Type);
-                    }
+                    case ElementType.Type:
+                        attributeString = EnumUtilities.ToString(((TypeElement)codeElement).Type);
+                        break;
+
+                    case ElementType.Comment:
+                        attributeString = EnumUtilities.ToString(((CommentElement)codeElement).Type);
+                        break;
+
+                    case ElementType.Using:
+                        attributeString = EnumUtilities.ToString(((UsingElement)codeElement).Type);
+                        break;
                 }
             }
 

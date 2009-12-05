@@ -1037,6 +1037,71 @@ namespace NArrange.Tests.CSharp
         /// Tests writing a group of elements.
         /// </summary>
         [Test]
+        public void WriteGroupNestedTest()
+        {
+            GroupElement group = new GroupElement();
+
+            GroupElement group1 = new GroupElement();
+            GroupElement group1a = new GroupElement();
+            group1a.AddChild(new UsingElement("System"));
+            group1a.AddChild(new UsingElement("System.IO"));
+            group1a.AddChild(new UsingElement("System.Text"));
+            group1.AddChild(group1a);
+            GroupElement group1b = new GroupElement();
+            group1b.AddChild(new UsingElement("NArrange.Core"));
+            group1.AddChild(group1b);
+            group.AddChild(group1);
+
+            GroupElement group2 = new GroupElement();
+            GroupElement group2a = new GroupElement();
+            group2a.AddChild(new UsingElement("MyClass", "System.String"));
+            group2.AddChild(group2a);
+            group.AddChild(group2);
+
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+            codeElements.Add(group);
+
+            StringWriter writer;
+            CSharpWriter csharpWriter = new CSharpWriter();
+
+            writer = new StringWriter();
+            csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+            string text = writer.ToString();
+            Assert.AreEqual(
+                "using System;\r\n" +
+                "using System.IO;\r\n" +
+                "using System.Text;\r\n\r\n" +
+                "using NArrange.Core;\r\n\r\n" +
+                "using MyClass = System.String;",
+                text,
+                "Group was not written correctly.");
+
+            group.SeparatorType = GroupSeparatorType.Custom;
+            group.CustomSeparator = "\r\n";
+            group1.SeparatorType = GroupSeparatorType.Custom;
+            group1.CustomSeparator = "\r\n";
+            group2.SeparatorType = GroupSeparatorType.Custom;
+            group2.CustomSeparator = "\r\n";
+
+            writer = new StringWriter();
+            csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+            text = writer.ToString();
+            Assert.AreEqual(
+                "using System;\r\n" +
+                "using System.IO;\r\n" +
+                "using System.Text;\r\n\r\n\r\n" +
+                "using NArrange.Core;\r\n\r\n\r\n" +
+                "using MyClass = System.String;",
+                text,
+                "Group was not written correctly.");
+        }
+
+        /// <summary>
+        /// Tests writing a group of elements.
+        /// </summary>
+        [Test]
         public void WriteGroupTest()
         {
             string[] nameSpaces = new string[]
@@ -1557,8 +1622,8 @@ namespace NArrange.Tests.CSharp
             List<ICodeElement> codeElements = new List<ICodeElement>();
 
             UsingElement usingElement = new UsingElement();
-            usingElement.Name = "System.Text";
-            usingElement.Redefine = "SysText";
+            usingElement.Name = "SysText";
+            usingElement.Redefine = "System.Text";
 
             StringWriter writer = new StringWriter();
             codeElements.Add(usingElement);

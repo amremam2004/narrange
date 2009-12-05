@@ -29,7 +29,7 @@ namespace NArrange.Tests.Core.CodeElements
             // Verify default values
             //
             Assert.AreEqual(string.Empty, element.Name, "Unexpected default value for Name.");
-            Assert.IsNull(element.Redefine, "Unexpected default value for Redefine.");
+            Assert.IsNull(element.Redefine, "Unexpected default value for Alias.");
 
             Assert.IsNotNull(element.Children, "Children collection should not be null.");
             Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");

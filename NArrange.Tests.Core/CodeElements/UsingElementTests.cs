@@ -1,5 +1,6 @@
 namespace NArrange.Tests.Core.CodeElements
 {
+    using NArrange.Core;
     using NArrange.Core.CodeElements;
 
     using NUnit.Framework;
@@ -24,7 +25,7 @@ namespace NArrange.Tests.Core.CodeElements
             // Verify default values
             //
             Assert.AreEqual(string.Empty, element.Name, "Unexpected default value for Name.");
-            Assert.IsNull(element.Redefine, "Unexpected default value for Redefine.");
+            Assert.IsNull(element.Redefine, "Unexpected default value for Alias.");
 
             Assert.IsNotNull(element.Children, "Children collection should not be null.");
             Assert.AreEqual(0, element.Children.Count, "Children collection should be empty.");
@@ -34,14 +35,29 @@ namespace NArrange.Tests.Core.CodeElements
         }
 
         /// <summary>
+        /// Tests the behavior of the Type property.
+        /// </summary>
+        public void TypeTest()
+        {
+            UsingElement element = new UsingElement();
+            Assert.AreEqual(UsingType.Namespace, element.Type);
+
+            element = new UsingElement("System.IO");
+            Assert.AreEqual(UsingType.Namespace, element.Type);
+
+            element = new UsingElement("MyString", "System.String");
+            Assert.AreEqual(UsingType.Alias, element.Type);
+        }
+
+        /// <summary>
         /// Creates an instance for cloning.
         /// </summary>
         /// <returns>Clone prototype.</returns>
         protected override UsingElement DoCreateClonePrototype()
         {
             UsingElement prototype = new UsingElement();
-            prototype.Name = "SampleNamespace";
-            prototype.Redefine = "MySampleNamespace";
+            prototype.Name = "MySampleNamespace";
+            prototype.Redefine = "SampleNamespace";
             prototype.IsMovable = true;
 
             return prototype;

@@ -26,12 +26,18 @@ namespace NArrange.Tests.Core.Configuration
             groupBy.Direction = SortDirection.Descending;
             groupBy.SeparatorType = GroupSeparatorType.Custom;
 
+            GroupBy innerGroupBy = new GroupBy();
+            innerGroupBy.By = ElementAttributeType.Type;
+            groupBy.InnerGroupBy = innerGroupBy;
+
             GroupBy clone = groupBy.Clone() as GroupBy;
             Assert.AreEqual(groupBy.By, clone.By, "By was not copied correctly");
             Assert.AreEqual(groupBy.AttributeCapture, clone.AttributeCapture, "AttributeCapture was not copied correctly");
             Assert.AreEqual(groupBy.CustomSeparator, clone.CustomSeparator, "CustomSeparator was not copied correctly");
             Assert.AreEqual(groupBy.Direction, clone.Direction, "Direction was not copied correctly");
             Assert.AreEqual(groupBy.SeparatorType, clone.SeparatorType, "SeparatorType was not copied correctly");
+            Assert.IsNotNull(clone.InnerGroupBy, "InnerGroupBy was not copied correctly");
+            Assert.AreEqual(groupBy.InnerGroupBy.By, clone.InnerGroupBy.By, "InnerGroupBy was not copied correctly");
         }
 
         /// <summary>

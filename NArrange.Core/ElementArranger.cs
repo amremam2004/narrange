@@ -255,6 +255,11 @@ namespace NArrange.Core
                 inserter = new SortedInserter(elementType, sortBy);
             }
 
+            if (groupBy != null && groupBy.InnerGroupBy != null)
+            {
+                inserter = new GroupedInserter(groupBy.InnerGroupBy, inserter);
+            }
+
             if (groupBy != null)
             {
                 inserter = new GroupedInserter(groupBy, inserter);

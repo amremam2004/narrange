@@ -217,6 +217,11 @@ namespace NArrange.Core
                     {
                         WriteIndentedLine();
                     }
+
+                    if (childElement is GroupElement)
+                    {
+                        WriteIndentedLine();
+                    }
                 }
             }
         }

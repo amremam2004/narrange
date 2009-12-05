@@ -3782,8 +3782,8 @@ namespace NArrange.Tests.CSharp
             Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
             UsingElement usingElement = elements[0] as UsingElement;
             Assert.IsNotNull(usingElement, "Element is not a UsingElement.");
-            Assert.AreEqual("System.Collections.Generic.Dictionary<int,object>", usingElement.Name, "Unexpected name.");
-            Assert.AreEqual("Redefined", usingElement.Redefine);
+            Assert.AreEqual("Redefined", usingElement.Name);
+            Assert.AreEqual("System.Collections.Generic.Dictionary<int,object>", usingElement.Redefine);
         }
 
         /// <summary>
@@ -3800,8 +3800,8 @@ namespace NArrange.Tests.CSharp
             Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
             UsingElement usingElement = elements[0] as UsingElement;
             Assert.IsNotNull(usingElement, "Element is not a UsingElement.");
-            Assert.AreEqual("System.Text.Encoder", usingElement.Name, "Unexpected name.");
-            Assert.AreEqual("Redefined", usingElement.Redefine);
+            Assert.AreEqual("Redefined", usingElement.Name);
+            Assert.AreEqual("System.Text.Encoder", usingElement.Redefine);
         }
 
         /// <summary>

@@ -190,6 +190,80 @@ namespace NArrange.Tests.Core
             Assert.AreEqual(2, groupElement.Children[0].Children.IndexOf(using3), "Element is not at the correct index.");
         }
 
+        /// <summary>
+        /// Tests inserting nested groups in a sorted manner.
+        /// </summary>
+        [Test]
+        public void NestedGroupSortTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            groupBy.By = ElementAttributeType.Type;
+            groupBy.Direction = SortDirection.Descending;
+
+            GroupBy innerGroupBy = new GroupBy();
+            innerGroupBy.By = ElementAttributeType.Name;
+            innerGroupBy.AttributeCapture = "^(.*?)(\\.|$)";
+            innerGroupBy.Direction = SortDirection.Ascending;
+
+            groupBy.InnerGroupBy = innerGroupBy;
+
+            GroupedInserter groupedInserter = new GroupedInserter(groupBy, new GroupedInserter(groupBy.InnerGroupBy));
+
+            //
+            // Create a parent element
+            //
+            GroupElement groupElement = new GroupElement();
+            Assert.AreEqual(0, groupElement.Children.Count, "Parent element should not have any children.");
+
+            // Insert elements
+            groupedInserter.InsertElement(groupElement, new UsingElement("NUnit.Framework"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("NArrange.Core"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("NArrange.Core.Configuration"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("System"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("System.IO"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("MyClass2", "NArrange.Core.CodeArranger"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("MyClass1", "NArrange.Core.ElementFilter"));
+
+            Assert.AreEqual(2, groupElement.Children.Count, "Unexpected number of child groups.");
+
+            GroupElement childGroup;
+            GroupElement grandchildGroup;
+
+            // Namespace usings should come before alias usings
+            childGroup = groupElement.Children[0] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(3, childGroup.Children.Count, "Unexpected number of group children.");
+
+            // System usings should always come first
+            grandchildGroup = childGroup.Children[0] as GroupElement;
+            Assert.IsNotNull(grandchildGroup, "Expected a child group.");
+            Assert.AreEqual(2, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("System", grandchildGroup.Children[0].Name);
+            Assert.AreEqual("System.IO", grandchildGroup.Children[1].Name);
+
+            grandchildGroup = childGroup.Children[1] as GroupElement;
+            Assert.IsNotNull(grandchildGroup, "Expected a child group.");
+            Assert.AreEqual(2, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("NArrange.Core", grandchildGroup.Children[0].Name);
+            Assert.AreEqual("NArrange.Core.Configuration", grandchildGroup.Children[1].Name);
+
+            grandchildGroup = childGroup.Children[2] as GroupElement;
+            Assert.IsNotNull(grandchildGroup, "Expected a child group.");
+            Assert.AreEqual(1, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("NUnit.Framework", grandchildGroup.Children[0].Name);
+
+            // Alias using directives
+            childGroup = groupElement.Children[1] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(2, childGroup.Children.Count, "Unexpected number of group children.");
+            grandchildGroup = childGroup.Children[0] as GroupElement;
+            Assert.AreEqual(1, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("MyClass1", grandchildGroup.Children[0].Name);
+            grandchildGroup = childGroup.Children[1] as GroupElement;
+            Assert.AreEqual(1, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("MyClass2", grandchildGroup.Children[0].Name);
+        }
+
         #endregion Methods
     }
 }

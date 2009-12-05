@@ -16,6 +16,29 @@ namespace NArrange.Tests.Core.Configuration
         #region Methods
 
         /// <summary>
+        /// Tests cloning the configuration element.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            SortBy sortBy = new SortBy();
+            sortBy.By = ElementAttributeType.Name;
+            sortBy.Direction = SortDirection.Descending;
+
+            SortBy innerSortBy = new SortBy();
+            innerSortBy.By = ElementAttributeType.Type;
+            innerSortBy.Direction = SortDirection.Ascending;
+            sortBy.InnerSortBy = innerSortBy;
+
+            SortBy clone = sortBy.Clone() as SortBy;
+            Assert.AreEqual(sortBy.By, clone.By, "By was not copied correctly");
+            Assert.AreEqual(sortBy.Direction, clone.Direction, "Direction was not copied correctly");
+            Assert.IsNotNull(clone.InnerSortBy, "InnerSortBy was not copied correctly");
+            Assert.AreEqual(sortBy.InnerSortBy.By, clone.InnerSortBy.By, "InnerSortBy was not copied correctly");
+            Assert.AreEqual(sortBy.InnerSortBy.Direction, clone.InnerSortBy.Direction, "InnerSortBy was not copied correctly");
+        }
+
+        /// <summary>
         /// Tests the creation of a new SortBy.
         /// </summary>
         [Test]

@@ -120,7 +120,7 @@ namespace NArrange.Core.CodeElements
         }
 
         /// <summary>
-        /// Gets or sets the namespace to be redefined to the name of this.
+        /// Gets or sets the namespace to be redefined to the name of this 
         /// UsingElement.
         /// </summary>
         public string Redefine
@@ -132,6 +132,23 @@ namespace NArrange.Core.CodeElements
             set
             {
                 _redefine = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the using statement.
+        /// </summary>
+        public UsingType Type
+        {
+            get
+            {
+                UsingType usingType = UsingType.Namespace;
+                if (!string.IsNullOrEmpty(this.Redefine))
+                {
+                    usingType = UsingType.Alias;
+                }
+
+                return usingType;
             }
         }
 
