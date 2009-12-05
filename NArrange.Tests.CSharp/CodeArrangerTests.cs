@@ -5,10 +5,10 @@ namespace NArrange.Tests.Core
     using System.Collections.ObjectModel;
     using System.IO;
 
-    using NArrange.CSharp;
     using NArrange.Core;
     using NArrange.Core.CodeElements;
     using NArrange.Core.Configuration;
+    using NArrange.CSharp;
     using NArrange.Tests.CSharp;
 
     using NUnit.Framework;

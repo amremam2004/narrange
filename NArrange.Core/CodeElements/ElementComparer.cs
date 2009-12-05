@@ -200,7 +200,7 @@ namespace NArrange.Core.CodeElements
                             {
                                 string attributeX = ElementUtilities.GetAttribute(compareAttribute, x);
                                 string attributeY = ElementUtilities.GetAttribute(compareAttribute, y);
-                                compareValue = StringComparer.Ordinal.Compare(attributeX, attributeY);
+                                compareValue = StringComparer.OrdinalIgnoreCase.Compare(attributeX, attributeY);
                             }
                             break;
                     }

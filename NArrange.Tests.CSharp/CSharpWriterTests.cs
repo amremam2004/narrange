@@ -3,10 +3,10 @@ namespace NArrange.Tests.CSharp
     using System.Collections.Generic;
     using System.IO;
 
-    using NArrange.CSharp;
     using NArrange.Core;
     using NArrange.Core.CodeElements;
     using NArrange.Core.Configuration;
+    using NArrange.CSharp;
     using NArrange.Tests.Core;
 
     using NUnit.Framework;

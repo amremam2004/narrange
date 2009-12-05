@@ -6,8 +6,8 @@ namespace NArrange.Tests.ConsoleApplication
 
     using NArrange.ConsoleApplication;
     using NArrange.Core;
-    using NArrange.Tests.CSharp;
     using NArrange.Tests.Core;
+    using NArrange.Tests.CSharp;
 
     using NUnit.Framework;
 
@@ -35,11 +35,6 @@ namespace NArrange.Tests.ConsoleApplication
         private string _testMBBuildProjectFile;
 
         /// <summary>
-        /// MSbuild solution file.
-        /// </summary>
-        private string _testMSBuildSolutionFile;
-
-        /// <summary>
         /// MonoDevelop project file.
         /// </summary>
         private string _testMonoDevelopProjectFile;
@@ -48,6 +43,11 @@ namespace NArrange.Tests.ConsoleApplication
         /// MonoDevelop solution file.
         /// </summary>
         private string _testMonoDevelopSolutionFile;
+
+        /// <summary>
+        /// MSbuild solution file.
+        /// </summary>
+        private string _testMSBuildSolutionFile;
 
         /// <summary>
         /// Valid source file.
@@ -276,67 +276,6 @@ namespace NArrange.Tests.ConsoleApplication
         /// Tests arranging an empty project file
         /// </summary>
         [Test]
-        public void ArrangeMSBuildEmptyProjectTest()
-        {
-            TestLogger logger = new TestLogger();
-
-            string emptyProjectFile = Path.Combine(
-                Path.GetTempPath(),
-                Guid.NewGuid().ToString().Replace('-', '_') + ".csproj");
-            File.WriteAllText(emptyProjectFile, "<Project></Project>");
-
-            try
-            {
-                bool success = Arrange(logger, emptyProjectFile);
-
-                Assert.IsTrue(success, "Expected file to be arranged succesfully.");
-                Assert.IsTrue(
-                    logger.HasPartialMessage(LogLevel.Warning, "does not contain any supported source files"));
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(emptyProjectFile);
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        /// <summary>
-        /// Tests arranging a project file
-        /// </summary>
-        [Test]
-        public void ArrangeMSBuildProjectTest()
-        {
-            TestLogger logger = new TestLogger();
-
-            bool success = Arrange(logger, _testMBBuildProjectFile);
-
-            Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
-            Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
-        }
-
-        /// <summary>
-        /// Tests arranging a solution file
-        /// </summary>
-        [Test]
-        public void ArrangeMSBuildSolutionTest()
-        {
-            TestLogger logger = new TestLogger();
-
-            bool success = Arrange(logger, _testMSBuildSolutionFile);
-
-            Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
-            Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
-        }
-
-        /// <summary>
-        /// Tests arranging an empty project file
-        /// </summary>
-        [Test]
         public void ArrangeMonoDevelopEmptyProjectTest()
         {
             TestLogger logger = new TestLogger();
@@ -389,6 +328,67 @@ namespace NArrange.Tests.ConsoleApplication
             TestLogger logger = new TestLogger();
 
             bool success = Arrange(logger, _testMonoDevelopSolutionFile);
+
+            Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
+            Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+        }
+
+        /// <summary>
+        /// Tests arranging an empty project file
+        /// </summary>
+        [Test]
+        public void ArrangeMSBuildEmptyProjectTest()
+        {
+            TestLogger logger = new TestLogger();
+
+            string emptyProjectFile = Path.Combine(
+                Path.GetTempPath(),
+                Guid.NewGuid().ToString().Replace('-', '_') + ".csproj");
+            File.WriteAllText(emptyProjectFile, "<Project></Project>");
+
+            try
+            {
+                bool success = Arrange(logger, emptyProjectFile);
+
+                Assert.IsTrue(success, "Expected file to be arranged succesfully.");
+                Assert.IsTrue(
+                    logger.HasPartialMessage(LogLevel.Warning, "does not contain any supported source files"));
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(emptyProjectFile);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests arranging a project file
+        /// </summary>
+        [Test]
+        public void ArrangeMSBuildProjectTest()
+        {
+            TestLogger logger = new TestLogger();
+
+            bool success = Arrange(logger, _testMBBuildProjectFile);
+
+            Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
+            Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());
+        }
+
+        /// <summary>
+        /// Tests arranging a solution file
+        /// </summary>
+        [Test]
+        public void ArrangeMSBuildSolutionTest()
+        {
+            TestLogger logger = new TestLogger();
+
+            bool success = Arrange(logger, _testMSBuildSolutionFile);
 
             Assert.IsTrue(success, "Expected file to be arranged succesfully - {0}", logger.ToString());
             Assert.IsTrue(logger.HasMessage(LogLevel.Verbose, "2 files written."), logger.ToString());

@@ -46,8 +46,8 @@ namespace NArrange.TestSourceFinder
     using System.Collections.Generic;
     using System.IO;
 
-    using NArrange.Tests.CSharp;
     using NArrange.Tests.Core;
+    using NArrange.Tests.CSharp;
     using NArrange.Tests.VisualBasic;
 
     /// <summary>

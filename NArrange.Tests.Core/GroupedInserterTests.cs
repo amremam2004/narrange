@@ -282,7 +282,12 @@ namespace NArrange.Tests.Core
 
             groupBy.InnerGroupBy = innerGroupBy;
 
-            GroupedInserter groupedInserter = new GroupedInserter(groupBy, new GroupedInserter(groupBy.InnerGroupBy));
+            SortBy sortBy = new SortBy();
+            sortBy.By = ElementAttributeType.Name;
+            SortedInserter sortedInserter = new SortedInserter(ElementType.NotSpecified, sortBy);
+            GroupedInserter groupedInserter = new GroupedInserter(
+                groupBy,
+                new GroupedInserter(groupBy.InnerGroupBy, sortedInserter));
 
             //
             // Create a parent element
@@ -293,6 +298,7 @@ namespace NArrange.Tests.Core
             // Insert elements
             groupedInserter.InsertElement(groupElement, new UsingElement("NUnit.Framework"));
             groupedInserter.InsertElement(groupElement, new UsingElement("NArrange.Core"));
+            groupedInserter.InsertElement(groupElement, new UsingElement("NArrange.CSharp"));
             groupedInserter.InsertElement(groupElement, new UsingElement("NArrange.Core.Configuration"));
             groupedInserter.InsertElement(groupElement, new UsingElement("System"));
             groupedInserter.InsertElement(groupElement, new UsingElement("System.IO"));
@@ -318,9 +324,10 @@ namespace NArrange.Tests.Core
 
             grandchildGroup = childGroup.Children[1] as GroupElement;
             Assert.IsNotNull(grandchildGroup, "Expected a child group.");
-            Assert.AreEqual(2, grandchildGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual(3, grandchildGroup.Children.Count, "Unexpected number of group children.");
             Assert.AreEqual("NArrange.Core", grandchildGroup.Children[0].Name);
             Assert.AreEqual("NArrange.Core.Configuration", grandchildGroup.Children[1].Name);
+            Assert.AreEqual("NArrange.CSharp", grandchildGroup.Children[2].Name);
 
             grandchildGroup = childGroup.Children[2] as GroupElement;
             Assert.IsNotNull(grandchildGroup, "Expected a child group.");
