@@ -1,5 +1,22 @@
+2009-12-05  James Nies
+
+	* Changed the sort behavior for alias using directives to conform
+	  to StyleCop rules SA1209 and SA1211. The default config has been
+	  updated for this behavior. If you
+	  are using a custom configuration, please update the
+	  "DefaultUsing" element in your file to pick up this change.
+
+2009-10-13  James Nies
+
+	* Fixed moving C# using statements from the Namespace level to the
+	  File level and improved parse error handling.
+	* Fixed moving C# using statements from the Namespace level to the
+	  File level and improved parse error handling.
+
 2009-07-07  James Nies
 
+	* Bumped version
+	* Updated changelog
 	* - Fixed parsing of C# events with generic type signatures
 	  - Upgraded build process from MS Source Analysis to StyleCop 4.3
 
