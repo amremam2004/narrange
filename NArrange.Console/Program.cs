@@ -77,6 +77,7 @@ namespace NArrange.ConsoleApplication
                 AssemblyCopyrightAttribute copyRight = copyrightAttributes[0] as AssemblyCopyrightAttribute;
                 copyrightText.AppendLine(copyRight.Copyright.Replace("©", "(C)"));
                 copyrightText.AppendLine("All rights reserved.");
+                copyrightText.AppendLine("http://www.NArrange.net");
                 copyrightText.AppendLine();
                 copyrightText.AppendLine("Zip functionality courtesy of ic#code (Mike Krueger, John Reilly).");
             }

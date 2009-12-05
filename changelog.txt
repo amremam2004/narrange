@@ -1,5 +1,11 @@
 2009-12-05  James Nies
 
+	* Changed the behavior of element sorting to ignore case for string
+	  attributes (e.g. name). This fixes the sorting of using
+	  directives for StyleCop rule SA1210.
+	* - Made improvements to the recent nested grouping changes and
+	  fixed a regression for the grouping of members by access.
+	  - Fixed sorting of members by modifiers.
 	* Fixed generation of changelog.txt.
 	* Changed the sort behavior for alias using directives to conform
 	  to StyleCop rules SA1209 and SA1211. The default config has been
