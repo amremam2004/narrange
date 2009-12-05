@@ -58,7 +58,7 @@
             </Elements>
         </Region>
         <Element Id="DefaultUsing" Type="Using">
-            <Group By="Type" SeparatorType="Custom" Direction="Descending">
+            <Group By="Type" SeparatorType="NewLine" Direction="Ascending">
               <!-- Note: System reference group is always placed first -->
               <Group By="Name" AttributeCapture="^(.*?)(\.|$)" SeparatorType="NewLine" Direction="Ascending"/>
             </Group>

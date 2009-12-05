@@ -55,11 +55,6 @@ namespace NArrange.Core
         #region Fields
 
         /// <summary>
-        /// Whitepace characters.
-        /// </summary>
-        protected static readonly char[] WhiteSpaceCharacters = { ' ', '\t', '\r', '\n' };
-
-        /// <summary>
         /// Default block length (for instantiating string builders)
         /// </summary>
         protected const int DefaultBlockLength = 256;
@@ -73,6 +68,11 @@ namespace NArrange.Core
         /// Empty character.
         /// </summary>
         protected const char EmptyChar = '\0';
+
+        /// <summary>
+        /// Whitepace characters.
+        /// </summary>
+        protected static readonly char[] WhiteSpaceCharacters = { ' ', '\t', '\r', '\n' };
 
         /// <summary>
         /// Buffer for reading a character.

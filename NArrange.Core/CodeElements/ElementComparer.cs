@@ -172,6 +172,15 @@ namespace NArrange.Core.CodeElements
                             }
                             break;
 
+                        case ElementAttributeType.Modifier:
+                            MemberElement memberX = x as MemberElement;
+                            MemberElement memberY = y as MemberElement;
+                            if (memberX != null && memberY != null)
+                            {
+                                compareValue = memberX.MemberModifiers.CompareTo(memberY.MemberModifiers);
+                            }
+                            break;
+
                         case ElementAttributeType.ElementType:
                             compareValue = x.ElementType.CompareTo(y.ElementType);
                             break;
@@ -181,6 +190,11 @@ namespace NArrange.Core.CodeElements
                                 x is TypeElement && y is TypeElement)
                             {
                                 compareValue = ((TypeElement)x).Type.CompareTo(((TypeElement)y).Type);
+                            }
+                            else if (compareAttribute == ElementAttributeType.Type &&
+                                x is UsingElement && y is UsingElement)
+                            {
+                                compareValue = ((UsingElement)x).Type.CompareTo(((UsingElement)y).Type);
                             }
                             else
                             {

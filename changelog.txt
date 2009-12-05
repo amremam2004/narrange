@@ -1,5 +1,6 @@
 2009-12-05  James Nies
 
+	* Fixed generation of changelog.txt.
 	* Changed the sort behavior for alias using directives to conform
 	  to StyleCop rules SA1209 and SA1211. The default config has been
 	  updated for this behavior. If you

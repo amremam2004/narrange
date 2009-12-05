@@ -69,11 +69,6 @@ namespace NArrange.Core
         private readonly IElementInserter _innerInserter;
 
         /// <summary>
-        /// Sort comparer for inserting groups.
-        /// </summary>
-        private IComparer<ICodeElement> _groupComparer;
-
-        /// <summary>
         /// Sort comparer for inserting elements into groups.
         /// </summary>
         private IComparer<ICodeElement> _sortComparer;
@@ -156,24 +151,23 @@ namespace NArrange.Core
                         GroupElement siblingGroup = parentElement.Children[insertIndex - 1] as GroupElement;
                         if (siblingGroup != null && siblingGroup.Children.Count > 0)
                         {
-                            int compareValue = 0;
-                            ICodeElement compareElement1 = null;
-                            ICodeElement compareElement2 = null;
+                            // This may not be the most accurate way to do this, but just compare
+                            // against the first element in the sibling group.
+                            ICodeElement compareElement = siblingGroup.Children[0];
 
-                            if (group.Name != siblingGroup.Name)
+                            // For nested groups, we need to drill down to find the first element.
+                            while (compareElement is GroupElement && compareElement.Children.Count > 0)
                             {
-                                // Compare by group
-                                compareElement1 = group;
-                                compareElement2 = siblingGroup;
-
-                                // Create the group comparer if necessary
-                                if (_groupComparer == null)
-                                {
-                                    _groupComparer = new ElementComparer(ElementAttributeType.Name, _groupBy.Direction);
-                                }
-
-                                compareValue = _groupComparer.Compare(compareElement1, compareElement2);
+                                compareElement = compareElement.Children[0];
                             }
+
+                            // Create the element comparer if necessary
+                            if (_sortComparer == null)
+                            {
+                                _sortComparer = new ElementComparer(_groupBy.By, _groupBy.Direction);
+                            }
+
+                            int compareValue = _sortComparer.Compare(codeElement, compareElement);
 
                             // System using directives should always be placed first in the file.
                             if (compareValue < 0 && (!(codeElement is UsingElement) || siblingGroup.Name != "System") ||

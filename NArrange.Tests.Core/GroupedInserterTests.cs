@@ -41,7 +41,82 @@ namespace NArrange.Tests.Core
         /// Tests inserting groups in a sorted manner.
         /// </summary>
         [Test]
-        public void GroupSortTest()
+        public void GroupSortByAccessTest()
+        {
+            GroupBy groupBy = new GroupBy();
+            groupBy.By = ElementAttributeType.Access;
+            groupBy.Direction = SortDirection.Ascending;
+
+            GroupedInserter groupedInserter = new GroupedInserter(groupBy);
+
+            //
+            // Create a parent element
+            //
+            GroupElement groupElement = new GroupElement();
+            Assert.AreEqual(0, groupElement.Children.Count, "Parent element should not have any children.");
+
+            // Insert elements
+            PropertyElement property1 = new PropertyElement();
+            property1.Access = CodeAccess.Internal;
+            property1.Name = "Property1";
+            property1.Type = "string";
+            groupedInserter.InsertElement(groupElement, property1);
+
+            PropertyElement property2 = new PropertyElement();
+            property2.Access = CodeAccess.Public;
+            property2.Name = "Property2";
+            property2.Type = "string";
+            groupedInserter.InsertElement(groupElement, property2);
+
+            PropertyElement property3 = new PropertyElement();
+            property3.Access = CodeAccess.Protected | CodeAccess.Internal;
+            property3.Name = "Property3";
+            property3.Type = "string";
+            groupedInserter.InsertElement(groupElement, property3);
+
+            PropertyElement property4 = new PropertyElement();
+            property4.Access = CodeAccess.Private;
+            property4.Name = "Property4";
+            property4.Type = "string";
+            groupedInserter.InsertElement(groupElement, property4);
+
+            PropertyElement property5 = new PropertyElement();
+            property5.Access = CodeAccess.Public;
+            property5.Name = "Property5";
+            property5.Type = "string";
+            groupedInserter.InsertElement(groupElement, property5);
+
+            Assert.AreEqual(4, groupElement.Children.Count, "Unexpected number of child groups.");
+
+            GroupElement childGroup;
+
+            childGroup = groupElement.Children[0] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(1, childGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("Property4", childGroup.Children[0].Name);
+
+            childGroup = groupElement.Children[1] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(1, childGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("Property1", childGroup.Children[0].Name);
+
+            childGroup = groupElement.Children[2] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(1, childGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("Property3", childGroup.Children[0].Name);
+
+            childGroup = groupElement.Children[3] as GroupElement;
+            Assert.IsNotNull(childGroup, "Expected a child group.");
+            Assert.AreEqual(2, childGroup.Children.Count, "Unexpected number of group children.");
+            Assert.AreEqual("Property2", childGroup.Children[0].Name);
+            Assert.AreEqual("Property5", childGroup.Children[1].Name);
+        }
+
+        /// <summary>
+        /// Tests inserting groups in a sorted manner.
+        /// </summary>
+        [Test]
+        public void GroupSortByNameTest()
         {
             GroupBy groupBy = new GroupBy();
             groupBy.By = ElementAttributeType.Name;
@@ -198,7 +273,7 @@ namespace NArrange.Tests.Core
         {
             GroupBy groupBy = new GroupBy();
             groupBy.By = ElementAttributeType.Type;
-            groupBy.Direction = SortDirection.Descending;
+            groupBy.Direction = SortDirection.Ascending;
 
             GroupBy innerGroupBy = new GroupBy();
             innerGroupBy.By = ElementAttributeType.Name;

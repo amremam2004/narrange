@@ -56,12 +56,6 @@ namespace NArrange.Core
             Path.GetTempPath(), "NArrange");
 
         /// <summary>
-        /// Max string length for an integer.
-        /// </summary>
-        private static readonly int MaxIntLength = 
-            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
-
-        /// <summary>
         /// Backup index file name.
         /// </summary>
         private const string IndexFileName = "index.txt";
@@ -75,6 +69,12 @@ namespace NArrange.Core
         /// Backup zip file name.
         /// </summary>
         private const string ZipFileName = "files.zip";
+
+        /// <summary>
+        /// Max string length for an integer.
+        /// </summary>
+        private static readonly int MaxIntLength = 
+            int.MinValue.ToString(CultureInfo.InvariantCulture).Length;
 
         #endregion Fields
 

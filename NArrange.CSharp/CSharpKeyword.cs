@@ -46,12 +46,6 @@ namespace NArrange.CSharp
         #region Fields
 
         /// <summary>
-        /// Type parameter new() constraint.
-        /// </summary>
-        public static readonly string NewConstraint = New + 
-            CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
-
-        /// <summary>
         /// "abstract" keyword.
         /// </summary>
         public const string Abstract = "abstract";
@@ -240,6 +234,12 @@ namespace NArrange.CSharp
         /// "where" keyword.
         /// </summary>
         public const string Where = "where";
+
+        /// <summary>
+        /// Type parameter new() constraint.
+        /// </summary>
+        public static readonly string NewConstraint = New + 
+            CSharpSymbol.BeginParameterList + CSharpSymbol.EndParameterList;
 
         #endregion Fields
     }
