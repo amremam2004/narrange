@@ -12,8 +12,8 @@
 
     <!-- Version -->
     <Major>0</Major>
-    <Minor>2</Minor>
-    <Build>9</Build>
+    <Minor>3</Minor>
+    <Build>0</Build>
 
     <!-- StyleCop related stuff -->
     <StyleCopRoot>$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3</StyleCopRoot>
