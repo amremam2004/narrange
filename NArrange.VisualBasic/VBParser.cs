@@ -31,6 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *<author>James Nies</author>
+ *<contributor>Clément Franchini</contributor>
  *<contributor>Justin Dearing</contributor>
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -1884,11 +1885,6 @@ namespace NArrange.VisualBasic
                 this.OnParseError("Invalid identifier");
             }
 
-            if (NextChar == VBSymbol.AliasSeparator)
-            {
-                TryReadChar();
-            }
-
             EatWhiteSpace();
             return typeParameterConstraint;
         }
@@ -1907,12 +1903,18 @@ namespace NArrange.VisualBasic
                 this.OnParseError("Expected type parameter");
             }
 
-            while (NextChar != VBSymbol.EndParameterList &&
-                NextChar != EmptyChar)
+            do
             {
-                if (genericElement.TypeParameters.Count > 0 && NextChar == VBSymbol.AliasSeparator)
+                if (genericElement.TypeParameters.Count > 0)
                 {
-                    TryReadChar();
+                    if (NextChar == VBSymbol.AliasSeparator)
+                    {
+                        TryReadChar();
+                    }
+                    else
+                    {
+                        this.OnParseError("Expected , or )");
+                    }
                 }
 
                 string typeParameterName = CaptureWord();
@@ -1955,26 +1957,37 @@ namespace NArrange.VisualBasic
                                     string typeParameterConstraint;
                                     typeParameterConstraint = ParseTypeParameterConstraint();
                                     typeParameter.AddConstraint(typeParameterConstraint);
+
+                                    if (NextChar != VBSymbol.EndTypeConstraintList)
+                                    {
+                                        if (NextChar == VBSymbol.AliasSeparator)
+                                        {
+                                            TryReadChar();
+                                        }
+                                        else
+                                        {
+                                            this.OnParseError("Expected , or }");
+                                        }
+                                    }
                                 }
 
                                 EatChar(VBSymbol.EndTypeConstraintList);
                             }
                             else
                             {
-                                while (NextChar != VBSymbol.EndParameterList &&
-                                    NextChar != EmptyChar)
-                                {
-                                    string typeParameterConstraint;
-                                    typeParameterConstraint = ParseTypeParameterConstraint();
-                                    typeParameter.AddConstraint(typeParameterConstraint);
-                                }
+                                string typeParameterConstraint;
+                                typeParameterConstraint = ParseTypeParameterConstraint();
+                                typeParameter.AddConstraint(typeParameterConstraint);
                             }
                         }
                     }
                 }
 
                 genericElement.AddTypeParameter(typeParameter);
+
+                EatWhiteSpace();
             }
+            while (NextChar != VBSymbol.EndParameterList && NextChar != EmptyChar);
 
             EatChar(VBSymbol.EndParameterList);
         }

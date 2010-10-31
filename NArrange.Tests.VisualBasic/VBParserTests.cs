@@ -656,12 +656,12 @@ namespace NArrange.Tests.VisualBasic
         /// </summary>
         [Test]
         [ExpectedException(typeof(ParseException),
-            ExpectedMessage = "Invalid identifier",
+            ExpectedMessage = "Expected , or )",
             MatchType = MessageMatch.Contains)]
-        public void ParseClassMultipleTypeParameterInvalidTest()
+        public void ParseClassMultipleTypeParameterInvalidTest1()
         {
             StringReader reader = new StringReader(
-                "Partial Public Class NewClass(Of T as new, IDisposable, S as new, IComparable)\r\n" +
+                "Partial Public Class NewClass(Of T as new IDisposable)\r\n" +
                 "End Class");
 
             VBParser parser = new VBParser();
@@ -669,10 +669,87 @@ namespace NArrange.Tests.VisualBasic
         }
 
         /// <summary>
+        /// Tests parsing a class with invalid multiple type parameters.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ParseException),
+            ExpectedMessage = "Expected , or }",
+            MatchType = MessageMatch.Contains)]
+        public void ParseClassMultipleTypeParameterInvalidTest2()
+        {
+            StringReader reader = new StringReader(
+                "Partial Public Class NewClass(Of T as new,  S as {IDisposable)\r\n" +
+                "End Class");
+
+            VBParser parser = new VBParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+        }
+
+        /// <summary>
+        /// Tests parsing a class with invalid multiple type parameters.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ParseException),
+            ExpectedMessage = "Expected , or )",
+            MatchType = MessageMatch.Contains)]
+        public void ParseClassMultipleTypeParameterInvalidTest3()
+        {
+            StringReader reader = new StringReader(
+                "Partial Public Class NewClass(Of T as new, IDisposable, S as new, IComparable})\r\n" +
+                "End Class");
+
+            VBParser parser = new VBParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.Fail();
+        }
+
+        /// <summary>
+        /// Tests parsing a class with invalid multiple type parameters.
+        /// </summary>
+        [Test]
+        public void ParseClassMultipleTypeParameterTest1()
+        {
+            string[] variations = new string[]
+            {
+                "Partial Public Class NewClass(Of T as new,R,S as new,Q)\r\n" +
+                "End Class",
+                "Partial Public Class NewClass(Of T as new, R, S as new, Q)\r\n" +
+                "End Class"
+            };
+
+            foreach (string variation in variations)
+            {
+                StringReader reader = new StringReader(variation);
+
+                VBParser parser = new VBParser();
+                ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+                TypeElement classElement = elements[0] as TypeElement;
+                Assert.IsNotNull(classElement, "Expected a class element");
+                Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class.");
+                Assert.AreEqual("NewClass", classElement.Name, "Unexpected class name.");
+                Assert.AreEqual(CodeAccess.Public, classElement.Access, "Unexpected access.");
+                Assert.IsTrue(classElement.IsPartial, "Expected a partial class.");
+                Assert.AreEqual(4, classElement.TypeParameters.Count, "Unexpected number of type parameters.");
+                Assert.AreEqual("T", classElement.TypeParameters[0].Name);
+                Assert.AreEqual(1, classElement.TypeParameters[0].Constraints.Count);
+                Assert.AreEqual("new", classElement.TypeParameters[0].Constraints[0]);
+                Assert.AreEqual("R", classElement.TypeParameters[1].Name);
+                Assert.AreEqual(0, classElement.TypeParameters[1].Constraints.Count);
+                Assert.AreEqual("S", classElement.TypeParameters[2].Name);
+                Assert.AreEqual(1, classElement.TypeParameters[2].Constraints.Count);
+                Assert.AreEqual("new", classElement.TypeParameters[2].Constraints[0]);
+                Assert.AreEqual("Q", classElement.TypeParameters[3].Name);
+                Assert.AreEqual(0, classElement.TypeParameters[3].Constraints.Count);
+            }
+        }
+
+        /// <summary>
         /// Tests parsing a class with multiple type parameters and constraints.
         /// </summary>
         [Test]
-        public void ParseClassMultipleTypeParameterTest()
+        public void ParseClassMultipleTypeParameterTest2()
         {
             StringReader reader = new StringReader(
                 "Partial Public Class NewClass(Of T as {new, IDisposable}, S as {new, IComparable})\r\n" +
@@ -696,6 +773,37 @@ namespace NArrange.Tests.VisualBasic
             Assert.AreEqual(2, classElement.TypeParameters[0].Constraints.Count);
             Assert.AreEqual("new", classElement.TypeParameters[1].Constraints[0]);
             Assert.AreEqual("IComparable", classElement.TypeParameters[1].Constraints[1]);
+        }
+
+        /// <summary>
+        /// Tests parsing a class with multiple type parameters and constraints.
+        /// </summary>
+        [Test]
+        public void ParseClassMultipleTypeParameterTest3()
+        {
+            StringReader reader = new StringReader(
+                "Partial Public Class NewClass(Of T as {new, IDisposable}, S as new, R)\r\n" +
+                "End Class");
+
+            VBParser parser = new VBParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            TypeElement classElement = elements[0] as TypeElement;
+            Assert.IsNotNull(classElement, "Expected a class element");
+            Assert.AreEqual(TypeElementType.Class, classElement.Type, "Expected a class.");
+            Assert.AreEqual("NewClass", classElement.Name, "Unexpected class name.");
+            Assert.AreEqual(CodeAccess.Public, classElement.Access, "Unexpected access.");
+            Assert.IsTrue(classElement.IsPartial, "Expected a partial class.");
+            Assert.AreEqual(3, classElement.TypeParameters.Count, "Unexpected number of type parameters.");
+            Assert.AreEqual("T", classElement.TypeParameters[0].Name);
+            Assert.AreEqual(2, classElement.TypeParameters[0].Constraints.Count);
+            Assert.AreEqual("new", classElement.TypeParameters[0].Constraints[0]);
+            Assert.AreEqual("IDisposable", classElement.TypeParameters[0].Constraints[1]);
+            Assert.AreEqual("S", classElement.TypeParameters[1].Name);
+            Assert.AreEqual(1, classElement.TypeParameters[1].Constraints.Count);
+            Assert.AreEqual("new", classElement.TypeParameters[1].Constraints[0]);
+            Assert.AreEqual("R", classElement.TypeParameters[2].Name);
+            Assert.AreEqual(0, classElement.TypeParameters[2].Constraints.Count);
         }
 
         /// <summary>
@@ -762,7 +870,7 @@ namespace NArrange.Tests.VisualBasic
         [Test]
         [ExpectedException(typeof(ParseException),
             MatchType = MessageMatch.Contains,
-           ExpectedMessage = "Expected )")]
+           ExpectedMessage = "Expected ,")]
         public void ParseClassUnclosedTypeParameterTest()
         {
             StringReader reader = new StringReader(
