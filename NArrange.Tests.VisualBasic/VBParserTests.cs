@@ -1663,6 +1663,71 @@ namespace NArrange.Tests.VisualBasic
         }
 
         /// <summary>
+        /// Tests parsing multiple fields from a single statement.
+        /// </summary>
+        [Test]
+        public void ParseFieldMultiTest1()
+        {
+            string[] fieldDefinitions = new string[]
+            {
+                "Private val1, val2 As Integer",
+                "Private val1 , val2 As Integer",
+                "Private val1 ,val2 As Integer"
+            };
+
+            foreach (string fieldDefinition in fieldDefinitions)
+            {
+                StringReader reader = new StringReader(fieldDefinition);
+
+                VBParser parser = new VBParser();
+                ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+                Assert.AreEqual(2, elements.Count, "An unexpected number of elements were parsed.");
+                FieldElement fieldElement1 = elements[0] as FieldElement;
+                Assert.IsNotNull(fieldElement1, "Element is not a FieldElement.");
+                Assert.AreEqual("val1", fieldElement1.Name, "Unexpected name.");
+                Assert.AreEqual(CodeAccess.Private, fieldElement1.Access, "Unexpected code access.");
+                Assert.AreEqual("Integer", fieldElement1.Type, "Unexpected member type.");
+                Assert.IsNull(fieldElement1.InitialValue, "Unexpected initial value.");
+
+                FieldElement fieldElement2 = elements[1] as FieldElement;
+                Assert.IsNotNull(fieldElement2, "Element is not a FieldElement.");
+                Assert.AreEqual("val2", fieldElement2.Name, "Unexpected name.");
+                Assert.AreEqual(CodeAccess.Private, fieldElement2.Access, "Unexpected code access.");
+                Assert.AreEqual("Integer", fieldElement2.Type, "Unexpected member type.");
+                Assert.IsNull(fieldElement2.InitialValue, "Unexpected initial value.");
+            }
+        }
+
+        /// <summary>
+        /// Tests parsing multiple fields declared on one line.
+        /// </summary>
+        [Test]
+        public void ParseFieldMultiTest2()
+        {
+            StringReader reader = new StringReader(
+                "Private val1 As Integer, val2 As String");
+
+            VBParser parser = new VBParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.AreEqual(2, elements.Count, "An unexpected number of elements were parsed.");
+            FieldElement fieldElement1 = elements[0] as FieldElement;
+            Assert.IsNotNull(fieldElement1, "Element is not a FieldElement.");
+            Assert.AreEqual("val1", fieldElement1.Name, "Unexpected name.");
+            Assert.AreEqual(CodeAccess.Private, fieldElement1.Access, "Unexpected code access.");
+            Assert.AreEqual("Integer", fieldElement1.Type, "Unexpected member type.");
+            Assert.IsNull(fieldElement1.InitialValue, "Unexpected initial value.");
+
+            FieldElement fieldElement2 = elements[1] as FieldElement;
+            Assert.IsNotNull(fieldElement2, "Element is not a FieldElement.");
+            Assert.AreEqual("val2", fieldElement2.Name, "Unexpected name.");
+            Assert.AreEqual(CodeAccess.Private, fieldElement2.Access, "Unexpected code access.");
+            Assert.AreEqual("String", fieldElement2.Type, "Unexpected member type.");
+            Assert.IsNull(fieldElement2.InitialValue, "Unexpected initial value.");
+        }
+
+        /// <summary>
         /// Tests parsing a simple field with an underscore at the beginning of the
         /// name.
         /// </summary>
@@ -1827,7 +1892,7 @@ namespace NArrange.Tests.VisualBasic
 
                 field = regionElement.Children[fieldIndex] as FieldElement;
                 Assert.IsNotNull(field, "Expected a field.");
-                Assert.AreEqual("_val1, _val2", field.Name, "Unexpected field name.");
+                Assert.AreEqual("_val1", field.Name, "Unexpected field name.");
                 Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
                 Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
                 Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
@@ -1841,7 +1906,63 @@ namespace NArrange.Tests.VisualBasic
 
                 field = regionElement.Children[fieldIndex] as FieldElement;
                 Assert.IsNotNull(field, "Expected a field.");
-                Assert.AreEqual("_val3, _val4, _val5, _val6", field.Name, "Unexpected field name.");
+                Assert.AreEqual("_val2", field.Name, "Unexpected field name.");
+                Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
+                Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
+                Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
+                Assert.AreEqual(0, field.HeaderComments.Count, "Unexpected number of header comment lines.");
+                Assert.IsFalse(field.IsVolatile, "Field should not be volatile.");
+                Assert.IsFalse(field.IsStatic, "Field should not be static.");
+                Assert.AreEqual(0, field.Attributes.Count, "Unexpected number of attributes.");
+                Assert.IsFalse(field.IsConstant, "Field should not be a constant.");
+                Assert.IsFalse(field.IsReadOnly, "Field should not be a readonly.");
+                fieldIndex++;
+
+                field = regionElement.Children[fieldIndex] as FieldElement;
+                Assert.IsNotNull(field, "Expected a field.");
+                Assert.AreEqual("_val3", field.Name, "Unexpected field name.");
+                Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
+                Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
+                Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
+                Assert.AreEqual(0, field.HeaderComments.Count, "Unexpected number of header comment lines.");
+                Assert.IsFalse(field.IsVolatile, "Field should not be volatile.");
+                Assert.IsTrue(field.IsStatic, "Field should be static.");
+                Assert.AreEqual(0, field.Attributes.Count, "Unexpected number of attributes.");
+                Assert.IsFalse(field.IsConstant, "Field should not be a constant.");
+                Assert.IsFalse(field.IsReadOnly, "Field should not be a readonly.");
+                fieldIndex++;
+
+                field = regionElement.Children[fieldIndex] as FieldElement;
+                Assert.IsNotNull(field, "Expected a field.");
+                Assert.AreEqual("_val4", field.Name, "Unexpected field name.");
+                Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
+                Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
+                Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
+                Assert.AreEqual(0, field.HeaderComments.Count, "Unexpected number of header comment lines.");
+                Assert.IsFalse(field.IsVolatile, "Field should not be volatile.");
+                Assert.IsTrue(field.IsStatic, "Field should be static.");
+                Assert.AreEqual(0, field.Attributes.Count, "Unexpected number of attributes.");
+                Assert.IsFalse(field.IsConstant, "Field should not be a constant.");
+                Assert.IsFalse(field.IsReadOnly, "Field should not be a readonly.");
+                fieldIndex++;
+
+                field = regionElement.Children[fieldIndex] as FieldElement;
+                Assert.IsNotNull(field, "Expected a field.");
+                Assert.AreEqual("_val5", field.Name, "Unexpected field name.");
+                Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
+                Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
+                Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
+                Assert.AreEqual(0, field.HeaderComments.Count, "Unexpected number of header comment lines.");
+                Assert.IsFalse(field.IsVolatile, "Field should not be volatile.");
+                Assert.IsTrue(field.IsStatic, "Field should be static.");
+                Assert.AreEqual(0, field.Attributes.Count, "Unexpected number of attributes.");
+                Assert.IsFalse(field.IsConstant, "Field should not be a constant.");
+                Assert.IsFalse(field.IsReadOnly, "Field should not be a readonly.");
+                fieldIndex++;
+
+                field = regionElement.Children[fieldIndex] as FieldElement;
+                Assert.IsNotNull(field, "Expected a field.");
+                Assert.AreEqual("_val6", field.Name, "Unexpected field name.");
                 Assert.AreEqual("Integer", field.Type, "Unexpected field type.");
                 Assert.AreEqual(CodeAccess.Private, field.Access, "Unexpected field access level.");
                 Assert.IsNull(field.InitialValue, "Unexpected field initial value.");
@@ -3281,55 +3402,6 @@ namespace NArrange.Tests.VisualBasic
                 Assert.IsFalse(globalClassElement.IsSealed, "Class should not be sealed.");
                 Assert.AreEqual(0, globalClassElement.Interfaces.Count, "Unexpected base class name.");
                 Assert.AreEqual(0, globalClassElement.TypeParameters.Count, "Unexpected number of type parameters.");
-            }
-        }
-
-        /// <summary>
-        /// Tests parsing multiple fields from a single statement.
-        /// </summary>
-        [Test]
-        public void ParseMultiFieldTest()
-        {
-            string[] fieldDefinitions = new string[]
-            {
-                "Private val1, val2 As Integer",
-                "Private val1 , val2 As Integer",
-                "Private val1 ,val2 As Integer"
-            };
-
-            foreach (string fieldDefinition in fieldDefinitions)
-            {
-                StringReader reader = new StringReader(fieldDefinition);
-
-                VBParser parser = new VBParser();
-                ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
-
-                Assert.AreEqual(
-                    1,
-                    elements.Count,
-                    "An unexpected number of elements were parsed. Field definition: {0}",
-                    fieldDefinition);
-                FieldElement fieldElement = elements[0] as FieldElement;
-                Assert.IsNotNull(fieldElement, "Element is not a FieldElement.");
-                Assert.AreEqual(
-                    "val1, val2",
-                    fieldElement.Name,
-                    "Unexpected name. Field definition: {0}",
-                    fieldDefinition);
-                Assert.AreEqual(
-                    CodeAccess.Private,
-                    fieldElement.Access,
-                    "Unexpected code access. Field definition: {0}",
-                    fieldDefinition);
-                Assert.AreEqual(
-                    "Integer",
-                    fieldElement.Type,
-                    "Unexpected member type. Field definition: {0}",
-                    fieldDefinition);
-                Assert.IsNull(
-                    fieldElement.InitialValue,
-                    "Unexpected initial value. Field definition: {0}",
-                    fieldDefinition);
             }
         }
 

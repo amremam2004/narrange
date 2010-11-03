@@ -999,6 +999,7 @@ namespace NArrange.CSharp
         private List<ICodeElement> ParseElements(ICodeElement parentElement)
         {
             List<ICodeElement> codeElements = new List<ICodeElement>();
+            List<ICodeElement> siblingElements = new List<ICodeElement>();
             List<ICommentElement> comments = new List<ICommentElement>();
             List<AttributeElement> attributes = new List<AttributeElement>();
             Stack<ICodeElement> enclosingElementStack = new Stack<ICodeElement>();
@@ -1312,6 +1313,31 @@ namespace NArrange.CSharp
                                 attributes.AsReadOnly());
                             if (element != null)
                             {
+                                // Since more than one field can be declared per line, we need special
+                                // handling here.
+                                FieldElement fieldElement = element as FieldElement;
+                                if (fieldElement != null)
+                                {
+                                    if (fieldElement.Name.Contains(CSharpSymbol.AliasSeparator.ToString()))
+                                    {
+                                        string[] fieldNames = fieldElement.Name.Split(
+                                            new char[] { CSharpSymbol.AliasSeparator }, StringSplitOptions.RemoveEmptyEntries);
+                                        for (int fieldIndex = 0; fieldIndex < fieldNames.Length; fieldIndex++)
+                                        {
+                                            if (fieldIndex == 0)
+                                            {
+                                                fieldElement.Name = fieldNames[0];
+                                            }
+                                            else
+                                            {
+                                                FieldElement siblingFieldElement = fieldElement.Clone() as FieldElement;
+                                                siblingFieldElement.Name = fieldNames[fieldIndex].Trim();
+                                                siblingElements.Add(siblingFieldElement);
+                                            }
+                                        }
+                                    }
+                                }
+
                                 if (element is CommentedElement)
                                 {
                                     UsingElement usingElement = element as UsingElement;
@@ -1354,11 +1380,20 @@ namespace NArrange.CSharp
                                     }
 
                                     enclosingElement.AddChild(element);
+                                    foreach (ICodeElement additionalElement in siblingElements)
+                                    {
+                                        enclosingElement.AddChild(additionalElement);
+                                    }
                                 }
                                 else
                                 {
                                     codeElements.Add(element);
+                                    foreach (ICodeElement additionalElement in siblingElements)
+                                    {
+                                        codeElements.Add(additionalElement);
+                                    }
                                 }
+                                siblingElements.Clear();
 
                                 elementBuilder = new StringBuilder(DefaultBlockLength);
 
