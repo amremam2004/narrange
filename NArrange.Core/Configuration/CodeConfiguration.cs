@@ -291,7 +291,7 @@ namespace NArrange.Core.Configuration
         /// <returns>The code configuration if succesful, otherwise null.</returns>
         public static CodeConfiguration Load(string fileName, bool resolveReferences)
         {
-            using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 return Load(fileStream, resolveReferences);
             }
