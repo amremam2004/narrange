@@ -11,8 +11,8 @@ THIS PROGRAM MODIFIES SOURCE CODE.  BECAUSE IT IS POSSIBLE THAT BUGS EXIST IN TH
 
 To ease command line usage, it is also recommended that you add the NArrange bin folder to your %PATH% environment variable.
 
-To setup NArrange as an external tool in Microsoft Visual Studio or for more information on using NArrange, please refer to the documentation included with the binary or source distribution in the Doc directory.  Alternatively, refer the the product homepage for online documentation:
-http://narrange.sourceforge.net
+To setup NArrange as an external tool in Microsoft Visual Studio or for more information on using NArrange, please refer to the documentation included with the binary or source distribution in the Doc directory.  Alternatively, refer the the homepage for online documentation:
+http://www.narrange.net/
 
 
 The following should help you get started:

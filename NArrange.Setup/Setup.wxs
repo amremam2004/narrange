@@ -15,7 +15,7 @@
 		<Property Id="ARPPRODUCTICON" Value="NArrange.exe" />
 		<Property Id='ARPCOMMENTS'>NArrange .NET Code Organizer</Property>
 		<Property Id='ARPCONTACT'>email: james@narrange.net</Property>
-		<Property Id='ARPURLINFOABOUT'>http://narrange.sourceforge.net</Property>
+		<Property Id='ARPURLINFOABOUT'>http://www.narrange.net</Property>
 		<Property Id="ALLUSERS" Value="1"/>
 		
 		<!--
