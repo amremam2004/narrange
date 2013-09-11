@@ -13,10 +13,10 @@
     <!-- Version -->
     <Major>0</Major>
     <Minor>3</Minor>
-    <Build>0</Build>
+    <Build>1</Build>
 
     <!-- StyleCop related stuff -->
-    <StyleCopRoot>$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3</StyleCopRoot>
+    <StyleCopRoot>$(MSBuildExtensionsPath)\..\StyleCop 4.7</StyleCopRoot>
     <StyleCopSettingsFile>$(MSBuildProjectDirectory)Settings.SourceAnalysis</StyleCopSettingsFile>
     <StyleCopForceFullAnalysis Condition="'$(SourceAnalysisForceFullAnalysis)' == ''">true</StyleCopForceFullAnalysis>
     <StyleCopCacheResults Condition="'$(SourceAnalysisCacheResults)' == ''">false</StyleCopCacheResults>
@@ -30,7 +30,7 @@
     <WixTasksPath Condition=" '$(WixTasksPath)' == '' ">$(WixToolPath)\WixTasks.dll</WixTasksPath>
   </PropertyGroup>
 
-  <UsingTask AssemblyFile="$(StyleCopRoot)\Microsoft.StyleCop.dll" TaskName="StyleCopTask"/>
+  <UsingTask AssemblyFile="$(StyleCopRoot)\StyleCop.dll" TaskName="StyleCopTask"/>
 
   <ItemGroup>
     <Projects Include="$(MSBuildProjectDirectory)\**\*.csproj"

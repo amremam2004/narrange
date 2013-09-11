@@ -814,6 +814,12 @@ namespace NArrange.CSharp
                 Writer.Write(CSharpKeyword.Virtual);
                 Writer.Write(' ');
             }
+
+            if ((memberAttributes & MemberModifiers.Async) == MemberModifiers.Async)
+            {
+                Writer.Write(CSharpKeyword.Async);
+                Writer.Write(' ');
+            }
         }
 
         /// <summary>

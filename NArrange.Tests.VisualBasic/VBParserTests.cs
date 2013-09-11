@@ -2817,6 +2817,29 @@ namespace NArrange.Tests.VisualBasic
         }
 
         /// <summary>
+        /// Tests parsing an async method declaration.
+        /// </summary>
+        [Test]
+        public void ParseMethodAsyncTest()
+        {
+            StringReader reader = new StringReader(
+                "Public Async Sub DoSomething()\r\n" +
+                "End Sub");
+
+            VBParser parser = new VBParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
+            MethodElement methodElement = elements[0] as MethodElement;
+            Assert.IsNotNull(methodElement, "Element is not a MethodElement.");
+            Assert.AreEqual("DoSomething", methodElement.Name, "Unexpected name.");
+            Assert.AreEqual(CodeAccess.Public, methodElement.Access, "Unexpected code access.");
+            Assert.IsNull(methodElement.Type, "Unexpected member type.");
+            Assert.IsTrue(methodElement.IsAsync, "Expected an async method.");
+            Assert.AreEqual(string.Empty, methodElement.BodyText, "Unexpected body text.");
+        }
+
+        /// <summary>
         /// Tests parsing a method without a block closing.
         /// </summary>
         [Test]

@@ -89,6 +89,17 @@ namespace NArrange.Core.CodeElements
         }
 
         /// <summary>
+        /// Gets a value indicating whether or not the member is async.
+        /// </summary>
+        public bool IsAsync
+        {
+            get
+            {
+                return (MemberModifiers & MemberModifiers.Async) == MemberModifiers.Async;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether or not the member is external.
         /// </summary>
         public bool IsExternal

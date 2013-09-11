@@ -3,11 +3,11 @@
 	
 	<!-- C9A6181D-BCAD-4561-A4A2-1D464646C6D3 -->
 	<Product Id="*"
-		Name="NArrange $(var.ProductVersion) (Beta)"
+		Name="NArrange $(var.ProductVersion)"
 		Language="1033"
 		Version="$(var.ProductVersion)"
 		UpgradeCode="AAF3AD2C-8C0A-4DE7-B603-B2D88BBE1737"
-		Manufacturer="James Nies and NArrange Contributors">
+		Manufacturer="Astral Softworks, LLC">
 
 		<Package InstallerVersion="200" Compressed="yes"/>
 		

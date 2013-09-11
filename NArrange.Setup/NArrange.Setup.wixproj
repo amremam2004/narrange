@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{40DBA0DD-5E29-46F6-961B-AD8AFB5B9AC7}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,9 +30,11 @@
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
       <HintPath>..\..\Tools\Wix\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
     </WixExtension>
     <WixExtension Include="WixUtilExtension">
       <HintPath>..\..\Tools\Wix\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
     </WixExtension>
     <Compile Include="Files.wxs" />
     <Compile Include="Setup.wxs" />

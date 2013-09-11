@@ -459,7 +459,12 @@ namespace NArrange.Core
         /// <summary>
         /// Partial member.
         /// </summary>
-        Partial = 1024
+        Partial = 1024,
+
+        /// <summary>
+        /// Async member.
+        /// </summary>
+        Async = 2048
     }
 
     /// <summary>

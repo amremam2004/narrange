@@ -1014,6 +1014,12 @@ namespace NArrange.VisualBasic
                 Writer.Write(VBKeyword.Overridable);
                 Writer.Write(' ');
             }
+
+            if ((memberAttributes & MemberModifiers.Async) == MemberModifiers.Async)
+            {
+                Writer.Write(VBKeyword.Async);
+                Writer.Write(' ');
+            }
         }
 
         /// <summary>

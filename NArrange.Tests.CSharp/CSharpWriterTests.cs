@@ -1209,6 +1209,38 @@ namespace NArrange.Tests.CSharp
         }
 
         /// <summary>
+        /// Tests writing an async method implementation.
+        /// </summary>
+        [Test]
+        public void WriteMethodAsyncTest()
+        {
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+
+            MethodElement methodElement = new MethodElement();
+            methodElement.Access = CodeAccess.Public;
+            methodElement.MemberModifiers = MemberModifiers.Async;
+            methodElement.Type = "void";
+            methodElement.Name = "DoSomething";
+            methodElement.Parameters = "bool flag";
+            methodElement.BodyText = "\treturn;";
+
+            StringWriter writer = new StringWriter();
+            codeElements.Add(methodElement);
+
+            CSharpWriter csharpWriter = new CSharpWriter();
+            csharpWriter.Write(codeElements.AsReadOnly(), writer);
+
+            string text = writer.ToString();
+            Assert.AreEqual(
+                "public async void DoSomething(bool flag)\r\n" +
+                "{\r\n" +
+                "    return;\r\n" +
+                "}",
+                text,
+                "Method element was not written correctly.");
+        }
+
+        /// <summary>
         /// Tests writing a method with a generic return type.
         /// </summary>
         [Test]

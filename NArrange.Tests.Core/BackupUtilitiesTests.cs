@@ -135,7 +135,7 @@ namespace NArrange.Tests.Core
             const string TestFileName1 = @"c:\temp\This Is Some Folder\This Is Some File.cs";
             const string TestFileName2 = @"c:\temp\this is some folder\this is some file.cs";
             const string TestFileName3 = @"e:\temp\this is some folder\this is some file.cs";
-            const string TestKey = "_1132715649";
+            const string TestKey = "_1910131599";
 
             //
             // The same key should be returned accross multiple runs.

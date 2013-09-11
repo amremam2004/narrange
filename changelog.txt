@@ -1,5 +1,28 @@
+2010-12-02  James Nies
+
+	* Updated homepage URL
+
+2010-11-07  James Nies
+
+	* Allow opening of read-only configuration file.
+
+2010-11-03  James Nies
+
+	* Improvements to multiple field declaration parsing for both C#
+	  and VB.
+
+2010-10-31  James Nies
+
+	* Fixed VB parsing of multiple type parameters.
+	  - Partial patch provided by Clément Franchini
+
+2009-12-21  James Nies
+
+	* Bumped version number
+
 2009-12-05  James Nies
 
+	* Added the NArrange site address to the copyright info.
 	* Changed the behavior of element sorting to ignore case for string
 	  attributes (e.g. name). This fixes the sorting of using
 	  directives for StyleCop rule SA1210.

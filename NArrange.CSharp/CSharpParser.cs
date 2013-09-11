@@ -225,6 +225,11 @@ namespace NArrange.CSharp
                 memberAttributes |= MemberModifiers.Partial;
             }
 
+            if (TryFindAndRemoveWord(wordList, CSharpKeyword.Async))
+            {
+                memberAttributes |= MemberModifiers.Async;
+            }
+
             return memberAttributes;
         }
 

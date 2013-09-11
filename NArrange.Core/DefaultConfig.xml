@@ -14,7 +14,7 @@
             </ProjectExtensions>
         </ProjectHandler>
         <!-- Source handlers are plugins that help NArrange parse and write source files -->
-        <SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.3.0.0, Culture=neutral, PublicKeyToken=null">
+        <SourceHandler Language="CSharp" Assembly="NArrange.CSharp, Version=0.3.1.0, Culture=neutral, PublicKeyToken=null">
             <!-- List of handled source file extensions -->
             <SourceExtensions>
                 <Extension Name="cs">
@@ -23,7 +23,7 @@
                 <!-- If your project uses other extensions for C# files add them here-->
             </SourceExtensions>
         </SourceHandler>
-        <SourceHandler Language="VisualBasic" Assembly="NArrange.VisualBasic, Version=0.3.0.0, Culture=neutral, PublicKeyToken=null">
+        <SourceHandler Language="VisualBasic" Assembly="NArrange.VisualBasic, Version=0.3.1.0, Culture=neutral, PublicKeyToken=null">
             <SourceExtensions>
                 <Extension Name="vb">
                     <Filter Condition="!($(File.Name) : '.Designer.')"/>

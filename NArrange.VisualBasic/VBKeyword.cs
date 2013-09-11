@@ -64,6 +64,11 @@ namespace NArrange.VisualBasic
         public const string As = "As";
 
         /// <summary>
+        /// "Async" keyword.
+        /// </summary>
+        public const string Async = "Async";
+
+        /// <summary>
         /// "Auto" keyword.
         /// </summary>
         public const string Auto = "Auto";
@@ -359,6 +364,7 @@ namespace NArrange.VisualBasic
                 isKeyword =
                     normalized == Alias ||
                     normalized == Ansi ||
+                    normalized == Async ||
                     normalized == Auto ||
                     normalized == As ||
                     normalized == Begin ||

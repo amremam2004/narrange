@@ -1300,6 +1300,36 @@ namespace NArrange.Tests.VisualBasic
         }
 
         /// <summary>
+        /// Tests writing an async method implementation.
+        /// </summary>
+        [Test]
+        public void WriteMethodAsyncTest()
+        {
+            List<ICodeElement> codeElements = new List<ICodeElement>();
+
+            MethodElement methodElement = new MethodElement();
+            methodElement.Access = CodeAccess.Public;
+            methodElement.MemberModifiers = MemberModifiers.Async;
+            methodElement.Type = null;
+            methodElement.Name = "DoSomething";
+            methodElement.Parameters = "ByVal flag As Boolean";
+            methodElement.BodyText = null;
+
+            StringWriter writer = new StringWriter();
+            codeElements.Add(methodElement);
+
+            VBWriter codeWriter = new VBWriter();
+            codeWriter.Write(codeElements.AsReadOnly(), writer);
+
+            string text = writer.ToString();
+            Assert.AreEqual(
+                "Public Async Sub DoSomething(ByVal flag As Boolean)\r\n" +
+                "End Sub",
+                text,
+                "Method element was not written correctly.");
+        }
+
+        /// <summary>
         /// Tests writing a method with a generic return type.
         /// </summary>
         [Test]

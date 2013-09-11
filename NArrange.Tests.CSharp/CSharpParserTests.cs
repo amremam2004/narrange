@@ -2416,6 +2416,32 @@ namespace NArrange.Tests.CSharp
         }
 
         /// <summary>
+        /// Tests parsing an async method implementation.
+        /// </summary>
+        [Test]
+        public void ParseMethodAsyncTest()
+        {
+            StringReader reader = new StringReader(
+                "public static async void DoSomething()\r\n" +
+                "{\r\n" +
+                "\t//Do something here\r\n" +
+                "}");
+
+            CSharpParser parser = new CSharpParser();
+            ReadOnlyCollection<ICodeElement> elements = parser.Parse(reader);
+
+            Assert.AreEqual(1, elements.Count, "An unexpected number of elements were parsed.");
+            MethodElement methodElement = elements[0] as MethodElement;
+            Assert.IsNotNull(methodElement, "Element is not a MethodElement.");
+            Assert.AreEqual("DoSomething", methodElement.Name, "Unexpected name.");
+            Assert.AreEqual(CodeAccess.Public, methodElement.Access, "Unexpected code access.");
+            Assert.AreEqual("void", methodElement.Type, "Unexpected member type.");
+            Assert.IsTrue(methodElement.IsStatic, "Expected a static method.");
+            Assert.IsTrue(methodElement.IsAsync, "Expected an async method.");
+            Assert.IsTrue(methodElement.BodyText.Contains("//Do something here"), "Unexpected body text.");
+        }
+
+        /// <summary>
         /// Tests parsing a method without a closing brace.
         /// </summary>
         [Test]

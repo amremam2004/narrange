@@ -257,6 +257,12 @@ namespace NArrange.VisualBasic
                 memberAttributes |= MemberModifiers.Partial;
             }
 
+            bool isAsync = wordList.Contains(VBKeyword.Async);
+            if (isAsync)
+            {
+                memberAttributes |= MemberModifiers.Async;
+            }
+
             return memberAttributes;
         }
 

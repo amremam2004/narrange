@@ -56,6 +56,11 @@ namespace NArrange.CSharp
         public const string As = "as";
 
         /// <summary>
+        /// "async" keyword.
+        /// </summary>
+        public const string Async = "async";
+
+        /// <summary>
         /// "class" keyword.
         /// </summary>
         public const string Class = "class";
